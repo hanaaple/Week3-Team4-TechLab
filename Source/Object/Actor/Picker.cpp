@@ -29,6 +29,13 @@ int APicker::DecodeUUID(FVector4 color)
     return (static_cast<unsigned int>(color.W)<<24) | (static_cast<unsigned int>(color.Z)<<16) | (static_cast<unsigned int>(color.Y)<<8) | (static_cast<unsigned int>(color.X));
 }
 
+void APicker::BeginPlay()
+{
+	Super::BeginPlay();
+
+	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::W, std::bind(&APicker::TestFunc, this), GetUUID());
+}
+
 void APicker::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
@@ -119,4 +126,9 @@ void APicker::LateTick(float DeltaTime)
 const char* APicker::GetTypeName()
 {
     return "Picker";
+}
+
+void APicker::TestFunc()
+{
+	int a = 0;
 }

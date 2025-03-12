@@ -53,6 +53,7 @@ PS_OUTPUT mainPS(PS_INPUT input) : SV_TARGET
 
     // 기본 깊이 값 계산 (0.0~1.0)
     // float baseDepth = input.depthPosition.z / input.depthPosition.w;
+	
 
     // 색상 설정 (예: 흰색)
     output.color = input.color;

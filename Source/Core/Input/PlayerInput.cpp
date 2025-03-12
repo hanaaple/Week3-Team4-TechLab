@@ -216,52 +216,58 @@ FVector APlayerInput::CalNDCPos(FVector MousePos, FVector WindowSize)
     return {( MousePos.X / ( WindowSize.X / 2 ) ) - 1, ( MousePos.Y / ( WindowSize.Y / 2 ) ) - 1, 0};
 }
 
-void APlayerInput::RegisterKeyDownCallback(EKeyCode KeyCode, std::function<void()> Callback)
+void APlayerInput::RegisterKeyDownCallback(EKeyCode KeyCode, std::function<void()> Callback, uint32 uuid)
 {
 	if (KeyDownCallbacks.Contains(KeyCode))
 	{
-		for (auto& callback : KeyDownCallbacks[KeyCode])
+		for (auto& callbackwrap : KeyDownCallbacks[KeyCode])
 		{
-			if (callback.target<void(*)()>() == Callback.target<void(*)()>())
+			if (callbackwrap.GetID() == uuid)
 			{
 				return;
 			}
 		}
 	}
-	KeyDownCallbacks[KeyCode].Add(Callback);
+
+	KeyCallbackWrapper wrapper(Callback, uuid);
+	KeyDownCallbacks[KeyCode].Add(wrapper);
 }
 
-void APlayerInput::RegisterKeyPressCallback(EKeyCode KeyCode, std::function<void()> Callback)
+void APlayerInput::RegisterKeyPressCallback(EKeyCode KeyCode, std::function<void()> Callback, uint32 uuid)
 {
 	if (KeyPressCallbacks.Contains(KeyCode))
 	{
 		for (auto& callback : KeyPressCallbacks[KeyCode])
 		{
-			if (callback.target<void(*)()>() == Callback.target<void(*)()>())
+			if (callback.GetID() == uuid)
 			{
 				return;
 			}
 		}
 	}
-	KeyPressCallbacks[KeyCode].Add(Callback);
+
+	KeyCallbackWrapper wrapper(Callback, uuid);
+	KeyPressCallbacks[KeyCode].Add(wrapper);
 }
 
-void APlayerInput::RegisterKeyUpCallback(EKeyCode KeyCode, std::function<void()> Callback)
+void APlayerInput::RegisterKeyUpCallback(EKeyCode KeyCode, std::function<void()> Callback, uint32 uuid)
 {
 	if (KeyUpCallbacks.Contains(KeyCode))
 	{
 		for (auto& callback : KeyUpCallbacks[KeyCode])
 		{
-			if (callback.target<void(*)()>() == Callback.target<void(*)()>())
+			if (callback.GetID() == uuid)
 			{
 				return;
 			}
 		}
 	}
-	KeyUpCallbacks[KeyCode].Add(Callback);
+
+	KeyCallbackWrapper wrapper(Callback, uuid);
+	KeyUpCallbacks[KeyCode].Add(wrapper);
 }
 
-void APlayerInput::RegisterMouseDownCallback(EMouseButton Button, std::function<void(FVector)> Callback)
+void APlayerInput::RegisterMouseDownCallback(EMouseButton Button, std::function<void(FVector)> Callback, uint32 uuid)
 {
 	if (Button < EMouseButton::Left || EMouseButton::End < Button)
 	{
@@ -270,16 +276,17 @@ void APlayerInput::RegisterMouseDownCallback(EMouseButton Button, std::function<
 
 	for (auto& callback : MouseDownCallbacks)
 	{
-		if (callback.target<FVector>() == Callback.target<FVector>())
+		if (callback.GetID() == uuid)
 		{
 			return;
 		}
 	}
 
-	MouseDownCallbacks.Add(Callback);
+	MouseCallbackWrapper wrapper(Callback, uuid);
+	MouseDownCallbacks.Add(wrapper);
 }
 
-void APlayerInput::RegisterMousePressCallback(EMouseButton Button, std::function<void(FVector)> Callback)
+void APlayerInput::RegisterMousePressCallback(EMouseButton Button, std::function<void(FVector)> Callback, uint32 uuid)
 {
 	if (Button < EMouseButton::Left || EMouseButton::End < Button)
 	{
@@ -288,16 +295,17 @@ void APlayerInput::RegisterMousePressCallback(EMouseButton Button, std::function
 
 	for (auto& callback : MousePressCallbacks)
 	{
-		if (callback.target<FVector>() == Callback.target<FVector>())
+		if (callback.GetID() == uuid)
 		{
 			return;
 		}
 	}
 
-	MousePressCallbacks.Add(Callback);
+	MouseCallbackWrapper wrapper(Callback, uuid);
+	MousePressCallbacks.Add(wrapper);
 }
 
-void APlayerInput::RegisterMouseUpCallback(EMouseButton Button, std::function<void(FVector)> Callback)
+void APlayerInput::RegisterMouseUpCallback(EMouseButton Button, std::function<void(FVector)> Callback, uint32 uuid)
 {
     if (Button < EMouseButton::Left ||  EMouseButton::End < Button)
     {
@@ -306,11 +314,12 @@ void APlayerInput::RegisterMouseUpCallback(EMouseButton Button, std::function<vo
 
 	for (auto& callback : MouseUpCallbacks)
 	{
-		if (callback.target<FVector>() == Callback.target<FVector>())
+		if (callback.GetID() == uuid)
 		{
 			return;
 		}
 	}
 
-    MouseUpCallbacks.Add(Callback);
+	MouseCallbackWrapper wrapper(Callback, uuid);
+    MouseUpCallbacks.Add(wrapper);
 }

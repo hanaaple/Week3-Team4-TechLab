@@ -25,10 +25,10 @@ ACamera::ACamera()
 void ACamera::BeginPlay()
 {
 	Super::BeginPlay();
-	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::W, [this]() { MoveForward(); });
-	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::S, [this]() { MoveBackward(); });
-	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::A, [this]() { MoveLeft(); });
-	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::D, [this]() { MoveRight(); });
+	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::W, std::bind(&ACamera::MoveForward, this), GetUUID());
+	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::S, std::bind(&ACamera::MoveBackward, this), GetUUID());
+	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::A, std::bind(&ACamera::MoveLeft, this), GetUUID());
+	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::D, std::bind(&ACamera::MoveRight, this), GetUUID());
 }
 
 void ACamera::SetFieldOfVew(float Fov)

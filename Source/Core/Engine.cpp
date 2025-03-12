@@ -133,7 +133,7 @@ void UEngine::Run()
         }
 
 		APlayerInput::Get().Update(WindowHandle, ScreenWidth, ScreenHeight);
-		APlayerController::Get().ProcessPlayerInput(DeltaTime);
+		//APlayerController::Get().ProcessPlayerInput(DeltaTime);
 
 		// Renderer Update
         Renderer->Prepare();

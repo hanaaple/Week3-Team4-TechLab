@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Object/Actor/Actor.h"
 
 enum class ESelectedAxis : uint8
@@ -19,10 +19,12 @@ enum class EGizmoType : uint8
 
 class AGizmoHandle : public AActor
 {
+	using Super = AActor;
 public:
 	AGizmoHandle();
 
 public:
+	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	void SetScaleByDistance();
 	void SetActive(bool bActive);

@@ -14,11 +14,11 @@ void APlayerController::HandleCameraMovement(float DeltaTime) {
 
     FVector NewVelocity(0, 0, 0);
 
-    //if (APlayerInput::Get().GetMousePressed(EMouseButton::Right) == false)
-    //{
-    //    // Camera->SetVelocity(NewVelocity);
-    //    return;
-    //}
+    if (APlayerInput::Get().GetMousePressed(EMouseButton::Right) == false)
+    {
+       // Camera->SetVelocity(NewVelocity);
+		return;
+    }
 
     ACamera* Camera = FEditorManager::Get().GetCamera();
     
