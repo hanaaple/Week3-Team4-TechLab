@@ -1,4 +1,4 @@
-﻿#include "GizmoHandle.h"
+#include "GizmoHandle.h"
 
 #include "Object/Actor/Camera.h"
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
@@ -36,7 +36,7 @@ AGizmoHandle::AGizmoHandle()
 	UEngine::Get().GetWorld()->AddZIgnoreComponent(XArrow);
 	UEngine::Get().GetWorld()->AddZIgnoreComponent(YArrow);
 
-	SetActive(false);
+	SetActive(false);  
 }
 
 void AGizmoHandle::Tick(float DeltaTime)

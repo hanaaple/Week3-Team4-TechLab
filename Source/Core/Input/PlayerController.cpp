@@ -1,4 +1,4 @@
-﻿#include "PlayerController.h"
+#include "PlayerController.h"
 
 #include <unordered_map>
 #include "Object//Actor/Camera.h"
@@ -14,20 +14,18 @@ void APlayerController::HandleCameraMovement(float DeltaTime) {
 
     FVector NewVelocity(0, 0, 0);
 
-    if (APlayerInput::Get().IsPressedMouse(true) == false)
-    {
-        // Camera->SetVelocity(NewVelocity);
-        return;
-    }
+    //if (APlayerInput::Get().GetMousePressed(EMouseButton::Right) == false)
+    //{
+    //    // Camera->SetVelocity(NewVelocity);
+    //    return;
+    //}
 
     ACamera* Camera = FEditorManager::Get().GetCamera();
     
     //전프레임이랑 비교
     //x좌표 받아와서 x만큼 x축회전
     //y좌표 받아와서 y만큼 y축 회전
-    FVector MousePrePos = APlayerInput::Get().GetMousePrePos();
-    FVector MousePos = APlayerInput::Get().GetMousePos();
-    FVector DeltaPos = MousePos - MousePrePos;
+    FVector DeltaPos = APlayerInput::Get().GetMouseDeltaPos();
     //FQuat CameraRot = FEditorManager::Get().GetCamera()->GetActorTransform().GetRotation();
 
     FTransform CameraTransform = Camera->GetActorTransform();
@@ -54,23 +52,23 @@ void APlayerController::HandleCameraMovement(float DeltaTime) {
     
     float CamSpeed = Camera->CameraSpeed;
 
-    if (APlayerInput::Get().IsPressedKey(EKeyCode::A)) {
+    if (APlayerInput::Get().GetKeyPressed(EKeyCode::A)) {
         NewVelocity -= Camera->GetRight();
     }
-    if (APlayerInput::Get().IsPressedKey(EKeyCode::D)) {
+    if (APlayerInput::Get().GetKeyPressed(EKeyCode::D)) {
         NewVelocity += Camera->GetRight();
     }
-    if (APlayerInput::Get().IsPressedKey(EKeyCode::W)) {
+    if (APlayerInput::Get().GetKeyPressed(EKeyCode::W)) {
         NewVelocity += Camera->GetForward();
     }
-    if (APlayerInput::Get().IsPressedKey(EKeyCode::S)) {
+    if (APlayerInput::Get().GetKeyPressed(EKeyCode::S)) {
         NewVelocity -= Camera->GetForward();
     }
-    if (APlayerInput::Get().IsPressedKey(EKeyCode::Q))
+    if (APlayerInput::Get().GetKeyPressed(EKeyCode::Q))
     {
         NewVelocity -= {0.0f, 0.0f, 1.0f};
     }
-    if (APlayerInput::Get().IsPressedKey(EKeyCode::E))
+    if (APlayerInput::Get().GetKeyPressed(EKeyCode::E))
     {
         NewVelocity += {0.0f, 0.0f, 1.0f};
     }
@@ -87,7 +85,7 @@ void APlayerController::HandleCameraMovement(float DeltaTime) {
 
 void APlayerController::HandleGizmoMovement(float DeltaTime)
 {
-    if (APlayerInput::Get().IsPressedMouse(false) == false)
+    if (APlayerInput::Get().GetMousePressed(EMouseButton::Left) == false)
     {
         return;
     }

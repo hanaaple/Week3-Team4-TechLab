@@ -1,4 +1,4 @@
-﻿#include "World.h"
+#include "World.h"
 #include <cassert>
 #include "JsonSavehelper.h"
 
@@ -73,7 +73,7 @@ void UWorld::Render()
 	Renderer->UpdateViewMatrix(cam->GetActorTransform());
 	Renderer->UpdateProjectionMatrix(cam);
 	
-	if (APlayerInput::Get().GetMouseDown(false))
+	if (APlayerInput::Get().GetMouseDown(EMouseButton::Left))
 	{
 		RenderPickingTexture(*Renderer);
 	}

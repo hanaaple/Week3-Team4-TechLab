@@ -1,4 +1,4 @@
-﻿#include "Core/HAL/PlatformType.h"
+#include "Core/HAL/PlatformType.h"
 #include "Core/Rendering/URenderer.h"
 #include "Picker.h"
 
@@ -38,7 +38,7 @@ void APicker::LateTick(float DeltaTime)
 {
     AActor::LateTick(DeltaTime);
 
-    if(APlayerInput::Get().GetMouseDown(false))
+    if(APlayerInput::Get().GetMouseDown(EMouseButton::Left))
     {
         POINT pt;
         GetCursorPos(&pt);
@@ -76,7 +76,7 @@ void APicker::LateTick(float DeltaTime)
         UE_LOG("Pick - UUID: %d", UUID);
     }
 
-    if (APlayerInput::Get().IsPressedMouse(false))
+    if (APlayerInput::Get().GetMousePressed(EMouseButton::Left))
     {
         POINT pt;
         GetCursorPos(&pt);
