@@ -1,4 +1,4 @@
-﻿#include "UI.h"
+#include "UI.h"
 
 #include <algorithm>
 
@@ -100,7 +100,10 @@ void UI::OnUpdateWindowSize(UINT InScreenWidth, UINT InScreenHeight)
     ImGui_ImplDX11_InvalidateDeviceObjects();
     ImGui_ImplDX11_CreateDeviceObjects();
    // ImGui 창 크기 업데이트
-	ScreenSize = ImVec2(static_cast<float>(InScreenWidth), static_cast<float>(InScreenHeight));
+	//ScreenSize = ImVec2(static_cast<float>(InScreenWidth), static_cast<float>(InScreenHeight));
+
+	ImGuiIO& io = ImGui::GetIO();
+	io.DisplaySize = ImVec2(static_cast<float>(InScreenWidth), static_cast<float>(InScreenHeight));
 
     bWasWindowSizeUpdated = true;
 }

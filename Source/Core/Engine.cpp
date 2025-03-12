@@ -1,4 +1,4 @@
-﻿#include "Engine.h"
+#include "Engine.h"
 
 #include <iostream>
 #include "Object/ObjectFactory.h"
@@ -263,6 +263,11 @@ void UEngine::UpdateWindowSize(UINT InScreenWidth, UINT InScreenHeight)
 	if (ui.bIsInitialized)
 	{
 		ui.OnUpdateWindowSize(ScreenWidth, ScreenHeight);
+	}
+
+	if (Renderer)
+	{
+		Renderer->OnResizeComplete();
 	}
 }
 
