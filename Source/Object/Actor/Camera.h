@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Core/HAL/PlatformType.h"
 #include "Core/Math/Matrix.h"
@@ -38,6 +38,8 @@ public:
     ECameraProjectionMode::Type ProjectionMode;
     // float AspectRatio;	// 카메라 비율 (이번 프로젝트에서는 사용 안할듯) 
 
+	void BeginPlay() override;
+
     void SetFieldOfVew(float Fov);
     void SetFar(float Far);
     void SetNear(float Near);
@@ -66,4 +68,9 @@ public:
     {
         return GetActorTransform().GetViewMatrix();
     }
+
+	void MoveForward();
+	void MoveBackward();
+	void MoveLeft();
+	void MoveRight();
 };
