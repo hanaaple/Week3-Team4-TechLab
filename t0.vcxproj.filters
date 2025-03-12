@@ -111,9 +111,6 @@
     <ClCompile Include="Source\JsonSaveHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Object\UObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Object\USceneComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -177,7 +174,10 @@
     <ClCompile Include="Source\Static\FEditorManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Object\Actor\Quad.cpp">
+    <ClCompile Include="Source\Core\UObject\Object.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Primitive\PrimitiveVertices.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Primitive\UGeometryGenerator.cpp">
@@ -259,9 +259,6 @@
     <ClInclude Include="Source\Core\Engine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Object\UObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Object\USceneComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -340,14 +337,20 @@
     <ClInclude Include="Source\Static\FEditorManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Object\Actor\Quad.h">
+    <ClInclude Include="Source\Primitive\PrimitiveVertices.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\UObject\Object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Primitive\UGeometryGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Primitive\PrimitiveVertices.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitignore" />
+    <None Include=".editorconfig" />
+    <None Include="imgui.ini" />
+    <None Include="README.md" />
   </ItemGroup>
 </Project>
