@@ -56,6 +56,8 @@ private:
 
     BaseStringType PrivateString;
 
+	friend struct std::hash<FString>;
+
 public:
     FString() = default;
     ~FString() = default;
@@ -179,3 +181,13 @@ FORCEINLINE FString& FString::operator+=(const FString& SubStr)
     this->PrivateString += SubStr.PrivateString;
     return *this;
 }
+
+template<>
+struct std::hash<FString>
+{
+	size_t operator()(const FString& Key) const noexcept
+	{
+		return hash<FString::BaseStringType>()(Key.PrivateString);
+	}
+};
+
