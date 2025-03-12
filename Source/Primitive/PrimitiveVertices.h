@@ -1,9 +1,17 @@
 ﻿#pragma once
 #include "Core/HAL/PlatformType.h"
+#include "Core/Container/Array.h"
+
 struct FVertexSimple
 {
     float X, Y, Z;    // Position
     float R, G, B, A; // Color
+};
+
+struct FGeometryData
+{
+	TArray<FVertexSimple> Vertices;
+	TArray<uint32> Indices;
 };
 
 enum class EPrimitiveType : uint8
