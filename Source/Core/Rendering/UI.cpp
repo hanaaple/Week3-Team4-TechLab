@@ -118,7 +118,7 @@ void UI::RenderControlPanel()
     }
     
     ImGui::Text("Hello, Jungle World!");
-    ImGui::Text("FPS: %.3f (what is that ms)", ImGui::GetIO().Framerate);
+    ImGui::Text("FPS: %.3f (%.2f ms)", ImGui::GetIO().Framerate , 1000.0f / ImGui::GetIO().Framerate);
 
     RenderMemoryUsage();
     RenderPrimitiveSelection();
