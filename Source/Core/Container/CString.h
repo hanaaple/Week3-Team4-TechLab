@@ -11,26 +11,6 @@ struct TCString
 public:
     using CharType = T;
 
-    // StrCmp method for comparing two strings
-    static int StrCmp(const CharType* str1, const CharType* str2)
-    {
-        if constexpr (std::is_same_v<CharType, char>)
-        {
-            // Use std::strcmp for char strings
-            return std::strcmp(str1, str2);
-        }
-        else if constexpr (std::is_same_v<CharType, wchar_t>)
-        {
-            // Use std::wcscmp for wchar_t strings
-            return std::wcscmp(str1, str2);
-        }
-        else
-        {
-            static_assert(false, "Unsupported character type!");
-            return 0;
-        }
-    }
-
     static CharType* Strcpy(CharType* dest, const CharType* src)
     {
         if constexpr (std::is_same_v<CharType, char>)
