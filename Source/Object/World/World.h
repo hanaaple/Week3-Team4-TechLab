@@ -4,7 +4,7 @@
 #include "Core/Container/Array.h"
 #include "Core/Container/Set.h"
 #include "Core/Container/String.h"
-#include "Object/UObject.h"
+#include "Core/UObject/Object.h"
 #include "Debug/DebugConsole.h"
 #include "Object/ObjectFactory.h"
 

@@ -1,4 +1,4 @@
-﻿#include "UObject.h"
+﻿#include "Core/UObject/Object.h"
 
 UObject::UObject()
 {

@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "Core/EngineTypes.h"
-#include "Object/UObject.h"
+#include "Core/UObject/Object.h"
 
 class UActorComponent : public UObject
 {

@@ -162,6 +162,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\Math\Plane.cpp" />
+    <ClCompile Include="Source\Core\UObject\Object.cpp" />
     <ClCompile Include="Source\Object\Actor\Camera.cpp" />
     <ClCompile Include="Source\Object\Actor\Cone.cpp" />
     <ClCompile Include="Source\Object\Actor\Cylinder.cpp" />
@@ -191,7 +192,6 @@
     <ClCompile Include="Source\ThirdParty\ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="Source\ThirdParty\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Source\ThirdParty\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="Source\Object\UObject.cpp" />
     <ClCompile Include="Source\Object\USceneComponent.cpp" />
     <ClCompile Include="Source\Object\PrimitiveComponent\UPrimitiveComponent.cpp" />
     <ClCompile Include="Source\Object\World\World.cpp" />
@@ -204,6 +204,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Core\UObject\Object.h" />
     <ClInclude Include="Source\Object\Actor\Camera.h" />
     <ClInclude Include="Source\Object\Actor\Cone.h" />
     <ClInclude Include="Source\Object\Actor\Cube.h" />
@@ -255,7 +256,6 @@
     <ClInclude Include="Source\Core\EngineTypes.h" />
     <ClInclude Include="Source\Static\FEditorManager.h" />
     <ClInclude Include="Source\Primitive\PrimitiveVertices.h" />
-    <ClInclude Include="Source\Object\UObject.h" />
     <ClInclude Include="Source\Object\USceneComponent.h" />
     <ClInclude Include="Source\Object\PrimitiveComponent\UPrimitiveComponent.h" />
     <ClInclude Include="Source\Object\World\World.h" />

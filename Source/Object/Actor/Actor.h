@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "Core/EngineTypes.h"
-#include "Object/UObject.h"
+#include "Core/UObject/Object.h"
 #include "Object/ActorComponent/ActorComponent.h"
 #include "Core/Math/Transform.h"
 #include "Core/Container/Set.h"
