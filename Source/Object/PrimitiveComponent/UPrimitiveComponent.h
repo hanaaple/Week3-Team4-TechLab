@@ -143,3 +143,18 @@ public:
 		return EPrimitiveType::EPT_Cone;
 	}
 };
+
+class UQuadComp : public UPrimitiveComponent
+{
+	using Super = UPrimitiveComponent;
+public:
+	UQuadComp()
+	{
+		bCanBeRendered = true;
+	}
+	virtual ~UQuadComp() = default;
+	EPrimitiveType GetType() override
+	{
+		return EPrimitiveType::EPT_Cube;
+	}
+};

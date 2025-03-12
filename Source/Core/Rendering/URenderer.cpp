@@ -207,7 +207,7 @@ void URenderer::RenderPrimitive(UPrimitiveComponent* PrimitiveComp)
 
 	BufferInfo Info = BufferCache->GetBufferInfo(PrimitiveComp->GetType());
 
-	if (Info.GetBuffer() == nullptr)
+	if (Info.GetVertexBuffer() == nullptr || Info.GetIndexBuffer() == nullptr)
 	{
 		return;
 	}
@@ -226,16 +226,18 @@ void URenderer::RenderPrimitive(UPrimitiveComponent* PrimitiveComp)
 
     UpdateConstant(UpdateInfo);
     
-    RenderPrimitiveInternal(Info.GetBuffer(), Info.GetSize());
+    RenderPrimitiveInternal(Info.GetVertexBuffer(), Info.GetIndexBuffer(), Info.GetIndexSize());
 
 }
 
-void URenderer::RenderPrimitiveInternal(ID3D11Buffer* pBuffer, UINT numVertices) const
+void URenderer::RenderPrimitiveInternal(ID3D11Buffer* vertexBuffer, ID3D11Buffer* indexBuffer, UINT numIndices) const
 {
     UINT Offset = 0;
-    DeviceContext->IASetVertexBuffers(0, 1, &pBuffer, &Stride, &Offset);
+    DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &Stride, &Offset);
+    DeviceContext->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+    DeviceContext->IASetPrimitiveTopology(CurrentTopology);
 
-    DeviceContext->Draw(numVertices, 0);
+    DeviceContext->DrawIndexed(numIndices, 0, 0);
 }
 
 ID3D11Buffer* URenderer::CreateVertexBuffer(const FVertexSimple* Vertices, UINT ByteWidth) const
@@ -255,6 +257,25 @@ ID3D11Buffer* URenderer::CreateVertexBuffer(const FVertexSimple* Vertices, UINT 
         return nullptr;
     }
     return VertexBuffer;
+}
+
+ID3D11Buffer* URenderer::CreateIndexBuffer(const uint32* Indices, UINT ByteWidth) const
+{
+    D3D11_BUFFER_DESC IndexBufferDesc = {};
+    IndexBufferDesc.ByteWidth = ByteWidth;
+    IndexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+    IndexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+
+    D3D11_SUBRESOURCE_DATA IndexBufferSRD = {};
+    IndexBufferSRD.pSysMem = Indices;
+
+    ID3D11Buffer* IndexBuffer;
+    const HRESULT Result = Device->CreateBuffer(&IndexBufferDesc, &IndexBufferSRD, &IndexBuffer);
+    if (FAILED(Result))
+    {
+        return nullptr;
+    }
+    return IndexBuffer;
 }
 
 void URenderer::ReleaseVertexBuffer(ID3D11Buffer* pBuffer) const
