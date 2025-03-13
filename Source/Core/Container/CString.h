@@ -2,7 +2,6 @@
 #include <cstring>
 #include <cwchar>
 #include <cctype>
-#include <type_traits>
 
 
 template <typename T>
@@ -71,6 +70,24 @@ public:
             ++p;
         }
         return str;
+    }
+
+	static CharType* Strlwr(CharType* str)
+    {
+	    CharType* p = str;
+    	while (*p)
+    	{
+			if constexpr (std::is_same_v<CharType, char>)
+			{
+				*p = std::tolower(static_cast<unsigned char>(*p));
+			}
+			else if constexpr (std::is_same_v<CharType, wchar_t>)
+			{
+				*p = towlower(static_cast<wchar_t>(*p));
+			}
+			++p;
+		}
+    	return str;
     }
 
     static int Strcmp(const CharType* str1, const CharType* str2)
