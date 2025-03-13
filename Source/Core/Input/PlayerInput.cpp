@@ -180,25 +180,33 @@ void APlayerInput::Update(HWND hWnd, uint32 windowWidth, uint32 windowHeight)
 			}
 		}
 
-		for (int i = 0; i < static_cast<uint32>(EMouseButton::End); i++)
+		for (auto& [button, callbacks] : MouseDownCallbacks)
 		{
-			if (GetMouseDown(static_cast<EMouseButton>(i)))
+			if (GetMouseDown(button))
 			{
-				for (auto& callback : MouseDownCallbacks)
+				for (auto& callback : callbacks)
 				{
 					callback(MouseNDCPos);
 				}
 			}
-			if (GetMousePressed(static_cast<EMouseButton>(i)))
+		}
+
+		for (auto& [button, callbacks] : MousePressCallbacks)
+		{
+			if (GetMousePressed(button))
 			{
-				for (auto& callback : MousePressCallbacks)
+				for (auto& callback : callbacks)
 				{
-					callback(MouseNDCPos);
+					callback(GetMouseDeltaPos());
 				}
 			}
-			if (GetMouseUp(static_cast<EMouseButton>(i)))
+		}
+
+		for (auto& [button, callbacks] : MouseUpCallbacks)
+		{
+			if (GetMouseUp(button))
 			{
-				for (auto& callback : MouseUpCallbacks)
+				for (auto& callback : callbacks)
 				{
 					callback(MouseNDCPos);
 				}
@@ -267,59 +275,68 @@ void APlayerInput::RegisterKeyUpCallback(EKeyCode KeyCode, std::function<void()>
 	KeyUpCallbacks[KeyCode].Add(wrapper);
 }
 
-void APlayerInput::RegisterMouseDownCallback(EMouseButton Button, std::function<void(FVector)> Callback, uint32 uuid)
+void APlayerInput::RegisterMouseDownCallback(EMouseButton Button, std::function<void(const FVector&)> Callback, uint32 uuid)
 {
 	if (Button < EMouseButton::Left || EMouseButton::End < Button)
 	{
 		return;
 	}
 
-	for (auto& callback : MouseDownCallbacks)
+	if (MouseDownCallbacks.Contains(Button))
 	{
-		if (callback.GetID() == uuid)
+		for (auto& callback : MouseDownCallbacks[Button])
 		{
-			return;
+			if (callback.GetID() == uuid)
+			{
+				return;
+			}
 		}
 	}
 
 	MouseCallbackWrapper wrapper(Callback, uuid);
-	MouseDownCallbacks.Add(wrapper);
+	MousePressCallbacks[Button].Add(wrapper);
 }
 
-void APlayerInput::RegisterMousePressCallback(EMouseButton Button, std::function<void(FVector)> Callback, uint32 uuid)
+void APlayerInput::RegisterMousePressCallback(EMouseButton Button, std::function<void(const FVector&)> Callback, uint32 uuid)
 {
 	if (Button < EMouseButton::Left || EMouseButton::End < Button)
 	{
 		return;
 	}
 
-	for (auto& callback : MousePressCallbacks)
+	if (MousePressCallbacks.Contains(Button))
 	{
-		if (callback.GetID() == uuid)
+		for (auto& callback : MousePressCallbacks[Button])
 		{
-			return;
+			if (callback.GetID() == uuid)
+			{
+				return;
+			}
 		}
 	}
 
 	MouseCallbackWrapper wrapper(Callback, uuid);
-	MousePressCallbacks.Add(wrapper);
+	MousePressCallbacks[Button].Add(wrapper);
 }
 
-void APlayerInput::RegisterMouseUpCallback(EMouseButton Button, std::function<void(FVector)> Callback, uint32 uuid)
+void APlayerInput::RegisterMouseUpCallback(EMouseButton Button, std::function<void(const FVector&)> Callback, uint32 uuid)
 {
     if (Button < EMouseButton::Left ||  EMouseButton::End < Button)
     {
         return;
     }
 
-	for (auto& callback : MouseUpCallbacks)
+	if (MouseUpCallbacks.Contains(Button))
 	{
-		if (callback.GetID() == uuid)
+		for (auto& callback : MouseUpCallbacks[Button])
 		{
-			return;
+			if (callback.GetID() == uuid)
+			{
+				return;
+			}
 		}
 	}
 
 	MouseCallbackWrapper wrapper(Callback, uuid);
-    MouseUpCallbacks.Add(wrapper);
+	MousePressCallbacks[Button].Add(wrapper);
 }

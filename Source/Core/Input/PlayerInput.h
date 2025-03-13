@@ -155,13 +155,13 @@ private:
 class MouseCallbackWrapper
 {
 public:
-	MouseCallbackWrapper(std::function<void(FVector)> Callback, uint32 uuid) : Callback(Callback), ID(uuid) {}
+	MouseCallbackWrapper(std::function<void(const FVector&)> Callback, uint32 uuid) : Callback(Callback), ID(uuid) {}
 
-	void operator()(FVector MousePos) { Callback(MousePos); }
+	void operator()(const FVector& MousePos) { Callback(MousePos); }
 
 	uint32 GetID() const { return ID; }
 private:
-	std::function<void(FVector)> Callback;
+	std::function<void(const FVector&)> Callback;
 	uint32 ID;
 };
 
@@ -198,23 +198,8 @@ public:
 
 	void MouseUp(EMouseButton button);
 
-	/// <summary>
-	/// 마우스 버튼을 눌리고 있는 로 전환합니다.
-	/// 
-	inline bool GetMousePressed(EMouseButton button) const { return MouseState[static_cast<uint8>(button)] == EKeyState::Pressed; }
-
-	/// <summary>
-	/// 마우스 버튼을 눌림 상태로 전환합니다.
-	/// </summary>
-	/// <param name="button"></param>
-	/// <returns></returns>
 	inline bool GetMouseDown(EMouseButton button) const { return MouseState[static_cast<uint8>(button)] == EKeyState::Down; }
-
-	/// <summary>
-	/// 마우스 버튼을 눌리지 않은 상태로 전환합니다.
-	/// </summary>
-	/// <param name="button"></param>
-	/// <returns></returns>
+	inline bool GetMousePressed(EMouseButton button) const { return MouseState[static_cast<uint8>(button)] == EKeyState::Pressed; }
 	inline bool GetMouseUp(EMouseButton button) const { return MouseState[static_cast<uint8>(button)] == EKeyState::UP; }
 
 	void Update(HWND hWnd, uint32 windowWidht, uint32 Height);
@@ -229,9 +214,9 @@ public:
 	void RegisterKeyPressCallback(EKeyCode KeyCode, std::function<void()> Callback, uint32 uuid);
 	void RegisterKeyUpCallback(EKeyCode KeyCode, std::function<void()> Callback, uint32 uuid);
 
-	void RegisterMouseDownCallback(EMouseButton Button, std::function<void(FVector)> Callback, uint32 uuid);
-	void RegisterMousePressCallback(EMouseButton Button, std::function<void(FVector)> Callback, uint32 uuid);
-	void RegisterMouseUpCallback(EMouseButton Button, std::function<void(FVector)> Callback, uint32 uuid);
+	void RegisterMouseDownCallback(EMouseButton Button, std::function<void(const FVector&)> Callback, uint32 uuid);
+	void RegisterMousePressCallback(EMouseButton Button, std::function<void(const FVector&)> Callback, uint32 uuid);
+	void RegisterMouseUpCallback(EMouseButton Button, std::function<void(const FVector&)> Callback, uint32 uuid);
 
 private:
 	void ClearKeys();
@@ -249,9 +234,9 @@ private:
 	TMap<EKeyCode, TArray<KeyCallbackWrapper>> KeyUpCallbacks;
 
 	// 마우스 이벤트에 대한 콜백들을 저장 (button 0: 좌클릭, 1: 우클릭)
-	TArray<MouseCallbackWrapper> MouseDownCallbacks;
-	TArray<MouseCallbackWrapper> MousePressCallbacks;
-	TArray<MouseCallbackWrapper> MouseUpCallbacks;
+	TMap<EMouseButton, TArray<MouseCallbackWrapper>> MouseDownCallbacks;
+	TMap<EMouseButton, TArray<MouseCallbackWrapper>> MousePressCallbacks;
+	TMap<EMouseButton, TArray<MouseCallbackWrapper>> MouseUpCallbacks;
 
 	EKeyState KeyState[256];
 	EKeyState MouseState[static_cast<uint8>(EMouseButton::End)]; //0이 좌클릭 1이 우클릭

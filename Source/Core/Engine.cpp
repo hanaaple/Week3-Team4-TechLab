@@ -50,7 +50,7 @@ LRESULT UEngine::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_CAPTURECHANGED://현재 마우스 입력을 독점(capture)하고 있던 창이 마우스 캡처를 잃었을 때
 		break;
     case WM_RBUTTONDOWN:
-        APlayerInput::Get().MouseUp(EMouseButton::Right);
+        APlayerInput::Get().MouseDown(EMouseButton::Right);
         break;
     case WM_RBUTTONUP:
         APlayerInput::Get().MouseUp(EMouseButton::Right);
