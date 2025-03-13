@@ -1,8 +1,9 @@
-﻿#pragma comment(lib, "user32")
+#pragma comment(lib, "user32")
 #pragma comment(lib, "d3d11")
 #pragma comment(lib, "d3dcompiler")
 
 #include "Core/Engine.h"
+#include "Core/Config/ConfigManager.h"
 
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nShowCmd)
@@ -12,6 +13,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	UNREFERENCED_PARAMETER(lpCmdLine);
 	UNREFERENCED_PARAMETER(nShowCmd);
 
+	UConfigManager::Get().LoadConfig("editor.ini");
 
 	UEngine& Engine = UEngine::Get();
 	Engine.Initialize(hInstance, L"Jungle Engine", L"JungleWindow", 1280, 720);
@@ -19,6 +21,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	Engine.Run();
 
 	Engine.Shutdown();
+
+	UConfigManager::Get().SaveConfig("editor.ini");
 
     return 0;
 }

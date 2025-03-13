@@ -4,6 +4,7 @@
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
 #include "Core/Input/PlayerInput.h"
 #include "functional"
+#include "Core/Config/ConfigManager.h"
 
 ACamera::ACamera()
 {
@@ -14,6 +15,7 @@ ACamera::ACamera()
     FieldOfView = 45.f;
     ProjectionMode = ECameraProjectionMode::Perspective;
 	CameraSpeed = 1.0f;
+	float sensitivity = std::stof(UConfigManager::Get().GetValue("Camera", "Sensitivity"));
 
     RootComponent = AddComponent<USceneComponent>();
     
@@ -33,6 +35,8 @@ void ACamera::BeginPlay()
 	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::E, std::bind(&ACamera::MoveDown, this), GetUUID());
 
 	///APlayerInput::Get().RegisterMousePressCallback(EKeyCode::RButton, std::bind(&ACamera::Rotate, this, std::placeholders::_1), GetUUID());
+
+	UConfigManager::Get().SetValue("Camera", "Sensitivity", std::to_string(20));
 }
 
 void ACamera::SetFieldOfVew(float Fov)
