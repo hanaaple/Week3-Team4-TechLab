@@ -11,10 +11,10 @@ ACamera::ACamera()
     bIsGizmo = true;
     
     Near = 0.1f;
-    Far = 100.f;
+    Far = 1000.f;
     FieldOfView = 45.f;
     ProjectionMode = ECameraProjectionMode::Perspective;
-	CameraSpeed = 1.0f;
+	CameraSpeed = 20.0f;
 	float sensitivity = std::stof(UConfigManager::Get().GetValue("Camera", "Sensitivity"));
 
     RootComponent = AddComponent<USceneComponent>();
