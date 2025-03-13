@@ -80,7 +80,6 @@ void APlayerInput::CreateKeys()
 		key.bPressed = false;
 		key.KeyState = EKeyState::None;
 		key.KeyCode = keyCode;
-		key.VK_KeyCode = vk;
 
 		Keys.Add(key);
 	}
