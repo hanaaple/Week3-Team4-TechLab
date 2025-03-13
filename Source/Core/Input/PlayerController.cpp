@@ -14,7 +14,7 @@ void APlayerController::HandleCameraMovement(float DeltaTime) {
 
     FVector NewVelocity(0, 0, 0);
 
-    if (APlayerInput::Get().GetMousePressed(EMouseButton::Right) == false)
+    if (APlayerInput::Get().GetKeyPress(EKeyCode::RButton) == false)
     {
        // Camera->SetVelocity(NewVelocity);
 		return;
@@ -31,8 +31,8 @@ void APlayerController::HandleCameraMovement(float DeltaTime) {
     FTransform CameraTransform = Camera->GetActorTransform();
 
     FVector TargetRotation = CameraTransform.GetRotation().GetEuler();
-    TargetRotation.Y += Camera->CameraSpeed * DeltaPos.Y * DeltaTime;
-    TargetRotation.Z += Camera->CameraSpeed * DeltaPos.X * DeltaTime;
+    TargetRotation.Y += Camera->CameraSpeed * DeltaPos.Y;
+    TargetRotation.Z += Camera->CameraSpeed * DeltaPos.X;
     
     TargetRotation.Y = FMath::Clamp(TargetRotation.Y, -Camera->MaxYDegree, Camera->MaxYDegree);
     CameraTransform.SetRotation(TargetRotation);
@@ -52,30 +52,30 @@ void APlayerController::HandleCameraMovement(float DeltaTime) {
     
     float CamSpeed = Camera->CameraSpeed;
 
-    if (APlayerInput::Get().GetKeyPressed(EKeyCode::A)) {
+    /*if (APlayerInput::Get().GetKeyPress(EKeyCode::A)) {
         NewVelocity -= Camera->GetRight();
     }
-    if (APlayerInput::Get().GetKeyPressed(EKeyCode::D)) {
+    if (APlayerInput::Get().GetKeyPress(EKeyCode::D)) {
         NewVelocity += Camera->GetRight();
     }
-    if (APlayerInput::Get().GetKeyPressed(EKeyCode::W)) {
+    if (APlayerInput::Get().GetKeyPress(EKeyCode::W)) {
         NewVelocity += Camera->GetForward();
     }
-    if (APlayerInput::Get().GetKeyPressed(EKeyCode::S)) {
+    if (APlayerInput::Get().GetKeyPress(EKeyCode::S)) {
         NewVelocity -= Camera->GetForward();
     }
-    if (APlayerInput::Get().GetKeyPressed(EKeyCode::Q))
+    if (APlayerInput::Get().GetKeyPress(EKeyCode::Q))
     {
         NewVelocity -= {0.0f, 0.0f, 1.0f};
     }
-    if (APlayerInput::Get().GetKeyPressed(EKeyCode::E))
+    if (APlayerInput::Get().GetKeyPress(EKeyCode::E))
     {
         NewVelocity += {0.0f, 0.0f, 1.0f};
     }
     if (NewVelocity.Length() > 0.001f)
     {
         NewVelocity = NewVelocity.GetSafeNormal();
-    }
+    }*/
 
     //회전이랑 마우스클릭 구현 카메라로 해야할듯?
     CameraTransform.Translate(NewVelocity * DeltaTime * CamSpeed);
@@ -85,7 +85,7 @@ void APlayerController::HandleCameraMovement(float DeltaTime) {
 
 void APlayerController::HandleGizmoMovement(float DeltaTime)
 {
-    if (APlayerInput::Get().GetMousePressed(EMouseButton::Left) == false)
+    if (APlayerInput::Get().GetKeyDown(EKeyCode::LButton) == false)
     {
         return;
     }

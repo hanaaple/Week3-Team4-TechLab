@@ -78,7 +78,7 @@ void UWorld::Render()
 	Renderer->UpdateViewMatrix(cam->GetActorTransform());
 	Renderer->UpdateProjectionMatrix(cam);
 	
-	if (APlayerInput::Get().GetMouseDown(EMouseButton::Left))
+	if (APlayerInput::Get().GetKeyDown(EKeyCode::LButton))
 	{
 		RenderPickingTexture(*Renderer);
 	}

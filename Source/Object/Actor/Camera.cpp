@@ -4,16 +4,18 @@
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
 #include "Core/Input/PlayerInput.h"
 #include "functional"
+#include "Core/Config/ConfigManager.h"
 
 ACamera::ACamera()
 {
     bIsGizmo = true;
     
     Near = 0.1f;
-    Far = 100.f;
+    Far = 1000.f;
     FieldOfView = 45.f;
     ProjectionMode = ECameraProjectionMode::Perspective;
-	CameraSpeed = 1.0f;
+	CameraSpeed = 20.0f;
+	float sensitivity = std::stof(UConfigManager::Get().GetValue("Camera", "Sensitivity"));
 
     RootComponent = AddComponent<USceneComponent>();
     
@@ -32,7 +34,9 @@ void ACamera::BeginPlay()
 	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::Q, std::bind(&ACamera::MoveUp, this), GetUUID());
 	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::E, std::bind(&ACamera::MoveDown, this), GetUUID());
 
-	APlayerInput::Get().RegisterMouseDownCallback(EMouseButton::Right, std::bind(&ACamera::Rotate, this, std::placeholders::_1), GetUUID());
+	///APlayerInput::Get().RegisterMousePressCallback(EKeyCode::RButton, std::bind(&ACamera::Rotate, this, std::placeholders::_1), GetUUID());
+
+	UConfigManager::Get().SetValue("Camera", "Sensitivity", std::to_string(20));
 }
 
 void ACamera::SetFieldOfVew(float Fov)
@@ -110,7 +114,12 @@ void ACamera::MoveDown()
 void ACamera::Rotate(const FVector& mouseDelta)
 {
 	FTransform tr = GetActorTransform();
-	//tr.Rotate(FVector(-mouseDelta.Y * 5.f, 0, mouseDelta.X * 5.f));
+	FVector TargetRotation = tr.GetRotation().GetEuler();
+	TargetRotation.Y += CameraSpeed * mouseDelta.Y;
+	TargetRotation.Z += CameraSpeed * mouseDelta.X;
+	TargetRotation.Y = FMath::Clamp(TargetRotation.Y, -MaxYDegree, MaxYDegree);
+	tr.SetRotation(TargetRotation);
+	tr.Rotate(FVector(-mouseDelta.X, - mouseDelta.Y, 0));
 
 	SetActorTransform(tr);
 }

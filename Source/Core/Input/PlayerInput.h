@@ -6,15 +6,21 @@
 #include "Core/Container/Map.h"
 #include "Core/Container/Array.h"
 #include <functional>
-#include <atomic>
+
 
 /**
  * 윈도우 키 코드 열거형
  * @note https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
  */
-enum class EKeyCode : uint8_t
+enum class EKeyCode : uint8
 {
-    Backspace = 0x08,
+	// 마우스 버튼
+	LButton = 0x01,
+	RButton = 0x02,
+	MButton = 0x04,
+
+	// 키보드 키
+	Backspace = 0x08,
     Tab = 0x09,
     Enter = 0x0D,
     Shift = 0x10,
@@ -116,25 +122,23 @@ enum class EKeyCode : uint8_t
     NumLock = 0x90,
     ScrollLock = 0x91,
     LShift = 0xA0,
+	LeftShift = 0xA0,
     RShift = 0xA1,
+	RightShift = 0xA1,
     LControl = 0xA2,
+	LeftControl = 0xA2,
     RControl = 0xA3,
+	RightControl = 0xA3,
     LAlt = 0xA4,
+	LeftAlt = 0xA4,
     RAlt = 0xA5,
-};
-
-enum class EMouseButton : uint8
-{
-	Left = 0,
-	Right = 1,
-	Middle = 2,
-	End = 3,
+	RightAlt = 0xA5,
 };
 
 enum class EKeyState : uint8
 {
 	Down,
-	Pressed,
+	Press,
 	UP,
 	None,
 };
@@ -168,44 +172,22 @@ private:
 class APlayerInput : public TSingleton<APlayerInput>
 {
 public:
+	struct Key
+	{
+		EKeyCode KeyCode;
+		EKeyState KeyState;
+		bool bPressed;
+	};
     APlayerInput();
 
-    /**
-     * 키를 눌림 상태로 전환합니다. 
-     */
-    void KeyDown(EKeyCode key);
+	inline bool GetKeyDown(EKeyCode key) const { return Keys[static_cast<uint8>(key)].KeyState == EKeyState::Down; }
 
-    /// <summary>
-	/// 키를 눌리고 있는 상태로 전환합니다.
-    /// </summary>
-    /// <param name="key"></param>
-    void KeyPress(EKeyCode key);
+	inline bool GetKeyPress(EKeyCode key) const { return Keys[static_cast<uint8>(key)].KeyState == EKeyState::Press; }
 
-    /**
-     * 키를 눌리지 않은 상태로 전환합니다.
-     */
-    void KeyUp(EKeyCode key);
-
-	inline bool GetKeyDown(EKeyCode key) const { return KeyState[static_cast<uint8>(key)] == EKeyState::Down; }
-
-	inline bool GetKeyPressed(EKeyCode key) const { return KeyState[static_cast<uint8>(key)] == EKeyState::Pressed; }
-
-	inline bool GetKeyUp(EKeyCode key) const { return KeyState[static_cast<uint8>(key)] == EKeyState::UP; }
-
-	void MouseDown(EMouseButton button);
-
-	void MosuePress(EMouseButton button);
-
-	void MouseUp(EMouseButton button);
-
-	inline bool GetMouseDown(EMouseButton button) const { return MouseState[static_cast<uint8>(button)] == EKeyState::Down; }
-	inline bool GetMousePressed(EMouseButton button) const { return MouseState[static_cast<uint8>(button)] == EKeyState::Pressed; }
-	inline bool GetMouseUp(EMouseButton button) const { return MouseState[static_cast<uint8>(button)] == EKeyState::UP; }
+	inline bool GetKeyUp(EKeyCode key) const { return Keys[static_cast<uint8>(key)].KeyState == EKeyState::UP; }
 
 	void Update(HWND hWnd, uint32 windowWidht, uint32 Height);
     
-	TArray<EKeyCode> GetPressedKeys();
-
     FVector GetMousePos() { return MousePos;}
     FVector GetMouseNDCPos() { return MouseNDCPos;}
 	FVector GetMouseDeltaPos() { return MouseNDCPos - MousePreNDCPos; }
@@ -214,14 +196,19 @@ public:
 	void RegisterKeyPressCallback(EKeyCode KeyCode, std::function<void()> Callback, uint32 uuid);
 	void RegisterKeyUpCallback(EKeyCode KeyCode, std::function<void()> Callback, uint32 uuid);
 
-	void RegisterMouseDownCallback(EMouseButton Button, std::function<void(const FVector&)> Callback, uint32 uuid);
-	void RegisterMousePressCallback(EMouseButton Button, std::function<void(const FVector&)> Callback, uint32 uuid);
-	void RegisterMouseUpCallback(EMouseButton Button, std::function<void(const FVector&)> Callback, uint32 uuid);
+	void RegisterMouseDownCallback(EKeyCode Button, std::function<void(const FVector&)> Callback, uint32 uuid);
+	void RegisterMousePressCallback(EKeyCode Button, std::function<void(const FVector&)> Callback, uint32 uuid);
+	void RegisterMouseUpCallback(EKeyCode Button, std::function<void(const FVector&)> Callback, uint32 uuid);
 
 private:
+	void CreateKeys();
 	void ClearKeys();
 
-	void UpdateKeyState();
+	bool IsKeyDown(EKeyCode code);
+
+	void UpdateKey(Key& key);
+	void UpdateKeyDown(Key& key);
+	void UpdateKeyUp(Key& key);
 
 	void SetMousePos(HWND hWnd, uint32 screenWeight, uint32 screenHeight);
 
@@ -234,17 +221,13 @@ private:
 	TMap<EKeyCode, TArray<KeyCallbackWrapper>> KeyUpCallbacks;
 
 	// 마우스 이벤트에 대한 콜백들을 저장 (button 0: 좌클릭, 1: 우클릭)
-	TMap<EMouseButton, TArray<MouseCallbackWrapper>> MouseDownCallbacks;
-	TMap<EMouseButton, TArray<MouseCallbackWrapper>> MousePressCallbacks;
-	TMap<EMouseButton, TArray<MouseCallbackWrapper>> MouseUpCallbacks;
+	TMap<EKeyCode, TArray<MouseCallbackWrapper>> MouseDownCallbacks;
+	TMap<EKeyCode, TArray<MouseCallbackWrapper>> MousePressCallbacks;
+	TMap<EKeyCode, TArray<MouseCallbackWrapper>> MouseUpCallbacks;
 
-	EKeyState KeyState[256];
-	EKeyState MouseState[static_cast<uint8>(EMouseButton::End)]; //0이 좌클릭 1이 우클릭
+	TArray<Key> Keys;
 
     bool bIsBlockInput = false;
-
-    FVector MouseKeyDownPos[static_cast<uint8>(EMouseButton::End)];
-    FVector MouseKeyDownNDCPos[static_cast<uint8>(EMouseButton::End)];
 
     FVector MousePreNDCPos;
     FVector MousePos;

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -177,6 +177,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Core\Config\ConfigManager.cpp" />
+    <ClCompile Include="Source\Object\Assets\AssetManager.cpp" />
+    <ClCompile Include="Source\Object\Assets\SceneAsset.cpp" />
+    <ClCompile Include="Source\Object\Assets\Asset.cpp" />
     <ClCompile Include="Source\Core\Math\Plane.cpp" />
     <ClCompile Include="Source\Core\UObject\NameTypes.cpp" />
     <ClCompile Include="Source\Core\UObject\Object.cpp" />
@@ -266,6 +270,10 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Core\Config\ConfigManager.h" />
+    <ClInclude Include="Source\Object\Assets\AssetManager.h" />
+    <ClInclude Include="Source\Object\Assets\SceneAsset.h" />
+    <ClInclude Include="Source\Object\Assets\Asset.h" />
     <ClInclude Include="Source\Core\UObject\NameTypes.h" />
     <ClInclude Include="Source\Core\UObject\Object.h" />
     <ClInclude Include="Source\Object\Actor\Camera.h" />
