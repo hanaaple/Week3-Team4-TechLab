@@ -183,11 +183,19 @@
     <ClCompile Include="Source\Primitive\UGeometryGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Object\Actor\Quad.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UFontAtlas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\ShaderW0.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\FontVertexShader.hlsl" />
+    <FxCompile Include="Shaders\FontPixelShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ThirdParty\ImGui\imstb_truetype.h">
@@ -346,11 +354,22 @@
     <ClInclude Include="Source\Primitive\UGeometryGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Object\Actor\Quad.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UFontAtlas.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
     <None Include=".editorconfig" />
     <None Include="imgui.ini" />
     <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="font_atlas.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
