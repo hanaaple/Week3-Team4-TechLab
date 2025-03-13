@@ -1,11 +1,19 @@
-﻿#pragma once
+#pragma once
 #include "Core/HAL/PlatformType.h"
 #include "Core/Container/Array.h"
+#include "Core/Math/Vector.h"
 
 struct FVertexSimple
 {
     float X, Y, Z;    // Position
     float R, G, B, A; // Color
+};
+
+struct FLineVertexSimple {
+	FVector position;
+	FVector4 color;
+
+	FLineVertexSimple(const FVector& pos, const FVector4& col) : position(pos), color(col) {}
 };
 
 struct FGeometryData

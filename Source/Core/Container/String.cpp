@@ -1,4 +1,5 @@
 ﻿#include "String.h"
+#include <algorithm>
 #include <cctype>
 
 #include "Core/Math/MathUtility.h"
@@ -51,11 +52,15 @@ bool FString::Equals(const FString& Other, ESearchCase::Type SearchCase) const
     {
         if (SearchCase == ESearchCase::CaseSensitive)
         {
-            return TCString<TCHAR>::Strcmp(**this, *Other) == 0; 
+        	return std::strcmp(**this, *Other) == 0;
         }
         else
         {
-            return TCString<TCHAR>::Stricmp(**this, *Other) == 0;
+        	return std::ranges::equal(
+		        PrivateString, Other.PrivateString, [](char a, char b)
+	        {
+		        return std::tolower(a) == std::tolower(b);
+	        });
         }
     }
 

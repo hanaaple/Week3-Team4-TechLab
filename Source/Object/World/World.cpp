@@ -13,6 +13,7 @@
 #include "Object/Actor/Sphere.h"
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
 #include "Static/FEditorManager.h"
+#include "Static/FLineBatchManager.h"
 
 
 void UWorld::BeginPlay()
@@ -64,6 +65,10 @@ void UWorld::Render()
 {
 	URenderer* Renderer = UEngine::Get().GetRenderer();
 
+	//라인 렌더링 임시
+
+
+
 	if (Renderer == nullptr)
 	{
 		return;
@@ -80,7 +85,8 @@ void UWorld::Render()
 	
 	RenderMainTexture(*Renderer);
 
-	
+
+	FLineBatchManager::Get().Render();
 	// DisplayPickingTexture(*Renderer);
 
 }

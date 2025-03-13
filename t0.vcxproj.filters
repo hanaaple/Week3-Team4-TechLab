@@ -186,7 +186,7 @@
     <ClCompile Include="Source\Object\Actor\Quad.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\UFontAtlas.cpp">
+    <ClCompile Include="Source\Static\FLineBatchManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -196,6 +196,8 @@
     </FxCompile>
     <FxCompile Include="Shaders\FontVertexShader.hlsl" />
     <FxCompile Include="Shaders\FontPixelShader.hlsl" />
+    <FxCompile Include="Shaders\ShaderLine_PS.hlsl" />
+    <FxCompile Include="Shaders\ShaderLine_VS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ThirdParty\ImGui\imstb_truetype.h">
@@ -405,7 +407,7 @@
     <ClInclude Include="Source\Object\Actor\Quad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\UFontAtlas.h">
+    <ClInclude Include="Source\Static\FLineBatchManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

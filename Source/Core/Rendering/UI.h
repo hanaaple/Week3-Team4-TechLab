@@ -1,6 +1,5 @@
 ﻿#pragma once
-#define _TCHAR_DEFINED
-#include <Windows.h>
+#include "Core/HAL/PlatformType.h"
 #include "ImGui/imgui.h"
 
 

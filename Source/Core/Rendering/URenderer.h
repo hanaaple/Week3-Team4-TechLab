@@ -21,6 +21,9 @@ class ACamera;
 
 class URenderer
 {
+public:
+	friend class FLineBatchManager;
+	
 private:
     struct alignas(16) FConstants
     {
