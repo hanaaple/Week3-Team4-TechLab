@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Core/Engine.h"
 #include "Object/USceneComponent.h"
@@ -19,6 +19,12 @@ public:
 	void UpdateConstantPicking(const URenderer& Renderer, FVector4 UUIDColor) const;
 	void UpdateConstantDepth(const URenderer& Renderer, int Depth) const;
 	virtual void Render();
+	virtual void CalculateModelMatrix(FMatrix& OutMatrix);
+
+	//virtual void 
+	
+
+
 
 	virtual EPrimitiveType GetType() { return EPrimitiveType::EPT_None; }
 
@@ -47,6 +53,7 @@ public:
 	
 protected:
 	bool bCanBeRendered = false;
+	bool bIsBillboard = false;
 	bool bUseVertexColor = true;
 	bool bIsOrthoGraphic = false;
 	FVector4 CustomColor = FVector4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -58,6 +65,7 @@ class UCubeComp : public UPrimitiveComponent
 public:
 	UCubeComp()
 	{
+
 		bCanBeRendered = true;
 	}
 	virtual ~UCubeComp() = default;

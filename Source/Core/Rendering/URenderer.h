@@ -42,12 +42,12 @@ private:
 		int farPlane;
 	};
 	
-    struct ConstantUpdateInfo
-    {
-        const FTransform& Transform;
-		const FVector4& Color;
-        bool bUseVertexColor;
-    };
+  //  struct ConstantUpdateInfo
+  //  {
+  //      const FTransform& Transform;
+		//const FVector4& Color;
+  //      bool bUseVertexColor;
+  //  };
 
 public:
     /** Renderer를 초기화 합니다. */
@@ -73,7 +73,7 @@ public:
     /** 셰이더를 준비 합니다. */
     void PrepareShader() const;
 
-	void RenderPrimitive(class UPrimitiveComponent* PrimitiveComp);
+	void RenderPrimitive(class UPrimitiveComponent& PrimitiveComp , const class FMatrix& ModelMatrix);
 
     /**
      * Buffer에 있는 Vertex를 그립니다.
@@ -97,7 +97,7 @@ public:
     void ReleaseVertexBuffer(ID3D11Buffer* pBuffer) const;
 
     /** Constant Data를 업데이트 합니다. */
-    void UpdateConstant(const ConstantUpdateInfo& UpdateInfo) const;
+    void UpdateConstant(const FConstants& UpdateInfo) const;
 
     ID3D11Device* GetDevice() const;
     ID3D11DeviceContext* GetDeviceContext() const;

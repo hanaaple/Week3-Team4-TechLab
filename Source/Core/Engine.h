@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <memory>
 
@@ -69,6 +69,7 @@ public:
         requires std::derived_from<ObjectType, UObject>
     ObjectType* GetObjectByUUID(uint32 InUUID) const;
     UObject* GetObjectByUUID(uint32 InUUID) const;
+
 
 private:
     bool IsRunning = false;

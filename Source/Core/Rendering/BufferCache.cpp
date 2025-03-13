@@ -1,4 +1,4 @@
-﻿#include "BufferCache.h"
+#include "BufferCache.h"
 #include "Core/Engine.h"
 #include "Primitive/PrimitiveVertices.h"
 #include "Primitive/UGeometryGenerator.h"
@@ -16,16 +16,16 @@ void FBufferCache::Init()
 
 }
 
-BufferInfo FBufferCache::GetBufferInfo(EPrimitiveType Type)
+const BufferInfo FBufferCache::GetBufferInfo(EPrimitiveType Type)
 {
-	if (!Cache.contains(Type))
+	if (!Cache.Contains(Type))
 	{
 		//여기서 버텍스 버퍼 생성한다
 		auto bufferInfo = CreateBufferInfo(Type);
-		Cache.insert({ Type, bufferInfo });
+		Cache.Add( Type , bufferInfo);
 	}
 
-	return Cache[Type];
+	return *Cache.Find(Type);
 }
 
 BufferInfo FBufferCache::CreateBufferInfo(EPrimitiveType Type)
