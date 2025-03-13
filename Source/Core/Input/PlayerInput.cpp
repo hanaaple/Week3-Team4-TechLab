@@ -126,8 +126,9 @@ void APlayerInput::Update(HWND hWnd, uint32 windowWidth, uint32 windowHeight)
 	for (Key& key : Keys)
 	{
 		UpdateKey(key);
-		SetMousePos(hWnd, windowWidth, windowHeight);
-	}
+	}		
+	SetMousePos(hWnd, windowWidth, windowHeight);
+
 
 	for (auto& [key, callbacks] : KeyDownCallbacks)
 	{
@@ -175,7 +176,7 @@ void APlayerInput::Update(HWND hWnd, uint32 windowWidth, uint32 windowHeight)
 
 	for (auto& [button, callbacks] : MousePressCallbacks)
 	{
-		if (GetKeyUp(button))
+		if (GetKeyPress(button))
 		{
 			for (auto& callback : callbacks)
 			{
