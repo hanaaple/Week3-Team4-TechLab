@@ -19,7 +19,7 @@ public:
 	void UpdateConstantPicking(const URenderer& Renderer, FVector4 UUIDColor) const;
 	void UpdateConstantDepth(const URenderer& Renderer, int Depth) const;
 	virtual void Render();
-	virtual FMatrix CalculateModelMatrix();
+	virtual void CalculateModelMatrix(FMatrix& OutMatrix);
 
 	//virtual void 
 	
@@ -53,6 +53,7 @@ public:
 	
 protected:
 	bool bCanBeRendered = false;
+	bool bIsBillboard = false;
 	bool bUseVertexColor = true;
 	bool bIsOrthoGraphic = false;
 	FVector4 CustomColor = FVector4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -64,6 +65,7 @@ class UCubeComp : public UPrimitiveComponent
 public:
 	UCubeComp()
 	{
+
 		bCanBeRendered = true;
 	}
 	virtual ~UCubeComp() = default;

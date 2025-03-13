@@ -6,6 +6,8 @@ cbuffer constants : register(b0)
 	float4x4 MVP;
 	float4 CustomColor;
 	uint bUseVertexColor;
+	
+	
 };
 
 
