@@ -31,30 +31,9 @@ LRESULT UEngine::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     case WM_DESTROY:
         PostQuitMessage(0); // 프로그램 종료
         break;
-    case WM_KEYDOWN:
-        APlayerInput::Get().KeyDown(static_cast<EKeyCode>(wParam));
         break;
-    case WM_KEYUP:
-        APlayerInput::Get().KeyUp(static_cast<EKeyCode>(wParam));
-        break;
-    case WM_LBUTTONDOWN:
-		APlayerInput::Get().MouseDown(EMouseButton::Left);
-        break;
-    case WM_LBUTTONUP:
-		APlayerInput::Get().MouseUp(EMouseButton::Left);
-        break;
-	case WM_LBUTTONDBLCLK:// 왼쪽 마우스 버튼 더블 클릭시
-		break;
-	case WM_RBUTTONDBLCLK:// 오른쪽 마우스 버튼 더블 클리시
-		break;
 	case WM_CAPTURECHANGED://현재 마우스 입력을 독점(capture)하고 있던 창이 마우스 캡처를 잃었을 때
 		break;
-    case WM_RBUTTONDOWN:
-        APlayerInput::Get().MouseUp(EMouseButton::Right);
-        break;
-    case WM_RBUTTONUP:
-        APlayerInput::Get().MouseUp(EMouseButton::Right);
-        break;
     case WM_SIZE:
 		UEngine::Get().UpdateWindowSize(LOWORD(lParam), HIWORD(lParam));
 		break;

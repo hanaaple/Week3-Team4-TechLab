@@ -45,7 +45,7 @@ void APicker::LateTick(float DeltaTime)
 {
     AActor::LateTick(DeltaTime);
 
-    if(APlayerInput::Get().GetMouseDown(EMouseButton::Left))
+    if(APlayerInput::Get().GetKeyDown(EKeyCode::LButton))
     {
         POINT pt;
         GetCursorPos(&pt);
@@ -83,7 +83,7 @@ void APicker::LateTick(float DeltaTime)
         UE_LOG("Pick - UUID: %d", UUID);
     }
 
-    if (APlayerInput::Get().GetMousePressed(EMouseButton::Left))
+    if (APlayerInput::Get().GetKeyPress(EKeyCode::LButton))
     {
         POINT pt;
         GetCursorPos(&pt);

@@ -73,4 +73,8 @@ public:
 	void MoveBackward();
 	void MoveLeft();
 	void MoveRight();
+	void MoveUp();
+	void MoveDown();
+
+	void Rotate(const FVector& mouseDelta);
 };
