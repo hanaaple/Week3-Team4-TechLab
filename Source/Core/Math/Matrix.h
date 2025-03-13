@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Vector.h"
 
 struct FVector4;
 struct FVector;
@@ -6,7 +7,19 @@ struct FQuat;
 
 struct alignas(16) FMatrix
 {
-	float M[4][4];
+	union {
+
+		float M[4][4];
+		//FVector4[4];
+
+		struct
+		{
+			FVector4 X;
+			FVector4 Y;
+			FVector4 Z;
+			FVector4 W;
+		};
+	};
 
 	FMatrix();
 	FMatrix(const FVector4& InX, const FVector4& InY, const FVector4& InZ, const FVector4& InW);

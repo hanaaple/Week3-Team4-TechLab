@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #define _TCHAR_DEFINED
 #include <d3d11.h>
@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include "Primitive/PrimitiveVertices.h"
 #include "Core/Container/Array.h"
+#include "Core/Container/Map.h"
 
 struct BufferInfo
 {
@@ -38,14 +39,14 @@ private:
 class FBufferCache
 {
 private:
-	std::unordered_map <EPrimitiveType, BufferInfo> Cache;
+	TMap<EPrimitiveType, BufferInfo> Cache;
 
 public:
 	FBufferCache();
 	~FBufferCache();
 
 	void Init();
-	BufferInfo GetBufferInfo(EPrimitiveType Type);
+	const BufferInfo GetBufferInfo(EPrimitiveType Type);
 
 public:
 	FGeometryData CreateArrowGeometry();

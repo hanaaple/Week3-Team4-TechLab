@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Core/Engine.h"
 #include "Object/USceneComponent.h"
@@ -19,6 +19,12 @@ public:
 	void UpdateConstantPicking(const URenderer& Renderer, FVector4 UUIDColor) const;
 	void UpdateConstantDepth(const URenderer& Renderer, int Depth) const;
 	virtual void Render();
+	virtual FMatrix CalculateModelMatrix();
+
+	//virtual void 
+	
+
+
 
 	virtual EPrimitiveType GetType() { return EPrimitiveType::EPT_None; }
 
