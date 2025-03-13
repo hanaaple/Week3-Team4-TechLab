@@ -31,8 +31,8 @@ void APlayerController::HandleCameraMovement(float DeltaTime) {
     FTransform CameraTransform = Camera->GetActorTransform();
 
     FVector TargetRotation = CameraTransform.GetRotation().GetEuler();
-    TargetRotation.Y += Camera->CameraSpeed * DeltaPos.Y * DeltaTime;
-    TargetRotation.Z += Camera->CameraSpeed * DeltaPos.X * DeltaTime;
+    TargetRotation.Y += Camera->CameraSpeed * DeltaPos.Y * 10.F;
+    TargetRotation.Z += Camera->CameraSpeed * DeltaPos.X * 10.F;
     
     TargetRotation.Y = FMath::Clamp(TargetRotation.Y, -Camera->MaxYDegree, Camera->MaxYDegree);
     CameraTransform.SetRotation(TargetRotation);

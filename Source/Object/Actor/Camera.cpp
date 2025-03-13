@@ -32,7 +32,7 @@ void ACamera::BeginPlay()
 	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::Q, std::bind(&ACamera::MoveUp, this), GetUUID());
 	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::E, std::bind(&ACamera::MoveDown, this), GetUUID());
 
-	APlayerInput::Get().RegisterMouseDownCallback(EKeyCode::RButton, std::bind(&ACamera::Rotate, this, std::placeholders::_1), GetUUID());
+	///APlayerInput::Get().RegisterMousePressCallback(EKeyCode::RButton, std::bind(&ACamera::Rotate, this, std::placeholders::_1), GetUUID());
 }
 
 void ACamera::SetFieldOfVew(float Fov)
@@ -110,7 +110,12 @@ void ACamera::MoveDown()
 void ACamera::Rotate(const FVector& mouseDelta)
 {
 	FTransform tr = GetActorTransform();
-	tr.Rotate(FVector(-mouseDelta.Y * 5.f, 0, mouseDelta.X * 5.f));
+	FVector TargetRotation = tr.GetRotation().GetEuler();
+	TargetRotation.Y += CameraSpeed * mouseDelta.Y;
+	TargetRotation.Z += CameraSpeed * mouseDelta.X;
+	TargetRotation.Y = FMath::Clamp(TargetRotation.Y, -MaxYDegree, MaxYDegree);
+	tr.SetRotation(TargetRotation);
+	tr.Rotate(FVector(-mouseDelta.X, - mouseDelta.Y, 0));
 
 	SetActorTransform(tr);
 }
