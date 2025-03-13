@@ -1,4 +1,4 @@
-﻿#include "Engine.h"
+#include "Engine.h"
 
 #include <iostream>
 #include "Object/ObjectFactory.h"
@@ -33,25 +33,27 @@ LRESULT UEngine::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         break;
     case WM_KEYDOWN:
         APlayerInput::Get().KeyDown(static_cast<EKeyCode>(wParam));
-        if ((lParam>>30)%2 != 0)
-        {
-            APlayerInput::Get().KeyOnceUp(static_cast<EKeyCode>( wParam ));
-        }
         break;
     case WM_KEYUP:
-        APlayerInput::Get().KeyUp(static_cast<EKeyCode>( wParam ));
+        APlayerInput::Get().KeyUp(static_cast<EKeyCode>(wParam));
         break;
     case WM_LBUTTONDOWN:
-        APlayerInput::Get().HandleMouseInput(hWnd, lParam, true, false);
+		APlayerInput::Get().MouseDown(EMouseButton::Left);
         break;
     case WM_LBUTTONUP:
-        APlayerInput::Get().HandleMouseInput(hWnd, lParam, false, false);
+		APlayerInput::Get().MouseUp(EMouseButton::Left);
         break;
+	case WM_LBUTTONDBLCLK:// 왼쪽 마우스 버튼 더블 클릭시
+		break;
+	case WM_RBUTTONDBLCLK:// 오른쪽 마우스 버튼 더블 클리시
+		break;
+	case WM_CAPTURECHANGED://현재 마우스 입력을 독점(capture)하고 있던 창이 마우스 캡처를 잃었을 때
+		break;
     case WM_RBUTTONDOWN:
-        APlayerInput::Get().HandleMouseInput(hWnd, lParam, true, true);
+        APlayerInput::Get().MouseDown(EMouseButton::Right);
         break;
     case WM_RBUTTONUP:
-        APlayerInput::Get().HandleMouseInput(hWnd, lParam, false, true);
+        APlayerInput::Get().MouseUp(EMouseButton::Right);
         break;
     case WM_SIZE:
 		UEngine::Get().UpdateWindowSize(LOWORD(lParam), HIWORD(lParam));
@@ -112,9 +114,6 @@ void UEngine::Run()
 
         const float DeltaTime =
             static_cast<float>(StartTime.QuadPart - EndTime.QuadPart) / static_cast<float>(Frequency.QuadPart);
-
-        APlayerInput::Get().PreProcessInput();
-        
         // 메시지(이벤트) 처리
         MSG Msg;
         while (PeekMessage(&Msg, nullptr, 0, 0, PM_REMOVE))
@@ -132,6 +131,10 @@ void UEngine::Run()
             }
 
         }
+
+		APlayerInput::Get().Update(WindowHandle, ScreenWidth, ScreenHeight);
+		//APlayerController::Get().ProcessPlayerInput(DeltaTime);
+
 		// Renderer Update
         Renderer->Prepare();
         Renderer->PrepareShader();
@@ -144,11 +147,10 @@ void UEngine::Run()
 		    World->LateTick(DeltaTime);
 		}
 
-        //각 Actor에서 TickActor() -> PlayerTick() -> TickPlayerInput() 호출하는데 지금은 Message에서 처리하고 있다.
-        APlayerInput::Get().TickPlayerInput(); //잘못된 위치. 위에 달린 주석대로 처리해야 정상 플레이어 액터 내에서만 처리해야할것같다.
-        
+        //각 Actor에서 TickActor() -> PlayerTick() -> TickPlayerInput() 호출하는데 지금은 Message에서 처리하고 있다
+
         // TickPlayerInput
-        APlayerController::Get().ProcessPlayerInput(DeltaTime);
+
         
 		// ui Update
         ui.Update();
@@ -263,6 +265,11 @@ void UEngine::UpdateWindowSize(UINT InScreenWidth, UINT InScreenHeight)
 	if (ui.bIsInitialized)
 	{
 		ui.OnUpdateWindowSize(ScreenWidth, ScreenHeight);
+	}
+
+	if (Renderer)
+	{
+		Renderer->OnResizeComplete();
 	}
 }
 

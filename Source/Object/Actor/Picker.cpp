@@ -1,4 +1,4 @@
-﻿#include "Core/HAL/PlatformType.h"
+#include "Core/HAL/PlatformType.h"
 #include "Core/Rendering/URenderer.h"
 #include "Picker.h"
 
@@ -29,6 +29,13 @@ int APicker::DecodeUUID(FVector4 color)
     return (static_cast<unsigned int>(color.W)<<24) | (static_cast<unsigned int>(color.Z)<<16) | (static_cast<unsigned int>(color.Y)<<8) | (static_cast<unsigned int>(color.X));
 }
 
+void APicker::BeginPlay()
+{
+	Super::BeginPlay();
+
+	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::W, std::bind(&APicker::TestFunc, this), GetUUID());
+}
+
 void APicker::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
@@ -38,7 +45,7 @@ void APicker::LateTick(float DeltaTime)
 {
     AActor::LateTick(DeltaTime);
 
-    if(APlayerInput::Get().GetMouseDown(false))
+    if(APlayerInput::Get().GetMouseDown(EMouseButton::Left))
     {
         POINT pt;
         GetCursorPos(&pt);
@@ -76,7 +83,7 @@ void APicker::LateTick(float DeltaTime)
         UE_LOG("Pick - UUID: %d", UUID);
     }
 
-    if (APlayerInput::Get().IsPressedMouse(false))
+    if (APlayerInput::Get().GetMousePressed(EMouseButton::Left))
     {
         POINT pt;
         GetCursorPos(&pt);
@@ -119,4 +126,9 @@ void APicker::LateTick(float DeltaTime)
 const char* APicker::GetTypeName()
 {
     return "Picker";
+}
+
+void APicker::TestFunc()
+{
+	int a = 0;
 }

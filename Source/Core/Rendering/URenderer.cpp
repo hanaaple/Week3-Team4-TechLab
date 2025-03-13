@@ -1,4 +1,4 @@
-﻿#include "URenderer.h"
+#include "URenderer.h"
 #include <d3dcompiler.h>
 #include "Core/Rendering/BufferCache.h"
 #include "Core/Math/Transform.h"
@@ -740,6 +740,13 @@ void URenderer::UpdateProjectionMatrix(ACamera* Camera)
 
 void URenderer::OnUpdateWindowSize(int Width, int Height)
 {
+	// 프레임 버퍼를 해제
+	ReleaseFrameBuffer();
+	ReleasePickingFrameBuffer();
+
+	// 뎁스 스텐실 버퍼를 해제
+	ReleaseDepthStencilBuffer();
+
     if (SwapChain)
     {
         SwapChain->ResizeBuffers(0, Width, Height, DXGI_FORMAT_UNKNOWN, 0);
@@ -752,18 +759,17 @@ void URenderer::OnUpdateWindowSize(int Width, int Height)
             static_cast<float>(SwapChainDesc.BufferDesc.Width), static_cast<float>(SwapChainDesc.BufferDesc.Height),
             0.0f, 1.0f
         };
-
-        // 프레임 버퍼를 다시 생성
-        ReleaseFrameBuffer();
-        CreateFrameBuffer();
-
-        ReleasePickingFrameBuffer();
-		CreatePickingTexture(UEngine::Get().GetWindowHandle());
-
-        // 뎁스 스텐실 버퍼를 다시 생성
-        ReleaseDepthStencilBuffer();
-        CreateDepthStencilBuffer();
     }
+}
+
+void URenderer::OnResizeComplete()
+{
+	// 프페임 버퍼를 재생성
+	CreateFrameBuffer();
+	CreatePickingTexture(UEngine::Get().GetWindowHandle());
+
+	// 깊이 스텐실 버퍼를 재생성
+	CreateDepthStencilBuffer();
 }
 
 void URenderer::RenderPickingTexture()

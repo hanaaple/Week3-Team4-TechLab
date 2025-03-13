@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #define _TCHAR_DEFINED
 #include <d3d11.h>
@@ -109,6 +109,8 @@ public:
     void UpdateProjectionMatrix(ACamera* Camera);
 
 	void OnUpdateWindowSize(int Width, int Height);
+
+	void OnResizeComplete();
 
 protected:
     /** Direct3D Device 및 SwapChain을 생성합니다. */

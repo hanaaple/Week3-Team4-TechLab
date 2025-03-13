@@ -1,8 +1,12 @@
-﻿#pragma once
+#pragma once
 #include <vector>
 
 #include "Core/AbstractClass/Singleton.h"
 #include "Core/Math/Vector.h"
+#include "Core/Container/Map.h"
+#include "Core/Container/Array.h"
+#include <functional>
+#include <atomic>
 
 /**
  * 윈도우 키 코드 열거형
@@ -119,6 +123,48 @@ enum class EKeyCode : uint8_t
     RAlt = 0xA5,
 };
 
+enum class EMouseButton : uint8
+{
+	Left = 0,
+	Right = 1,
+	Middle = 2,
+	End = 3,
+};
+
+enum class EKeyState : uint8
+{
+	Down,
+	Pressed,
+	UP,
+	None,
+};
+
+class KeyCallbackWrapper
+{
+public:
+	KeyCallbackWrapper(std::function<void()> Callback, uint32 uuid) : Callback(Callback), ID(uuid) {}
+
+	void operator()() { Callback(); }
+
+	uint32 GetID() const { return ID; }
+private:
+	std::function<void()> Callback;
+	uint32 ID;
+};
+
+class MouseCallbackWrapper
+{
+public:
+	MouseCallbackWrapper(std::function<void(const FVector&)> Callback, uint32 uuid) : Callback(Callback), ID(uuid) {}
+
+	void operator()(const FVector& MousePos) { Callback(MousePos); }
+
+	uint32 GetID() const { return ID; }
+private:
+	std::function<void(const FVector&)> Callback;
+	uint32 ID;
+};
+
 class APlayerInput : public TSingleton<APlayerInput>
 {
 public:
@@ -128,64 +174,79 @@ public:
      * 키를 눌림 상태로 전환합니다. 
      */
     void KeyDown(EKeyCode key);
-    void KeyOnceUp(EKeyCode key);
+
+    /// <summary>
+	/// 키를 눌리고 있는 상태로 전환합니다.
+    /// </summary>
+    /// <param name="key"></param>
+    void KeyPress(EKeyCode key);
 
     /**
      * 키를 눌리지 않은 상태로 전환합니다.
      */
     void KeyUp(EKeyCode key);
 
-    void SetMousePos();
-    void ExpireOnce();
+	inline bool GetKeyDown(EKeyCode key) const { return KeyState[static_cast<uint8>(key)] == EKeyState::Down; }
+
+	inline bool GetKeyPressed(EKeyCode key) const { return KeyState[static_cast<uint8>(key)] == EKeyState::Pressed; }
+
+	inline bool GetKeyUp(EKeyCode key) const { return KeyState[static_cast<uint8>(key)] == EKeyState::UP; }
+
+	void MouseDown(EMouseButton button);
+
+	void MosuePress(EMouseButton button);
+
+	void MouseUp(EMouseButton button);
+
+	inline bool GetMouseDown(EMouseButton button) const { return MouseState[static_cast<uint8>(button)] == EKeyState::Down; }
+	inline bool GetMousePressed(EMouseButton button) const { return MouseState[static_cast<uint8>(button)] == EKeyState::Pressed; }
+	inline bool GetMouseUp(EMouseButton button) const { return MouseState[static_cast<uint8>(button)] == EKeyState::UP; }
+
+	void Update(HWND hWnd, uint32 windowWidht, uint32 Height);
     
-    void HandleMouseInput(HWND hWnd, LPARAM lParam, bool isDown, bool isRight);
-    
-    std::vector<EKeyCode> GetPressedKeys();
-
-    /**
-     * 키가 눌려있는지 확인합니다.
-     * @param key 감지 할 키
-     * @return key의 눌림 여부
-     */
-    [[nodiscard]] bool IsPressedKey(EKeyCode key) const;
-
-    void MouseKeyDown(FVector MouseDownPoint, FVector WindowSize, int isRight);
-
-    void MouseKeyUp(FVector MouseUpPoint, FVector WindowSize, int isRight);
-    void PreProcessInput();
-    void TickPlayerInput();
-
-    bool IsPressedMouse(bool isRight) { return mouse[isRight]; }
-
-    bool GetMouseDown(bool isRight) { return onceMouse[isRight]; }
-
-    [[nodiscard]] bool GetKeyDown(EKeyCode KeyCode) const { return _onceKeys[static_cast<uint32>(KeyCode)];}
-
-    FVector GetMouseDownPos(int isRight) { return MouseKeyDownPos[isRight]; }
-
-    FVector GetMouseDownNDCPos(int isRight) { return MouseKeyDownNDCPos[isRight]; }
+	TArray<EKeyCode> GetPressedKeys();
 
     FVector GetMousePos() { return MousePos;}
     FVector GetMouseNDCPos() { return MouseNDCPos;}
-    FVector GetMousePrePos() { return MousePrePos;}
-    
-    FVector CalNDCPos(FVector MousePos, FVector WindowSize);
+	FVector GetMouseDeltaPos() { return MouseNDCPos - MousePreNDCPos; }
 
-    void SetMousePrePos(FVector PMP) { MousePrePos = PMP;}
-    void SetMousePos(FVector MP){ SetMousePrePos(MousePos); MousePos = MP;}
-    void SetMouseNDCPos(FVector MNP) {MouseNDCPos = MNP;}
-    
+	void RegisterKeyDownCallback(EKeyCode KeyCode, std::function<void()> Callback, uint32 uuid);
+	void RegisterKeyPressCallback(EKeyCode KeyCode, std::function<void()> Callback, uint32 uuid);
+	void RegisterKeyUpCallback(EKeyCode KeyCode, std::function<void()> Callback, uint32 uuid);
+
+	void RegisterMouseDownCallback(EMouseButton Button, std::function<void(const FVector&)> Callback, uint32 uuid);
+	void RegisterMousePressCallback(EMouseButton Button, std::function<void(const FVector&)> Callback, uint32 uuid);
+	void RegisterMouseUpCallback(EMouseButton Button, std::function<void(const FVector&)> Callback, uint32 uuid);
+
 private:
-    // std::unordered_map<EKeyCode, std::unordered_set<void()>> InputHandlers; //인풋핸들러 각 오브젝트에서 키에 해당하는 함수를 할당한 다음 업데이트에서 눌린 키에 해당하는 함수 계속 돌려줘서 실행 
+	void ClearKeys();
 
-    bool mouse[2]; //0이 좌클릭 1이 우클릭
-    bool onceMouse[2];
-    bool _keys[256];
-    bool _onceKeys[256];
+	void UpdateKeyState();
+
+	void SetMousePos(HWND hWnd, uint32 screenWeight, uint32 screenHeight);
+
+	FVector CalNDCPos(FVector MousePos, FVector WindowSize);
+
+private:
+	// Key 이벤트에 대한 콜백들을 저장하는 맵 (각 키마다 여러 콜백을 가질 수 있음)
+	TMap<EKeyCode, TArray<KeyCallbackWrapper>> KeyDownCallbacks;
+	TMap<EKeyCode, TArray<KeyCallbackWrapper>> KeyPressCallbacks;
+	TMap<EKeyCode, TArray<KeyCallbackWrapper>> KeyUpCallbacks;
+
+	// 마우스 이벤트에 대한 콜백들을 저장 (button 0: 좌클릭, 1: 우클릭)
+	TMap<EMouseButton, TArray<MouseCallbackWrapper>> MouseDownCallbacks;
+	TMap<EMouseButton, TArray<MouseCallbackWrapper>> MousePressCallbacks;
+	TMap<EMouseButton, TArray<MouseCallbackWrapper>> MouseUpCallbacks;
+
+	EKeyState KeyState[256];
+	EKeyState MouseState[static_cast<uint8>(EMouseButton::End)]; //0이 좌클릭 1이 우클릭
+
     bool bIsBlockInput = false;
-    FVector MouseKeyDownPos[2];
-    FVector MouseKeyDownNDCPos[2];
-    FVector MousePrePos;
+
+    FVector MouseKeyDownPos[static_cast<uint8>(EMouseButton::End)];
+    FVector MouseKeyDownNDCPos[static_cast<uint8>(EMouseButton::End)];
+
+    FVector MousePreNDCPos;
     FVector MousePos;
     FVector MouseNDCPos;
 };

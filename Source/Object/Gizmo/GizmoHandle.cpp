@@ -1,4 +1,4 @@
-﻿#include "GizmoHandle.h"
+#include "GizmoHandle.h"
 
 #include "Object/Actor/Camera.h"
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
@@ -36,7 +36,19 @@ AGizmoHandle::AGizmoHandle()
 	UEngine::Get().GetWorld()->AddZIgnoreComponent(XArrow);
 	UEngine::Get().GetWorld()->AddZIgnoreComponent(YArrow);
 
-	SetActive(false);
+	SetActive(false);  
+}	
+
+void AGizmoHandle::BeginPlay()
+{
+	Super::BeginPlay();
+
+	//APlayerInput::Get().RegisterKeyDownCallback(EKeyCode::Space, [this]()
+	//	{
+	//		int type = static_cast<int>(GizmoType);
+	//		type = (type + 1) % static_cast<int>(EGizmoType::Max);
+	//		GizmoType = static_cast<EGizmoType>(type);
+	//	});
 }
 
 void AGizmoHandle::Tick(float DeltaTime)
@@ -103,14 +115,6 @@ void AGizmoHandle::Tick(float DeltaTime)
 			
 		}
 	}
-
-	if (APlayerInput::Get().GetKeyDown(EKeyCode::Space))
-	{
- 		int type = static_cast<int>(GizmoType);
-		type = (type + 1) % static_cast<int>(EGizmoType::Max);
-		GizmoType = static_cast<EGizmoType>(type);
-	}
-
 }
 
 void AGizmoHandle::SetScaleByDistance()
