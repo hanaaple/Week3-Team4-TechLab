@@ -4,12 +4,14 @@
 #include "ContainerAllocator.h"
 
 
-template <typename T, typename Allocator = FDefaultAllocator<T>>
+template <typename T, typename Hasher = std::hash<T>, typename Allocator = FDefaultAllocator<T>>
 class TSet
 {
 private:
-    using SetType = std::unordered_set<T, std::hash<T>, std::equal_to<T>, Allocator>;
+    using SetType = std::unordered_set<T, Hasher, std::equal_to<>, Allocator>;
     SetType PrivateSet;
+
+	friend struct FNamePool;
 
 public:
     using SizeType = typename Allocator::SizeType;
@@ -41,6 +43,9 @@ public:
     // Find
     Iterator Find(const T& Item) { return PrivateSet.find(Item); }
     ConstIterator Find(const T& Item) const { return PrivateSet.find(Item); }
+
+	// Contains
+	bool Contains(const T& Item) const { return PrivateSet.contains(Item); }
 
     // Array (TArray로 반환)
     TArray<T, Allocator> Array() const
