@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "JsonSavehelper.h"
 #include "Core/Engine.h"
 #include "Core/Container/Array.h"
@@ -48,8 +48,12 @@ public:
 	void AddRenderComponent(class UPrimitiveComponent* Component) { RenderComponents.Add(Component); }
 	void RemoveRenderComponent(class UPrimitiveComponent* Component) { RenderComponents.Remove(Component); }
 
+	inline class ACamera* GetCamera() const { return Camera; }
+	void SetCamera(class ACamera* NewCamera) { Camera = NewCamera; }
+
 private:
 	UWorldInfo GetWorldInfo() const;
+	class ACamera* Camera = nullptr;
 
 public:
 	FString SceneName;

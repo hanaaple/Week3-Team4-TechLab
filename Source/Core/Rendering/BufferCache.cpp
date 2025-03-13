@@ -1,6 +1,7 @@
-﻿#include "BufferCache.h"
+#include "BufferCache.h"
 #include "Core/Engine.h"
 #include "Primitive/PrimitiveVertices.h"
+#include "Primitive/UGeometryGenerator.h"
 
 FBufferCache::FBufferCache()
 {
@@ -15,136 +16,164 @@ void FBufferCache::Init()
 
 }
 
-BufferInfo FBufferCache::GetBufferInfo(EPrimitiveType Type)
+const BufferInfo FBufferCache::GetBufferInfo(EPrimitiveType Type)
 {
-	if (!Cache.contains(Type))
+	if (!Cache.Contains(Type))
 	{
 		//여기서 버텍스 버퍼 생성한다
-		auto bufferInfo = CreateVertexBufferInfo(Type);
-		Cache.insert({ Type, bufferInfo });
+		auto bufferInfo = CreateBufferInfo(Type);
+		Cache.Add( Type , bufferInfo);
 	}
 
-	return Cache[Type];
+	return *Cache.Find(Type);
 }
 
-BufferInfo FBufferCache::CreateVertexBufferInfo(EPrimitiveType Type)
+BufferInfo FBufferCache::CreateBufferInfo(EPrimitiveType Type)
 {
-	ID3D11Buffer* Buffer = nullptr;
-	int Size = 0;
+	ID3D11Buffer* VertexBuffer = nullptr;
+	ID3D11Buffer* IndexBuffer = nullptr;
+	int VertexSize = 0;
+	int IndexSize = 0;
 	D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 	switch (Type)
 	{
 	case EPrimitiveType::EPT_Line:
-		Size = std::size(LineVertices);
-		Buffer = UEngine::Get().GetRenderer()->CreateVertexBuffer(LineVertices, sizeof(FVertexSimple) * Size);
-		Topology = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
+	{
+		FVertexSimple LineVertices[2] =
+		{
+			{ -1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f },
+			{ 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f }
+		};
+
+		uint32 LineIndices[2] =
+		{
+			0, 1
+		};
+		
+		VertexSize = std::size(LineVertices);
+		IndexSize = std::size(LineIndices);
+		VertexBuffer = UEngine::Get().GetRenderer()->CreateVertexBuffer(LineVertices, sizeof(FVertexSimple) * VertexSize);
+		IndexBuffer = UEngine::Get().GetRenderer()->CreateIndexBuffer(LineIndices, sizeof(uint32) * IndexSize);
+		Topology = D3D10_PRIMITIVE_TOPOLOGY_LINELIST;
 		break;
+	}
 	case EPrimitiveType::EPT_Triangle:
-		Size = std::size(TriangleVertices);
-		Buffer = UEngine::Get().GetRenderer()->CreateVertexBuffer(TriangleVertices, sizeof(FVertexSimple) * Size);
+	{
+		FVertexSimple TriangleVertices[3] =
+		{
+			{  0.0f, 0.0f, 1.0f,  1.0f, 0.0f, 0.0f, 1.0f },
+			{  0.0f, 1.0f, 0.0f,  0.0f, 1.0f, 0.0f, 1.0f },
+			{  0.0f, -1.0f, 0.0f,  0.0f, 0.0f, 1.0f, 1.0f } 
+		};
+
+		uint32 TriangleIndices[3] =
+		{
+			0, 1, 2
+		};
+
+		VertexSize = std::size(TriangleVertices);
+		IndexSize = std::size(TriangleIndices);
+		VertexBuffer = UEngine::Get().GetRenderer()->CreateVertexBuffer(TriangleVertices, sizeof(FVertexSimple) * VertexSize);
+		IndexBuffer = UEngine::Get().GetRenderer()->CreateIndexBuffer(TriangleIndices, sizeof(uint32) * IndexSize);
 		break;
+	}
 	case EPrimitiveType::EPT_Cube:
-		Size = std::size(CubeVertices);
-		Buffer = UEngine::Get().GetRenderer()->CreateVertexBuffer(CubeVertices, sizeof(FVertexSimple) * Size);
+	{
+		FGeometryData GeometryData = CreateCubeGeometry();
+
+		VertexSize = GeometryData.Vertices.Num();
+		IndexSize = GeometryData.Indices.Num();
+		VertexBuffer = UEngine::Get().GetRenderer()->CreateVertexBuffer(GeometryData.Vertices.GetData(), sizeof(FVertexSimple) * VertexSize);
+		IndexBuffer = UEngine::Get().GetRenderer()->CreateIndexBuffer(GeometryData.Indices.GetData(), sizeof(uint32) * IndexSize);
 		break;
+	}
 	case EPrimitiveType::EPT_Sphere:
-		Size = std::size(SphereVertices);
-		Buffer = UEngine::Get().GetRenderer()->CreateVertexBuffer(SphereVertices, sizeof(FVertexSimple) * Size);
+	{
+		FGeometryData GeometryData = CreateSphereGeometry();
+
+		VertexSize = GeometryData.Vertices.Num();
+		IndexSize = GeometryData.Indices.Num();
+		VertexBuffer = UEngine::Get().GetRenderer()->CreateVertexBuffer(GeometryData.Vertices.GetData(), sizeof(FVertexSimple) * VertexSize);
+		IndexBuffer = UEngine::Get().GetRenderer()->CreateIndexBuffer(GeometryData.Indices.GetData(), sizeof(uint32) * IndexSize);
 		break;
+	}
 	case EPrimitiveType::EPT_Cylinder:
 	{
-		TArray<FVertexSimple> Vertices = CreateCylinderVertices();
-		Size = Vertices.Num();
-		Buffer = UEngine::Get().GetRenderer()->CreateVertexBuffer(Vertices.GetData(), sizeof(FVertexSimple) * Size);
+		FGeometryData GeometryData = CreateCylinderGeometry();
+
+		VertexSize = GeometryData.Vertices.Num();
+		IndexSize = GeometryData.Indices.Num();
+		VertexBuffer = UEngine::Get().GetRenderer()->CreateVertexBuffer(GeometryData.Vertices.GetData(), sizeof(FVertexSimple) * VertexSize);
+		IndexBuffer = UEngine::Get().GetRenderer()->CreateIndexBuffer(GeometryData.Indices.GetData(), sizeof(uint32) * IndexSize);
 		break;
 	}
 	case EPrimitiveType::EPT_Cone:
 	{
-		TArray<FVertexSimple> Vertices = CreateConeVertices();
-		Size = Vertices.Num();
-		Buffer = UEngine::Get().GetRenderer()->CreateVertexBuffer(Vertices.GetData(), sizeof(FVertexSimple) * Size);
+		FGeometryData GeometryData = CreateConeGeometry();
+		
+		VertexSize = GeometryData.Vertices.Num();
+		IndexSize = GeometryData.Indices.Num();
+		VertexBuffer = UEngine::Get().GetRenderer()->CreateVertexBuffer(GeometryData.Vertices.GetData(), sizeof(FVertexSimple) * VertexSize);
+		IndexBuffer = UEngine::Get().GetRenderer()->CreateIndexBuffer(GeometryData.Indices.GetData(), sizeof(uint32) * IndexSize);
 		break;
 	}
 	}
 
-	return BufferInfo(Buffer, Size, Topology);
+	return BufferInfo(VertexBuffer, VertexSize, IndexBuffer, IndexSize, Topology);
 }
 
 
-TArray<FVertexSimple> FBufferCache::CreateConeVertices()
+FGeometryData FBufferCache::CreateCubeGeometry()
 {
 	TArray<FVertexSimple> vertices;
+	TArray<uint32> indices;
+	int size = 1.f;
 
-	int segments = 36;
+	UGeometryGenerator::CreateCube(size, &vertices, &indices);
+
+	return { vertices, indices };
+}
+
+FGeometryData FBufferCache::CreateSphereGeometry()
+{
+	TArray<FVertexSimple> vertices;
+	TArray<uint32> indices;
+	int slices = 16;
+	int stacks = 16;
 	float radius = 1.f;
 	float height = 1.f;
 
+	UGeometryGenerator::CreateSphere(radius, slices, stacks, &vertices, &indices);
 
-	// 원뿔의 바닥
-	for (int i = 0; i < segments; ++i)
-	{
-		float angle = 2.0f * PI * i / segments;
-		float nextAngle = 2.0f * PI * (i + 1) / segments;
-
-		float x1 = radius * cos(angle);
-		float y1 = radius * sin(angle);
-		float x2 = radius * cos(nextAngle);
-		float y2 = radius * sin(nextAngle);
-
-		 // 바닥 삼각형 (반시계 방향으로 추가)
-        vertices.Add({ 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f });
-        vertices.Add({ x2, y2, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f });
-        vertices.Add({ x1, y1, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f });
-
-        // 옆면 삼각형 (시계 방향으로 추가)
-        vertices.Add({ x1, y1, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f });
-        vertices.Add({ x2, y2, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f });
-        vertices.Add({ 0.0f, 0.0f, height, 0.0f, 1.0f, 0.0f, 1.0f });
-	}
-
-	return vertices;
+	return { vertices, indices };
 }
 
-TArray<FVertexSimple> FBufferCache::CreateCylinderVertices()
+FGeometryData FBufferCache::CreateConeGeometry()
 {
 	TArray<FVertexSimple> vertices;
-	
-	int segments = 36;
-	float radius = .03f;
-	float height = .5f;
+	TArray<uint32> indices;
+	int slices = 36;
+	int stacks = 6;
+	float radius = 1.f;
+	float height = 1.f;
 
+	UGeometryGenerator::CreateCone(radius, height, slices, stacks, &vertices, &indices);
 
-	// 원기둥의 바닥과 윗면
-	for (int i = 0; i < segments; ++i)
-	{
-		float angle = 2.0f * PI * i / segments;
-		float nextAngle = 2.0f * PI * (i + 1) / segments;
+	return { vertices, indices };
+}
 
-		float x1 = radius * cos(angle);
-		float y1 = radius * sin(angle);
-		float x2 = radius * cos(nextAngle);
-		float y2 = radius * sin(nextAngle);
+FGeometryData FBufferCache::CreateCylinderGeometry()
+{
+	TArray<FVertexSimple> vertices;
+	TArray<uint32> indices;
+	int slices = 36;
+	int stacks = 36;
+	float bRadius = .2f;
+	float tRdius = .2f;
+	float height = 1.f;
 
-		// 바닥 삼각형
-		vertices.Add({ 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f });
-		vertices.Add({ x2, y2, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f });
-		vertices.Add({ x1, y1, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f });
+	UGeometryGenerator::CreateCylinder(bRadius, tRdius, height, slices, stacks, &vertices , &indices);
 
-		// 윗면 삼각형
-		vertices.Add({ 0.0f, 0.0f, height, 0.0f, 1.0f, 0.0f, 1.0f });
-		vertices.Add({ x1, y1, height, 0.0f, 1.0f, 0.0f, 1.0f });
-		vertices.Add({ x2, y2, height, 0.0f, 1.0f, 0.0f, 1.0f });
-
-		// 옆면 삼각형 두 개
-		vertices.Add({ x1, y1, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f });
-		vertices.Add({ x2, y2, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f });
-		vertices.Add({ x1, y1, height, 0.0f, 0.0f, 1.0f, 1.0f });
-
-		vertices.Add({ x2, y2, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f });
-		vertices.Add({ x2, y2, height, 0.0f, 0.0f, 1.0f, 1.0f });
-		vertices.Add({ x1, y1, height, 0.0f, 0.0f, 1.0f, 1.0f });
-	}
-
-	return vertices;
+	return {vertices, indices};
 }

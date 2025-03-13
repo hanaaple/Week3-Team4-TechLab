@@ -213,6 +213,7 @@ FMatrix FMatrix::GetScaleMatrix(float X, float Y, float Z)
 	Result.M[0][0] = X;
 	Result.M[1][1] = Y;
 	Result.M[2][2] = Z;
+	Result.M[3][3] = 1.f;
 	return Result;
 }
 

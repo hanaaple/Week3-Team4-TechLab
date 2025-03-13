@@ -1,10 +1,16 @@
 // ShaderW0.hlsl
+//#pragma pack_matrix(column_major)
+
 cbuffer constants : register(b0)
 {
-    matrix MVP;
-    float4 CustomColor;
-    uint bUseVertexColor;
-}
+	float4x4 MVP;
+	float4 CustomColor;
+	uint bUseVertexColor;
+	
+	
+};
+
+
 
 cbuffer UUIDColor : register(b1){
     float4 UUIDColor;

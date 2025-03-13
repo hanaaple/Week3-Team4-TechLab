@@ -208,7 +208,9 @@ void UEngine::InitWorld()
 {
     World = FObjectFactory::ConstructObject<UWorld>();
 
-    FEditorManager::Get().SetCamera(World->SpawnActor<ACamera>());
+	World->SetCamera(World->SpawnActor<ACamera>());
+
+    FEditorManager::Get().SetCamera(World->GetCamera());
 
     //// Test
     //AArrow* Arrow = World->SpawnActor<AArrow>();

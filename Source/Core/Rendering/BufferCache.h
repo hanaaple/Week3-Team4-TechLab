@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #define _TCHAR_DEFINED
 #include <d3d11.h>
@@ -7,46 +7,55 @@
 #include <unordered_map>
 #include "Primitive/PrimitiveVertices.h"
 #include "Core/Container/Array.h"
+#include "Core/Container/Map.h"
 
 struct BufferInfo
 {
 public:
 	BufferInfo() = default;
-	BufferInfo(ID3D11Buffer* InBuffer, int BufferSize, D3D_PRIMITIVE_TOPOLOGY InTopology)
+	BufferInfo(ID3D11Buffer* InVertexBuffer, int VertexBufferSize, ID3D11Buffer* InIndexBuffer, int IndexBufferSize, D3D_PRIMITIVE_TOPOLOGY InTopology)
 	{
-		Buffer = InBuffer;
-		Size = BufferSize;
+		VertexBuffer = InVertexBuffer;
+		VertexSize = VertexBufferSize;
+		IndexBuffer = InIndexBuffer;
+		IndexSize = IndexBufferSize;
 		Topology = InTopology;
 	}
 
-	ID3D11Buffer* GetBuffer() const { return Buffer.Get(); }
-	int GetSize() const { return Size; }
+	ID3D11Buffer* GetVertexBuffer() const { return VertexBuffer.Get(); }
+	ID3D11Buffer* GetIndexBuffer() const { return IndexBuffer.Get(); }
+	int GetVertexSize() const { return VertexSize; }
+	int GetIndexSize() const { return IndexSize; }
 	D3D_PRIMITIVE_TOPOLOGY GetTopology() const { return Topology; }
 
 private:
-	Microsoft::WRL::ComPtr<ID3D11Buffer> Buffer;
+	Microsoft::WRL::ComPtr<ID3D11Buffer> VertexBuffer;
+	Microsoft::WRL::ComPtr<ID3D11Buffer> IndexBuffer;
 	D3D_PRIMITIVE_TOPOLOGY Topology;
-	int Size;
+	int VertexSize;
+	int IndexSize;
 };
 
 class FBufferCache
 {
 private:
-	std::unordered_map <EPrimitiveType, BufferInfo> Cache;
+	TMap<EPrimitiveType, BufferInfo> Cache;
 
 public:
 	FBufferCache();
 	~FBufferCache();
 
 	void Init();
-	BufferInfo GetBufferInfo(EPrimitiveType Type);
+	const BufferInfo GetBufferInfo(EPrimitiveType Type);
 
 public:
-	TArray<FVertexSimple> CreateArrowVertices();
-	TArray<FVertexSimple> CreateConeVertices();
-	TArray<FVertexSimple> CreateCylinderVertices();
+	FGeometryData CreateArrowGeometry();
+	FGeometryData CreateCubeGeometry();
+	FGeometryData CreateSphereGeometry();
+	FGeometryData CreateConeGeometry();
+	FGeometryData CreateCylinderGeometry();
 
 private :
-	BufferInfo CreateVertexBufferInfo(EPrimitiveType Type);
+	BufferInfo CreateBufferInfo(EPrimitiveType Type);
 };
 

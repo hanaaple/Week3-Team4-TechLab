@@ -70,6 +70,7 @@ public:
     ObjectType* GetObjectByUUID(uint32 InUUID) const;
     UObject* GetObjectByUUID(uint32 InUUID) const;
 
+
 private:
     bool IsRunning = false;
     EScreenMode ScreenMode = EScreenMode::Windowed;

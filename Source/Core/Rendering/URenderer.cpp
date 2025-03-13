@@ -51,6 +51,7 @@ void URenderer::CreateShader()
     ID3DBlob* PickingShaderCSO;
     
 	ID3DBlob* ErrorMsg = nullptr;
+
     // 셰이더 컴파일 및 생성
     D3DCompileFromFile(L"Shaders/ShaderW0.hlsl", nullptr, nullptr, "mainVS", "vs_5_0", 0, 0, &VertexShaderCSO, &ErrorMsg);
     Device->CreateVertexShader(VertexShaderCSO->GetBufferPointer(), VertexShaderCSO->GetBufferSize(), nullptr, &SimpleVertexShader);
@@ -198,16 +199,16 @@ void URenderer::PrepareShader() const
     }
 }
 
-void URenderer::RenderPrimitive(UPrimitiveComponent* PrimitiveComp)
+void URenderer::RenderPrimitive(class UPrimitiveComponent& PrimitiveComp, const class FMatrix& ModelMatrix)
 {
     if (BufferCache == nullptr)
     {
         return;
     }
 
-	BufferInfo Info = BufferCache->GetBufferInfo(PrimitiveComp->GetType());
+	BufferInfo Info = BufferCache->GetBufferInfo(PrimitiveComp.GetType());
 
-	if (Info.GetBuffer() == nullptr)
+	if (Info.GetVertexBuffer() == nullptr || Info.GetIndexBuffer() == nullptr)
 	{
 		return;
 	}
@@ -218,24 +219,32 @@ void URenderer::RenderPrimitive(UPrimitiveComponent* PrimitiveComp)
 		CurrentTopology = Info.GetTopology();
 	}
 
-    ConstantUpdateInfo UpdateInfo{ 
-        PrimitiveComp->GetWorldTransform(), 
-        PrimitiveComp->GetCustomColor(), 
-        PrimitiveComp->IsUseVertexColor()
+	FMatrix MVP = FMatrix::Transpose(
+		ModelMatrix *
+	ViewMatrix *
+	ProjectionMatrix
+);
+
+	FConstants UpdateInfo{
+		MVP,
+        PrimitiveComp.GetCustomColor(), 
+        PrimitiveComp.IsUseVertexColor()
     };
 
     UpdateConstant(UpdateInfo);
     
-    RenderPrimitiveInternal(Info.GetBuffer(), Info.GetSize());
+    RenderPrimitiveInternal(Info.GetVertexBuffer(), Info.GetIndexBuffer(), Info.GetIndexSize());
 
 }
 
-void URenderer::RenderPrimitiveInternal(ID3D11Buffer* pBuffer, UINT numVertices) const
+void URenderer::RenderPrimitiveInternal(ID3D11Buffer* vertexBuffer, ID3D11Buffer* indexBuffer, UINT numIndices) const
 {
     UINT Offset = 0;
-    DeviceContext->IASetVertexBuffers(0, 1, &pBuffer, &Stride, &Offset);
+    DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &Stride, &Offset);
+    DeviceContext->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+    DeviceContext->IASetPrimitiveTopology(CurrentTopology);
 
-    DeviceContext->Draw(numVertices, 0);
+    DeviceContext->DrawIndexed(numIndices, 0, 0);
 }
 
 ID3D11Buffer* URenderer::CreateVertexBuffer(const FVertexSimple* Vertices, UINT ByteWidth) const
@@ -257,28 +266,44 @@ ID3D11Buffer* URenderer::CreateVertexBuffer(const FVertexSimple* Vertices, UINT 
     return VertexBuffer;
 }
 
+ID3D11Buffer* URenderer::CreateIndexBuffer(const uint32* Indices, UINT ByteWidth) const
+{
+    D3D11_BUFFER_DESC IndexBufferDesc = {};
+    IndexBufferDesc.ByteWidth = ByteWidth;
+    IndexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+    IndexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+
+    D3D11_SUBRESOURCE_DATA IndexBufferSRD = {};
+    IndexBufferSRD.pSysMem = Indices;
+
+    ID3D11Buffer* IndexBuffer;
+    const HRESULT Result = Device->CreateBuffer(&IndexBufferDesc, &IndexBufferSRD, &IndexBuffer);
+    if (FAILED(Result))
+    {
+        return nullptr;
+    }
+    return IndexBuffer;
+}
+
 void URenderer::ReleaseVertexBuffer(ID3D11Buffer* pBuffer) const
 {
     pBuffer->Release();
 }
 
-void URenderer::UpdateConstant(const ConstantUpdateInfo& UpdateInfo) const
+void URenderer::UpdateConstant(const FConstants& UpdateInfo) const
 {
     if (!ConstantBuffer) return;
 
-    D3D11_MAPPED_SUBRESOURCE ConstantBufferMSR;
 
-    FMatrix MVP = 
-        FMatrix::Transpose(ProjectionMatrix) * 
-        FMatrix::Transpose(ViewMatrix) * 
-        FMatrix::Transpose(UpdateInfo.Transform.GetMatrix());    // 상수 버퍼를 CPU 메모리에 매핑
+	D3D11_MAPPED_SUBRESOURCE ConstantBufferMSR;
+  // 상수 버퍼를 CPU 메모리에 매핑
 
     // D3D11_MAP_WRITE_DISCARD는 이전 내용을 무시하고 새로운 데이터로 덮어쓰기 위해 사용
     DeviceContext->Map(ConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ConstantBufferMSR);
     {
         // 매핑된 메모리를 FConstants 구조체로 캐스팅
         FConstants* Constants = static_cast<FConstants*>(ConstantBufferMSR.pData);
-        Constants->MVP = MVP;
+        Constants->MVP = UpdateInfo.MVP;
 		Constants->Color = UpdateInfo.Color;
 		Constants->bUseVertexColor = UpdateInfo.bUseVertexColor ? 1 : 0;
     }
