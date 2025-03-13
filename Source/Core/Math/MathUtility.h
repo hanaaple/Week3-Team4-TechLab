@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <cmath>
 #include "Core/HAL/PlatformType.h"
 
@@ -164,4 +164,22 @@ struct FMath
     {
 	    return Value*Value;
     }
+
+	template <typename T>
+	[[nodiscard]] static FORCEINLINE int32 CeilToInt(T Value)
+	{
+		return static_cast<int32>(ceil(Value));
+	}
+
+	/** float 타입을 위한 특수화된 버전 */
+	[[nodiscard]] static FORCEINLINE int32 CeilToInt(float Value)
+	{
+		return static_cast<int32>(ceilf(Value));
+	}
+
+	/** double 타입을 위한 특수화된 버전 */
+	[[nodiscard]] static FORCEINLINE int32 CeilToInt(double Value)
+	{
+		return static_cast<int32>(ceil(Value));
+	}
 };

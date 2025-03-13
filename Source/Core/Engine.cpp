@@ -10,6 +10,7 @@
 #include "Object/Actor/Camera.h"
 #include "Object/Actor/Sphere.h"
 #include "Static/FEditorManager.h"
+#include "Static/FLineBatchManager.h"
 
 class AArrow;
 class APicker;
@@ -233,11 +234,19 @@ void UEngine::InitWorld()
 
     FEditorManager::Get().SetCamera(World->GetCamera());
 
+	////Test
+	//FLineBatchManager::Get().AddLine(FVector{ 3.0f,3.0f,0.0f }, { -3.f,-3.f,0.0f });
+	//FLineBatchManager::Get().AddLine(FVector{ 6.0f,6.0f,6.0f }, { -6.f,-6.f,-6.0f });
+	//FLineBatchManager::Get().AddLine(FVector{ 6.0f,6.0f,7.0f }, { -6.f,-6.f,-7.0f });
+	//FLineBatchManager::Get().AddLine(FVector{ 6.0f,6.0f,8.0f }, { -6.f,-6.f,-8.0f });
+
+	FLineBatchManager::Get().DrawWorldGrid(100.f,1.f);
+
     //// Test
     //AArrow* Arrow = World->SpawnActor<AArrow>();
     //World->SpawnActor<ASphere>();
     
-    World->SpawnActor<AAxis>();
+    //World->SpawnActor<AAxis>();
     World->SpawnActor<APicker>();
 
 	World->BeginPlay();

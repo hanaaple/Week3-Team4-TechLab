@@ -5,6 +5,7 @@
 #include <Object/Actor/Camera.h>
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
 #include "Static/FEditorManager.h"
+#include "Static/FLineBatchManager.h"
 
 void URenderer::Create(HWND hWindow)
 {
@@ -16,6 +17,8 @@ void URenderer::Create(HWND hWindow)
     CreateDepthStencilState();
 
     CreatePickingTexture(hWindow);
+
+	FLineBatchManager::Get().Create();
     
     InitMatrix();
 }
@@ -240,6 +243,13 @@ void URenderer::RenderPrimitive(class UPrimitiveComponent& PrimitiveComp, const 
 void URenderer::RenderPrimitiveInternal(ID3D11Buffer* vertexBuffer, ID3D11Buffer* indexBuffer, UINT numIndices) const
 {
     UINT Offset = 0;
+
+	//임시로 만듦 각 렌더러에 맞는 쉐이더를 넣어야함
+	DeviceContext->VSSetShader(SimpleVertexShader, nullptr, 0);
+	DeviceContext->PSSetShader(SimplePixelShader, nullptr, 0);
+	DeviceContext->IASetInputLayout(SimpleInputLayout);
+
+
     DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &Stride, &Offset);
     DeviceContext->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
     DeviceContext->IASetPrimitiveTopology(CurrentTopology);

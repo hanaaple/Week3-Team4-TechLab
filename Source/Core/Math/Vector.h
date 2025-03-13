@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "MathUtility.h"
 
 
@@ -194,13 +194,18 @@ inline bool FVector::operator!=(const FVector& Other) const
     return X != Other.X || Y != Other.Y || Z != Other.Z;
 }
 
-struct alignas(16) FVector4 : public FVector
+struct FVector4 : public FVector
 {
     using FVector::X;
     using FVector::Y;
     using FVector::Z;
 
     float W;
+
+	FVector4(const FVector& InVector, float InW)
+		: FVector(InVector), W(InW)
+	{
+	}
     FVector4()
         : FVector(0, 0, 0), W(0)
     {
@@ -209,4 +214,35 @@ struct alignas(16) FVector4 : public FVector
         : FVector(InX, InY, InZ), W(InW)
     {
     }
+
+
+	static const FVector4 ONE;
+	static const FVector4 ONENULL;
+
+	static const FVector4 ZERO;
+	static const FVector4 ZERONULL;
+	static const FVector4 LEFT;
+	static const FVector4 RIGHT;
+	static const FVector4 UP;
+	static const FVector4 DOWN;
+	static const FVector4 FORWARD;
+	static const FVector4 BACKWARD;
+
+	static const FVector4 WHITE;
+	static const FVector4 RED;
+	static const FVector4 GREEN;
+	static const FVector4 BLUE;
+	static const FVector4 BLACK;
+
+	// 두 개의 채널이 1인 색상들
+	static const FVector4 YELLOW ;    // 빨강 + 초록 = 노랑
+	static const FVector4 CYAN;      // 초록 + 파랑 = 청록색/시안
+	static const FVector4 MAGENTA ;   // 빨강 + 파랑 = 자홍색/마젠타
+	
+	// 추가적인 색
+	static const FVector4 ORANGE;    // 주황색
+	static const FVector4 PURPLE;    // 보라색
+	static const FVector4 TEAL;
+
+
 };
