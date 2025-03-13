@@ -19,6 +19,7 @@
 #include "Static/FEditorManager.h"
 #include "Object/World/World.h"
 #include "Object/Gizmo/GizmoHandle.h"
+#include <Core/Input/PlayerInput.h>
 
 
 
@@ -307,6 +308,10 @@ void UI::RenderCameraSettings()
     ImGui::Text("Camera GetForward(): (%.2f %.2f %.2f)", Forward.X, Forward.Y, Forward.Z);
     ImGui::Text("Camera GetUp(): (%.2f %.2f %.2f)", Up.X, Up.Y, Up.Z);
     ImGui::Text("Camera GetRight(): (%.2f %.2f %.2f)", Right.X, Right.Y, Right.Z);
+	ImGui::Text("MouseLeftDown: %s", APlayerInput::Get().GetKeyDown(EKeyCode::LButton) ? "True" : "False");
+	ImGui::Text("MousePress : %s", APlayerInput::Get().GetKeyPress(EKeyCode::LButton) ? "True" : "False");
+	ImGui::Text("MosueLeftUp: %s", APlayerInput::Get().GetKeyUp(EKeyCode::LButton) ? "True" : "False");
+	ImGui::Separator();
 }
 
 void UI::RenderPropertyWindow()
