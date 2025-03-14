@@ -5,7 +5,7 @@
 #include "Core/Math/MathUtility.h"
 
 
-#if IS_WIDECHAR
+#if USE_WIDECHAR
 std::wstring FString::ConvertWideChar(const ANSICHAR* NarrowStr)
 {
     const int Size = MultiByteToWideChar(CP_UTF8, 0, NarrowStr, -1, nullptr, 0);
@@ -17,7 +17,7 @@ std::wstring FString::ConvertWideChar(const ANSICHAR* NarrowStr)
 
 FString FString::FromInt(int32 Num)
 {
-#if IS_WIDECHAR
+#if USE_WIDECHAR
     return FString{std::to_wstring(Num)};
 #else
     return FString{std::to_string(Num)};
@@ -26,7 +26,7 @@ FString FString::FromInt(int32 Num)
 
 FString FString::SanitizeFloat(float InFloat)
 {
-#if IS_WIDECHAR
+#if USE_WIDECHAR
     return FString{std::to_wstring(InFloat)};
 #else
     return FString{std::to_string(InFloat)};
@@ -52,7 +52,7 @@ bool FString::Equals(const FString& Other, ESearchCase::Type SearchCase) const
     {
         if (SearchCase == ESearchCase::CaseSensitive)
         {
-        	return std::strcmp(**this, *Other) == 0;
+        	return TCString<ElementType>::Strcmp(**this, *Other) == 0;
         }
         else
         {
@@ -81,12 +81,12 @@ int32 FString::Find(
         return INDEX_NONE;
     }
 
-    const TCHAR* StrPtr = **this;
-    const TCHAR* SubStrPtr = *SubStr;
+    const ElementType* StrPtr = **this;
+    const ElementType* SubStrPtr = *SubStr;
     const int32 StrLen = Len();
     const int32 SubStrLen = SubStr.Len();
 
-    auto CompareFunc = [SearchCase](TCHAR A, TCHAR B) -> bool {
+    auto CompareFunc = [SearchCase](ElementType A, ElementType B) -> bool {
         return (SearchCase == ESearchCase::IgnoreCase) ? 
             tolower(A) == tolower(B) : A == B;
     };

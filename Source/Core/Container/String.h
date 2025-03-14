@@ -48,10 +48,11 @@ enum Type : uint8
 class FString
 {
 private:
+	using ElementType = TCHAR;
     using BaseStringType = std::basic_string<
-        TCHAR,
-        std::char_traits<TCHAR>,
-        FDefaultAllocator<TCHAR>
+        ElementType,
+        std::char_traits<ElementType>,
+        FDefaultAllocator<ElementType>
     >;
 
     BaseStringType PrivateString;
@@ -69,7 +70,7 @@ public:
 
     FString(BaseStringType InString) : PrivateString(std::move(InString)) {}
 
-#if IS_WIDECHAR
+#if USE_WIDECHAR
 private:
     static std::wstring ConvertWideChar(const ANSICHAR* NarrowStr);
 
@@ -127,16 +128,18 @@ public:
         ESearchDir::Type SearchDir = ESearchDir::FromStart, int32 StartPosition = -1
     ) const;
 
+	const FString::ElementType* GetData() const;
+
 public:
-    /** TCHAR* 로 반환하는 연산자 */
-    FORCEINLINE const TCHAR* operator*() const;
+    /** ElementType* 로 반환하는 연산자 */
+    FORCEINLINE const ElementType* operator*() const;
 
     FORCEINLINE FString operator+(const FString& SubStr) const;
     FORCEINLINE FString& operator+=(const FString& SubStr);
     FORCEINLINE friend FString operator+(const FString& Lhs, const FString& Rhs);
 
     FORCEINLINE bool operator==(const FString& Rhs) const;
-    FORCEINLINE bool operator==(const TCHAR* Rhs) const;
+    FORCEINLINE bool operator==(const ElementType* Rhs) const;
 };
 
 
@@ -150,7 +153,7 @@ FORCEINLINE bool FString::IsEmpty() const
     return PrivateString.empty();
 }
 
-FORCEINLINE const TCHAR* FString::operator*() const
+FORCEINLINE const FString::ElementType* FString::operator*() const
 {
     return PrivateString.c_str();
 }
@@ -171,7 +174,7 @@ FORCEINLINE bool FString::operator==(const FString& Rhs) const
     return Equals(Rhs, ESearchCase::IgnoreCase);
 }
 
-FORCEINLINE bool FString::operator==(const TCHAR* Rhs) const
+FORCEINLINE bool FString::operator==(const ElementType* Rhs) const
 {
     return Equals(Rhs);
 }
@@ -180,6 +183,11 @@ FORCEINLINE FString& FString::operator+=(const FString& SubStr)
 {
     this->PrivateString += SubStr.PrivateString;
     return *this;
+}
+
+FORCEINLINE const FString::ElementType* FString::GetData() const
+{
+	return PrivateString.data();
 }
 
 template<>
