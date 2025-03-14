@@ -1,5 +1,5 @@
 #include "SceneAsset.h"
-#include "ThirdParty/SimpleJSON/Json.hpp"
+#include "SimpleJSON/Json.hpp"
 #include "filesystem"
 #include <fstream>
 #include <iostream>
