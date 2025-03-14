@@ -33,7 +33,7 @@ public:
     const float MaxYDegree = 89.8f;
     //카메라 스피드 IMGui용 나중에 Velocity로 관리하면 없어질애라 편하게 public에서 관리
     float CameraSpeed = 1.0f;
-	float Sensitivity = 0.1f;
+	float Sensitivity = 1.0f;
     
     // 투영 타입 - Perspective, Orthographic
     ECameraProjectionMode::Type ProjectionMode;
