@@ -1,11 +1,10 @@
 #pragma once
-#include <vector>
+#include <functional>
 
 #include "Core/AbstractClass/Singleton.h"
 #include "Core/Math/Vector.h"
 #include "Core/Container/Map.h"
 #include "Core/Container/Array.h"
-#include <functional>
 
 
 /**
@@ -137,20 +136,21 @@ enum class EKeyCode : uint8
 
 enum class EKeyState : uint8
 {
-	Down,
-	Press,
-	UP,
 	None,
+	Down,  // 버튼이 눌린 경우 (매 틱마다)
+	Press, // 버튼이 눌린 경우 (1틱만)
+	Up,    // 버튼이 때진 경우 (매 틱마다)
 };
 
 class KeyCallbackWrapper
 {
 public:
-	KeyCallbackWrapper(std::function<void()> Callback, uint32 uuid) : Callback(Callback), ID(uuid) {}
+	KeyCallbackWrapper(const std::function<void()>& Callback, uint32 uuid) : Callback(Callback), ID(uuid) {}
 
-	void operator()() { Callback(); }
+	void operator()() const { Callback(); }
 
 	uint32 GetID() const { return ID; }
+
 private:
 	std::function<void()> Callback;
 	uint32 ID;
@@ -159,9 +159,9 @@ private:
 class MouseCallbackWrapper
 {
 public:
-	MouseCallbackWrapper(std::function<void(const FVector&)> Callback, uint32 uuid) : Callback(Callback), ID(uuid) {}
+	MouseCallbackWrapper(const std::function<void(const FVector&)>& Callback, uint32 uuid) : Callback(Callback), ID(uuid) {}
 
-	void operator()(const FVector& MousePos) { Callback(MousePos); }
+	void operator()(const FVector& MousePos) const { Callback(MousePos); }
 
 	uint32 GetID() const { return ID; }
 private:
@@ -172,7 +172,7 @@ private:
 class APlayerInput : public TSingleton<APlayerInput>
 {
 public:
-	struct Key
+	struct FKey
 	{
 		EKeyCode KeyCode;
 		EKeyState KeyState;
@@ -184,35 +184,41 @@ public:
 
 	inline bool GetKeyPress(EKeyCode key) const { return Keys[static_cast<uint8>(key)].KeyState == EKeyState::Press; }
 
-	inline bool GetKeyUp(EKeyCode key) const { return Keys[static_cast<uint8>(key)].KeyState == EKeyState::UP; }
+	inline bool GetKeyUp(EKeyCode key) const { return Keys[static_cast<uint8>(key)].KeyState == EKeyState::Up; }
 
-	void Update(HWND hWnd, uint32 windowWidht, uint32 Height);
+	void Update(HWND hWnd, uint32 Width, uint32 Height);
     
-    FVector GetMousePos() { return MousePos;}
-    FVector GetMouseNDCPos() { return MouseNDCPos;}
-	FVector GetMouseDeltaPos() { return MouseNDCPos - MousePreNDCPos; }
+    FVector GetMousePos() const { return MousePos;}
+    FVector GetMouseNDCPos() const { return MouseNDCPos;}
+	FVector GetMouseDeltaPos() const { return MouseNDCPos - MousePreNDCPos; }
 
-	void RegisterKeyDownCallback(EKeyCode KeyCode, std::function<void()> Callback, uint32 uuid);
-	void RegisterKeyPressCallback(EKeyCode KeyCode, std::function<void()> Callback, uint32 uuid);
-	void RegisterKeyUpCallback(EKeyCode KeyCode, std::function<void()> Callback, uint32 uuid);
+	template <typename Fn>
+	void RegisterKeyDownCallback(EKeyCode KeyCode, const Fn& Callback, uint32 uuid);
+	template <typename Fn>
+	void RegisterKeyPressCallback(EKeyCode KeyCode, const Fn& Callback, uint32 uuid);
+	template <typename Fn>
+	void RegisterKeyUpCallback(EKeyCode KeyCode, const Fn& Callback, uint32 uuid);
 
-	void RegisterMouseDownCallback(EKeyCode Button, std::function<void(const FVector&)> Callback, uint32 uuid);
-	void RegisterMousePressCallback(EKeyCode Button, std::function<void(const FVector&)> Callback, uint32 uuid);
-	void RegisterMouseUpCallback(EKeyCode Button, std::function<void(const FVector&)> Callback, uint32 uuid);
+	template <typename Fn>
+	void RegisterMouseDownCallback(EKeyCode Button, const Fn& Callback, uint32 uuid);
+	template <typename Fn>
+	void RegisterMousePressCallback(EKeyCode Button, const Fn& Callback, uint32 uuid);
+	template <typename Fn>
+	void RegisterMouseUpCallback(EKeyCode Button, const Fn& Callback, uint32 uuid);
 
 private:
 	void CreateKeys();
 	void ClearKeys();
 
-	bool IsKeyDown(EKeyCode code);
+	bool IsKeyDown(EKeyCode code) const;
 
-	void UpdateKey(Key& key);
-	void UpdateKeyDown(Key& key);
-	void UpdateKeyUp(Key& key);
+	void UpdateKey(FKey& key);
+	void UpdateKeyDown(FKey& key) const;
+	void UpdateKeyUp(FKey& key) const;
 
-	void SetMousePos(HWND hWnd, uint32 screenWeight, uint32 screenHeight);
+	void SetMousePos(HWND hWnd, uint32 Width, uint32 Height);
 
-	FVector CalNDCPos(FVector MousePos, FVector WindowSize);
+	FVector CalNDCPos(FVector InMousePos, FVector WindowSize) const;
 
 private:
 	// Key 이벤트에 대한 콜백들을 저장하는 맵 (각 키마다 여러 콜백을 가질 수 있음)
@@ -225,11 +231,129 @@ private:
 	TMap<EKeyCode, TArray<MouseCallbackWrapper>> MousePressCallbacks;
 	TMap<EKeyCode, TArray<MouseCallbackWrapper>> MouseUpCallbacks;
 
-	TArray<Key> Keys;
+	TArray<FKey> Keys;
 
+	[[maybe_unused]]
     bool bIsBlockInput = false;
 
     FVector MousePreNDCPos;
     FVector MousePos;
     FVector MouseNDCPos;
 };
+
+template <typename Fn>
+void APlayerInput::RegisterKeyDownCallback(EKeyCode KeyCode, const Fn& Callback, uint32 uuid)
+{
+	if (KeyDownCallbacks.Contains(KeyCode))
+	{
+		for (const auto& Wrapper : KeyDownCallbacks[KeyCode])
+		{
+			if (Wrapper.GetID() == uuid)
+			{
+				return;
+			}
+		}
+	}
+
+	KeyDownCallbacks[KeyCode].Emplace(Callback, uuid);
+}
+
+template <typename Fn>
+void APlayerInput::RegisterKeyPressCallback(EKeyCode KeyCode, const Fn& Callback, uint32 uuid)
+{
+	if (KeyPressCallbacks.Contains(KeyCode))
+	{
+		for (const auto& Wrapper : KeyPressCallbacks[KeyCode])
+		{
+			if (Wrapper.GetID() == uuid)
+			{
+				return;
+			}
+		}
+	}
+
+	KeyPressCallbacks[KeyCode].Emplace(Callback, uuid);
+}
+
+template <typename Fn>
+void APlayerInput::RegisterKeyUpCallback(EKeyCode KeyCode, const Fn& Callback, uint32 uuid)
+{
+	if (KeyUpCallbacks.Contains(KeyCode))
+	{
+		for (const auto& Wrapper : KeyUpCallbacks[KeyCode])
+		{
+			if (Wrapper.GetID() == uuid)
+			{
+				return;
+			}
+		}
+	}
+
+	KeyUpCallbacks[KeyCode].Emplace(Callback, uuid);
+}
+
+template <typename Fn>
+void APlayerInput::RegisterMouseDownCallback(EKeyCode Button, const Fn& Callback, uint32 uuid)
+{
+	//if (Button != EKeyCode::LButton || Button != EKeyCode::MButton || Button != EKeyCode::RButton)
+	//{
+	//	return;
+	//}
+
+	if (MouseDownCallbacks.Contains(Button))
+	{
+		for (const auto& Wrapper : MouseDownCallbacks[Button])
+		{
+			if (Wrapper.GetID() == uuid)
+			{
+				return;
+			}
+		}
+	}
+
+	MousePressCallbacks[Button].Emplace(Callback, uuid);
+}
+
+template <typename Fn>
+void APlayerInput::RegisterMousePressCallback(EKeyCode Button, const Fn& Callback, uint32 uuid)
+{
+	//if (Button != EKeyCode::LButton || Button != EKeyCode::MButton || Button != EKeyCode::RButton)
+	//{
+	//	return;
+	//}
+
+	if (MousePressCallbacks.Contains(Button))
+	{
+		for (const auto& Wrapper : MousePressCallbacks[Button])
+		{
+			if (Wrapper.GetID() == uuid)
+			{
+				return;
+			}
+		}
+	}
+
+	MousePressCallbacks[Button].Emplace(Callback, uuid);
+}
+
+template <typename Fn>
+void APlayerInput::RegisterMouseUpCallback(EKeyCode Button, const Fn& Callback, uint32 uuid)
+{
+	//if (Button != EKeyCode::LButton || Button != EKeyCode::MButton || Button != EKeyCode::RButton)
+	//{
+	//	return;
+	//}
+
+	if (MouseUpCallbacks.Contains(Button))
+	{
+		for (const auto& Wrapper : MouseUpCallbacks[Button])
+		{
+			if (Wrapper.GetID() == uuid)
+			{
+				return;
+			}
+		}
+	}
+
+	MousePressCallbacks[Button].Emplace(Callback, uuid);
+}
