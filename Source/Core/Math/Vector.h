@@ -11,6 +11,10 @@ struct FVector
     static const FVector ZeroVector;
     static const FVector OneVector;
 
+	static const FVector ForwardVector;
+	static const FVector RightVector;
+	static const FVector UpVector;
+
 public:
     static FVector Zero() { return {0, 0, 0}; }
     static FVector One() { return {1, 1, 1}; }

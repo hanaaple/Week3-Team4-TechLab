@@ -5,6 +5,8 @@ Binaries/
 Intermediate/
 
 *.vcxproj.user
+*.DotSettings.user
+*.dmp
 
 
 # Prerequisites

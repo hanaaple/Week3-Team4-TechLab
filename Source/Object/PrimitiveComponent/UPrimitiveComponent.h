@@ -3,14 +3,14 @@
 #include "Core/Engine.h"
 #include "Object/USceneComponent.h"
 #include "Primitive/PrimitiveVertices.h"
-#include "Core/Math/Quat.h"
-
+#include "Resource/DirectResource/Vertexbuffer.h"
+#include "Resource/DirectResource/IndexBuffer.h"
 
 class UPrimitiveComponent : public USceneComponent
 {
 	using Super = USceneComponent;
 public:
-	UPrimitiveComponent() = default;
+	UPrimitiveComponent();
 	virtual ~UPrimitiveComponent() = default;
 
 public:
@@ -23,7 +23,11 @@ public:
 
 	//virtual void 
 	
-
+	//테스트 임시 메쉬
+	class std::shared_ptr<class FVertexBuffer> VertexBuffer = nullptr;
+	class std::shared_ptr<class FIndexBuffer> IndexBuffer = nullptr;
+	D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	
 
 
 	virtual EPrimitiveType GetType() { return EPrimitiveType::EPT_None; }
@@ -63,14 +67,12 @@ class UCubeComp : public UPrimitiveComponent
 {
 	using Super = UPrimitiveComponent;
 public:
-	UCubeComp()
-	{
+	UCubeComp();
 
-		bCanBeRendered = true;
-	}
 	virtual ~UCubeComp() = default;
 	EPrimitiveType GetType() override
 	{
+
 		return EPrimitiveType::EPT_Cube;
 	}
 };
@@ -79,10 +81,8 @@ class USphereComp : public UPrimitiveComponent
 {
 	using Super = UPrimitiveComponent;
 public:
-	USphereComp()
-	{
-		bCanBeRendered = true;
-	}
+	USphereComp();
+
 	virtual ~USphereComp() = default;
 	EPrimitiveType GetType() override
 	{
@@ -94,10 +94,8 @@ class UTriangleComp : public UPrimitiveComponent
 {
 	using Super = UPrimitiveComponent;
 public:
-	UTriangleComp()
-	{
-		bCanBeRendered = true;
-	}
+	UTriangleComp();
+
 	virtual ~UTriangleComp() = default;
 	EPrimitiveType GetType() override
 	{
@@ -110,10 +108,8 @@ class ULineComp : public UPrimitiveComponent
 	using Super = UPrimitiveComponent;
 
 public:
-	ULineComp()
-	{
-		bCanBeRendered = true;
-	}
+	ULineComp();
+
 	virtual ~ULineComp() = default;
 	EPrimitiveType GetType() override
 	{
@@ -126,10 +122,8 @@ class UCylinderComp : public UPrimitiveComponent
 	using Super = UPrimitiveComponent;
 
 public:
-	UCylinderComp()
-	{
-		bCanBeRendered = true;
-	}
+	UCylinderComp();
+	;
 	virtual ~UCylinderComp() = default;
 	EPrimitiveType GetType() override
 	{
@@ -141,10 +135,7 @@ class UConeComp : public UPrimitiveComponent
 {
 	using Super = UPrimitiveComponent;
 public:
-	UConeComp()
-	{
-		bCanBeRendered = true;
-	}
+	UConeComp();
 	virtual ~UConeComp() = default;
 	EPrimitiveType GetType() override
 	{
@@ -163,6 +154,6 @@ public:
 	virtual ~UQuadComp() = default;
 	EPrimitiveType GetType() override
 	{
-		return EPrimitiveType::EPT_Cube;
+		return EPrimitiveType::EPT_Quad;
 	}
 };

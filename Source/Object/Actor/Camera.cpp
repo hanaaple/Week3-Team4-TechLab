@@ -15,7 +15,7 @@ ACamera::ACamera()
     FieldOfView = 45.f;
     ProjectionMode = ECameraProjectionMode::Perspective;
 	CameraSpeed = 1.0f;
-	float sensitivity = std::stof(UConfigManager::Get().GetValue("Camera", "Sensitivity"));
+	Sensitivity = std::stof(UConfigManager::Get().GetValue("Camera", "Sensitivity"));
 
     RootComponent = AddComponent<USceneComponent>();
     
@@ -27,16 +27,16 @@ ACamera::ACamera()
 void ACamera::BeginPlay()
 {
 	Super::BeginPlay();
-	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::W, std::bind(&ACamera::MoveForward, this), GetUUID());
-	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::S, std::bind(&ACamera::MoveBackward, this), GetUUID());
-	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::A, std::bind(&ACamera::MoveLeft, this), GetUUID());
-	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::D, std::bind(&ACamera::MoveRight, this), GetUUID());
-	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::Q, std::bind(&ACamera::MoveUp, this), GetUUID());
-	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::E, std::bind(&ACamera::MoveDown, this), GetUUID());
+	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::W, [this] { MoveForward(); }, GetUUID());
+	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::S, [this] { MoveBackward(); }, GetUUID());
+	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::A, [this] { MoveLeft(); }, GetUUID());
+	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::D, [this] { MoveRight(); }, GetUUID());
+	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::Q, [this] { MoveDown(); }, GetUUID());
+	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::E, [this] { MoveUp(); }, GetUUID());
 
 	///APlayerInput::Get().RegisterMousePressCallback(EKeyCode::RButton, std::bind(&ACamera::Rotate, this, std::placeholders::_1), GetUUID());
 
-	UConfigManager::Get().SetValue("Camera", "Sensitivity", std::to_string(20));
+	UConfigManager::Get().SetValue("Camera", "Sensitivity", std::to_string(Sensitivity));
 }
 
 void ACamera::SetFieldOfVew(float Fov)
@@ -77,42 +77,42 @@ FMatrix ACamera::GetProjectionMatrix() const
 void ACamera::MoveForward()
 {
 	FTransform tr = GetActorTransform();
-	tr.SetPosition(tr.GetPosition() + GetForward() * CameraSpeed);
+	tr.SetPosition(tr.GetPosition() + (GetForward() * CameraSpeed * UEngine::GetDeltaTime()));
 	SetActorTransform(tr);
 }
 
 void ACamera::MoveBackward()
 {
 	FTransform tr = GetActorTransform();
-	tr.SetPosition(tr.GetPosition() - GetForward() * CameraSpeed);
+	tr.SetPosition(tr.GetPosition() - (GetForward() * CameraSpeed * UEngine::GetDeltaTime()));
 	SetActorTransform(tr);
 }
 
 void ACamera::MoveLeft()
 {
 	FTransform tr = GetActorTransform();
-	tr.SetPosition(tr.GetPosition() - GetRight() * CameraSpeed);
+	tr.SetPosition(tr.GetPosition() - (GetRight() * CameraSpeed * UEngine::GetDeltaTime()));
 	SetActorTransform(tr);
 }
 
 void ACamera::MoveRight()
 {
 	FTransform tr = GetActorTransform();
-	tr.SetPosition(tr.GetPosition() + GetRight() * CameraSpeed);
+	tr.SetPosition(tr.GetPosition() + (GetRight() * CameraSpeed * UEngine::GetDeltaTime()));
 	SetActorTransform(tr);
 }
 
 void ACamera::MoveUp()
 {
 	FTransform tr = GetActorTransform();
-	tr.SetPosition(tr.GetPosition() + GetUp() * CameraSpeed);
+	tr.SetPosition(tr.GetPosition() + (FVector::UpVector * CameraSpeed * UEngine::GetDeltaTime()));
 	SetActorTransform(tr);
 }
 
 void ACamera::MoveDown()
 {
 	FTransform tr = GetActorTransform();
-	tr.SetPosition(tr.GetPosition() - GetUp() * CameraSpeed);
+	tr.SetPosition(tr.GetPosition() - (FVector::UpVector * CameraSpeed * UEngine::GetDeltaTime()));
 	SetActorTransform(tr);
 }
 

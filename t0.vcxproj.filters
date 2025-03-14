@@ -108,9 +108,6 @@
     <ClCompile Include="Source\Core\Engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\JsonSaveHelper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Object\USceneComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -189,13 +186,34 @@
     <ClCompile Include="Source\Static\FLineBatchManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\Config\ConfigManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Object\Assets\AssetManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Object\Assets\SceneAsset.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Object\Assets\Asset.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\UObject\NameTypes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UFontAtlas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Utils\JsonSaveHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\ShaderW0.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\FontVertexShader.hlsl" />
-    <FxCompile Include="Shaders\FontPixelShader.hlsl" />
+    <FxCompile Include="Shaders\Font_VS.hlsl" />
+    <FxCompile Include="Shaders\Font_PS.hlsl" />
     <FxCompile Include="Shaders\ShaderLine_PS.hlsl" />
     <FxCompile Include="Shaders\ShaderLine_VS.hlsl" />
   </ItemGroup>
@@ -262,9 +280,6 @@
     </ClInclude>
     <ClInclude Include="Source\Core\Rendering\URenderer.h">
       <Filter>Header Files\Core\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\JsonSaveHelper.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Engine.h">
       <Filter>Header Files</Filter>
@@ -395,9 +410,6 @@
     <ClInclude Include="Source\Static\FEditorManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Primitive\PrimitiveVertices.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Core\UObject\Object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -408,6 +420,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Static\FLineBatchManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\UObject\NameTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UFontAtlas.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Utils\JsonSaveHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Object\Gizmo\Axis.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

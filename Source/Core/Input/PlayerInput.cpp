@@ -1,10 +1,12 @@
 #include "PlayerInput.h"
 
-FVector GetWndWH(HWND hWnd)
+[[maybe_unused]]
+static FVector GetWindowSize(HWND hWnd)
 {
     RECT Rect;
-    int Width , Height;
-    if (GetClientRect(hWnd , &Rect)) {
+    int Width = 0, Height = 0;
+    if (GetClientRect(hWnd, &Rect))
+    {
         Width = Rect.right - Rect.left;
         Height = Rect.bottom - Rect.top;
     }
@@ -23,7 +25,7 @@ APlayerInput::APlayerInput()
 	MouseNDCPos = FVector(0.0f, 0.0f, 0.0f);
 }
 
-void APlayerInput::UpdateKey(Key& key)
+void APlayerInput::UpdateKey(FKey& key)
 {
 	if (GetFocus())
 	{
@@ -42,7 +44,7 @@ void APlayerInput::UpdateKey(Key& key)
 	}
 }
 
-void APlayerInput::UpdateKeyDown(Key& key)
+void APlayerInput::UpdateKeyDown(FKey& key) const
 {
 	if (key.bPressed == true)
 	{
@@ -56,11 +58,11 @@ void APlayerInput::UpdateKeyDown(Key& key)
 	key.bPressed = true;
 }
 
-void APlayerInput::UpdateKeyUp(Key& key)
+void APlayerInput::UpdateKeyUp(FKey& key) const
 {
 	if (key.bPressed == true)
 	{
-		key.KeyState = EKeyState::UP;
+		key.KeyState = EKeyState::Up;
 	}
 	else
 	{
@@ -74,41 +76,38 @@ void APlayerInput::CreateKeys()
 {
 	for (int vk = 0; vk <= 0xFF; ++vk)
 	{
-		EKeyCode keyCode = static_cast<EKeyCode>(vk);
-
-		Key key = {};
-		key.bPressed = false;
-		key.KeyState = EKeyState::None;
-		key.KeyCode = keyCode;
-
-		Keys.Add(key);
+		Keys.Emplace(FKey{
+			.KeyCode = static_cast<EKeyCode>(vk),
+			.KeyState = EKeyState::None,
+			.bPressed = false
+		});
 	}
 }
 
 void APlayerInput::ClearKeys()
 {
-	for (Key& key : Keys)
+	for (FKey& Key : Keys)
 	{
-		if (key.KeyState == EKeyState::Down || key.KeyState == EKeyState::Press)
+		if (Key.KeyState == EKeyState::Down || Key.KeyState == EKeyState::Press)
 		{
-			key.KeyState = EKeyState::UP;
+			Key.KeyState = EKeyState::Up;
 
 		}
-		else if (key.KeyState == EKeyState::UP)
+		else if (Key.KeyState == EKeyState::Up)
 		{
-			key.KeyState = EKeyState::None;
+			Key.KeyState = EKeyState::None;
 		}
 
-		key.bPressed = false;
+		Key.bPressed = false;
 	}
 }
 
-bool APlayerInput::IsKeyDown(EKeyCode code)
+bool APlayerInput::IsKeyDown(EKeyCode code) const
 {
 	return GetAsyncKeyState(static_cast<int>(code)) & 0x8000;
 }
 
-void APlayerInput::SetMousePos(HWND hWnd, uint32 screenWidth, uint32 screenHeight)
+void APlayerInput::SetMousePos(HWND hWnd, uint32 Width, uint32 Height)
 {
 	MousePreNDCPos = MouseNDCPos;
 	POINT Pts = {};
@@ -117,204 +116,87 @@ void APlayerInput::SetMousePos(HWND hWnd, uint32 screenWidth, uint32 screenHeigh
 	ScreenToClient(hWnd, &Pts);
 
 	MousePos = FVector(Pts.x, Pts.y, 0);
-	MouseNDCPos = CalNDCPos(MousePos, FVector(screenWidth, screenHeight, 0));
+	MouseNDCPos = CalNDCPos(MousePos, FVector(Width, Height, 0));
 }
 
-void APlayerInput::Update(HWND hWnd, uint32 windowWidth, uint32 windowHeight)
+void APlayerInput::Update(HWND hWnd, uint32 Width, uint32 Height)
 {
-	for (Key& key : Keys)
+	for (FKey& key : Keys)
 	{
 		UpdateKey(key);
 	}		
-	SetMousePos(hWnd, windowWidth, windowHeight);
+	SetMousePos(hWnd, Width, Height);
 
 
-	for (auto& [key, callbacks] : KeyDownCallbacks)
+	for (const auto& [Key, Callbacks] : KeyDownCallbacks)
 	{
-		if (GetKeyDown(key))
+		if (GetKeyDown(Key))
 		{
-			for (auto& callback : callbacks)
+			for (const auto& Callback : Callbacks)
 			{
-				callback();
+				Callback();
 			}
 		}
 	}
 
-	for (auto& [key, callbacks] : KeyPressCallbacks)
+	for (const auto& [Key,Callbacks] : KeyPressCallbacks)
 	{
-		if (GetKeyPress(key))
+		if (GetKeyPress(Key))
 		{
-			for (auto& callback : callbacks)
+			for (const auto& Callback : Callbacks)
 			{
-				callback();
+				Callback();
 			}
 		}
 	}
 
-	for (auto& [key, callbacks] : KeyUpCallbacks)
+	for (const auto& [Key, Callbacks] : KeyUpCallbacks)
 	{
-		if (GetKeyUp(key))
+		if (GetKeyUp(Key))
 		{
-			for (auto& callback : callbacks)
+			for (const auto& Callback : Callbacks)
 			{
-				callback();
+				Callback();
 			}
 		}
 	}
 
-	for (auto& [button, callbacks] : MouseDownCallbacks)
+	for (const auto& [button, Callbacks] : MouseDownCallbacks)
 	{
 		if (GetKeyDown(button))
 		{
-			for (auto& callback : callbacks)
+			for (const auto& Callback : Callbacks)
 			{
-				callback(MouseNDCPos);
+				Callback(MouseNDCPos);
 			}
 		}
 	}
 
-	for (auto& [button, callbacks] : MousePressCallbacks)
+	for (const auto& [button, Callbacks] : MousePressCallbacks)
 	{
 		if (GetKeyPress(button))
 		{
-			for (auto& callback : callbacks)
+			for (const auto& Callback : Callbacks)
 			{
-				callback(GetMouseDeltaPos());
+				Callback(GetMouseDeltaPos());
 			}
 		}
 	}
 
-	for (auto& [button, callbacks] : MouseUpCallbacks)
+	for (const auto& [button, Callbacks] : MouseUpCallbacks)
 	{
 		if (GetKeyUp(button))
 		{
-			for (auto& callback : callbacks)
+			for (const auto& Callback : Callbacks)
 			{
-				callback(MouseNDCPos);
+				Callback(MouseNDCPos);
 			}
 		}
 	}
 
 }
 
-FVector APlayerInput::CalNDCPos(FVector MousePos, FVector WindowSize)
+FVector APlayerInput::CalNDCPos(FVector InMousePos, FVector WindowSize) const
 {
-    return {( MousePos.X / ( WindowSize.X / 2 ) ) - 1, ( MousePos.Y / ( WindowSize.Y / 2 ) ) - 1, 0};
-}
-
-void APlayerInput::RegisterKeyDownCallback(EKeyCode KeyCode, std::function<void()> Callback, uint32 uuid)
-{
-	if (KeyDownCallbacks.Contains(KeyCode))
-	{
-		for (auto& callbackwrap : KeyDownCallbacks[KeyCode])
-		{
-			if (callbackwrap.GetID() == uuid)
-			{
-				return;
-			}
-		}
-	}
-
-	KeyCallbackWrapper wrapper(Callback, uuid);
-	KeyDownCallbacks[KeyCode].Add(wrapper);
-}
-
-void APlayerInput::RegisterKeyPressCallback(EKeyCode KeyCode, std::function<void()> Callback, uint32 uuid)
-{
-	if (KeyPressCallbacks.Contains(KeyCode))
-	{
-		for (auto& callback : KeyPressCallbacks[KeyCode])
-		{
-			if (callback.GetID() == uuid)
-			{
-				return;
-			}
-		}
-	}
-
-	KeyCallbackWrapper wrapper(Callback, uuid);
-	KeyPressCallbacks[KeyCode].Add(wrapper);
-}
-
-void APlayerInput::RegisterKeyUpCallback(EKeyCode KeyCode, std::function<void()> Callback, uint32 uuid)
-{
-	if (KeyUpCallbacks.Contains(KeyCode))
-	{
-		for (auto& callback : KeyUpCallbacks[KeyCode])
-		{
-			if (callback.GetID() == uuid)
-			{
-				return;
-			}
-		}
-	}
-
-	KeyCallbackWrapper wrapper(Callback, uuid);
-	KeyUpCallbacks[KeyCode].Add(wrapper);
-}
-
-void APlayerInput::RegisterMouseDownCallback(EKeyCode Button, std::function<void(const FVector&)> Callback, uint32 uuid)
-{
-	//if (Button != EKeyCode::LButton || Button != EKeyCode::MButton || Button != EKeyCode::RButton)
-	//{
-	//	return;
-	//}
-
-	if (MouseDownCallbacks.Contains(Button))
-	{
-		for (auto& callback : MouseDownCallbacks[Button])
-		{
-			if (callback.GetID() == uuid)
-			{
-				return;
-			}
-		}
-	}
-
-	MouseCallbackWrapper wrapper(Callback, uuid);
-	MouseDownCallbacks[Button].Add(wrapper);
-}
-
-void APlayerInput::RegisterMousePressCallback(EKeyCode Button, std::function<void(const FVector&)> Callback, uint32 uuid)
-{
-	//if (Button != EKeyCode::LButton || Button != EKeyCode::MButton || Button != EKeyCode::RButton)
-	//{
-	//	return;
-	//}
-
-	if (MousePressCallbacks.Contains(Button))
-	{
-		for (auto& callback : MousePressCallbacks[Button])
-		{
-			if (callback.GetID() == uuid)
-			{
-				return;
-			}
-		}
-	}
-
-	MouseCallbackWrapper wrapper(Callback, uuid);
-	MousePressCallbacks[Button].Add(wrapper);
-}
-
-void APlayerInput::RegisterMouseUpCallback(EKeyCode Button, std::function<void(const FVector&)> Callback, uint32 uuid)
-{
-	//if (Button != EKeyCode::LButton || Button != EKeyCode::MButton || Button != EKeyCode::RButton)
-	//{
-	//	return;
-	//}
-
-	if (MouseUpCallbacks.Contains(Button))
-	{
-		for (auto& callback : MouseUpCallbacks[Button])
-		{
-			if (callback.GetID() == uuid)
-			{
-				return;
-			}
-		}
-	}
-
-	MouseCallbackWrapper wrapper(Callback, uuid);
-	MouseUpCallbacks[Button].Add(wrapper);
+    return {( InMousePos.X / ( WindowSize.X / 2 ) ) - 1, ( InMousePos.Y / ( WindowSize.Y / 2 ) ) - 1, 0};
 }

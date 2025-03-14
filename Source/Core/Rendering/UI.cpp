@@ -300,6 +300,7 @@ void UI::RenderCameraSettings()
         Camera->SetActorTransform(Transform);
     }
     ImGui::DragFloat("Camera Speed", &Camera->CameraSpeed, 0.1f);
+	ImGui::DragFloat("Camera Sensitivity", &Camera->Sensitivity, 0.1f);
 
     FVector Forward = Camera->GetActorTransform().GetForward();
     FVector Up = Camera->GetActorTransform().GetUp();

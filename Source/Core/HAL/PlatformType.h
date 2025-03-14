@@ -19,9 +19,9 @@
 #define FORCENOINLINE __declspec(noinline)
 
 
-#define IS_WIDECHAR 0
+#define USE_WIDECHAR 0
 
-#if IS_WIDECHAR 
+#if USE_WIDECHAR 
     #define TEXT(x) L##x
 #else
     #define TEXT(x) x
@@ -43,7 +43,7 @@ typedef std::int64_t int64;
 typedef char ANSICHAR;
 typedef wchar_t WIDECHAR;
 
-#if IS_WIDECHAR
+#if USE_WIDECHAR
     typedef WIDECHAR TCHAR;
 #else
     typedef ANSICHAR TCHAR;

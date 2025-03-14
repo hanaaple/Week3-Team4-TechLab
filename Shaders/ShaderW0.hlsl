@@ -45,7 +45,7 @@ PS_INPUT mainVS(VS_INPUT input)
 {
     PS_INPUT output;
 
-    output.position = mul(input.position, MVP);
+	output.position = mul(float4(input.position.xyz, 1), MVP);
     // output.depthPosition = output.position;
 
     output.color = bUseVertexColor == 1 ? input.color : CustomColor;

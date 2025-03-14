@@ -1,17 +1,14 @@
 #pragma once
 
-#define _TCHAR_DEFINED
+#define _TCHAR_DEFINED  // TCHAR 재정의 에러 때문
 #include <d3d11.h>
-#include <memory>
 
 #include "UI.h"
 #include "Core/Math/Vector.h"
 // #include "Object/Actor/Camera.h"
-#include "Core/Rendering/BufferCache.h"
 #include "Core/Math/Matrix.h"
 #include "Core/Engine.h"
 #include "Primitive/PrimitiveVertices.h"
-#include "Core/Math/Quat.h"
 
 
 struct FVertexSimple;
@@ -83,8 +80,11 @@ public:
      * @param pBuffer 렌더링에 사용할 버텍스 버퍼에 대한 포인터
      * @param numVertices 버텍스 버퍼에 저장된 버텍스의 총 개수
      */
-    void RenderPrimitiveInternal(ID3D11Buffer* vertexBuffer, ID3D11Buffer* indexBuffer, UINT numVertices) const;
+    void RenderPrimitiveInternal(class UPrimitiveComponent& PrimitiveComp) const;
 
+	void LoadTexture(const wchar_t* texturePath);
+	ID3D11ShaderResourceView* FontTextureSRV = nullptr;
+	ID3D11SamplerState* FontSamplerState = nullptr;
     /**
      * 정점 데이터로 Vertex Buffer를 생성합니다.
      * @param Vertices 버퍼로 변환할 정점 데이터 배열의 포인터
@@ -131,6 +131,9 @@ protected:
     /** 뎁스 스텐실 상태를 생성합니다. */
 	void CreateDepthStencilState();
 	
+	/** 블렌드 상태를 생성합니다. */
+	void CreateBlendState();
+
     /** 프레임 버퍼를 해제합니다. */
     void ReleaseFrameBuffer();
 
@@ -142,8 +145,6 @@ protected:
 
     /** 레스터라이저 상태를 해제합니다. */
     void ReleaseRasterizerState();
-
-    void CreateBufferCache();
 
     void InitMatrix();
 
@@ -165,6 +166,8 @@ protected:
     // Shader를 렌더링할 때 사용되는 변수들
     ID3D11VertexShader* SimpleVertexShader = nullptr;       // Vertex 데이터를 처리하는 Vertex 셰이더
     ID3D11PixelShader* SimplePixelShader = nullptr;         // Pixel의 색상을 결정하는 Pixel 셰이더
+	ID3D11VertexShader* FontVertexShader = nullptr;       // Vertex 데이터를 처리하는 Vertex 셰이더
+	ID3D11PixelShader* FontPixelShader = nullptr;         // Pixel의 색상을 결정하는 Pixel 셰이더
 
     ID3D11InputLayout* SimpleInputLayout = nullptr;         // Vertex 셰이더 입력 레이아웃 정의
     unsigned int Stride = 0;                                // Vertex 버퍼의 각 요소 크기
@@ -175,9 +178,9 @@ protected:
 	ID3D11DepthStencilState* DepthStencilState = nullptr;   // DepthStencil 상태(깊이 테스트, 스텐실 테스트 등 정의)
     ID3D11DepthStencilState* GizmoDepthStencilState = nullptr; // 기즈모용 스텐실 스테이트. Z버퍼 테스트 하지않고 항상 앞에렌더
 	
-	// Buffer Cache
-
-	std::unique_ptr<FBufferCache> BufferCache;
+	// Blend state
+	ID3D11BlendState* BlendState = nullptr;
+	float BlendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 	FMatrix WorldMatrix;
     FMatrix ViewMatrix;
