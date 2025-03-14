@@ -47,11 +47,13 @@ public:
     void Shutdown();
 
 	class URenderer* GetRenderer() const { return Renderer.get(); }
-	float GetScreenRatio() const { return static_cast<float>(ScreenWidth) / ScreenHeight; }
+	float GetScreenRatio() const { return static_cast<float>(ScreenWidth) / static_cast<float>(ScreenHeight); }
     int GetScreenWidth() const { return ScreenWidth; }
     int GetScreenHeight() const { return ScreenHeight; }
     int GetInitializedScreenWidth() const { return InitializedScreenWidth; }
     int GetInitializedScreenHeight() const { return InitializedScreenHeight; }
+
+	static float GetDeltaTime() { return UEngine::Get().EngineDeltaTime; }
 
 private:
     void InitWindow(int InScreenWidth, int InScreenHeight);
@@ -86,6 +88,8 @@ private:
     int ScreenWidth = 0;
     int ScreenHeight = 0;
 
+	float EngineDeltaTime = 0.0f;
+
 private:
 	std::unique_ptr<URenderer> Renderer;
 
@@ -93,7 +97,7 @@ private:
 	UI ui;
 
 private:
-    class UWorld* World;
+    UWorld* World = nullptr;
 
 public:
     // TArray<std::shared_ptr<UObject>> GObjects;

@@ -92,8 +92,7 @@ void UEngine::Run()
         const LARGE_INTEGER EndTime = StartTime;
         QueryPerformanceCounter(&StartTime);
 
-        const float DeltaTime =
-            static_cast<float>(StartTime.QuadPart - EndTime.QuadPart) / static_cast<float>(Frequency.QuadPart);
+        EngineDeltaTime = static_cast<float>(StartTime.QuadPart - EndTime.QuadPart) / static_cast<float>(Frequency.QuadPart);
         // 메시지(이벤트) 처리
         MSG Msg;
         while (PeekMessage(&Msg, nullptr, 0, 0, PM_REMOVE))
@@ -113,7 +112,7 @@ void UEngine::Run()
         }
 
 		APlayerInput::Get().Update(WindowHandle, ScreenWidth, ScreenHeight);
-		APlayerController::Get().ProcessPlayerInput(DeltaTime);
+		APlayerController::Get().ProcessPlayerInput(EngineDeltaTime);
 
 		// Renderer Update
         Renderer->Prepare();
@@ -122,9 +121,9 @@ void UEngine::Run()
 		// World Update
 		if (World)
 		{
-			World->Tick(DeltaTime);
+			World->Tick(EngineDeltaTime);
 			World->Render();
-		    World->LateTick(DeltaTime);
+		    World->LateTick(EngineDeltaTime);
 		}
 
         //각 Actor에서 TickActor() -> PlayerTick() -> TickPlayerInput() 호출하는데 지금은 Message에서 처리하고 있다
