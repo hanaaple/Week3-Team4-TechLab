@@ -49,6 +49,7 @@ public:
     float GetNear() const;
     float GetFar() const;
 
+	FMatrix GetProjectionMatrix() const;
         
     FVector GetForward() const
     {

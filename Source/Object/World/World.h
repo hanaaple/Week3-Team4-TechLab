@@ -51,6 +51,8 @@ public:
 	inline class ACamera* GetCamera() const { return Camera; }
 	void SetCamera(class ACamera* NewCamera) { Camera = NewCamera; }
 
+	void RayCasting(const FVector& MouseNDCPos);
+
 private:
 	UWorldInfo GetWorldInfo() const;
 	class ACamera* Camera = nullptr;

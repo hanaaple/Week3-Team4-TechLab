@@ -272,7 +272,7 @@ void APlayerInput::RegisterMouseDownCallback(EKeyCode Button, std::function<void
 	}
 
 	MouseCallbackWrapper wrapper(Callback, uuid);
-	MousePressCallbacks[Button].Add(wrapper);
+	MouseDownCallbacks[Button].Add(wrapper);
 }
 
 void APlayerInput::RegisterMousePressCallback(EKeyCode Button, std::function<void(const FVector&)> Callback, uint32 uuid)
@@ -316,5 +316,5 @@ void APlayerInput::RegisterMouseUpCallback(EKeyCode Button, std::function<void(c
 	}
 
 	MouseCallbackWrapper wrapper(Callback, uuid);
-	MousePressCallbacks[Button].Add(wrapper);
+	MouseUpCallbacks[Button].Add(wrapper);
 }

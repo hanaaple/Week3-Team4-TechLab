@@ -145,6 +145,40 @@ float FMatrix::Determinant() const
 		m[3] * (m[4] * (m[9] * m[14] - m[10] * m[13]) - m[5] * (m[8] * m[14] - m[10] * m[12]) + m[6] * (m[8] * m[13] - m[9] * m[12]));
 }
 
+FMatrix FMatrix::InverseGaussJordan(FMatrix& mat)
+{
+	FMatrix augmented = mat;
+	FMatrix identity = FMatrix();
+	for (int col = 0; col < 4; col++) {
+		int pivotRow = col;
+		for (int row = col + 1; row < 4; row++) {
+			if (fabs(augmented.M[row][col]) > fabs(augmented.M[pivotRow][col])) {
+				pivotRow = row;
+			}
+		}
+		if (fabs(augmented.M[pivotRow][col]) < 1e-6f) {
+			std::cerr << "Matrix is singular and cannot be inverted (Gauss-Jordan)." << std::endl;
+			return FMatrix();
+		}
+		std::swap(augmented.M[col], augmented.M[pivotRow]);
+		std::swap(identity.M[col], identity.M[pivotRow]);
+		float pivot = augmented.M[col][col];
+		for (int j = 0; j < 4; j++) {
+			augmented.M[col][j] /= pivot;
+			identity.M[col][j] /= pivot;
+		}
+		for (int row = 0; row < 4; row++) {
+			if (row == col) continue;
+			float factor = augmented.M[row][col];
+			for (int j = 0; j < 4; j++) {
+				augmented.M[row][j] -= factor * augmented.M[col][j];
+				identity.M[row][j] -= factor * identity.M[col][j];
+			}
+		}
+	}
+	return identity;
+}
+
 FMatrix FMatrix::Inverse() const
 {
 	const float Det = Determinant();

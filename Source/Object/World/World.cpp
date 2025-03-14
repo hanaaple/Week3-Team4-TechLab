@@ -14,6 +14,7 @@
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
 #include "Static/FEditorManager.h"
 #include "Static/FLineBatchManager.h"
+#include <Core/Math/Ray.h>
 
 
 void UWorld::BeginPlay()
@@ -22,6 +23,8 @@ void UWorld::BeginPlay()
 	{
 		Actor->BeginPlay();
 	}
+
+	APlayerInput::Get().RegisterMouseDownCallback(EKeyCode::LButton, std::bind(&UWorld::RayCasting, this, std::placeholders::_1), GetUUID());
 }
 
 void UWorld::Tick(float DeltaTime)
@@ -243,6 +246,53 @@ void UWorld::LoadWorld(const char* SceneName)
 		}
 		
 		Actor->SetActorTransform(Transform);
+	}
+}
+
+void UWorld::RayCasting(const FVector& MouseNDCPos)
+{
+	float screenWidth = UEngine::Get().GetScreenWidth();
+	float screenHeight = UEngine::Get().GetScreenHeight();
+
+	FMatrix ProjMatrix = Camera->GetProjectionMatrix();
+
+	FRay ray = FRay(Camera->GetViewMatrix(), ProjMatrix, MouseNDCPos.X, MouseNDCPos.Y, screenWidth, screenHeight);
+
+	AActor* debugActor = SpawnActor<AActor>();
+	debugActor->SetRootComponent(debugActor->AddComponent<USphereComp>());
+	debugActor->SetActorTransform(FTransform(ray.GetOrigin(), FQuat(), FVector(0.01f, 0.01f, 0.01f)));
+	AddRenderComponent(debugActor->GetComponentByClass<USphereComp>());
+
+	for (auto& Actor : Actors)
+	{
+		UCubeComp* PrimitiveComponent = Actor->GetComponentByClass<UCubeComp>();
+
+		if (PrimitiveComponent == nullptr)
+		{
+			continue;
+		}
+
+		FMatrix primWorldMat = PrimitiveComponent->GetComponentTransform().GetMatrix();
+
+		FVector4 localOrigin = primWorldMat.TransformVector4(FVector4(ray.GetOrigin(), 1));
+		localOrigin /= localOrigin.W;
+
+		FVector4 localDir = primWorldMat.TransformVector4(FVector4(ray.GetDirection(), 0));
+
+		FRay localRay = FRay(FVector(localOrigin.X, localOrigin.Y, localOrigin.Z), FVector(localDir.X, localDir.Y, localDir.Z));
+
+		switch (PrimitiveComponent->GetType())
+		{
+		case EPrimitiveType::EPT_Cube:
+		{
+			float outT = 0;
+			if (FRayCast::IntersectRayAABB(localRay, FVector(-0.5f, -0.5f, -0.5f), FVector(0.5f, 0.5f, 0.5f), outT))
+			{
+				UE_LOG("Hit Cube");
+			}
+			break;
+		}
+		}
 	}
 }
 

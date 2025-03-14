@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Vector.h"
 
 struct FVector4;
@@ -33,6 +33,7 @@ struct alignas(16) FMatrix
 	static FMatrix GetRotateMatrix(const FQuat& Q);
 	static FMatrix LookAtLH(const FVector& EyePosition, const FVector& FocusPoint, const FVector& WorldUp);
 	static FMatrix PerspectiveFovLH(float FieldOfView, float AspectRatio, float NearPlane, float FarPlane);
+	static FMatrix InverseGaussJordan(FMatrix& mat);
 
 	FMatrix operator+(const FMatrix& Other) const;
 	FMatrix operator+=(const FMatrix& Other);
@@ -57,3 +58,5 @@ struct alignas(16) FMatrix
 
 	class FTransform GetTransform() const;
 };
+
+

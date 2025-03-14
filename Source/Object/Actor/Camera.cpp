@@ -14,7 +14,7 @@ ACamera::ACamera()
     Far = 1000.f;
     FieldOfView = 45.f;
     ProjectionMode = ECameraProjectionMode::Perspective;
-	CameraSpeed = 20.0f;
+	CameraSpeed = 1.0f;
 	float sensitivity = std::stof(UConfigManager::Get().GetValue("Camera", "Sensitivity"));
 
     RootComponent = AddComponent<USceneComponent>();
@@ -67,6 +67,11 @@ float ACamera::GetNear() const
 float ACamera::GetFar() const
 {
     return Far;
+}
+
+FMatrix ACamera::GetProjectionMatrix() const
+{
+	return FMatrix::PerspectiveFovLH(FieldOfView, UEngine::Get().GetScreenRatio(), Near, Far);
 }
 
 void ACamera::MoveForward()
