@@ -22,7 +22,7 @@ private:
     private:
         typename MapType::iterator InnerIt;
     public:
-        Iterator(typename MapType::iterator it) : InnerIt(it) {}
+        Iterator(typename MapType::iterator it) : InnerIt(std::move(it)) {}
         PairType& operator*() { return reinterpret_cast<PairType&>(*InnerIt); }
         PairType* operator->() { return reinterpret_cast<PairType*>(&(*InnerIt)); }
         Iterator& operator++() { ++InnerIt; return *this; }
@@ -94,9 +94,25 @@ public:
         PrivateMap.insert_or_assign(Key, Value);
     }
 
-    void Emplace(KeyType&& Key, ValueType&& Value)
+    /**
+     * Map에 새로운 Key-Value를 삽입합니다.
+     * @param InKey 삽입할 키
+     * @param InValue 삽입할 값
+     * @return InValue의 참조
+     */
+    template <typename InitKeyType = KeyType, typename InitValueType = ValueType>
+    ValueType& Emplace(InitKeyType&& InKey, InitValueType&& InValue)
     {
-        PrivateMap.emplace(std::move(Key), std::move(Value));
+        auto it = PrivateMap.emplace(std::forward<InitKeyType>(InKey), std::forward<InitValueType>(InValue));
+    	return it->second;
+    }
+
+	// Key만 넣고, Value는 기본값으로 삽입
+	template <typename InitKeyType = KeyType>
+    ValueType& Emplace(InitKeyType&& InKey)
+    {
+        auto it = PrivateMap.emplace(std::forward<InitKeyType>(InKey), ValueType{});
+    	return it->second;
     }
 
     void Remove(const KeyType& Key)
