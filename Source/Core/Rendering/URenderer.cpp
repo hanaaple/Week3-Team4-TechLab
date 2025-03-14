@@ -205,25 +205,25 @@ void URenderer::PrepareShader() const
 
 void URenderer::RenderPrimitive(class UPrimitiveComponent& PrimitiveComp, const class FMatrix& ModelMatrix)
 {
-    if (BufferCache == nullptr)
-    {
-        return;
-    }
+ //    if (BufferCache == nullptr)
+ //    {
+ //        return;
+ //    }
+ //
+ //
+	//
+	// BufferInfo Info = BufferCache->GetBufferInfo(PrimitiveComp.GetType());
 
-
-	
-	BufferInfo Info = BufferCache->GetBufferInfo(PrimitiveComp.GetType());
-
-	if (Info.GetVertexBuffer() == nullptr || Info.GetIndexBuffer() == nullptr)
-	{
-		return;
-	}
+	// if (Info.GetVertexBuffer() == nullptr || Info.GetIndexBuffer() == nullptr)
+	// {
+	// 	return;
+	// }
 
 	//if (CurrentTopology != Info.GetTopology())
-	{
-		DeviceContext->IASetPrimitiveTopology(Info.GetTopology());
-		CurrentTopology = Info.GetTopology();
-	}
+	// {
+	// 	DeviceContext->IASetPrimitiveTopology(Info.GetTopology());
+	// 	CurrentTopology = Info.GetTopology();
+	// }
 
 	FMatrix MVP = FMatrix::Transpose(
 		ModelMatrix *
@@ -242,11 +242,11 @@ void URenderer::RenderPrimitive(class UPrimitiveComponent& PrimitiveComp, const 
 	
 
 	
-    RenderPrimitiveInternal(Info.GetVertexBuffer(), Info.GetIndexBuffer(), Info.GetIndexSize(), PrimitiveComp);
+    RenderPrimitiveInternal( PrimitiveComp);
 
 }
 
-void URenderer::RenderPrimitiveInternal(ID3D11Buffer* vertexBuffer, ID3D11Buffer* indexBuffer, UINT numIndices, class UPrimitiveComponent& PrimitiveComp) const
+void URenderer::RenderPrimitiveInternal(class UPrimitiveComponent& PrimitiveComp) const
 {
     UINT Offset = 0;
 
@@ -257,20 +257,21 @@ void URenderer::RenderPrimitiveInternal(ID3D11Buffer* vertexBuffer, ID3D11Buffer
 
 	if (PrimitiveComp.VertexBuffer != nullptr)
 	{
-		PrimitiveComp.VertexBuffer->Setting();
-		PrimitiveComp.IndexBuffer->Setting();
+		
 	}
 	else
 	{
-		DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &Stride, &Offset);
+		//DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &Stride, &Offset);
 	}
 		
 
 	
-    DeviceContext->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-    DeviceContext->IASetPrimitiveTopology(CurrentTopology);
+    
+	PrimitiveComp.VertexBuffer->Setting();
+	PrimitiveComp.IndexBuffer->Setting();
+	//DeviceContext->IASetPrimitiveTopology(PrimitiveComp.Topology);
 
-    DeviceContext->DrawIndexed(numIndices, 0, 0);
+    DeviceContext->DrawIndexed(PrimitiveComp.IndexBuffer->GetIndexCount(), 0, 0);
 }
 
 ID3D11Buffer* URenderer::CreateVertexBuffer(const FVertexSimple* Vertices, UINT ByteWidth) const
@@ -553,7 +554,7 @@ void URenderer::ReleaseRasterizerState()
 
 void URenderer::CreateBufferCache()
 {
-    BufferCache = std::make_unique<FBufferCache>();
+    //BufferCache = std::make_unique<FBufferCache>();
 }
 
 void URenderer::InitMatrix()

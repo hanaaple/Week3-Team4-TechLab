@@ -23,14 +23,19 @@ static std::shared_ptr<FIndexBuffer> Create(FString _Name, const TArray<uint32>&
 
 	void Setting() const;
 	
+	inline uint32 GetIndexCount() 
+	{
+		return IndexCount;
+	}
+	
 private:
 	
 	void ResCreate(const void* _Data, size_t _IndexCount);
 
 	DXGI_FORMAT Format = DXGI_FORMAT::DXGI_FORMAT_R32_UINT;
-	UINT IndexSize = sizeof(uint32);
-	UINT IndexCount = 0;
-	UINT Offset = 0;
+	uint32 IndexSize = sizeof(uint32);
+	uint32 IndexCount = 0;
+	uint32 Offset = 0;
 
 	
 	
