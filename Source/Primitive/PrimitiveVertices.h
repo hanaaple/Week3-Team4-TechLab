@@ -30,7 +30,6 @@ enum class EPrimitiveType : uint8
 	EPT_Quad,
 	EPT_Cube,
 	EPT_Sphere,
-	EPT_Line,
 	EPT_Cylinder,
 	EPT_Cone,
 	EPT_Max,
