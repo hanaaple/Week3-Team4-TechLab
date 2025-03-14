@@ -4,7 +4,7 @@
 #include "Object//Actor/Camera.h"
 #include "PlayerInput.h"
 #include "Static/FEditorManager.h"
-#include "Core/Math/Plane.h"
+#include "Core/Math/Quat.h"
 
 APlayerController::APlayerController() {
 

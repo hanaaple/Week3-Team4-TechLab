@@ -178,10 +178,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\Config\ConfigManager.cpp" />
+    <ClCompile Include="Source\Core\Math\Ray.cpp" />
     <ClCompile Include="Source\Object\Assets\AssetManager.cpp" />
     <ClCompile Include="Source\Object\Assets\SceneAsset.cpp" />
     <ClCompile Include="Source\Object\Assets\Asset.cpp" />
-    <ClCompile Include="Source\Core\Math\Plane.cpp" />
+    <ClCompile Include="Source\Core\Math\Quat.cpp" />
     <ClCompile Include="Source\Core\UObject\NameTypes.cpp" />
     <ClCompile Include="Source\Core\UObject\Object.cpp" />
     <ClCompile Include="Source\Object\Actor\Camera.cpp" />
@@ -271,6 +272,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Core\Config\ConfigManager.h" />
+    <ClInclude Include="Source\Core\Math\Ray.h" />
     <ClInclude Include="Source\Object\Assets\AssetManager.h" />
     <ClInclude Include="Source\Object\Assets\SceneAsset.h" />
     <ClInclude Include="Source\Object\Assets\Asset.h" />
@@ -295,7 +297,7 @@
     <ClInclude Include="Source\Core\HAL\PlatformType.h" />
     <ClInclude Include="Source\Core\Math\MathUtility.h" />
     <ClInclude Include="Source\Core\Math\Matrix.h" />
-    <ClInclude Include="Source\Core\Math\Plane.h" />
+    <ClInclude Include="Source\Core\Math\Quat.h" />
     <ClInclude Include="Source\Core\Math\Vector.h" />
     <ClInclude Include="Source\JsonSaveHelper.h" />
     <ClInclude Include="Source\Core\Math\Transform.h" />

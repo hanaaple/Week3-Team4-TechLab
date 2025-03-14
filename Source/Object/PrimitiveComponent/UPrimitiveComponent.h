@@ -3,7 +3,7 @@
 #include "Core/Engine.h"
 #include "Object/USceneComponent.h"
 #include "Primitive/PrimitiveVertices.h"
-#include "Core/Math/Plane.h"
+#include "Core/Math/Quat.h"
 
 
 class UPrimitiveComponent : public USceneComponent

@@ -1,6 +1,6 @@
-﻿#include "Matrix.h"
+#include "Matrix.h"
 #include "Vector.h"
-#include "Plane.h"
+#include "Quat.h"
 #include "Transform.h"
 
 

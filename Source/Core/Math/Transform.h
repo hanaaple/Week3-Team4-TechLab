@@ -1,8 +1,8 @@
-﻿#pragma once
+#pragma once
 #include "Vector.h"
 #include "Matrix.h"
 #include "Core/Engine.h"
-#include "Core/Math/Plane.h"
+#include "Core/Math/Quat.h"
 
 #define TORAD 0.0174532925199432957f
 
