@@ -1,14 +1,14 @@
-﻿#include "Quad.h"
+#include "Quad.h"
 #include <Object/PrimitiveComponent/UPrimitiveComponent.h>
 
 AQuad::AQuad()
 {
 	bCanEverTick = true;
 
-	UCubeComp* CubeComponent = AddComponent<UCubeComp>();
-	RootComponent = CubeComponent;
+	UQuadComp* QuadComponent = AddComponent<UQuadComp>();
+	RootComponent = QuadComponent;
 
-	CubeComponent->SetRelativeTransform(FTransform());
+	QuadComponent->SetRelativeTransform(FTransform());
 }
 
 void AQuad::BeginPlay()

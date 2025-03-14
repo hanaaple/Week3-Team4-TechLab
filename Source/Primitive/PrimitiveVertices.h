@@ -25,7 +25,9 @@ struct FGeometryData
 enum class EPrimitiveType : uint8
 {
 	EPT_None,
+	EPT_Line,
 	EPT_Triangle,
+	EPT_Quad,
 	EPT_Cube,
 	EPT_Sphere,
 	EPT_Line,
@@ -38,3 +40,13 @@ extern FVertexSimple LineVertices[2];
 extern FVertexSimple CubeVertices[36];
 extern FVertexSimple SphereVertices[2400];
 extern FVertexSimple TriangleVertices[3];
+
+struct GlyphInfo
+{
+	float u;      
+	float v;      
+	float width;  
+	float height; 
+	float offsetX;
+	float offsetY;
+};

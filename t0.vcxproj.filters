@@ -189,13 +189,31 @@
     <ClCompile Include="Source\Static\FLineBatchManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\Config\ConfigManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Object\Assets\AssetManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Object\Assets\SceneAsset.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Object\Assets\Asset.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\UObject\NameTypes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UFontAtlas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\ShaderW0.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\FontVertexShader.hlsl" />
-    <FxCompile Include="Shaders\FontPixelShader.hlsl" />
+    <FxCompile Include="Shaders\Font_VS.hlsl" />
+    <FxCompile Include="Shaders\Font_PS.hlsl" />
     <FxCompile Include="Shaders\ShaderLine_PS.hlsl" />
     <FxCompile Include="Shaders\ShaderLine_VS.hlsl" />
   </ItemGroup>
@@ -410,6 +428,12 @@
     <ClInclude Include="Source\Static\FLineBatchManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\UObject\NameTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UFontAtlas.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
@@ -419,6 +443,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="font_atlas.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="test.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

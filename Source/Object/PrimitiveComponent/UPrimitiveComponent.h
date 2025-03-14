@@ -163,6 +163,6 @@ public:
 	virtual ~UQuadComp() = default;
 	EPrimitiveType GetType() override
 	{
-		return EPrimitiveType::EPT_Cube;
+		return EPrimitiveType::EPT_Quad;
 	}
 };
