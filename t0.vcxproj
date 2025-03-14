@@ -178,6 +178,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\Config\ConfigManager.cpp" />
+    <ClCompile Include="Source\Core\Utils\JsonSaveHelper.cpp" />
     <ClCompile Include="Source\Object\Assets\AssetManager.cpp" />
     <ClCompile Include="Source\Object\Assets\SceneAsset.cpp" />
     <ClCompile Include="Source\Object\Assets\Asset.cpp" />
@@ -205,7 +206,6 @@
     <ClCompile Include="Source\Core\HAL\PlatformMemory.cpp" />
     <ClCompile Include="Source\Core\Math\Matrix.cpp" />
     <ClCompile Include="Source\Core\Math\Vector.cpp" />
-    <ClCompile Include="Source\JsonSaveHelper.cpp" />
     <ClCompile Include="Source\Object\ObjectFactory.cpp" />
     <ClCompile Include="Source\Primitive\UGeometryGenerator.cpp" />
     <ClCompile Include="Source\Static\FLineBatchManager.cpp" />
@@ -272,6 +272,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Core\Config\ConfigManager.h" />
+    <ClInclude Include="Source\Core\Utils\JsonSaveHelper.h" />
     <ClInclude Include="Source\Object\Assets\AssetManager.h" />
     <ClInclude Include="Source\Object\Assets\SceneAsset.h" />
     <ClInclude Include="Source\Object\Assets\Asset.h" />
@@ -298,11 +299,13 @@
     <ClInclude Include="Source\Core\Math\Matrix.h" />
     <ClInclude Include="Source\Core\Math\Plane.h" />
     <ClInclude Include="Source\Core\Math\Vector.h" />
-    <ClInclude Include="Source\JsonSaveHelper.h" />
     <ClInclude Include="Source\Core\Math\Transform.h" />
     <ClInclude Include="Source\Object\Actor\Cylinder.h" />
     <ClInclude Include="Source\Object\Actor\Quad.h" />
+    <ClInclude Include="Source\Object\Gizmo\Axis.h" />
     <ClInclude Include="Source\Object\ObjectFactory.h" />
+    <ClInclude Include="Source\Object\PrimitiveComponent\UPrimitiveComponent.h" />
+    <ClInclude Include="Source\Object\World\World.h" />
     <ClInclude Include="Source\Primitive\UGeometryGenerator.h" />
     <ClInclude Include="Source\Static\FLineBatchManager.h" />
     <ClInclude Include="Source\ThirdParty\ImGui\imconfig.h" />
@@ -330,10 +333,7 @@
     <ClInclude Include="Source\Core\Input\PlayerInput.h" />
     <ClInclude Include="Source\Core\EngineTypes.h" />
     <ClInclude Include="Source\Static\FEditorManager.h" />
-    <ClInclude Include="Source\Primitive\PrimitiveVertices.h" />
     <ClInclude Include="Source\Object\USceneComponent.h" />
-    <ClInclude Include="Source\Object\PrimitiveComponent\UPrimitiveComponent.h" />
-    <ClInclude Include="Source\Object\World\World.h" />
     <ClInclude Include="Source\Object\Actor\Sphere.h" />
     <ClInclude Include="Source\UFontAtlas.h" />
   </ItemGroup>
@@ -345,7 +345,6 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="font_atlas.png" />
-    <Image Include="test.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
