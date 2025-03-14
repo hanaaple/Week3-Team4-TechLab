@@ -15,6 +15,7 @@ class UObject : public std::enable_shared_from_this<UObject>
 private:
 	friend class FObjectFactory;
 
+	/** Object의 Instance Name */
 	FName NamePrivate;
 
 	uint32 UUID = 0;
