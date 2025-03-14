@@ -311,7 +311,7 @@ void APlayerInput::RegisterMouseDownCallback(EKeyCode Button, const Fn& Callback
 		}
 	}
 
-	MousePressCallbacks[Button].Emplace(Callback, uuid);
+	MouseDownCallbacks[Button].Emplace(Callback, uuid);
 }
 
 template <typename Fn>
@@ -355,5 +355,5 @@ void APlayerInput::RegisterMouseUpCallback(EKeyCode Button, const Fn& Callback, 
 		}
 	}
 
-	MousePressCallbacks[Button].Emplace(Callback, uuid);
+	MouseUpCallbacks[Button].Emplace(Callback, uuid);
 }

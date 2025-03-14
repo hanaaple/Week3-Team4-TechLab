@@ -198,5 +198,5 @@ void APlayerInput::Update(HWND hWnd, uint32 Width, uint32 Height)
 
 FVector APlayerInput::CalNDCPos(FVector InMousePos, FVector WindowSize) const
 {
-    return {( InMousePos.X / ( WindowSize.X / 2 ) ) - 1, ( InMousePos.Y / ( WindowSize.Y / 2 ) ) - 1, 0};
+    return { 2.0f * InMousePos.X / WindowSize.X - 1.0f, -2.0f * InMousePos.Y / WindowSize.Y + 1.0f, 0};
 }
