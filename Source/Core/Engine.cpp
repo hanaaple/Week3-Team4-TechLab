@@ -227,6 +227,7 @@ void UEngine::InitWorld()
     
     //World->SpawnActor<AAxis>();
     World->SpawnActor<APicker>();
+
 	World->BeginPlay();
 }
 
