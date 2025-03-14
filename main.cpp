@@ -73,7 +73,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	UConfigManager::Get().LoadConfig("editor.ini");
 
 	UEngine& Engine = UEngine::Get();
-	Engine.Initialize(hInstance, L"Jungle Engine", L"JungleWindow", 1280, 720);
+	Engine.Initialize(hInstance, L"Jungle Engine", L"JungleWindow", 1600, 900);
 
 	Engine.Run();
 
