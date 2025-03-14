@@ -58,7 +58,7 @@ void UEngine::Initialize(
     ScreenWidth = InScreenWidth;
     ScreenHeight = InScreenHeight;
 
-    InitWindow(InScreenWidth, InScreenWidth);
+    InitWindow(InScreenWidth, InScreenHeight);
     InitRenderer();
 
     InitWorld();

@@ -102,13 +102,13 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>$(ProjectDir)Source;$(ProjectDir)Source\ThirdParty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source;$(ProjectDir)Source\ThirdParty\ImGui\include;$(ProjectDir)Source\ThirdParty\SimpleJSON\include;$(ProjectDir)Source\ThirdParty\DirectXTK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Source\ThirdParty\x86\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Source\ThirdParty\DirectXTK\lib\$(PlatformTarget)\$(Configuration)</AdditionalLibraryDirectories>
       <AdditionalDependencies>DirectXTK.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -122,7 +122,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>$(ProjectDir)Source;$(ProjectDir)Source\ThirdParty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source;$(ProjectDir)Source\ThirdParty\ImGui\include;$(ProjectDir)Source\ThirdParty\SimpleJSON\include;$(ProjectDir)Source\ThirdParty\DirectXTK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -130,7 +130,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Source\ThirdParty\x86\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Source\ThirdParty\DirectXTK\lib\$(PlatformTarget)\$(Configuration)</AdditionalLibraryDirectories>
       <AdditionalDependencies>DirectXTK.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -142,7 +142,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>$(ProjectDir)Source;$(ProjectDir)Source\ThirdParty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source;$(ProjectDir)Source\ThirdParty\ImGui\include;$(ProjectDir)Source\ThirdParty\SimpleJSON\include;$(ProjectDir)Source\ThirdParty\DirectXTK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -150,7 +150,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Source\ThirdParty\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Source\ThirdParty\DirectXTK\lib\$(PlatformTarget)\$(Configuration)</AdditionalLibraryDirectories>
       <AdditionalDependencies>DirectXTK.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -164,7 +164,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>$(ProjectDir)Source;$(ProjectDir)Source\ThirdParty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source;$(ProjectDir)Source\ThirdParty\ImGui\include;$(ProjectDir)Source\ThirdParty\SimpleJSON\include;$(ProjectDir)Source\ThirdParty\DirectXTK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -172,7 +172,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Source\ThirdParty\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Source\ThirdParty\DirectXTK\lib\$(PlatformTarget)\$(Configuration)</AdditionalLibraryDirectories>
       <AdditionalDependencies>DirectXTK.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -209,17 +209,17 @@
     <ClCompile Include="Source\Object\ObjectFactory.cpp" />
     <ClCompile Include="Source\Primitive\UGeometryGenerator.cpp" />
     <ClCompile Include="Source\Static\FLineBatchManager.cpp" />
-    <ClCompile Include="Source\ThirdParty\ImGui\imgui.cpp" />
-    <ClCompile Include="Source\ThirdParty\ImGui\imgui_demo.cpp" />
-    <ClCompile Include="Source\ThirdParty\ImGui\imgui_draw.cpp" />
-    <ClCompile Include="Source\ThirdParty\ImGui\imgui_impl_dx11.cpp" />
-    <ClCompile Include="Source\ThirdParty\ImGui\imgui_impl_win32.cpp" />
-    <ClCompile Include="Source\ThirdParty\ImGui\imgui_tables.cpp" />
-    <ClCompile Include="Source\ThirdParty\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Source\Object\USceneComponent.cpp" />
     <ClCompile Include="Source\Object\PrimitiveComponent\UPrimitiveComponent.cpp" />
     <ClCompile Include="Source\Object\World\World.cpp" />
     <ClCompile Include="Source\Object\Actor\Sphere.cpp" />
+    <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui.cpp" />
+    <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Source\UFontAtlas.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -308,15 +308,6 @@
     <ClInclude Include="Source\Object\World\World.h" />
     <ClInclude Include="Source\Primitive\UGeometryGenerator.h" />
     <ClInclude Include="Source\Static\FLineBatchManager.h" />
-    <ClInclude Include="Source\ThirdParty\ImGui\imconfig.h" />
-    <ClInclude Include="Source\ThirdParty\ImGui\imgui.h" />
-    <ClInclude Include="Source\ThirdParty\ImGui\imgui_impl_dx11.h" />
-    <ClInclude Include="Source\ThirdParty\ImGui\imgui_impl_win32.h" />
-    <ClInclude Include="Source\ThirdParty\ImGui\imgui_internal.h" />
-    <ClInclude Include="Source\ThirdParty\ImGui\imstb_rectpack.h" />
-    <ClInclude Include="Source\ThirdParty\ImGui\imstb_textedit.h" />
-    <ClInclude Include="Source\ThirdParty\ImGui\imstb_truetype.h" />
-    <ClInclude Include="Source\ThirdParty\SimpleJSON\Json.hpp" />
     <ClCompile Include="Source\Core\Rendering\UI.cpp" />
     <ClCompile Include="Source\Core\Rendering\URenderer.cpp" />
     <ClCompile Include="Source\Primitive\PrimitiveVertices.cpp" />
@@ -335,6 +326,37 @@
     <ClInclude Include="Source\Static\FEditorManager.h" />
     <ClInclude Include="Source\Object\USceneComponent.h" />
     <ClInclude Include="Source\Object\Actor\Sphere.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\Audio.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\BufferHelpers.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\CommonStates.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\DDSTextureLoader.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\DirectXHelpers.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\Effects.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\GamePad.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\GeometricPrimitive.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\GraphicsMemory.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\Keyboard.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\Model.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\Mouse.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\PostProcess.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\PrimitiveBatch.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\ScreenGrab.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\SimpleMath.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\SimpleMath.inl" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\SpriteBatch.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\SpriteFont.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\VertexTypes.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\WICTextureLoader.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\XboxDDSTextureLoader.h" />
+    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imconfig.h" />
+    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imgui.h" />
+    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imgui_impl_dx11.h" />
+    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imgui_impl_win32.h" />
+    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imgui_internal.h" />
+    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imstb_textedit.h" />
+    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imstb_truetype.h" />
+    <ClInclude Include="Source\ThirdParty\SimpleJSON\include\SimpleJSON\Json.hpp" />
     <ClInclude Include="Source\UFontAtlas.h" />
   </ItemGroup>
   <ItemGroup>
