@@ -3,6 +3,9 @@
 const FVector FVector::ZeroVector = {};
 const FVector FVector::OneVector = {};
 
+const FVector FVector::ForwardVector = { 1.0f, 0.0f, 0.0f };
+const FVector FVector::RightVector = { 0.0f, 1.0f, 0.0f };
+const FVector FVector::UpVector = { 0.0f, 0.0f, 1.0f };
 
 const FVector4 FVector4::WHITE = { 1.0f, 1.0f, 1.0f, 1.0f };
 const FVector4 FVector4::RED = { 1.0f, 0.0f, 0.0f, 1.0f };
