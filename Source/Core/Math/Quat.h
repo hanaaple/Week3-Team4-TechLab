@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Vector.h"
 
 #define PIDIV2 3.141592654/2
@@ -13,7 +13,6 @@ struct alignas(16) FQuat : public FVector4{
 	explicit FQuat(float InX, float InY, float InZ, float InW) : FVector4(InX, InY, InZ, InW) {}
     explicit FQuat(FVector Rotation) : FVector4(EulerToQuaternion(Rotation)) {}
     FQuat(const FVector& Axis, float AngleInDegrees) : FVector4(AxisAngleToQuaternion(Axis, AngleInDegrees)) {}
-
 
     static FQuat EulerToQuaternion(FVector Euler);
     static FVector QuaternionToEuler(const FQuat& quaternion);

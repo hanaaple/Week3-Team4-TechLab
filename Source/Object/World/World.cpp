@@ -258,10 +258,13 @@ void UWorld::RayCasting(const FVector& MouseNDCPos)
 
 	FRay ray = FRay(Camera->GetViewMatrix(), ProjMatrix, MouseNDCPos.X, MouseNDCPos.Y, screenWidth, screenHeight);
 
-	AActor* debugActor = SpawnActor<AActor>();
-	debugActor->SetRootComponent(debugActor->AddComponent<USphereComp>());
-	debugActor->SetActorTransform(FTransform(ray.GetOrigin(), FQuat(), FVector(0.01f, 0.01f, 0.01f)));
-	AddRenderComponent(debugActor->GetComponentByClass<USphereComp>());
+
+	FLineBatchManager::Get().AddLine(ray.GetOrigin(), ray.GetDirection() * Camera->GetFar(), FVector4::RED);
+
+	//AActor* debugActor = SpawnActor<AActor>();
+	//debugActor->SetRootComponent(debugActor->AddComponent<USphereComp>());
+	//debugActor->SetActorTransform(FTransform(ray.GetOrigin(), FQuat(), FVector(0.01f, 0.01f, 0.01f)));
+	//AddRenderComponent(debugActor->GetComponentByClass<USphereComp>());
 
 	for (auto& Actor : Actors)
 	{

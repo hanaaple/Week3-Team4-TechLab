@@ -177,6 +177,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Core\Math\Rotator.cpp" />
     <ClCompile Include="Source\Core\Config\ConfigManager.cpp" />
     <ClCompile Include="Source\Core\Math\Ray.cpp" />
     <ClCompile Include="Source\Core\Utils\JsonSaveHelper.cpp" />
@@ -276,6 +277,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Core\Math\Rotator.h" />
     <ClInclude Include="Source\Core\Config\ConfigManager.h" />
     <ClInclude Include="Source\Core\Math\Ray.h" />
     <ClInclude Include="Source\Core\Utils\JsonSaveHelper.h" />
