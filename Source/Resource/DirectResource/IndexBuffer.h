@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "Resource/Resource.h"
 #include "DirectBuffer.h"
 #include "Core/Container/String.h"

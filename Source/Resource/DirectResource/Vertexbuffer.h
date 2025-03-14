@@ -1,10 +1,12 @@
 #pragma once
-#include "Resource/Resource.h"
+#define _TCHAR_DEFINED
+#include <d3d11.h>
+#include <memory>
+
 #include "DirectBuffer.h"
+#include "Resource/Resource.h"
 #include "Core/Container/String.h"
 #include "Core/Container/Array.h"
-#include <d3d11.h>
-#include "Primitive/PrimitiveVertices.h"
 
 
 class FVertexBuffer :
@@ -17,7 +19,7 @@ public:
 
 	
 	template<typename VertexType>
-static std::shared_ptr<FVertexBuffer> Create(FString _Name, const TArray<VertexType>& _Data)
+	static std::shared_ptr<FVertexBuffer> Create(FString _Name, const TArray<VertexType>& _Data)
 	{
 		std::shared_ptr<FVertexBuffer> Res = FVertexBuffer::CreateRes(_Name);
 		Res->ResCreate(&_Data[0], sizeof(VertexType), _Data.Num());

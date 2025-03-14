@@ -13,7 +13,6 @@ void URenderer::Create(HWND hWindow)
     CreateDeviceAndSwapChain(hWindow);
     CreateFrameBuffer();
     CreateRasterizerState();
-    CreateBufferCache();
     CreateDepthStencilBuffer();
     CreateDepthStencilState();
 	CreateBlendState();

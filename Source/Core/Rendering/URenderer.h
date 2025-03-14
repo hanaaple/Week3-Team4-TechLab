@@ -1,17 +1,14 @@
 #pragma once
 
-#define _TCHAR_DEFINED
+#define _TCHAR_DEFINED  // TCHAR 재정의 에러 때문
 #include <d3d11.h>
-#include <memory>
 
 #include "UI.h"
 #include "Core/Math/Vector.h"
 // #include "Object/Actor/Camera.h"
-#include "Core/Rendering/BufferCache.h"
 #include "Core/Math/Matrix.h"
 #include "Core/Engine.h"
 #include "Primitive/PrimitiveVertices.h"
-#include "Core/Math/Plane.h"
 
 
 struct FVertexSimple;
@@ -149,8 +146,6 @@ protected:
     /** 레스터라이저 상태를 해제합니다. */
     void ReleaseRasterizerState();
 
-    void CreateBufferCache();
-
     void InitMatrix();
 
 protected:
@@ -186,10 +181,6 @@ protected:
 	// Blend state
 	ID3D11BlendState* BlendState = nullptr;
 	float BlendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-
-	// Buffer Cache
-
-	std::unique_ptr<FBufferCache> BufferCache;
 
 	FMatrix WorldMatrix;
     FMatrix ViewMatrix;
