@@ -71,10 +71,10 @@ void URenderer::CreateShader()
     Device->CreatePixelShader(PickingShaderCSO->GetBufferPointer(), PickingShaderCSO->GetBufferSize(), nullptr, &PickingPixelShader);
     
 	// Font Shaders
-	D3DCompileFromFile(L"Shaders/FontVertexShader.hlsl", nullptr, nullptr, "main", "vs_5_0", 0, 0, &FontVertexShaderCSO, &ErrorMsg);
+	D3DCompileFromFile(L"Shaders/Font_VS.hlsl", nullptr, nullptr, "Font_VS", "vs_5_0", 0, 0, &FontVertexShaderCSO, &ErrorMsg);
 	Device->CreateVertexShader(FontVertexShaderCSO->GetBufferPointer(), FontVertexShaderCSO->GetBufferSize(), nullptr, &FontVertexShader);
 
-	D3DCompileFromFile(L"Shaders/FontPixelShader.hlsl", nullptr, nullptr, "main", "ps_5_0", 0, 0, &FontPixelShaderCSO, nullptr);
+	D3DCompileFromFile(L"Shaders/Font_PS.hlsl", nullptr, nullptr, "Font_PS", "ps_5_0", 0, 0, &FontPixelShaderCSO, nullptr);
 	Device->CreatePixelShader(FontPixelShaderCSO->GetBufferPointer(), FontPixelShaderCSO->GetBufferSize(), nullptr, &FontPixelShader);
 
 	if (ErrorMsg)

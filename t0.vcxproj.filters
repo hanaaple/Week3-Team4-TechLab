@@ -212,8 +212,8 @@
     <FxCompile Include="Shaders\ShaderW0.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\FontVertexShader.hlsl" />
-    <FxCompile Include="Shaders\FontPixelShader.hlsl" />
+    <FxCompile Include="Shaders\Font_VS.hlsl" />
+    <FxCompile Include="Shaders\Font_PS.hlsl" />
     <FxCompile Include="Shaders\ShaderLine_PS.hlsl" />
     <FxCompile Include="Shaders\ShaderLine_VS.hlsl" />
   </ItemGroup>
