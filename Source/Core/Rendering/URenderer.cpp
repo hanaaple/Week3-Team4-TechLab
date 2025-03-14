@@ -2,11 +2,11 @@
 #include <d3dcompiler.h>
 #include "Core/Rendering/BufferCache.h"
 #include "Core/Math/Transform.h"
-#include <Object/Actor/Camera.h>
+#include "Object/Actor/Camera.h"
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
 #include "Static/FEditorManager.h"
 #include "Static/FLineBatchManager.h"
-#include "WICTextureLoader.h"
+#include "DirectXTK/WICTextureLoader.h"
 
 void URenderer::Create(HWND hWindow)
 {
