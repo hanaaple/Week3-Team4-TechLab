@@ -8,8 +8,12 @@ class FResource
 {
 public:
 	FResource() {}
-	~FResource() {}
-	
+
+	virtual ~FResource()
+	{
+	}
+
+
 	// delete Function
 	FResource(const FResource& _Other) = delete;
 	FResource(FResource&& _Other) noexcept = delete;
@@ -25,8 +29,17 @@ public:
 		return (pResult != nullptr) ? *pResult : std::shared_ptr<ResourcesType>();
 	}
 
+	
+	static void AllResourcesRelease()
+	{
+		{
+			std::lock_guard<std::mutex> Lock(NameMutex);
+			NameRes.Empty();
+		}
+	}
+
 protected:
-	static std::shared_ptr<ResourcesType> CreateRes(FString _Name)
+	static std::shared_ptr<ResourcesType>  CreateRes(const FString&  _Name)
 	{
 		std::shared_ptr<ResourcesType> NewRes = std::make_shared<ResourcesType>();
 
@@ -41,6 +54,8 @@ private:
 
 	
 };
+
+
 
 
 template<typename ResourcesType>

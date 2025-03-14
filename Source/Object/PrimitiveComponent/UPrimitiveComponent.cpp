@@ -13,6 +13,12 @@ UPrimitiveComponent::UPrimitiveComponent()
 	bCanBeRendered = true;
 }
 
+UPrimitiveComponent::~UPrimitiveComponent()
+{
+	class std::shared_ptr<class FVertexBuffer> VertexBuffer = nullptr;
+	class std::shared_ptr<class FIndexBuffer> IndexBuffer = nullptr;
+}
+
 void UPrimitiveComponent::BeginPlay()
 {
 	Super::BeginPlay();

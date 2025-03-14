@@ -12,7 +12,7 @@ class UPrimitiveComponent : public USceneComponent
 	using Super = USceneComponent;
 public:
 	UPrimitiveComponent();
-	virtual ~UPrimitiveComponent() = default;
+	virtual ~UPrimitiveComponent() override;
 
 public:
 	virtual void BeginPlay() override;

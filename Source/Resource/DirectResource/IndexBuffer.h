@@ -16,7 +16,7 @@ class FIndexBuffer :
 {
 public:
 	
-static std::shared_ptr<FIndexBuffer> Create(FString _Name, const TArray<uint32>& _Data)
+static std::shared_ptr<FIndexBuffer> Create(const FString&  _Name, const TArray<uint32>& _Data)
 	{
 		std::shared_ptr<FIndexBuffer> Res = FIndexBuffer::CreateRes(_Name);
 		Res->ResCreate(&_Data[0], _Data.Num());

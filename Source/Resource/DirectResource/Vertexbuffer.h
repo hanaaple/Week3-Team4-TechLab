@@ -19,7 +19,7 @@ public:
 
 	
 	template<typename VertexType>
-	static std::shared_ptr<FVertexBuffer> Create(FString _Name, const TArray<VertexType>& _Data)
+	static std::shared_ptr<FVertexBuffer> Create(const FString&  _Name, const TArray<VertexType>& _Data)
 	{
 		std::shared_ptr<FVertexBuffer> Res = FVertexBuffer::CreateRes(_Name);
 		Res->ResCreate(&_Data[0], sizeof(VertexType), _Data.Num());
