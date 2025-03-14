@@ -48,7 +48,7 @@ void FLineBatchManager::DrawWorldGrid(float GridSize, float GridSpacing, const F
 
 		// Y=0인 라인은 X축이므로 강조
 		FVector4 LineColor = (FMath::Abs(Position) < KINDA_SMALL_NUMBER)
-			? FVector4::BLUE // X축 강조
+			? FVector4::RED // X축 강조
 			: GridColor;
 
 		AddLine(StartPoint, EndPoint, LineColor);
@@ -64,7 +64,7 @@ void FLineBatchManager::DrawWorldGrid(float GridSize, float GridSpacing, const F
 
 		// X=0인 라인은 Y축이므로 강조
 		FVector4 LineColor = (FMath::Abs(Position) < KINDA_SMALL_NUMBER)
-			? FVector4::RED // Y축 강조
+			? FVector4::GREEN // Y축 강조
 			: GridColor;
 
 		AddLine(StartPoint, EndPoint, LineColor);
@@ -74,7 +74,7 @@ void FLineBatchManager::DrawWorldGrid(float GridSize, float GridSpacing, const F
 	if (bCenterGrid)
 	{
 		// Z축 표시 (위쪽 방향)
-		AddLine(FVector(0, 0, 0), FVector(0, 0, GridSpacing * 10.0f), FVector4::GREEN);
+		AddLine(FVector(0, 0, 0), FVector(0, 0, GridSpacing * 10.0f), FVector4::BLUE);
 
 		// 원점에 작은 마커 추가 (옵션)
 		float MarkerSize = GridSpacing * 0.25f;
