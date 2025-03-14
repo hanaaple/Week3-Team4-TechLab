@@ -3,6 +3,7 @@
 #include "Core/Rendering/URenderer.h"
 #include "Debug/DebugConsole.h"
 #include "d3d11.h"
+#include "Core/Rendering/FDevice.h"
 
 
 D3D11_INPUT_ELEMENT_DESC FVertexBuffer:: Layout[] = {
@@ -17,7 +18,7 @@ void FVertexBuffer::Setting() const
 		UE_LOG("Error: Vertexbuffer Setting Failed");
 	}
 	
-	UEngine::Get().GetRenderer()->GetDeviceContext()->IASetVertexBuffers(0, 1, &Buffer, &VertexSize, &Offset);
+	FDevice::Get().GetDeviceContext()->IASetVertexBuffers(0, 1, &Buffer, &VertexSize, &Offset);
 }
 
 void FVertexBuffer::ResCreate(const void* _Data, size_t _VertexSize, size_t _VertexCount)
@@ -35,7 +36,7 @@ void FVertexBuffer::ResCreate(const void* _Data, size_t _VertexSize, size_t _Ver
 	BufferInfo.CPUAccessFlags = 0;
 	BufferInfo.Usage = D3D11_USAGE_DEFAULT;
 
-	if (S_OK != UEngine::Get().GetRenderer()->GetDevice()->CreateBuffer(&BufferInfo, &Data, &Buffer))
+	if (S_OK != FDevice::Get().GetDevice()->CreateBuffer(&BufferInfo, &Data, &Buffer))
 	{
 		UE_LOG("Error: Vertexbuffer Create Failed") ;
 		return;

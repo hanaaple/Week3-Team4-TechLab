@@ -4,7 +4,6 @@
 
 
 class AActor;
-class URenderer;
 
 class UI
 {
@@ -13,7 +12,7 @@ public:
     int NumOfSpawn = 0;
 	bool bIsInitialized = false;
     
-    void Initialize(HWND hWnd, const class URenderer& Renderer, UINT ScreenWidth, UINT ScreenHeight);
+    void Initialize(HWND hWnd, const class FDevice& Device, UINT ScreenWidth, UINT ScreenHeight);
     void Update();
     void Shutdown();
 

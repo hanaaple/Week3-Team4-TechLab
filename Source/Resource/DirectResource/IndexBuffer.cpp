@@ -4,6 +4,8 @@
 #include "Debug/DebugConsole.h"
 #include "d3d11.h"
 
+#include "Core/Rendering/FDevice.h"
+
 void FIndexBuffer::Setting() const
 {
 	// ID3D11Buffer* Arr[1];
@@ -15,7 +17,7 @@ void FIndexBuffer::Setting() const
 
 
 	// 버텍스버퍼를 여러개 넣어줄수 있다.
-	UEngine::Get().GetRenderer()->GetDeviceContext()->IASetIndexBuffer(Buffer, Format, Offset);
+	FDevice::Get().GetDeviceContext()->IASetIndexBuffer(Buffer, Format, Offset);
 }
 
 void FIndexBuffer::ResCreate(const void* _Data, size_t _IndexCount)
@@ -30,7 +32,7 @@ void FIndexBuffer::ResCreate(const void* _Data, size_t _IndexCount)
 	D3D11_SUBRESOURCE_DATA Data;
 	Data.pSysMem = _Data;
 
-	if (S_OK != UEngine::Get().GetRenderer()->GetDevice()->CreateBuffer(&BufferInfo, &Data, &Buffer))
+	if (S_OK != FDevice::Get().GetDevice()->CreateBuffer(&BufferInfo, &Data, &Buffer))
 	{
 		UE_LOG("Error: FIndexBuffer Create Failed") ;
 		return;
