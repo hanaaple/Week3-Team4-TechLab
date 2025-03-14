@@ -220,6 +220,7 @@
     <ClCompile Include="Source\Object\PrimitiveComponent\UPrimitiveComponent.cpp" />
     <ClCompile Include="Source\Object\World\World.cpp" />
     <ClCompile Include="Source\Object\Actor\Sphere.cpp" />
+    <ClCompile Include="Source\UFontAtlas.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\FontVertexShader.hlsl">
@@ -334,6 +335,7 @@
     <ClInclude Include="Source\Object\PrimitiveComponent\UPrimitiveComponent.h" />
     <ClInclude Include="Source\Object\World\World.h" />
     <ClInclude Include="Source\Object\Actor\Sphere.h" />
+    <ClInclude Include="Source\UFontAtlas.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -343,6 +345,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="font_atlas.png" />
+    <Image Include="test.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

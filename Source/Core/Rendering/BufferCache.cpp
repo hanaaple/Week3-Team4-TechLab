@@ -1,5 +1,7 @@
 #include "BufferCache.h"
 #include "Core/Engine.h"
+#include "Core/Container/String.h"
+#include "UFontAtlas.h"
 #include "Primitive/PrimitiveVertices.h"
 #include "Primitive/UGeometryGenerator.h"
 
@@ -76,6 +78,28 @@ BufferInfo FBufferCache::CreateBufferInfo(EPrimitiveType Type)
 		IndexSize = std::size(TriangleIndices);
 		VertexBuffer = UEngine::Get().GetRenderer()->CreateVertexBuffer(TriangleVertices, sizeof(FVertexSimple) * VertexSize);
 		IndexBuffer = UEngine::Get().GetRenderer()->CreateIndexBuffer(TriangleIndices, sizeof(uint32) * IndexSize);
+		break;
+	}
+	case EPrimitiveType::EPT_Quad:
+	{
+		FVertexSimple QuadVertices[4] =
+		{
+			{ 0.0f, -1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f },
+			{ 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f },
+			{ 0.0f, 1.0f, -1.0f, 1.0f, 0.0f, 1.0f, 1.0f },
+			{ 0.0f, -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f }
+		};
+		
+		uint32 QuadIndices[6] =
+		{
+			0, 1, 2,
+			0, 2, 3,
+		};
+
+		VertexSize = std::size(QuadVertices);
+		IndexSize = std::size(QuadIndices);
+		VertexBuffer = UEngine::Get().GetRenderer()->CreateVertexBuffer(QuadVertices, sizeof(FVertexSimple) * VertexSize);
+		IndexBuffer = UEngine::Get().GetRenderer()->CreateIndexBuffer(QuadIndices, sizeof(uint32) * IndexSize);
 		break;
 	}
 	case EPrimitiveType::EPT_Cube:

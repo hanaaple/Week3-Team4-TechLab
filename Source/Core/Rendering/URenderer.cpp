@@ -6,6 +6,7 @@
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
 #include "Static/FEditorManager.h"
 #include "Static/FLineBatchManager.h"
+#include "WICTextureLoader.h"
 
 void URenderer::Create(HWND hWindow)
 {
@@ -15,12 +16,14 @@ void URenderer::Create(HWND hWindow)
     CreateBufferCache();
     CreateDepthStencilBuffer();
     CreateDepthStencilState();
-
+	CreateBlendState();
     CreatePickingTexture(hWindow);
 
 	FLineBatchManager::Get().Create();
     
     InitMatrix();
+
+	LoadTexture(L"font_atlas.png");
 }
 
 void URenderer::Release()
@@ -50,9 +53,11 @@ void URenderer::CreateShader()
          */
     ID3DBlob* VertexShaderCSO;
     ID3DBlob* PixelShaderCSO;
-
     ID3DBlob* PickingShaderCSO;
     
+	ID3DBlob* FontVertexShaderCSO;
+	ID3DBlob* FontPixelShaderCSO;
+
 	ID3DBlob* ErrorMsg = nullptr;
 
     // 셰이더 컴파일 및 생성
@@ -65,6 +70,13 @@ void URenderer::CreateShader()
     D3DCompileFromFile(L"Shaders/ShaderW0.hlsl", nullptr, nullptr, "PickingPS", "ps_5_0", 0, 0, &PickingShaderCSO, nullptr);
     Device->CreatePixelShader(PickingShaderCSO->GetBufferPointer(), PickingShaderCSO->GetBufferSize(), nullptr, &PickingPixelShader);
     
+	// Font Shaders
+	D3DCompileFromFile(L"Shaders/FontVertexShader.hlsl", nullptr, nullptr, "main", "vs_5_0", 0, 0, &FontVertexShaderCSO, &ErrorMsg);
+	Device->CreateVertexShader(FontVertexShaderCSO->GetBufferPointer(), FontVertexShaderCSO->GetBufferSize(), nullptr, &FontVertexShader);
+
+	D3DCompileFromFile(L"Shaders/FontPixelShader.hlsl", nullptr, nullptr, "main", "ps_5_0", 0, 0, &FontPixelShaderCSO, nullptr);
+	Device->CreatePixelShader(FontPixelShaderCSO->GetBufferPointer(), FontPixelShaderCSO->GetBufferSize(), nullptr, &FontPixelShader);
+
 	if (ErrorMsg)
 	{
 		std::cout << (char*)ErrorMsg->GetBufferPointer() << std::endl;
@@ -78,7 +90,15 @@ void URenderer::CreateShader()
         { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
 
+	D3D11_INPUT_ELEMENT_DESC TextureLayout[] =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+
     Device->CreateInputLayout(Layout, ARRAYSIZE(Layout), VertexShaderCSO->GetBufferPointer(), VertexShaderCSO->GetBufferSize(), &SimpleInputLayout);
+	Device->CreateInputLayout(TextureLayout, ARRAYSIZE(TextureLayout), FontVertexShaderCSO->GetBufferPointer(), FontVertexShaderCSO->GetBufferSize(), &TextureInputLayout);
 
     VertexShaderCSO->Release();
     PixelShaderCSO->Release();
@@ -217,7 +237,7 @@ void URenderer::RenderPrimitive(class UPrimitiveComponent& PrimitiveComp, const 
 	}
 
 	//if (CurrentTopology != Info.GetTopology())
-	{
+	{		
 		DeviceContext->IASetPrimitiveTopology(Info.GetTopology());
 		CurrentTopology = Info.GetTopology();
 	}
@@ -235,9 +255,8 @@ void URenderer::RenderPrimitive(class UPrimitiveComponent& PrimitiveComp, const 
     };
 
     UpdateConstant(UpdateInfo);
-    
-    RenderPrimitiveInternal(Info.GetVertexBuffer(), Info.GetIndexBuffer(), Info.GetIndexSize());
 
+	RenderPrimitiveInternal(Info.GetVertexBuffer(), Info.GetIndexBuffer(), Info.GetIndexSize());
 }
 
 void URenderer::RenderPrimitiveInternal(ID3D11Buffer* vertexBuffer, ID3D11Buffer* indexBuffer, UINT numIndices) const
@@ -274,6 +293,30 @@ ID3D11Buffer* URenderer::CreateVertexBuffer(const FVertexSimple* Vertices, UINT 
         return nullptr;
     }
     return VertexBuffer;
+}
+
+void URenderer::LoadTexture(const wchar_t* texturePath)
+{
+	DirectX::CreateWICTextureFromFile(Device, DeviceContext, texturePath, nullptr, &FontTextureSRV);
+	
+	D3D11_SAMPLER_DESC samplerDesc = {};
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.MipLODBias = 0.0f;
+	samplerDesc.MaxAnisotropy = 1;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	samplerDesc.BorderColor[0] = 0;
+	samplerDesc.BorderColor[1] = 0;
+	samplerDesc.BorderColor[2] = 0;
+	samplerDesc.BorderColor[3] = 0;
+	samplerDesc.MinLOD = 0;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	Device->CreateSamplerState(&samplerDesc, &FontSamplerState);
+	DeviceContext->PSSetShaderResources(0, 1, &FontTextureSRV);
+	DeviceContext->PSSetSamplers(0, 1, &FontSamplerState);
 }
 
 ID3D11Buffer* URenderer::CreateIndexBuffer(const uint32* Indices, UINT ByteWidth) const
@@ -436,6 +479,24 @@ void URenderer::CreateDepthStencilBuffer()
     dsvDesc.Texture2D.MipSlice = 0;
     
     result = Device->CreateDepthStencilView(DepthStencilBuffer, &dsvDesc, &DepthStencilView);
+}
+
+void URenderer::CreateBlendState() 
+{
+	// Blend
+	D3D11_BLEND_DESC blendDesc = {};
+	blendDesc.AlphaToCoverageEnable = FALSE;
+	blendDesc.IndependentBlendEnable = FALSE;
+	blendDesc.RenderTarget[0].BlendEnable = TRUE;
+	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	Device->CreateBlendState(&blendDesc, &BlendState);
 }
 
 void URenderer::CreateDepthStencilState()

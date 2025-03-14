@@ -11,6 +11,7 @@
 #include "Object/Actor/Sphere.h"
 #include "Static/FEditorManager.h"
 #include "Static/FLineBatchManager.h"
+#include "Object/Actor/Quad.h"
 
 class AArrow;
 class APicker;
@@ -227,7 +228,7 @@ void UEngine::InitWorld()
     
     //World->SpawnActor<AAxis>();
     World->SpawnActor<APicker>();
-
+	World->SpawnActor<AQuad>();
 	World->BeginPlay();
 }
 
