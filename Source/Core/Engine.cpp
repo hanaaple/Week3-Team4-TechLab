@@ -224,7 +224,7 @@ void UEngine::InitWorld()
     //AArrow* Arrow = World->SpawnActor<AArrow>();
     //World->SpawnActor<ASphere>();
     
-    //World->SpawnActor<AAxis>();
+    World->SpawnActor<AAxis>();
     World->SpawnActor<APicker>();
 
 	World->BeginPlay();

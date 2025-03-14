@@ -3,8 +3,15 @@
 #include "Object/Actor/Actor.h"
 #include "Core/Engine.h"
 #include "Object/Actor/Camera.h"
+#include "Primitive/UGeometryGenerator.h"
+#include "Resource/DirectResource/Vertexbuffer.h"
 
 //#include ""
+
+UPrimitiveComponent::UPrimitiveComponent()
+{
+	bCanBeRendered = true;
+}
 
 void UPrimitiveComponent::BeginPlay()
 {
@@ -117,4 +124,171 @@ void UPrimitiveComponent::CalculateModelMatrix(FMatrix& OutMatrix)
 void UPrimitiveComponent::RegisterComponentWithWorld(UWorld* World)
 {
 	World->AddRenderComponent(this);
+}
+
+UCubeComp::UCubeComp()
+{
+	VertexBuffer = FVertexBuffer::Find("Cube");
+	IndexBuffer = FIndexBuffer::Find("Cube");
+	
+	//없으면 만든다.
+	if (VertexBuffer == nullptr)
+	{
+		TArray<FVertexSimple> vertices;
+		TArray<uint32> indices;
+		float size = 1.f;
+
+		UGeometryGenerator::CreateCube(size, &vertices, &indices);
+		
+		VertexBuffer = FVertexBuffer::Create(FString("Cube"), vertices);
+		IndexBuffer = FIndexBuffer::Create(FString("Cube"), indices);
+	}
+
+		
+	
+	bCanBeRendered = true;
+	
+}
+
+USphereComp::USphereComp()
+{
+	//없으면 만든다.
+	VertexBuffer= FVertexBuffer::Find("Sphere");
+	IndexBuffer = FIndexBuffer::Find("Sphere");
+	if (VertexBuffer == nullptr)
+	{
+		TArray<FVertexSimple> vertices;
+		TArray<uint32> indices;
+		int slices = 16;
+		int stacks = 16;
+		int32 radius = 1.f;
+		float height = 1.f;
+
+		UGeometryGenerator::CreateSphere(radius, slices, stacks, &vertices, &indices);
+		
+		VertexBuffer = FVertexBuffer::Create(FString("Sphere"), vertices);
+		IndexBuffer = FIndexBuffer::Create(FString("Sphere"), indices);
+	}
+	
+	bCanBeRendered = true;
+
+}
+
+UTriangleComp::UTriangleComp()
+{
+	//없으면 만든다.
+	VertexBuffer= FVertexBuffer::Find("Triangle");
+	IndexBuffer = FIndexBuffer::Find("Triangle");
+	if (VertexBuffer == nullptr)
+	{
+		
+		
+		FVertexSimple tempArray[] =
+		{
+			{  0.0f, 0.0f, 1.0f,  1.0f, 0.0f, 0.0f, 1.0f },
+			{  0.0f, 1.0f, 0.0f,  0.0f, 1.0f, 0.0f, 1.0f },
+			{  0.0f, -1.0f, 0.0f,  0.0f, 0.0f, 1.0f, 1.0f } 
+		};
+		//TArray<FVertexSimple> vertices(tempArray, 3);
+		TArray<FVertexSimple> vertices;
+
+		vertices.Add(tempArray[0]);
+		vertices.Add(tempArray[1]);
+		vertices.Add(tempArray[2]);
+		
+		uint32 TriangleIndices[3] =
+		{
+			0, 1, 2
+		};
+
+
+		
+		TArray<uint32> indices;
+		indices.Add(TriangleIndices[0]);
+		indices.Add(TriangleIndices[1]);
+		indices.Add(TriangleIndices[2]);
+		
+		//indices.Append(TriangleIndices, 3);
+		
+		VertexBuffer = FVertexBuffer::Create(FString("Triangle"), vertices);
+		IndexBuffer = FIndexBuffer::Create(FString("Triangle"), indices);
+	}
+}
+
+ULineComp::ULineComp()
+{//없으면 만든다.
+	VertexBuffer= FVertexBuffer::Find("Line");
+	IndexBuffer = FIndexBuffer::Find("Line");
+	if (VertexBuffer == nullptr)
+	{
+		
+		
+		FVertexSimple tempArray[2] =
+		{
+			{ -1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f },
+			{ 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f }
+		};
+		//TArray<FVertexSimple> vertices(tempArray, 3);
+		TArray<FVertexSimple> vertices;
+
+		vertices.Add(tempArray[0]);
+		vertices.Add(tempArray[1]);
+		
+		uint32 tempIndices[2] =
+		{
+			0, 1
+		};
+		
+		
+		TArray<uint32> indices;
+		indices.Add(tempIndices[0]);
+		indices.Add(tempIndices[1]);
+		
+		//indices.Append(TriangleIndices, 3);
+		
+		VertexBuffer = FVertexBuffer::Create(FString("Line"), vertices);
+		IndexBuffer = FIndexBuffer::Create(FString("Line"), indices);
+	}
+}
+
+UCylinderComp::UCylinderComp()
+{
+	//없으면 만든다.
+	VertexBuffer= FVertexBuffer::Find("Cylinder");
+	IndexBuffer = FIndexBuffer::Find("Cylinder");
+	if (VertexBuffer == nullptr)
+	{
+		TArray<FVertexSimple> vertices;
+		TArray<uint32> indices;
+		int slices = 36;
+		int stacks = 36;
+		float bRadius = .2f;
+		float tRdius = .2f;
+		float height = 1.f;
+
+		UGeometryGenerator::CreateCylinder(bRadius, tRdius, height, slices, stacks, &vertices , &indices);
+		
+		VertexBuffer = FVertexBuffer::Create(FString("Cylinder"), vertices);
+		IndexBuffer = FIndexBuffer::Create(FString("Cylinder"), indices);
+	}
+}
+
+UConeComp::UConeComp()
+{
+	//없으면 만든다.
+	VertexBuffer= FVertexBuffer::Find("Cone");
+	IndexBuffer = FIndexBuffer::Find("Cone");
+	if (VertexBuffer == nullptr)
+	{
+		TArray<FVertexSimple> vertices;
+		TArray<uint32> indices;
+		int slices = 36;
+		int stacks = 6;
+		float radius = 1.f;
+		float height = 1.f;
+
+		UGeometryGenerator::CreateCone(radius, height, slices, stacks, &vertices, &indices);
+		VertexBuffer = FVertexBuffer::Create(FString("Cone"), vertices);
+		IndexBuffer = FIndexBuffer::Create(FString("Cone"), indices);
+	}
 }

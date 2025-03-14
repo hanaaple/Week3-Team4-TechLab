@@ -1,11 +1,11 @@
 #include "URenderer.h"
 #include <d3dcompiler.h>
-#include "Core/Rendering/BufferCache.h"
 #include "Core/Math/Transform.h"
 #include "Object/Actor/Camera.h"
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
 #include "Static/FEditorManager.h"
 #include "Static/FLineBatchManager.h"
+#include "Resource/DirectResource/Vertexbuffer.h"
 #include "DirectXTK/WICTextureLoader.h"
 
 void URenderer::Create(HWND hWindow)
@@ -53,6 +53,7 @@ void URenderer::CreateShader()
          */
     ID3DBlob* VertexShaderCSO;
     ID3DBlob* PixelShaderCSO;
+
     ID3DBlob* PickingShaderCSO;
     
 	ID3DBlob* FontVertexShaderCSO;
@@ -90,15 +91,7 @@ void URenderer::CreateShader()
         { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
 
-	D3D11_INPUT_ELEMENT_DESC TextureLayout[] =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	};
-
     Device->CreateInputLayout(Layout, ARRAYSIZE(Layout), VertexShaderCSO->GetBufferPointer(), VertexShaderCSO->GetBufferSize(), &SimpleInputLayout);
-	Device->CreateInputLayout(TextureLayout, ARRAYSIZE(TextureLayout), FontVertexShaderCSO->GetBufferPointer(), FontVertexShaderCSO->GetBufferSize(), &TextureInputLayout);
 
     VertexShaderCSO->Release();
     PixelShaderCSO->Release();
@@ -224,23 +217,8 @@ void URenderer::PrepareShader() const
 
 void URenderer::RenderPrimitive(class UPrimitiveComponent& PrimitiveComp, const class FMatrix& ModelMatrix)
 {
-    if (BufferCache == nullptr)
-    {
-        return;
-    }
 
-	BufferInfo Info = BufferCache->GetBufferInfo(PrimitiveComp.GetType());
 
-	if (Info.GetVertexBuffer() == nullptr || Info.GetIndexBuffer() == nullptr)
-	{
-		return;
-	}
-
-	//if (CurrentTopology != Info.GetTopology())
-	{		
-		DeviceContext->IASetPrimitiveTopology(Info.GetTopology());
-		CurrentTopology = Info.GetTopology();
-	}
 
 	FMatrix MVP = FMatrix::Transpose(
 		ModelMatrix *
@@ -255,11 +233,15 @@ void URenderer::RenderPrimitive(class UPrimitiveComponent& PrimitiveComp, const 
     };
 
     UpdateConstant(UpdateInfo);
+	
+	
 
-	RenderPrimitiveInternal(Info.GetVertexBuffer(), Info.GetIndexBuffer(), Info.GetIndexSize());
+	
+    RenderPrimitiveInternal( PrimitiveComp);
+
 }
 
-void URenderer::RenderPrimitiveInternal(ID3D11Buffer* vertexBuffer, ID3D11Buffer* indexBuffer, UINT numIndices) const
+void URenderer::RenderPrimitiveInternal(class UPrimitiveComponent& PrimitiveComp) const
 {
     UINT Offset = 0;
 
@@ -268,12 +250,23 @@ void URenderer::RenderPrimitiveInternal(ID3D11Buffer* vertexBuffer, ID3D11Buffer
 	DeviceContext->PSSetShader(SimplePixelShader, nullptr, 0);
 	DeviceContext->IASetInputLayout(SimpleInputLayout);
 
+	if (PrimitiveComp.VertexBuffer != nullptr)
+	{
+		
+	}
+	else
+	{
+		//DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &Stride, &Offset);
+	}
+		
 
-    DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &Stride, &Offset);
-    DeviceContext->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-    DeviceContext->IASetPrimitiveTopology(CurrentTopology);
+	
+    
+	PrimitiveComp.VertexBuffer->Setting();
+	PrimitiveComp.IndexBuffer->Setting();
+	//DeviceContext->IASetPrimitiveTopology(PrimitiveComp.Topology);
 
-    DeviceContext->DrawIndexed(numIndices, 0, 0);
+    DeviceContext->DrawIndexed(PrimitiveComp.IndexBuffer->GetIndexCount(), 0, 0);
 }
 
 ID3D11Buffer* URenderer::CreateVertexBuffer(const FVertexSimple* Vertices, UINT ByteWidth) const
@@ -596,10 +589,6 @@ void URenderer::ReleaseRasterizerState()
     }
 }
 
-void URenderer::CreateBufferCache()
-{
-    BufferCache = std::make_unique<FBufferCache>();
-}
 
 void URenderer::InitMatrix()
 {

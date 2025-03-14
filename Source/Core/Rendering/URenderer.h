@@ -13,6 +13,7 @@
 #include "Primitive/PrimitiveVertices.h"
 #include "Core/Math/Plane.h"
 
+
 struct FVertexSimple;
 struct FVector4;
 
@@ -82,7 +83,7 @@ public:
      * @param pBuffer 렌더링에 사용할 버텍스 버퍼에 대한 포인터
      * @param numVertices 버텍스 버퍼에 저장된 버텍스의 총 개수
      */
-    void RenderPrimitiveInternal(ID3D11Buffer* vertexBuffer, ID3D11Buffer* indexBuffer, UINT numVertices) const;
+    void RenderPrimitiveInternal(class UPrimitiveComponent& PrimitiveComp) const;
 
 	void LoadTexture(const wchar_t* texturePath);
 	ID3D11ShaderResourceView* FontTextureSRV = nullptr;
@@ -173,9 +174,7 @@ protected:
 	ID3D11VertexShader* FontVertexShader = nullptr;       // Vertex 데이터를 처리하는 Vertex 셰이더
 	ID3D11PixelShader* FontPixelShader = nullptr;         // Pixel의 색상을 결정하는 Pixel 셰이더
 
-    ID3D11InputLayout* SimpleInputLayout = nullptr;		// Vertex 셰이더 입력 레이아웃 정의 
-	ID3D11InputLayout* TextureInputLayout = nullptr;	// Vertex 셰이더 입력 레이아웃 정의
-
+    ID3D11InputLayout* SimpleInputLayout = nullptr;         // Vertex 셰이더 입력 레이아웃 정의
     unsigned int Stride = 0;                                // Vertex 버퍼의 각 요소 크기
 
     // Depth Stenil Buffer
@@ -189,6 +188,7 @@ protected:
 	float BlendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 	// Buffer Cache
+
 	std::unique_ptr<FBufferCache> BufferCache;
 
 	FMatrix WorldMatrix;
