@@ -83,7 +83,7 @@ public:
      * @param pBuffer 렌더링에 사용할 버텍스 버퍼에 대한 포인터
      * @param numVertices 버텍스 버퍼에 저장된 버텍스의 총 개수
      */
-    void RenderPrimitiveInternal(ID3D11Buffer* vertexBuffer, ID3D11Buffer* indexBuffer, UINT numVertices) const;
+    void RenderPrimitiveInternal(ID3D11Buffer* vertexBuffer, ID3D11Buffer* indexBuffer, UINT numVertices,class UPrimitiveComponent& PrimitiveComp) const;
 
     /**
      * 정점 데이터로 Vertex Buffer를 생성합니다.

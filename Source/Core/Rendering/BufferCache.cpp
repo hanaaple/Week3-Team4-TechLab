@@ -2,6 +2,7 @@
 #include "Core/Engine.h"
 #include "Primitive/PrimitiveVertices.h"
 #include "Primitive/UGeometryGenerator.h"
+#include "Resource/Vertexbuffer.h"
 
 FBufferCache::FBufferCache()
 {
@@ -20,6 +21,7 @@ const BufferInfo FBufferCache::GetBufferInfo(EPrimitiveType Type)
 {
 	if (!Cache.Contains(Type))
 	{
+		
 		//여기서 버텍스 버퍼 생성한다
 		auto bufferInfo = CreateBufferInfo(Type);
 		Cache.Add( Type , bufferInfo);
@@ -86,6 +88,10 @@ BufferInfo FBufferCache::CreateBufferInfo(EPrimitiveType Type)
 		IndexSize = GeometryData.Indices.Num();
 		VertexBuffer = UEngine::Get().GetRenderer()->CreateVertexBuffer(GeometryData.Vertices.GetData(), sizeof(FVertexSimple) * VertexSize);
 		IndexBuffer = UEngine::Get().GetRenderer()->CreateIndexBuffer(GeometryData.Indices.GetData(), sizeof(uint32) * IndexSize);
+
+		FVertexBuffer::Create(FString("Cube"), GeometryData.Vertices);
+
+			
 		break;
 	}
 	case EPrimitiveType::EPT_Sphere:

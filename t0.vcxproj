@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -208,6 +208,10 @@
     <ClCompile Include="Source\JsonSaveHelper.cpp" />
     <ClCompile Include="Source\Object\ObjectFactory.cpp" />
     <ClCompile Include="Source\Primitive\UGeometryGenerator.cpp" />
+    <ClCompile Include="Source\Resource\DirectBuffer.cpp" />
+    <ClCompile Include="Source\Resource\RenderResourceManager.cpp" />
+    <ClCompile Include="Source\Resource\Resource.cpp" />
+    <ClCompile Include="Source\Resource\Vertexbuffer.cpp" />
     <ClCompile Include="Source\Static\FLineBatchManager.cpp" />
     <ClCompile Include="Source\ThirdParty\ImGui\imgui.cpp" />
     <ClCompile Include="Source\ThirdParty\ImGui\imgui_demo.cpp" />
@@ -303,6 +307,10 @@
     <ClInclude Include="Source\Object\Actor\Quad.h" />
     <ClInclude Include="Source\Object\ObjectFactory.h" />
     <ClInclude Include="Source\Primitive\UGeometryGenerator.h" />
+    <ClInclude Include="Source\Resource\DirectBuffer.h" />
+    <ClInclude Include="Source\Resource\RenderResourceManager.h" />
+    <ClInclude Include="Source\Resource\Resource.h" />
+    <ClInclude Include="Source\Resource\Vertexbuffer.h" />
     <ClInclude Include="Source\Static\FLineBatchManager.h" />
     <ClInclude Include="Source\ThirdParty\ImGui\imconfig.h" />
     <ClInclude Include="Source\ThirdParty\ImGui\imgui.h" />

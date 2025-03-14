@@ -6,6 +6,7 @@
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
 #include "Static/FEditorManager.h"
 #include "Static/FLineBatchManager.h"
+#include "Resource/Vertexbuffer.h"
 
 void URenderer::Create(HWND hWindow)
 {
@@ -209,6 +210,8 @@ void URenderer::RenderPrimitive(class UPrimitiveComponent& PrimitiveComp, const 
         return;
     }
 
+
+	
 	BufferInfo Info = BufferCache->GetBufferInfo(PrimitiveComp.GetType());
 
 	if (Info.GetVertexBuffer() == nullptr || Info.GetIndexBuffer() == nullptr)
@@ -235,12 +238,15 @@ void URenderer::RenderPrimitive(class UPrimitiveComponent& PrimitiveComp, const 
     };
 
     UpdateConstant(UpdateInfo);
-    
-    RenderPrimitiveInternal(Info.GetVertexBuffer(), Info.GetIndexBuffer(), Info.GetIndexSize());
+	
+	
+
+	
+    RenderPrimitiveInternal(Info.GetVertexBuffer(), Info.GetIndexBuffer(), Info.GetIndexSize(), PrimitiveComp);
 
 }
 
-void URenderer::RenderPrimitiveInternal(ID3D11Buffer* vertexBuffer, ID3D11Buffer* indexBuffer, UINT numIndices) const
+void URenderer::RenderPrimitiveInternal(ID3D11Buffer* vertexBuffer, ID3D11Buffer* indexBuffer, UINT numIndices, class UPrimitiveComponent& PrimitiveComp) const
 {
     UINT Offset = 0;
 
@@ -249,8 +255,17 @@ void URenderer::RenderPrimitiveInternal(ID3D11Buffer* vertexBuffer, ID3D11Buffer
 	DeviceContext->PSSetShader(SimplePixelShader, nullptr, 0);
 	DeviceContext->IASetInputLayout(SimpleInputLayout);
 
+	// if (PrimitiveComp.VertexBuffer != nullptr)
+	// {
+	// 	//PrimitiveComp.VertexBuffer->Setting();
+	// }
+	// else
+	{
+		DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &Stride, &Offset);
+	}
+		
 
-    DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &Stride, &Offset);
+	
     DeviceContext->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
     DeviceContext->IASetPrimitiveTopology(CurrentTopology);
 

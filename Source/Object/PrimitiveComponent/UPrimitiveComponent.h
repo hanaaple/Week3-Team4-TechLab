@@ -4,13 +4,13 @@
 #include "Object/USceneComponent.h"
 #include "Primitive/PrimitiveVertices.h"
 #include "Core/Math/Plane.h"
-
+#include "Resource/Vertexbuffer.h"
 
 class UPrimitiveComponent : public USceneComponent
 {
 	using Super = USceneComponent;
 public:
-	UPrimitiveComponent() = default;
+	UPrimitiveComponent();
 	virtual ~UPrimitiveComponent() = default;
 
 public:
@@ -23,7 +23,8 @@ public:
 
 	//virtual void 
 	
-
+	//테스트
+	class std::shared_ptr<class FVertexBuffer> VertexBuffer = nullptr;
 
 
 	virtual EPrimitiveType GetType() { return EPrimitiveType::EPT_None; }
@@ -71,6 +72,9 @@ public:
 	virtual ~UCubeComp() = default;
 	EPrimitiveType GetType() override
 	{
+
+		VertexBuffer = FVertexBuffer::Find("Cube");
+		
 		return EPrimitiveType::EPT_Cube;
 	}
 };
