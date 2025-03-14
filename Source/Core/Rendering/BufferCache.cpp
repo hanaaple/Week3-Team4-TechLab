@@ -2,7 +2,8 @@
 #include "Core/Engine.h"
 #include "Primitive/PrimitiveVertices.h"
 #include "Primitive/UGeometryGenerator.h"
-#include "Resource/Vertexbuffer.h"
+#include "Resource/DirectResource/Vertexbuffer.h"
+#include "Resource/DirectResource/IndexBuffer.h"
 
 FBufferCache::FBufferCache()
 {
@@ -88,8 +89,10 @@ BufferInfo FBufferCache::CreateBufferInfo(EPrimitiveType Type)
 		IndexSize = GeometryData.Indices.Num();
 		VertexBuffer = UEngine::Get().GetRenderer()->CreateVertexBuffer(GeometryData.Vertices.GetData(), sizeof(FVertexSimple) * VertexSize);
 		IndexBuffer = UEngine::Get().GetRenderer()->CreateIndexBuffer(GeometryData.Indices.GetData(), sizeof(uint32) * IndexSize);
-
+			const TArray<uint32>& IndexArr = GeometryData.Indices;
+			
 		FVertexBuffer::Create(FString("Cube"), GeometryData.Vertices);
+		FIndexBuffer::Create(FString("Cube"), IndexArr);
 
 			
 		break;

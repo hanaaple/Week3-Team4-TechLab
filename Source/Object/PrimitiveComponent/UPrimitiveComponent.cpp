@@ -3,7 +3,7 @@
 #include "Object/Actor/Actor.h"
 #include "Core/Engine.h"
 #include "Object/Actor/Camera.h"
-#include "Resource/Vertexbuffer.h"
+#include "Resource/DirectResource/Vertexbuffer.h"
 
 //#include ""
 

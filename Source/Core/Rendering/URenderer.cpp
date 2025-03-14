@@ -6,7 +6,7 @@
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
 #include "Static/FEditorManager.h"
 #include "Static/FLineBatchManager.h"
-#include "Resource/Vertexbuffer.h"
+#include "Resource/DirectResource/Vertexbuffer.h"
 
 void URenderer::Create(HWND hWindow)
 {
@@ -255,11 +255,12 @@ void URenderer::RenderPrimitiveInternal(ID3D11Buffer* vertexBuffer, ID3D11Buffer
 	DeviceContext->PSSetShader(SimplePixelShader, nullptr, 0);
 	DeviceContext->IASetInputLayout(SimpleInputLayout);
 
-	// if (PrimitiveComp.VertexBuffer != nullptr)
-	// {
-	// 	//PrimitiveComp.VertexBuffer->Setting();
-	// }
-	// else
+	if (PrimitiveComp.VertexBuffer != nullptr)
+	{
+		PrimitiveComp.VertexBuffer->Setting();
+		PrimitiveComp.IndexBuffer->Setting();
+	}
+	else
 	{
 		DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &Stride, &Offset);
 	}

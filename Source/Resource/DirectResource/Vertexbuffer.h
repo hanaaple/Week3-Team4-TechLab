@@ -1,6 +1,6 @@
 #pragma once
-#include "Resource.h"
-#include "Resource/DirectBuffer.h"
+#include "Resource/Resource.h"
+#include "DirectBuffer.h"
 #include "Core/Container/String.h"
 #include "Core/Container/Array.h"
 #include <d3d11.h>

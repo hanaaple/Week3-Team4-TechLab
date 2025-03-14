@@ -4,7 +4,8 @@
 #include "Object/USceneComponent.h"
 #include "Primitive/PrimitiveVertices.h"
 #include "Core/Math/Plane.h"
-#include "Resource/Vertexbuffer.h"
+#include "Resource/DirectResource/Vertexbuffer.h"
+#include "Resource/DirectResource/IndexBuffer.h"
 
 class UPrimitiveComponent : public USceneComponent
 {
@@ -25,6 +26,7 @@ public:
 	
 	//테스트
 	class std::shared_ptr<class FVertexBuffer> VertexBuffer = nullptr;
+	class std::shared_ptr<class FIndexBuffer> IndexBuffer = nullptr;
 
 
 	virtual EPrimitiveType GetType() { return EPrimitiveType::EPT_None; }
@@ -74,6 +76,7 @@ public:
 	{
 
 		VertexBuffer = FVertexBuffer::Find("Cube");
+		IndexBuffer = FIndexBuffer::Find("Cube");
 		
 		return EPrimitiveType::EPT_Cube;
 	}
