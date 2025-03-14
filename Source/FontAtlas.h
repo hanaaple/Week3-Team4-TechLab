@@ -1,10 +1,10 @@
 #pragma once
 #include "Primitive/PrimitiveVertices.h"
 #include "Core/Container/Map.h"
-class UFontAtlas
+class FFontAtlas
 {
 public:
-	UFontAtlas();
+	FFontAtlas();
 
 	const GlyphInfo& GetGlyph(wchar_t c) const
 	{

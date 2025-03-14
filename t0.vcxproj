@@ -224,7 +224,7 @@
     <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="Source\UFontAtlas.cpp" />
+    <ClCompile Include="Source\FontAtlas.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\Font_VS.hlsl">
@@ -365,7 +365,7 @@
     <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imstb_textedit.h" />
     <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imstb_truetype.h" />
     <ClInclude Include="Source\ThirdParty\SimpleJSON\include\SimpleJSON\Json.hpp" />
-    <ClInclude Include="Source\UFontAtlas.h" />
+    <ClInclude Include="Source\FontAtlas.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
