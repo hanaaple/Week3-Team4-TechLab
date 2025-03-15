@@ -1,4 +1,4 @@
-﻿#include "ActorComponent.h"
+#include "ActorComponent.h"
 #include "Object/Actor/Actor.h"
 
 void UActorComponent::BeginPlay()
@@ -16,4 +16,12 @@ void UActorComponent::EndPlay(const EEndPlayReason::Type Reason)
 AActor* UActorComponent::GetOwner() const
 {
 	return Owner;
+}
+
+FVector UActorComponent::GetActorLocation() const
+{
+	if (Owner)
+	{
+		return Owner->GetActorTransform().GetPosition();
+	}
 }

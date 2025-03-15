@@ -69,11 +69,11 @@ PS_OUTPUT mainPS(PS_INPUT input) : SV_TARGET
     return output;
 }
 
-float4 outlinePS(PS_INPUT input) : SV_TARGET
-{
-    // Output the color directly
-    return float4(1.0f, 0.647f, 0.0f, 0.1f);
-}
+// float4 outlinePS(PS_INPUT input) : SV_TARGET
+// {
+//     // Output the color directly
+//     return float4(1.0f, 0.647f, 0.0f, 0.1f);
+// }
 
 PS_OUTPUT PickingPS(PS_INPUT input):SV_TARGET{
     PS_OUTPUT output;

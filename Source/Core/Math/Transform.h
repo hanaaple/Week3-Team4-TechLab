@@ -1,8 +1,8 @@
-﻿#pragma once
+#pragma once
 #include "Vector.h"
 #include "Matrix.h"
 #include "Core/Engine.h"
-#include "Core/Math/Plane.h"
+#include "Core/Math/Quat.h"
 
 #define TORAD 0.0174532925199432957f
 
@@ -112,7 +112,8 @@ public:
 		return FVector::CrossProduct(FVector(0, 0, 1), GetForward()).GetSafeNormal();
 	}
 
-	FVector GetUp() const{
+	FVector GetUp() const
+	{
 		return FVector::CrossProduct(GetForward(), GetRight()).GetSafeNormal();
 
 	}
@@ -125,18 +126,6 @@ public:
 	// InRotate는 Degree 단위
 	void Rotate(const FVector& InRotation)
 	{
-	//	// Create a single quaternion for the combined rotation
-	//// Using the same rotation order: Roll (X) -> Pitch (Y) -> Yaw (Z)
-	//	FQuat rollQuat = FQuat(FVector(1, 0, 0), InRotation.X);
-	//	FQuat pitchQuat = FQuat(FVector(0, 1, 0), InRotation.Y);
-	//	FQuat yawQuat = FQuat(FVector(0, 0, 1), InRotation.Z);
-
-	//	// Combine the rotations in the same order
-	//	FQuat combinedRotation = yawQuat * pitchQuat * rollQuat;
-
-	//	// Apply the combined rotation once
-	//	Rotation = FQuat::MultiplyQuaternions(Rotation, combinedRotation);
-
 		RotateRoll(InRotation.X);
 		RotatePitch(InRotation.Y);
 		RotateYaw(InRotation.Z);
@@ -144,12 +133,8 @@ public:
 
 	void RotateYaw(float Angle)
 	{
-
-
 		FVector Axis = FVector(0, 0, 1);
 		Rotation = FQuat::MultiplyQuaternions(Rotation, FQuat(Axis, Angle));
-
-		//Rotation = FQuat::MultiplyQuaternions(Rotation, FQuat(0, 0, sin(Angle * TORAD / 2), cos(Angle * TORAD / 2)));
 	}
 
 	void RotatePitch(float Angle)

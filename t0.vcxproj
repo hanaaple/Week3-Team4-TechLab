@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -177,14 +177,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Static\FUUIDBillBoard.cpp" />
+    <ClCompile Include="Source\Core\Math\Rotator.cpp" />
     <ClCompile Include="Source\Core\Config\ConfigManager.cpp" />
     <ClCompile Include="Source\Core\UObject\Casts.cpp" />
     <ClCompile Include="Source\Core\UObject\Class.cpp" />
+    <ClCompile Include="Source\Core\Math\Ray.cpp" />
+    <ClCompile Include="Source\Core\Rendering\FDevice.cpp" />
+    <ClCompile Include="Source\Core\Rendering\FDeviceResource.cpp" />
     <ClCompile Include="Source\Core\Utils\JsonSaveHelper.cpp" />
     <ClCompile Include="Source\Object\Assets\AssetManager.cpp" />
     <ClCompile Include="Source\Object\Assets\SceneAsset.cpp" />
     <ClCompile Include="Source\Object\Assets\Asset.cpp" />
-    <ClCompile Include="Source\Core\Math\Plane.cpp" />
+    <ClCompile Include="Source\Core\Math\Quat.cpp" />
     <ClCompile Include="Source\Core\UObject\NameTypes.cpp" />
     <ClCompile Include="Source\Core\UObject\Object.cpp" />
     <ClCompile Include="Source\Object\Actor\Camera.cpp" />
@@ -200,7 +205,6 @@
     <ClCompile Include="Source\Object\ActorComponent\ActorComponent.cpp" />
     <ClCompile Include="Source\Debug\DebugConsole.cpp" />
     <ClCompile Include="Source\Object\Actor\Actor.cpp" />
-    <ClCompile Include="Source\Core\Rendering\BufferCache.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Source\Core\Engine.cpp" />
     <ClCompile Include="Source\Core\Container\String.cpp" />
@@ -210,6 +214,15 @@
     <ClCompile Include="Source\Core\Math\Vector.cpp" />
     <ClCompile Include="Source\Object\ObjectFactory.cpp" />
     <ClCompile Include="Source\Primitive\UGeometryGenerator.cpp" />
+    <ClCompile Include="Source\Resource\DirectResource\DirectBuffer.cpp" />
+    <ClCompile Include="Source\Resource\DirectResource\IndexBuffer.cpp" />
+    <ClCompile Include="Source\Resource\DirectResource\InputLayout.cpp" />
+    <ClCompile Include="Source\Resource\DirectResource\PixelShader.cpp" />
+    <ClCompile Include="Source\Resource\DirectResource\Shader.cpp" />
+    <ClCompile Include="Source\Resource\DirectResource\Vertexbuffer.cpp" />
+    <ClCompile Include="Source\Resource\DirectResource\VertexShader.cpp" />
+    <ClCompile Include="Source\Resource\RenderResourceManager.cpp" />
+    <ClCompile Include="Source\Resource\Resource.cpp" />
     <ClCompile Include="Source\Static\FLineBatchManager.cpp" />
     <ClCompile Include="Source\Object\USceneComponent.cpp" />
     <ClCompile Include="Source\Object\PrimitiveComponent\UPrimitiveComponent.cpp" />
@@ -222,7 +235,7 @@
     <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="Source\UFontAtlas.cpp" />
+    <ClCompile Include="Source\FontAtlas.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\Font_VS.hlsl">
@@ -273,10 +286,14 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Static\FUUIDBillBoard.h" />
+    <ClInclude Include="Source\Core\Math\Rotator.h" />
     <ClInclude Include="Source\Core\Config\ConfigManager.h" />
     <ClInclude Include="Source\Core\UObject\Casts.h" />
     <ClInclude Include="Source\Core\UObject\Class.h" />
     <ClInclude Include="Source\Core\UObject\ObjectMacros.h" />
+    <ClInclude Include="Source\Core\Math\Ray.h" />
+    <ClInclude Include="Source\Core\Rendering\FDevice.h" />
     <ClInclude Include="Source\Core\Utils\JsonSaveHelper.h" />
     <ClInclude Include="Source\Object\Assets\AssetManager.h" />
     <ClInclude Include="Source\Object\Assets\SceneAsset.h" />
@@ -292,7 +309,6 @@
     <ClInclude Include="Source\Core\Container\Pair.h" />
     <ClInclude Include="Source\Debug\DebugConsole.h" />
     <ClInclude Include="Source\Core\Container\Set.h" />
-    <ClInclude Include="Source\Core\Rendering\BufferCache.h" />
     <ClInclude Include="Source\Core\AbstractClass\Singleton.h" />
     <ClInclude Include="Source\Core\Container\Array.h" />
     <ClInclude Include="Source\Core\Container\ContainerAllocator.h" />
@@ -302,7 +318,7 @@
     <ClInclude Include="Source\Core\HAL\PlatformType.h" />
     <ClInclude Include="Source\Core\Math\MathUtility.h" />
     <ClInclude Include="Source\Core\Math\Matrix.h" />
-    <ClInclude Include="Source\Core\Math\Plane.h" />
+    <ClInclude Include="Source\Core\Math\Quat.h" />
     <ClInclude Include="Source\Core\Math\Vector.h" />
     <ClInclude Include="Source\Core\Math\Transform.h" />
     <ClInclude Include="Source\Object\Actor\Cylinder.h" />
@@ -311,7 +327,17 @@
     <ClInclude Include="Source\Object\ObjectFactory.h" />
     <ClInclude Include="Source\Object\PrimitiveComponent\UPrimitiveComponent.h" />
     <ClInclude Include="Source\Object\World\World.h" />
+    <ClInclude Include="Source\Primitive\PrimitiveVertices.h" />
     <ClInclude Include="Source\Primitive\UGeometryGenerator.h" />
+    <ClInclude Include="Source\Resource\DirectResource\DirectBuffer.h" />
+    <ClInclude Include="Source\Resource\DirectResource\IndexBuffer.h" />
+    <ClInclude Include="Source\Resource\DirectResource\InputLayout.h" />
+    <ClInclude Include="Source\Resource\DirectResource\PixelShader.h" />
+    <ClInclude Include="Source\Resource\DirectResource\Shader.h" />
+    <ClInclude Include="Source\Resource\DirectResource\Vertexbuffer.h" />
+    <ClInclude Include="Source\Resource\DirectResource\VertexShader.h" />
+    <ClInclude Include="Source\Resource\RenderResourceManager.h" />
+    <ClInclude Include="Source\Resource\Resource.h" />
     <ClInclude Include="Source\Static\FLineBatchManager.h" />
     <ClCompile Include="Source\Core\Rendering\UI.cpp" />
     <ClCompile Include="Source\Core\Rendering\URenderer.cpp" />
@@ -362,7 +388,7 @@
     <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imstb_textedit.h" />
     <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imstb_truetype.h" />
     <ClInclude Include="Source\ThirdParty\SimpleJSON\include\SimpleJSON\Json.hpp" />
-    <ClInclude Include="Source\UFontAtlas.h" />
+    <ClInclude Include="Source\FontAtlas.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

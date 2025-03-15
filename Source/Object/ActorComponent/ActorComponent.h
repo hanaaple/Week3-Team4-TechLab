@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Core/EngineTypes.h"
 #include "Core/UObject/Object.h"
 #include "Core/UObject/ObjectMacros.h"
@@ -18,6 +18,8 @@ public:
 
 	virtual class AActor* GetOwner() const;
 	virtual void SetOwner(class AActor* InOwner) { Owner = InOwner; }
+
+	FVector GetActorLocation() const;
 
 protected:
 	bool bCanEverTick = true;

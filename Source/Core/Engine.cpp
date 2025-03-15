@@ -11,6 +11,8 @@
 #include "Object/Actor/Sphere.h"
 #include "Static/FEditorManager.h"
 #include "Static/FLineBatchManager.h"
+#include "Core/Rendering/FDevice.h"
+
 
 class AArrow;
 class APicker;
@@ -20,101 +22,108 @@ extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam
 
 LRESULT UEngine::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-    // ImGui의 메시지를 처리
-    if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
-    {
-        return true;
-    }
-    
-    switch (uMsg)
-    {
-        // 창이 제거될 때 (창 닫기, Alt+F4 등)
-    case WM_DESTROY:
-        PostQuitMessage(0); // 프로그램 종료
-        break;
-        break;
+	// ImGui의 메시지를 처리
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
+	{
+		return true;
+	}
+
+	switch (uMsg)
+	{
+		// 창이 제거될 때 (창 닫기, Alt+F4 등)
+	case WM_DESTROY:
+		PostQuitMessage(0); // 프로그램 종료
+		break;
+		break;
 	case WM_CAPTURECHANGED://현재 마우스 입력을 독점(capture)하고 있던 창이 마우스 캡처를 잃었을 때
 		break;
-    case WM_SIZE:
+	case WM_SIZE:
 		UEngine::Get().UpdateWindowSize(LOWORD(lParam), HIWORD(lParam));
 		break;
-    default:
-        return DefWindowProc(hWnd, uMsg, wParam, lParam);
-    }
+	default:
+		return DefWindowProc(hWnd, uMsg, wParam, lParam);
+	}
 
-    return 0;
+	return 0;
 }
 
 void UEngine::Initialize(
-    HINSTANCE hInstance, const WCHAR* InWindowTitle, const WCHAR* InWindowClassName, int InScreenWidth,
-    int InScreenHeight,
-    EScreenMode InScreenMode
+	HINSTANCE hInstance, const WCHAR* InWindowTitle, const WCHAR* InWindowClassName, int InScreenWidth,
+	int InScreenHeight,
+	EScreenMode InScreenMode
 )
 {
-    WindowInstance = hInstance;
-    WindowTitle = InWindowTitle;
-    WindowClassName = InWindowClassName;
-    ScreenMode = InScreenMode;
-    ScreenWidth = InScreenWidth;
-    ScreenHeight = InScreenHeight;
+	WindowInstance = hInstance;
+	WindowTitle = InWindowTitle;
+	WindowClassName = InWindowClassName;
+	ScreenMode = InScreenMode;
+	ScreenWidth = InScreenWidth;
+	ScreenHeight = InScreenHeight;
 
     InitWindow(InScreenWidth, InScreenHeight);
+
+	FDevice::Get().Init(WindowHandle);
     InitRenderer();
 
-    InitWorld();
+	InitWorld();
 
-    InitializedScreenWidth = ScreenWidth;
-    InitializedScreenHeight = ScreenHeight;
-    
-    ui.Initialize(WindowHandle, *Renderer, ScreenWidth, ScreenHeight);
-    
+	InitializedScreenWidth = ScreenWidth;
+	InitializedScreenHeight = ScreenHeight;
+   ui.Initialize(WindowHandle, FDevice::Get(), ScreenWidth, ScreenHeight);
 	UE_LOG("Engine Initialized!");
 }
 
 void UEngine::Run()
 {
-    // FPS 제한
-    constexpr int TargetFPS = 750;
-    constexpr double TargetDeltaTime = 1000.0f / TargetFPS; // 1 FPS의 목표 시간 (ms)
+	// FPS 제한
+	constexpr int TargetFPS = 750;
+	constexpr double TargetDeltaTime = 1000.0f / TargetFPS; // 1 FPS의 목표 시간 (ms)
 
-    // 고성능 타이머 초기화
-    LARGE_INTEGER Frequency;
-    QueryPerformanceFrequency(&Frequency);
+	// 고성능 타이머 초기화
+	LARGE_INTEGER Frequency;
+	QueryPerformanceFrequency(&Frequency);
 
-    LARGE_INTEGER StartTime;
-    QueryPerformanceCounter(&StartTime);
+	LARGE_INTEGER StartTime;
+	QueryPerformanceCounter(&StartTime);
 
 
-    IsRunning = true;
-    while (IsRunning)
-    {
-        // DeltaTime 계산 (초 단위)
-        const LARGE_INTEGER EndTime = StartTime;
-        QueryPerformanceCounter(&StartTime);
+	IsRunning = true;
+	while (IsRunning)
+	{
+		// DeltaTime 계산 (초 단위)
+		const LARGE_INTEGER EndTime = StartTime;
+		QueryPerformanceCounter(&StartTime);
 
-        EngineDeltaTime = static_cast<float>(StartTime.QuadPart - EndTime.QuadPart) / static_cast<float>(Frequency.QuadPart);
-        // 메시지(이벤트) 처리
-        MSG Msg;
-        while (PeekMessage(&Msg, nullptr, 0, 0, PM_REMOVE))
-        {
-            // 키 입력 메시지를 번역
-            TranslateMessage(&Msg);
+		EngineDeltaTime = static_cast<float>(StartTime.QuadPart - EndTime.QuadPart) / static_cast<float>(Frequency.QuadPart);
+		// 메시지(이벤트) 처리
+		MSG Msg;
+		while (PeekMessage(&Msg, nullptr, 0, 0, PM_REMOVE))
+		{
+			// 키 입력 메시지를 번역
+			TranslateMessage(&Msg);
 
-            // 메시지를 등록한 Proc에 전달
-            DispatchMessage(&Msg);
+			// 메시지를 등록한 Proc에 전달
+			DispatchMessage(&Msg);
 
-            if (Msg.message == WM_QUIT)
-            {
-                IsRunning = false;
-                break;
-            }
+			if (Msg.message == WM_QUIT)
+			{
+				IsRunning = false;
+				break;
+			}
 
-        }
+		}
 
-		APlayerInput::Get().Update(WindowHandle, ScreenWidth, ScreenHeight);
-		APlayerController::Get().ProcessPlayerInput(EngineDeltaTime);
+		if (!ImGui::GetIO().WantCaptureMouse)
+		{		
+			FVector winSize = Renderer->GetFrameBufferWindowSize();
+			APlayerInput::Get().Update(WindowHandle, winSize.X, winSize.Y);
+			APlayerController::Get().ProcessPlayerInput(EngineDeltaTime);
+		}
+
 
 		// Renderer Update
+
+    	FDevice::Get().Prepare();
         Renderer->Prepare();
         Renderer->PrepareShader();
 
@@ -134,7 +143,7 @@ void UEngine::Run()
 		// ui Update
         ui.Update();
 
-        Renderer->SwapBuffer();
+        FDevice::Get().SwapBuffer();
 
         // FPS 제한
         double ElapsedTime;
@@ -148,6 +157,9 @@ void UEngine::Run()
             ElapsedTime = static_cast<double>(CurrentTime.QuadPart - StartTime.QuadPart) * 1000.0 / static_cast<double>(Frequency.QuadPart);
         } while (ElapsedTime < TargetDeltaTime);
     }
+
+	Renderer->Release();
+	FDevice::Get().Release();
 }
 
 
@@ -224,7 +236,7 @@ void UEngine::InitWorld()
     //AArrow* Arrow = World->SpawnActor<AArrow>();
     //World->SpawnActor<ASphere>();
     
-    //World->SpawnActor<AAxis>();
+    World->SpawnActor<AAxis>();
     World->SpawnActor<APicker>();
 
 	World->BeginPlay();
@@ -241,10 +253,18 @@ void UEngine::ShutdownWindow()
 	ui.Shutdown();
 }
 
-void UEngine::UpdateWindowSize(UINT InScreenWidth, UINT InScreenHeight)
+void UEngine::UpdateWindowSize(uint32 InScreenWidth, uint32 InScreenHeight)
 {
 	ScreenWidth = InScreenWidth;
 	ScreenHeight = InScreenHeight;
+
+	//디바이스 초기화전에 진입막음
+	if (FDevice::Get().IsInit() == false)
+	{
+		return;
+	}
+	
+	FDevice::Get().OnUpdateWindowSize(ScreenWidth, ScreenHeight);
 
     if(Renderer)
     {
@@ -255,7 +275,8 @@ void UEngine::UpdateWindowSize(UINT InScreenWidth, UINT InScreenHeight)
 	{
 		ui.OnUpdateWindowSize(ScreenWidth, ScreenHeight);
 	}
-
+	
+	FDevice::Get().OnResizeComplete();
 	if (Renderer)
 	{
 		Renderer->OnResizeComplete();

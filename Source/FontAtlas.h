@@ -1,10 +1,12 @@
 #pragma once
 #include "Primitive/PrimitiveVertices.h"
 #include "Core/Container/Map.h"
-class UFontAtlas
+#include "Core/AbstractClass/Singleton.h"
+
+class FFontAtlas : public TSingleton<FFontAtlas>
 {
 public:
-	UFontAtlas();
+	FFontAtlas();
 
 	const GlyphInfo& GetGlyph(wchar_t c) const
 	{

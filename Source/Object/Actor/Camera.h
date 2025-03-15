@@ -47,7 +47,6 @@ public:
     float GetFieldOfView() const;
     float GetNear() const;
     float GetFar() const;
-
         
     FVector GetForward() const
     {
@@ -66,8 +65,10 @@ public:
 
     FMatrix GetViewMatrix() const
     {
-        return GetActorTransform().GetViewMatrix();
+		return FMatrix::LookAtLH(GetActorTransform().GetPosition(), GetActorTransform().GetPosition() + GetForward(), GetUp());
     }
+
+	FMatrix GetProjectionMatrix(float FrameBufferWidth, float FrameBufferHeight) const;
 
 	void MoveForward();
 	void MoveBackward();

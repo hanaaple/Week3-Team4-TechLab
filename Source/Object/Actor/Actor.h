@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Core/EngineTypes.h"
 #include "Core/UObject/Object.h"
 #include "Object/ActorComponent/ActorComponent.h"
@@ -82,6 +82,20 @@ public:
 	void RemoveComponent(T* Object)
 	{
 		Components.Remove(Object);
+	}
+
+	template<typename T>
+		requires std::derived_from<T, UActorComponent>
+	T* GetComponentByClass()
+	{
+		for (UActorComponent* Component : Components)
+		{
+			if (T* CastedComponent = dynamic_cast<T*>(Component))
+			{
+				return CastedComponent;
+			}
+		}
+		return nullptr;
 	}
 
 	FTransform GetActorTransform() const;

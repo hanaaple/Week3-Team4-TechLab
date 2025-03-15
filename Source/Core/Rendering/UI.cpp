@@ -3,7 +3,7 @@
 #include <algorithm>
 
 #include "Object/Actor/Camera.h"
-#include "URenderer.h"
+#include "FDevice.h"
 #include "Core/HAL/PlatformMemory.h"
 #include "ImGui/imgui_impl_dx11.h"
 #include "ImGui/imgui_impl_win32.h"
@@ -23,7 +23,7 @@
 
 
 
-void UI::Initialize(HWND hWnd, const URenderer& Renderer, UINT ScreenWidth, UINT ScreenHeight)
+void UI::Initialize(HWND hWnd, const class FDevice& Device, UINT ScreenWidth, UINT ScreenHeight)
 {
     // ImGui 초기화
     IMGUI_CHECKVERSION();
@@ -38,7 +38,7 @@ void UI::Initialize(HWND hWnd, const URenderer& Renderer, UINT ScreenWidth, UINT
     //io.WantSetMousePos = true;
     // ImGui Backend 초기화
     ImGui_ImplWin32_Init(hWnd);
-    ImGui_ImplDX11_Init(Renderer.GetDevice(), Renderer.GetDeviceContext());
+    ImGui_ImplDX11_Init(Device.GetDevice(), Device.GetDeviceContext());
 
 	ScreenSize = ImVec2(static_cast<float>(ScreenWidth), static_cast<float>(ScreenHeight));
     InitialScreenSize = ScreenSize;

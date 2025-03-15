@@ -1,8 +1,8 @@
-#include "UFontAtlas.h"
+#include "FontAtlas.h"
 #include "Core/Container/String.h"
 #include <string>
 
-UFontAtlas::UFontAtlas()
+FFontAtlas::FFontAtlas()
 {
 	const int textureWidth = 512;
 	const int textureHeight = 512;

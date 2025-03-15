@@ -3,8 +3,8 @@
 #include "Core/Engine.h"
 #include "Object/USceneComponent.h"
 #include "Primitive/PrimitiveVertices.h"
-#include "Core/Math/Plane.h"
-
+#include "Resource/DirectResource/Vertexbuffer.h"
+#include "Resource/DirectResource/IndexBuffer.h"
 
 class UPrimitiveComponent : public USceneComponent
 {
@@ -20,6 +20,17 @@ public:
 	void UpdateConstantDepth(const URenderer& Renderer, int Depth) const;
 	virtual void Render();
 	virtual void CalculateModelMatrix(FMatrix& OutMatrix);
+
+	//테스트 임시 메쉬
+	std::shared_ptr<class FVertexBuffer> VertexBuffer = nullptr;
+	std::shared_ptr<class FIndexBuffer> IndexBuffer = nullptr;
+	std::shared_ptr<class FInputLayout> InputLayout = nullptr;
+	D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+	// 테스트 임시 메테리얼
+	std::shared_ptr<class FPixelShader> PixelShader = nullptr;
+	std::shared_ptr<class FVertexShader> VertexShader = nullptr;
+	
 
 
 	virtual EPrimitiveType GetType() { return EPrimitiveType::EPT_None; }
@@ -60,14 +71,11 @@ class UCubeComp : public UPrimitiveComponent
 	DECLARE_CLASS(UCubeComp, UPrimitiveComponent)
 
 public:
-	UCubeComp()
-	{
-
-		bCanBeRendered = true;
-	}
+	UCubeComp();
 
 	virtual EPrimitiveType GetType() override
 	{
+
 		return EPrimitiveType::EPT_Cube;
 	}
 };
@@ -77,10 +85,7 @@ class USphereComp : public UPrimitiveComponent
 	DECLARE_CLASS(USphereComp, UPrimitiveComponent)
 
 public:
-	USphereComp()
-	{
-		bCanBeRendered = true;
-	}
+	USphereComp();
 
 	virtual EPrimitiveType GetType() override
 	{
@@ -93,10 +98,7 @@ class UTriangleComp : public UPrimitiveComponent
 	DECLARE_CLASS(UTriangleComp, UPrimitiveComponent)
 
 public:
-	UTriangleComp()
-	{
-		bCanBeRendered = true;
-	}
+	UTriangleComp();
 
 	virtual EPrimitiveType GetType() override
 	{
@@ -110,10 +112,7 @@ class ULineComp : public UPrimitiveComponent
 
 
 public:
-	ULineComp()
-	{
-		bCanBeRendered = true;
-	}
+	ULineComp();
 
 	virtual EPrimitiveType GetType() override
 	{
@@ -127,10 +126,7 @@ class UCylinderComp : public UPrimitiveComponent
 
 
 public:
-	UCylinderComp()
-	{
-		bCanBeRendered = true;
-	}
+	UCylinderComp();
 
 	virtual EPrimitiveType GetType() override
 	{
@@ -143,10 +139,7 @@ class UConeComp : public UPrimitiveComponent
 	DECLARE_CLASS(UConeComp, UPrimitiveComponent)
 
 public:
-	UConeComp()
-	{
-		bCanBeRendered = true;
-	}
+	UConeComp();
 
 	virtual EPrimitiveType GetType() override
 	{

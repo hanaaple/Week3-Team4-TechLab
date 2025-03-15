@@ -1,7 +1,8 @@
-﻿#include "Matrix.h"
+#include "Matrix.h"
 #include "Vector.h"
-#include "Plane.h"
+#include "Quat.h"
 #include "Transform.h"
+#include "Rotator.h"
 
 
 FMatrix::FMatrix()
@@ -20,6 +21,11 @@ FMatrix::FMatrix(const FVector4& InX, const FVector4& InY, const FVector4& InZ, 
 	M[1][0] = InY.X; M[1][1] = InY.Y; M[1][2] = InY.Z; M[1][3] = InY.W;
 	M[2][0] = InZ.X; M[2][1] = InZ.Y; M[2][2] = InZ.Z; M[2][3] = InZ.W;
 	M[3][0] = InW.X; M[3][1] = InW.Y; M[3][2] = InW.Z; M[3][3] = InW.W;
+}
+
+FMatrix::FMatrix(const FRotator& Rotation)
+{
+	*this = FMatrix::RotateToMatrix(Rotation.Roll, Rotation.Pitch, Rotation.Yaw);
 }
 
 FMatrix FMatrix::Identity()
@@ -143,6 +149,40 @@ float FMatrix::Determinant() const
 		m[1] * (m[4] * (m[10] * m[15] - m[11] * m[14]) - m[6] * (m[8] * m[15] - m[11] * m[12]) + m[7] * (m[8] * m[14] - m[10] * m[12])) +
 		m[2] * (m[4] * (m[9] * m[15] - m[11] * m[13]) - m[5] * (m[8] * m[15] - m[11] * m[12]) + m[7] * (m[8] * m[13] - m[9] * m[12])) -
 		m[3] * (m[4] * (m[9] * m[14] - m[10] * m[13]) - m[5] * (m[8] * m[14] - m[10] * m[12]) + m[6] * (m[8] * m[13] - m[9] * m[12]));
+}
+
+FMatrix FMatrix::InverseGaussJordan(FMatrix& mat)
+{
+	FMatrix augmented = mat;
+	FMatrix identity = FMatrix();
+	for (int col = 0; col < 4; col++) {
+		int pivotRow = col;
+		for (int row = col + 1; row < 4; row++) {
+			if (fabs(augmented.M[row][col]) > fabs(augmented.M[pivotRow][col])) {
+				pivotRow = row;
+			}
+		}
+		if (fabs(augmented.M[pivotRow][col]) < 1e-6f) {
+			std::cerr << "Matrix is singular and cannot be inverted (Gauss-Jordan)." << std::endl;
+			return FMatrix();
+		}
+		std::swap(augmented.M[col], augmented.M[pivotRow]);
+		std::swap(identity.M[col], identity.M[pivotRow]);
+		float pivot = augmented.M[col][col];
+		for (int j = 0; j < 4; j++) {
+			augmented.M[col][j] /= pivot;
+			identity.M[col][j] /= pivot;
+		}
+		for (int row = 0; row < 4; row++) {
+			if (row == col) continue;
+			float factor = augmented.M[row][col];
+			for (int j = 0; j < 4; j++) {
+				augmented.M[row][j] -= factor * augmented.M[col][j];
+				identity.M[row][j] -= factor * identity.M[col][j];
+			}
+		}
+	}
+	return identity;
 }
 
 FMatrix FMatrix::Inverse() const
@@ -271,12 +311,11 @@ FMatrix FMatrix::LookAtLH(const FVector& EyePosition, const FVector& FocusPoint,
 	FVector Up = FVector::CrossProduct(Forward, Right).GetSafeNormal();
 
 	// row major
-	FMatrix Result = FMatrix(
-		FVector4(Right.X, Up.X, Forward.X, 0.0f),
-		FVector4(Right.Y, Up.Y, Forward.Y, 0.0f),
-		FVector4(Right.Z, Up.Z, Forward.Z, 0.0f),
-		FVector4(-Right.Dot(EyePosition), -Up.Dot(EyePosition), -Forward.Dot(EyePosition), 1.0f)
-	);
+	FMatrix Result;
+	Result.M[0][0] = Right.X; Result.M[0][1] = Up.X; Result.M[0][2] = Forward.X; Result.M[0][3] = 0.0f;
+	Result.M[1][0] = Right.Y; Result.M[1][1] = Up.Y; Result.M[1][2] = Forward.Y; Result.M[1][3] = 0.0f;
+	Result.M[2][0] = Right.Z; Result.M[2][1] = Up.Z; Result.M[2][2] = Forward.Z; Result.M[2][3] = 0.0f;
+	Result.M[3][0] = FVector::DotProduct(Right, -EyePosition); Result.M[3][1] = FVector::DotProduct(Up, -EyePosition); Result.M[3][2] = FVector::DotProduct(Forward, -EyePosition); Result.M[3][3] = 1.0f;
 
 	return Result;
 }
@@ -317,6 +356,15 @@ FVector FMatrix::GetRotation() const
 	return Euler;
 }
 
+FVector FMatrix::TransformVector(const FVector& Vector) const
+{
+	return {
+			Vector.X * M[0][0] + Vector.Y * M[1][0] + Vector.Z * M[2][0],
+			Vector.X * M[0][1] + Vector.Y * M[1][1] + Vector.Z * M[2][1],
+			Vector.X * M[0][2] + Vector.Y * M[1][2] + Vector.Z * M[2][2]
+	};
+}
+
 FVector4 FMatrix::TransformVector4(const FVector4& Vector) const
 {
 	return {
@@ -327,8 +375,77 @@ FVector4 FMatrix::TransformVector4(const FVector4& Vector) const
 	};
 }
 
+FVector4 FMatrix::TransformVector4Ex(const FVector4& Vector) const
+{
+	return {
+			Vector.X * M[0][0] + Vector.Y * M[0][1] + Vector.Z * M[0][2] + Vector.W * M[0][3],
+			Vector.X * M[1][0] + Vector.Y * M[1][1] + Vector.Z * M[1][2] + Vector.W * M[1][3],
+			Vector.X * M[2][0] + Vector.Y * M[2][1] + Vector.Z * M[2][2] + Vector.W * M[2][3],
+			Vector.X * M[3][0] + Vector.Y * M[3][1] + Vector.Z * M[3][2] + Vector.W * M[3][3]
+	};
+}
+
 FTransform FMatrix::GetTransform() const
 {
 	FQuat RotationQuat = FQuat::MakeFromRotationMatrix(*this);
 	return FTransform(GetTranslation(), RotationQuat, GetScale());
+}
+
+FMatrix FMatrix::RotateRoll(float Angle)
+{
+	Angle = FMath::DegreesToRadians(Angle);
+
+	FMatrix Result;
+
+	float C = cos(Angle);
+	float S = sin(Angle);
+
+	Result.M[1][1] = C;
+	Result.M[1][2] = -S;
+	Result.M[2][1] = S;
+	Result.M[2][2] = C;
+
+	return Result;
+}
+
+FMatrix FMatrix::RotatePitch(float Angle)
+{
+	Angle = FMath::DegreesToRadians(Angle);
+
+	FMatrix Result;
+
+	float C = cos(Angle);
+	float S = sin(Angle);
+
+	Result.M[0][0] = C;
+	Result.M[0][2] = -S;
+	Result.M[2][0] = S;
+	Result.M[2][2] = C;
+	return Result;
+}
+
+FMatrix FMatrix::RotateYaw(float Angle)
+{
+	Angle = FMath::DegreesToRadians(Angle);
+	FMatrix Result;
+
+	float C = cos(Angle);
+	float S = sin(Angle);
+
+	Result.M[0][0] = C;  // ù ��° ���� ù ��° ��
+	Result.M[0][1] = -S;  // ù ��° ���� �� ��° ��
+	Result.M[1][0] = S; // �� ��° ���� ù ��° ��
+	Result.M[1][1] = C;  // �� ��° ���� �� ��° ��
+
+	return Result;
+}
+
+// TODO: 벡터 받아서 Rotate 해주는 것이니까 네이밍 제대로 해주기.
+FMatrix FMatrix::RotateToMatrix(float X, float Y, float Z)
+{
+	if (abs(Y) == 90)
+	{
+		return RotateRoll(X) * RotatePitch(Y) * RotateYaw(Z);
+	}
+	return  RotateRoll(X) * RotateYaw(Z) * RotatePitch(Y);
 }
