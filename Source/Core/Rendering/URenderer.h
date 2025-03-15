@@ -41,14 +41,6 @@ private:
 		int nearPlane;
 		int farPlane;
 	};
-	
-  //  struct ConstantUpdateInfo
-  //  {
-  //      const FTransform& Transform;
-		//const FVector4& Color;
-  //      bool bUseVertexColor;
-  //  };
-
 public:
 	
     /** Renderer를 초기화 합니다. */
@@ -59,13 +51,9 @@ public:
 
     void CreateShader();
 
-    void ReleaseShader();
-
     void CreateConstantBuffer();
 
     void ReleaseConstantBuffer();
-
-
 
     /** 렌더링 파이프라인을 준비 합니다. */
     void Prepare() const;
@@ -93,11 +81,6 @@ public:
      *
      * @note 이 함수는 D3D11_USAGE_IMMUTABLE 사용법으로 버퍼를 생성합니다.
      */
-    ID3D11Buffer* CreateVertexBuffer(const FVertexSimple* Vertices, UINT ByteWidth) const;
-    ID3D11Buffer* CreateIndexBuffer(const uint32* Indices, UINT ByteWidth) const;
-
-    /** Buffer를 해제합니다. */
-    void ReleaseVertexBuffer(ID3D11Buffer* pBuffer) const;
 
     /** Constant Data를 업데이트 합니다. */
     void UpdateConstant(const FConstants& UpdateInfo) const;
@@ -108,21 +91,12 @@ public:
 	void OnUpdateWindowSize(uint32 Width, uint32 Height);
 
 	void OnResizeComplete();
-
-	
-
 protected:
-
-
-
-
-
     /** 뎁스 스텐실 상태를 생성합니다. */
 	void CreateDepthStencilState();
 	
 	/** 블렌드 상태를 생성합니다. */
 	void CreateBlendState();
-
 
 	/** 뎁스 스텐실 리소스는 디바이스 뎁스 설정은 여기서 날린다. */
 	void ReleaseDepthStencilBuffer();
@@ -135,22 +109,8 @@ protected:
 
 
 protected:
-
-
-
-
-	
     ID3D11RasterizerState* RasterizerState = nullptr;       // 래스터라이저 상태(컬링, 채우기 모드 등 정의)
     ID3D11Buffer* ConstantBuffer = nullptr;                 // 쉐이더에 데이터를 전달하기 위한 상수 버퍼
-
-
-    // Shader를 렌더링할 때 사용되는 변수들
-	
-	ID3D11VertexShader* FontVertexShader = nullptr;       // Vertex 데이터를 처리하는 Vertex 셰이더
-	ID3D11PixelShader* FontPixelShader = nullptr;         // Pixel의 색상을 결정하는 Pixel 셰이더
-
-    //ID3D11InputLayout* SimpleInputLayout = nullptr;         // Vertex 셰이더 입력 레이아웃 정의
-    unsigned int Stride = 0;                                // Vertex 버퍼의 각 요소 크기
 
 	ID3D11DepthStencilState* DepthStencilState = nullptr;   // DepthStencil 상태(깊이 테스트, 스텐실 테스트 등 정의)
     ID3D11DepthStencilState* GizmoDepthStencilState = nullptr; // 기즈모용 스텐실 스테이트. Z버퍼 테스트 하지않고 항상 앞에렌더
@@ -163,7 +123,6 @@ protected:
 
 	D3D_PRIMITIVE_TOPOLOGY CurrentTopology = D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
 
-	
 #pragma region picking
 protected:
 	// 피킹용 버퍼들
@@ -187,7 +146,6 @@ public:
     void UpdateConstantDepth(int Depth) const;
 
     void PrepareMain();
-	//void PrepareMainShader();
 
 	FVector4 GetPixel(FVector MPos);
 
