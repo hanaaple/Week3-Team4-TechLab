@@ -85,7 +85,10 @@ public:
     FString(const ANSICHAR* InString) : PrivateString(InString) {}
 #endif
 
-    static FString FromInt(int32 Num);
+	template <typename Number>
+		requires std::is_arithmetic_v<Number>
+    static FString FromInt(Number Num);
+
     static FString SanitizeFloat(float InFloat);
 
 public:
@@ -134,7 +137,7 @@ public:
     /** ElementType* 로 반환하는 연산자 */
     FORCEINLINE const ElementType* operator*() const;
 
-    FORCEINLINE FString operator+(const FString& SubStr) const;
+    // FORCEINLINE FString operator+(const FString& SubStr) const;
     FORCEINLINE FString& operator+=(const FString& SubStr);
     FORCEINLINE friend FString operator+(const FString& Lhs, const FString& Rhs);
 
@@ -142,6 +145,16 @@ public:
     FORCEINLINE bool operator==(const ElementType* Rhs) const;
 };
 
+template <typename Number>
+	requires std::is_arithmetic_v<Number>
+FString FString::FromInt(Number Num)
+{
+#if USE_WIDECHAR
+    return FString{std::to_wstring(Num)};
+#else
+    return FString{std::to_string(Num)};
+#endif
+}
 
 FORCEINLINE int32 FString::Len() const
 {
@@ -158,10 +171,10 @@ FORCEINLINE const FString::ElementType* FString::operator*() const
     return PrivateString.c_str();
 }
 
-FORCEINLINE FString FString::operator+(const FString& SubStr) const
-{
-    return this->PrivateString + SubStr.PrivateString;
-}
+// FORCEINLINE FString FString::operator+(const FString& SubStr) const
+// {
+//     return this->PrivateString + SubStr.PrivateString;
+// }
 
 FString operator+(const FString& Lhs, const FString& Rhs)
 {
