@@ -13,23 +13,6 @@ void FDevice::Init(HWND _hwnd)
 	bIsInit = true;
 }
 
-ID3D11Device* FDevice::GetDevice() const
-{ return Device; }
-
-ID3D11DeviceContext* FDevice::GetDeviceContext() const
-{ return DeviceContext; }
-
-const D3D11_VIEWPORT& FDevice::GetViewPortInfo() const 
-{ return ViewportInfo; ; }
-
-ID3D11DepthStencilView* FDevice::GetDepthStencilView() const
-{ return DepthStencilView; }
-
-IDXGISwapChain* FDevice::GetSwapChain() const
-{ return SwapChain; }
-
-
-
 void FDevice::Release()
 {
 	ReleaseDeviceAndSwapChain();
