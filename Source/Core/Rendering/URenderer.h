@@ -85,11 +85,9 @@ public:
     /** Constant Data를 업데이트 합니다. */
     void UpdateConstant(const FConstants& UpdateInfo) const;
 
-    /** View 변환 Matrix를 업데이트 합니다. */
-    void UpdateViewMatrix(const FTransform& CameraTransform);
 
-    /** Projection 변환 Matrix를 업데이트 합니다. */
-    void UpdateProjectionMatrix(ACamera* Camera);
+
+    
 	void OnUpdateWindowSize(uint32 Width, uint32 Height);
 
 	void OnResizeComplete();
@@ -109,7 +107,7 @@ protected:
     /** 레스터라이저 상태를 해제합니다. */
     void ReleaseRasterizerState();
 
-    void InitMatrix();
+
 protected:
     ID3D11RasterizerState* RasterizerState = nullptr;       // 래스터라이저 상태(컬링, 채우기 모드 등 정의)
     ID3D11Buffer* ConstantBuffer = nullptr;                 // 쉐이더에 데이터를 전달하기 위한 상수 버퍼
@@ -121,9 +119,7 @@ protected:
 	ID3D11BlendState* BlendState = nullptr;
 	float BlendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
-	FMatrix WorldMatrix;
-    FMatrix ViewMatrix;
-	FMatrix ProjectionMatrix;
+
 
 	D3D_PRIMITIVE_TOPOLOGY CurrentTopology = D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
 
@@ -154,7 +150,6 @@ public:
 	FVector4 GetPixel(FVector MPos);
 
 	void RenderPickingTexture();
-	FMatrix GetProjectionMatrix() const { return ProjectionMatrix; }
 #pragma endregion picking
 
 #pragma region Ray

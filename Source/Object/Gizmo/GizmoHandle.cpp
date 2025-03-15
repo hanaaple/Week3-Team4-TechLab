@@ -96,7 +96,7 @@ void AGizmoHandle::Tick(float DeltaTime)
 			FVector4 RayEnd {PosX, PosY, 1.0f, 1.0f};
 			
 			// View 공간으로 변환
-			FMatrix InvProjMat = UEngine::Get().GetRenderer()->GetProjectionMatrix().Inverse();
+			FMatrix InvProjMat =  UEngine::Get().GetWorld()->GetCamera()->GetProjectionMatrix().Inverse();
 			RayOrigin = InvProjMat.TransformVector4(RayOrigin);
 			RayOrigin.W = 1;
 			RayEnd = InvProjMat.TransformVector4(RayEnd);

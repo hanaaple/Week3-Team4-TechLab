@@ -4,6 +4,9 @@
 #include <d3dcompiler.h>
 #include "Core/Rendering/FDevice.h"
 
+#include "Object/Actor/Camera.h"
+#include "Object/World/World.h"
+
 void FLineBatchManager::AddLine(const FVector& Start, const FVector& End, const FVector4& Color, float Thickness)
 {
 	// 버텍스 버퍼에 두 정점 추가
@@ -135,7 +138,7 @@ void FLineBatchManager::Render()
 
 		URenderer* Renderer = UEngine::Get().GetRenderer();
 
-		Constants.ViewProjectionMatrix = FMatrix::Transpose( Renderer->ViewMatrix * Renderer->GetProjectionMatrix());
+		Constants.ViewProjectionMatrix = FMatrix::Transpose(UEngine::Get().GetWorld()->GetCamera()->GetViewProjectionMatrix());
 
 
 

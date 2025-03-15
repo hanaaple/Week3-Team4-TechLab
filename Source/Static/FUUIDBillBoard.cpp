@@ -133,8 +133,7 @@ void FUUIDBillBoard::Render()
 
 		Constants.ViewProjectionMatrix = FMatrix::Transpose(
 			ModelMatrix
-			* UEngine::Get().GetWorld()->GetCamera()->GetViewMatrix()
-			* Renderer->GetProjectionMatrix()
+			* UEngine::Get().GetWorld()->GetCamera()->GetViewProjectionMatrix()
 		);
 
 		// D3D11_MAP_WRITE_DISCARD는 이전 내용을 무시하고 새로운 데이터로 덮어쓰기 위해 사용

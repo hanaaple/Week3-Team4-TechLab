@@ -55,6 +55,7 @@ public:
 
 	void RayCasting(const FVector& MouseNDCPos);
 
+	TArray<AActor*>& GetActors() { return Actors; }
 private:
 	UWorldInfo GetWorldInfo() const;
 	class ACamera* Camera = nullptr;

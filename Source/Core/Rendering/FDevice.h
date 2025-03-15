@@ -7,7 +7,6 @@
 
 class FDevice : public TSingleton<FDevice>
 {
-
 	
 public:
 	void Init(HWND _hwnd);
@@ -15,12 +14,12 @@ public:
 	{
 		return bIsInit;
 	}
-	
-	ID3D11Device* GetDevice() const;
-	ID3D11DeviceContext* GetDeviceContext() const;
-	const D3D11_VIEWPORT& GetViewPortInfo() const  ;
-	ID3D11DepthStencilView* GetDepthStencilView() const  ;
-	IDXGISwapChain* GetSwapChain() const  ;
+
+	inline ID3D11Device* GetDevice() const { return Device; }
+	inline ID3D11DeviceContext* GetDeviceContext() const { return DeviceContext; }
+	inline const D3D11_VIEWPORT& GetViewPortInfo() const { return ViewportInfo; }
+	inline ID3D11DepthStencilView* GetDepthStencilView() const { return DepthStencilView; }
+	inline IDXGISwapChain* GetSwapChain() const { return SwapChain; }
 
 	/** Renderer에 사용된 모든 리소스를 해제합니다. */
 	void Release();
