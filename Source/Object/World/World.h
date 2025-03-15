@@ -51,6 +51,7 @@ public:
 	inline class ACamera* GetCamera() const { return Camera; }
 	void SetCamera(class ACamera* NewCamera) { Camera = NewCamera; }
 
+	TArray<AActor*>& GetActors() { return Actors; }
 private:
 	UWorldInfo GetWorldInfo() const;
 	class ACamera* Camera = nullptr;
