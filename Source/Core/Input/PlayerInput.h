@@ -186,7 +186,7 @@ public:
 
 	inline bool GetKeyUp(EKeyCode key) const { return Keys[static_cast<uint8>(key)].KeyState == EKeyState::Up; }
 
-	void Update(HWND hWnd, uint32 Width, uint32 Height);
+	void Update(HWND hWnd, uint32 FramaeBufferHeight, uint32 FramaeBufferWidth);
     
     FVector GetMousePos() const { return MousePos;}
     FVector GetMouseNDCPos() const { return MouseNDCPos;}
@@ -216,7 +216,7 @@ private:
 	void UpdateKeyDown(FKey& key) const;
 	void UpdateKeyUp(FKey& key) const;
 
-	void SetMousePos(HWND hWnd, uint32 Width, uint32 Height);
+	void SetMousePos(HWND hWnd, uint32 FrameBufferWidth, uint32 FrameBufferHeight);
 
 	FVector CalNDCPos(FVector InMousePos, FVector WindowSize) const;
 

@@ -10,8 +10,8 @@ ACamera::ACamera()
 {
     bIsGizmo = true;
     
-    Near = 0.1f;
-    Far = 1000.f;
+    Near = 1.f;
+    Far = 100.f;
     FieldOfView = 45.f;
     ProjectionMode = ECameraProjectionMode::Perspective;
 	CameraSpeed = 1.0f;
@@ -69,9 +69,9 @@ float ACamera::GetFar() const
     return Far;
 }
 
-FMatrix ACamera::GetProjectionMatrix() const
+FMatrix ACamera::GetProjectionMatrix(float FrameBufferWidth, float FrameBufferHeight) const
 {
-	return FMatrix::PerspectiveFovLH(FieldOfView, UEngine::Get().GetScreenRatio(), Near, Far);
+	return FMatrix::PerspectiveFovLH(FieldOfView, FrameBufferWidth/FrameBufferHeight, Near, Far);
 }
 
 void ACamera::MoveForward()

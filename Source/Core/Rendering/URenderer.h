@@ -111,9 +111,11 @@ public:
     /** Projection 변환 Matrix를 업데이트 합니다. */
     void UpdateProjectionMatrix(ACamera* Camera);
 
-	void OnUpdateWindowSize(int Width, int Height);
+	void OnUpdateWindowSize(uint32 Width, uint32 Height);
 
 	void OnResizeComplete();
+
+	
 
 protected:
     /** Direct3D Device 및 SwapChain을 생성합니다. */
@@ -219,4 +221,8 @@ public:
 	void RenderPickingTexture();
 	FMatrix GetProjectionMatrix() const { return ProjectionMatrix; }
 #pragma endregion picking
+
+#pragma region Ray
+public:
+	FVector GetFrameBufferWindowSize() const;
 };

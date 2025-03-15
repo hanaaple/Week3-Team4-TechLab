@@ -311,12 +311,11 @@ FMatrix FMatrix::LookAtLH(const FVector& EyePosition, const FVector& FocusPoint,
 	FVector Up = FVector::CrossProduct(Forward, Right).GetSafeNormal();
 
 	// row major
-	FMatrix Result = FMatrix(
-		FVector4(Right.X, Up.X, Forward.X, 0.0f),
-		FVector4(Right.Y, Up.Y, Forward.Y, 0.0f),
-		FVector4(Right.Z, Up.Z, Forward.Z, 0.0f),
-		FVector4(-Right.Dot(EyePosition), -Up.Dot(EyePosition), -Forward.Dot(EyePosition), 1.0f)
-	);
+	FMatrix Result;
+	Result.M[0][0] = Right.X; Result.M[0][1] = Up.X; Result.M[0][2] = Forward.X; Result.M[0][3] = 0.0f;
+	Result.M[1][0] = Right.Y; Result.M[1][1] = Up.Y; Result.M[1][2] = Forward.Y; Result.M[1][3] = 0.0f;
+	Result.M[2][0] = Right.Z; Result.M[2][1] = Up.Z; Result.M[2][2] = Forward.Z; Result.M[2][3] = 0.0f;
+	Result.M[3][0] = FVector::DotProduct(Right, -EyePosition); Result.M[3][1] = FVector::DotProduct(Up, -EyePosition); Result.M[3][2] = FVector::DotProduct(Forward, -EyePosition); Result.M[3][3] = 1.0f;
 
 	return Result;
 }
@@ -373,6 +372,16 @@ FVector4 FMatrix::TransformVector4(const FVector4& Vector) const
 			Vector.X * M[0][1] + Vector.Y * M[1][1] + Vector.Z * M[2][1] + Vector.W * M[3][1],
 			Vector.X * M[0][2] + Vector.Y * M[1][2] + Vector.Z * M[2][2] + Vector.W * M[3][2],
 			Vector.X * M[0][3] + Vector.Y * M[1][3] + Vector.Z * M[2][3] + Vector.W * M[3][3]
+	};
+}
+
+FVector4 FMatrix::TransformVector4Ex(const FVector4& Vector) const
+{
+	return {
+			Vector.X * M[0][0] + Vector.Y * M[0][1] + Vector.Z * M[0][2] + Vector.W * M[0][3],
+			Vector.X * M[1][0] + Vector.Y * M[1][1] + Vector.Z * M[1][2] + Vector.W * M[1][3],
+			Vector.X * M[2][0] + Vector.Y * M[2][1] + Vector.Z * M[2][2] + Vector.W * M[2][3],
+			Vector.X * M[3][0] + Vector.Y * M[3][1] + Vector.Z * M[3][2] + Vector.W * M[3][3]
 	};
 }
 

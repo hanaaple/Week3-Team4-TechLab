@@ -58,6 +58,7 @@ struct alignas(16) FMatrix
 
 	FVector TransformVector(const FVector& Vector) const;
 	FVector4 TransformVector4(const FVector4& Vector) const;
+	FVector4 TransformVector4Ex(const FVector4& Vector) const;
 
 	class FTransform GetTransform() const;
 

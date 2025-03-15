@@ -3,19 +3,21 @@
 #include "Static/FLineBatchManager.h"
 
 
-FRay::FRay(const FMatrix& ViewMatrix, const FMatrix& ProjMatrix, float MouseNDCX, float MouseNDCY, float ScreenWidth, float ScreenHeight)
+FRay::FRay(const FMatrix& ViewMatrix, const FMatrix& ProjMatrix, float MouseNDCX, float MouseNDCY)
 {
-	FVector StartClip = FVector(MouseNDCX, MouseNDCY, 0.0f);
-	FVector EndClip = FVector(MouseNDCX, MouseNDCY, 1.0f);
+	FMatrix viewProj = ViewMatrix * ProjMatrix;
+	FMatrix invViewProj = viewProj.Inverse();
 
-	FVector NDCToViewStart = ProjMatrix.Inverse().TransformVector(StartClip);
-	FVector NDCToViewEnd = ProjMatrix.Inverse().TransformVector(EndClip);;
+	FVector NDCStart = FVector(MouseNDCX, MouseNDCY, 0.0f);
+	FVector NDCEnd = FVector(MouseNDCX, MouseNDCY, 1.0f);
 
-	FVector ViewToWorldStart = ViewMatrix.Inverse().TransformVector(NDCToViewStart);
-	FVector ViewToWorldEnd = ViewMatrix.Inverse().TransformVector(NDCToViewEnd);
+	FVector4 ViewToWorldStart = invViewProj.TransformVector4(FVector4(NDCStart, 1.0f));
+	ViewToWorldStart *= 1.f / ViewToWorldStart.W;
+	FVector4 ViewToWorldEnd = invViewProj.TransformVector4(FVector4(NDCEnd, 1.0f));
+	ViewToWorldEnd *= 1.f / ViewToWorldEnd.W;
 
-    Origin = FVector(ViewToWorldStart.X, ViewToWorldStart.Y, ViewToWorldStart.Z);
-	Direction = (ViewToWorldEnd - ViewToWorldStart).GetSafeNormal();
+	Origin = FVector(ViewToWorldStart.X, ViewToWorldStart.Y, ViewToWorldStart.Z);
+	Direction = (ViewToWorldEnd -ViewToWorldStart).GetSafeNormal();
 }
 
 bool FRayCast::InserSectRaySphere(const FRay& Ray, const FVector& SphereCenter, float SphereRadius, OUT float& OutT)

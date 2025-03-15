@@ -19,7 +19,7 @@ private:
 public:
 	FRay() : Origin(FVector::Zero()), Direction(FVector::Zero()) {}
 	FRay(const FVector& Origin, const FVector& Direction) : Origin(Origin), Direction(Direction) {}
-	FRay(const FMatrix& ViewMatrix, const FMatrix& ProjMatrix, float MouseNDCX, float MouseNDCY, float ScreenWidth, float ScreenHeight);
+	FRay(const FMatrix& ViewMatrix, const FMatrix& ProjMatrix, float MouseNDCX, float MouseNDCY);
 
 	FVector GetPoint(float T) const
 	{

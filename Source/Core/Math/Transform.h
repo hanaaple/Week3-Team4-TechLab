@@ -112,7 +112,8 @@ public:
 		return FVector::CrossProduct(FVector(0, 0, 1), GetForward()).GetSafeNormal();
 	}
 
-	FVector GetUp() const{
+	FVector GetUp() const
+	{
 		return FVector::CrossProduct(GetForward(), GetRight()).GetSafeNormal();
 
 	}

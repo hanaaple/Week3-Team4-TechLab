@@ -251,20 +251,16 @@ void UWorld::LoadWorld(const char* SceneName)
 
 void UWorld::RayCasting(const FVector& MouseNDCPos)
 {
-	float screenWidth = UEngine::Get().GetScreenWidth();
-	float screenHeight = UEngine::Get().GetScreenHeight();
+	FVector winSize = UEngine::Get().GetRenderer()->GetFrameBufferWindowSize();
 
-	FMatrix ProjMatrix = Camera->GetProjectionMatrix();
+	URenderer* Renderer = UEngine::Get().GetRenderer();
+	
 
-	FRay ray = FRay(Camera->GetViewMatrix(), ProjMatrix, MouseNDCPos.X, MouseNDCPos.Y, screenWidth, screenHeight);
+	FMatrix ProjMatrix = Camera->GetProjectionMatrix(winSize.X, winSize.Y); 
+	FRay ray = FRay(Camera->GetViewMatrix(), ProjMatrix, MouseNDCPos.X, MouseNDCPos.Y);
 
 
-	FLineBatchManager::Get().AddLine(ray.GetOrigin(), ray.GetDirection() * Camera->GetFar(), FVector4::RED);
-
-	//AActor* debugActor = SpawnActor<AActor>();
-	//debugActor->SetRootComponent(debugActor->AddComponent<USphereComp>());
-	//debugActor->SetActorTransform(FTransform(ray.GetOrigin(), FQuat(), FVector(0.01f, 0.01f, 0.01f)));
-	//AddRenderComponent(debugActor->GetComponentByClass<USphereComp>());
+	FLineBatchManager::Get().AddLine(ray.GetOrigin(), ray.GetDirection() * Camera->GetFar(), FVector4::CYAN);
 
 	for (auto& Actor : Actors)
 	{
@@ -295,6 +291,34 @@ void UWorld::RayCasting(const FVector& MouseNDCPos)
 			}
 			break;
 		}
+		case EPrimitiveType::EPT_Sphere:
+		{
+			float outT = 0;
+			if (FRayCast::InserSectRaySphere(localRay, PrimitiveComponent->GetActorLocation(), 0.5f, outT))
+			{
+				UE_LOG("Hit Sphere");
+			}
+			break;
+		}
+		case EPrimitiveType::EPT_Cylinder:
+		{
+			float outT = 0;
+			if (FRayCast::IntersectRayAABB(localRay, FVector(0, -0.5f, 0), FVector(0, 0.5f, 0), outT))
+			{
+				UE_LOG("Hit Cylinder");
+			}
+			break;
+		}
+		case EPrimitiveType::EPT_Cone:
+		{
+			break;
+		}
+		case EPrimitiveType::EPT_Triangle:
+		{
+			break; 
+		}
+		default:
+			break;
 		}
 	}
 }
