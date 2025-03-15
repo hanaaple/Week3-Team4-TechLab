@@ -17,16 +17,13 @@
 
 void URenderer::Create(HWND hWindow)
 {
-    //CreateDeviceAndSwapChain(hWindow);
-    //CreateFrameBuffer();
     CreateRasterizerState();
-    //CreateDepthStencilBuffer();
     CreateDepthStencilState();
 	CreateBlendState();
     CreatePickingTexture(hWindow);
 
 	FLineBatchManager::Get().Create();
-    
+
     InitMatrix();
 
 	LoadTexture(L"font_atlas.png");
@@ -35,73 +32,27 @@ void URenderer::Create(HWND hWindow)
 void URenderer::Release()
 {
     ReleaseRasterizerState();
+    ReleaseDepthStencilBuffer();
 
     // 렌더 타겟을 초기화
     FDevice::Get().GetDeviceContext()->OMSetRenderTargets(0, nullptr, nullptr);
-
-    //ReleaseFrameBuffer();
-    ReleaseDepthStencilBuffer();
-    //ReleaseDeviceAndSwapChain();
 }
 
 void URenderer::CreateShader()
 {
-    // /**
-    //      * 컴파일된 셰이더의 바이트코드를 저장할 변수 (ID3DBlob)
-    //      *
-    //      * 범용 메모리 버퍼를 나타내는 형식
-    //      *   - 여기서는 shader object bytecode를 담기위해 쓰임
-    //      * 다음 두 메서드를 제공한다.
-    //      *   - LPVOID GetBufferPointer
-    //      *     - 버퍼를 가리키는 void* 포인터를 돌려준다.
-    //      *   - SIZE_T GetBufferSize
-    //      *     - 버퍼의 크기(바이트 갯수)를 돌려준다
-    //      */
-    // ID3DBlob* VertexShaderCSO;
-    // ID3DBlob* PixelShaderCSO;
-
     ID3DBlob* PickingShaderCSO;
-    
-	ID3DBlob* FontVertexShaderCSO;
-	ID3DBlob* FontPixelShaderCSO;
-
 	ID3DBlob* ErrorMsg = nullptr;
-
 
     D3DCompileFromFile(L"Shaders/ShaderW0.hlsl", nullptr, nullptr, "PickingPS", "ps_5_0", 0, 0, &PickingShaderCSO, nullptr);
     FDevice::Get().GetDevice()->CreatePixelShader(PickingShaderCSO->GetBufferPointer(), PickingShaderCSO->GetBufferSize(), nullptr, &PickingPixelShader);
-    
-	// Font Shaders
-	D3DCompileFromFile(L"Shaders/Font_VS.hlsl", nullptr, nullptr, "Font_VS", "vs_5_0", 0, 0, &FontVertexShaderCSO, &ErrorMsg);
-	FDevice::Get().GetDevice()->CreateVertexShader(FontVertexShaderCSO->GetBufferPointer(), FontVertexShaderCSO->GetBufferSize(), nullptr, &FontVertexShader);
-
-	D3DCompileFromFile(L"Shaders/Font_PS.hlsl", nullptr, nullptr, "Font_PS", "ps_5_0", 0, 0, &FontPixelShaderCSO, nullptr);
-	FDevice::Get().GetDevice()->CreatePixelShader(FontPixelShaderCSO->GetBufferPointer(), FontPixelShaderCSO->GetBufferSize(), nullptr, &FontPixelShader);
-
+ 
 	if (ErrorMsg)
 	{
 		std::cout << (char*)ErrorMsg->GetBufferPointer() << std::endl;
 		ErrorMsg->Release();
 	}
 
-    // // 입력 레이아웃 정의 및 생성
-    // D3D11_INPUT_ELEMENT_DESC Layout[] =
-    // {
-    //     { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-    //     { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-    // };
-    //
-    // FDevice::Get().GetDevice()->CreateInputLayout(Layout, ARRAYSIZE(Layout), VertexShaderCSO->GetBufferPointer(), VertexShaderCSO->GetBufferSize(), &SimpleInputLayout);
-
     PickingShaderCSO->Release();
-
-    // 정점 하나의 크기를 설정 (바이트 단위)
-    Stride = sizeof(FVertexSimple);
-}
-
-void URenderer::ReleaseShader()
-{
-    
 }
 
 void URenderer::CreateConstantBuffer()
@@ -152,28 +103,18 @@ void URenderer::ReleaseConstantBuffer()
     }
 }
 
-
-
 void URenderer::Prepare() const
 {
-
-
     /**
      * OutputMerger 설정
      * 렌더링 파이프라인의 최종 단계로써, 어디에 그릴지(렌더 타겟)와 어떻게 그릴지(블렌딩)를 지정
      */
-    //FDevice::Get().GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     FDevice::Get().GetDeviceContext()->RSSetState(RasterizerState);
     FDevice::Get().GetDeviceContext()->OMSetBlendState(nullptr, nullptr, 0xffffffff);
 }
 
 void URenderer::PrepareShader() const
 {
-    // 기본 셰이더랑 InputLayout을 설정
-    //FDevice::Get().GetDeviceContext()->VSSetShader(SimpleVertexShader, nullptr, 0);
-    //FDevice::Get().GetDeviceContext()->PSSetShader(SimplePixelShader, nullptr, 0);
-    //FDevice::Get().GetDeviceContext()->IASetInputLayout(SimpleInputLayout);
-
     // 버텍스 쉐이더에 상수 버퍼를 설정
     if (ConstantBuffer)
     {
@@ -187,14 +128,11 @@ void URenderer::PrepareShader() const
 
 void URenderer::RenderPrimitive(class UPrimitiveComponent& PrimitiveComp, const class FMatrix& ModelMatrix)
 {
-
-
-
 	FMatrix MVP = FMatrix::Transpose(
 		ModelMatrix *
-	ViewMatrix *
-	ProjectionMatrix
-);
+		ViewMatrix *
+		ProjectionMatrix
+	);
 
 	FConstants UpdateInfo{
 		MVP,
@@ -203,78 +141,40 @@ void URenderer::RenderPrimitive(class UPrimitiveComponent& PrimitiveComp, const 
     };
 
     UpdateConstant(UpdateInfo);
-	
-	
-
-	
-    RenderPrimitiveInternal( PrimitiveComp);
-
+    RenderPrimitiveInternal(PrimitiveComp);
 }
 
 void URenderer::RenderPrimitiveInternal(class UPrimitiveComponent& PrimitiveComp) const
 {
-    UINT Offset = 0;
-
-	//임시로 만듦 각 렌더러에 맞는 쉐이더를 넣어야함
-	//FDevice::Get().GetDeviceContext()->VSSetShader(SimpleVertexShader, nullptr, 0);
-	//FDevice::Get().GetDeviceContext()->PSSetShader(SimplePixelShader, nullptr, 0);
-
 	if (PrimitiveComp.VertexShader == nullptr)
 	{
 		UE_LOG("Error: VertexShader has not been set.");
 	}
-	else
-	{
-	
-	}
-	
+
 	if (PrimitiveComp.PixelShader == nullptr)
 	{
 		UE_LOG("Error: PixelShader has not been set.");
 	}
-	
+
 	if (PrimitiveComp.VertexBuffer == nullptr)
 	{
 		UE_LOG("Error: VertexBuffer has not been set.");
-		
 	}
-	
+
 	if (PrimitiveComp.IndexBuffer == nullptr)
 	{
 		UE_LOG("Error: IndexBuffer has not been set.");
 	}
 	
-		PrimitiveComp.VertexBuffer->Setting();
-		PrimitiveComp.VertexShader->Setting();
-		PrimitiveComp.PixelShader->Setting();
-		PrimitiveComp.IndexBuffer->Setting();
-		PrimitiveComp.InputLayout->Setting();
+	PrimitiveComp.VertexBuffer->Setting();
+	PrimitiveComp.VertexShader->Setting();
+	PrimitiveComp.PixelShader->Setting();
+	PrimitiveComp.IndexBuffer->Setting();
+	PrimitiveComp.InputLayout->Setting();
 
 	FDevice::Get().GetDeviceContext()->IASetPrimitiveTopology(PrimitiveComp.Topology);
-	
 	FDevice::Get().GetDeviceContext()->RSSetState(RasterizerState);
-	
-
     FDevice::Get().GetDeviceContext()->DrawIndexed(PrimitiveComp.IndexBuffer->GetIndexCount(), 0, 0);
-}
-
-ID3D11Buffer* URenderer::CreateVertexBuffer(const FVertexSimple* Vertices, UINT ByteWidth) const
-{
-    D3D11_BUFFER_DESC VertexBufferDesc = {};
-    VertexBufferDesc.ByteWidth = ByteWidth;
-    VertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-    VertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-
-    D3D11_SUBRESOURCE_DATA VertexBufferSRD = {};
-    VertexBufferSRD.pSysMem = Vertices;
-
-    ID3D11Buffer* VertexBuffer;
-    const HRESULT Result = FDevice::Get().GetDevice()->CreateBuffer(&VertexBufferDesc, &VertexBufferSRD, &VertexBuffer);
-    if (FAILED(Result))
-    {
-        return nullptr;
-    }
-    return VertexBuffer;
 }
 
 void URenderer::LoadTexture(const wchar_t* texturePath)
@@ -301,37 +201,12 @@ void URenderer::LoadTexture(const wchar_t* texturePath)
 	FDevice::Get().GetDeviceContext()->PSSetSamplers(0, 1, &FontSamplerState);
 }
 
-ID3D11Buffer* URenderer::CreateIndexBuffer(const uint32* Indices, UINT ByteWidth) const
-{
-    D3D11_BUFFER_DESC IndexBufferDesc = {};
-    IndexBufferDesc.ByteWidth = ByteWidth;
-    IndexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-    IndexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-
-    D3D11_SUBRESOURCE_DATA IndexBufferSRD = {};
-    IndexBufferSRD.pSysMem = Indices;
-
-    ID3D11Buffer* IndexBuffer;
-    const HRESULT Result = FDevice::Get().GetDevice()->CreateBuffer(&IndexBufferDesc, &IndexBufferSRD, &IndexBuffer);
-    if (FAILED(Result))
-    {
-        return nullptr;
-    }
-    return IndexBuffer;
-}
-
-void URenderer::ReleaseVertexBuffer(ID3D11Buffer* pBuffer) const
-{
-    pBuffer->Release();
-}
-
 void URenderer::UpdateConstant(const FConstants& UpdateInfo) const
 {
     if (!ConstantBuffer) return;
 
-
 	D3D11_MAPPED_SUBRESOURCE ConstantBufferMSR;
-  // 상수 버퍼를 CPU 메모리에 매핑
+	// 상수 버퍼를 CPU 메모리에 매핑
 
     // D3D11_MAP_WRITE_DISCARD는 이전 내용을 무시하고 새로운 데이터로 덮어쓰기 위해 사용
     FDevice::Get().GetDeviceContext()->Map(ConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ConstantBufferMSR);
@@ -344,13 +219,6 @@ void URenderer::UpdateConstant(const FConstants& UpdateInfo) const
     }
     FDevice::Get().GetDeviceContext()->Unmap(ConstantBuffer, 0);
 }
-
-
-
-
-
-
-
 
 void URenderer::CreateBlendState() 
 {
@@ -400,7 +268,6 @@ void URenderer::CreateDepthStencilState()
 
 void URenderer::ReleaseDepthStencilBuffer()
 {
-    
     if (DepthStencilState)
     {
         DepthStencilState->Release();
@@ -431,7 +298,6 @@ void URenderer::ReleaseRasterizerState()
         RasterizerState = nullptr;
     }
 }
-
 
 void URenderer::InitMatrix()
 {
@@ -547,11 +413,6 @@ void URenderer::PrepareMain()
     FDevice::Get().GetDeviceContext()->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
 }
 
-// void URenderer::PrepareMainShader()
-// {
-//     FDevice::Get().GetDeviceContext()->PSSetShader(SimplePixelShader, nullptr, 0);
-// }
-
 FVector4 URenderer::GetPixel(FVector MPos)
 {
     MPos.X = FMath::Clamp(MPos.X, 0.0f, FDevice::Get().GetViewPortInfo().Width);
@@ -655,8 +516,6 @@ void URenderer::OnUpdateWindowSize(uint32 Width, uint32 Height)
 void URenderer::OnResizeComplete()
 {
 	CreatePickingTexture(UEngine::Get().GetWindowHandle());
-
-
 	// 깊이 스텐실 버퍼를 재생성
 }
 
