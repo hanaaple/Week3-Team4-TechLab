@@ -10,9 +10,6 @@ using ConfigData = TMap<std::string, Section>;
 class UConfigManager : public TSingleton<UConfigManager>
 {
 public:
-	UConfigManager();
-	~UConfigManager();
-
 	/// <summary>
 	/// ini 파일을 읽어들입니다.
 	/// </summary>
