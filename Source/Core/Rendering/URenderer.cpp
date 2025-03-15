@@ -626,7 +626,8 @@ void URenderer::UpdateViewMatrix(const FTransform& CameraTransform)
 
 void URenderer::UpdateProjectionMatrix(ACamera* Camera)
 {
-	float AspectRatio = ViewportInfo.Width / ViewportInfo.Height;
+	const FDevice& Device = FDevice::Get();
+	float AspectRatio = Device.GetViewPortInfo().Width / Device.GetViewPortInfo().Height;
 
     float FOV = FMath::DegreesToRadians(Camera->GetFieldOfView());
     float Near = Camera->GetNear();
@@ -671,7 +672,7 @@ void URenderer::RenderPickingTexture()
 FVector URenderer::GetFrameBufferWindowSize() const
 {
 	DXGI_SWAP_CHAIN_DESC SwapChainDesc;
-	SwapChain->GetDesc(&SwapChainDesc);
+	FDevice::Get().GetSwapChain()->GetDesc(&SwapChainDesc);
 
 	return FVector(static_cast<float>(SwapChainDesc.BufferDesc.Width), static_cast<float>(SwapChainDesc.BufferDesc.Height), 0);
 }

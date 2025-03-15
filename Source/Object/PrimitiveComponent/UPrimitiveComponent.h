@@ -11,7 +11,8 @@ class UPrimitiveComponent : public USceneComponent
 	DECLARE_CLASS(UPrimitiveComponent, USceneComponent)
 
 public:
-	UPrimitiveComponent() = default;
+	UPrimitiveComponent();
+	virtual ~UPrimitiveComponent() override;
 
 public:
 	virtual void BeginPlay() override;
