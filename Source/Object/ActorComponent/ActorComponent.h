@@ -1,23 +1,29 @@
-﻿#pragma once
+#pragma once
 #include "Core/EngineTypes.h"
+#include "Core/Math/Vector.h"
 #include "Core/UObject/Object.h"
+#include "Core/UObject/ObjectMacros.h"
 
 class UActorComponent : public UObject
 {
+	DECLARE_CLASS(UActorComponent, UObject)
+
 public:
 	UActorComponent() = default;
 
 	virtual void BeginPlay();
 	virtual void Tick(float DeltaTime);
-	virtual void EndPlay(const EEndPlayReason::Type Reason);
+	virtual void EndPlay(EEndPlayReason::Type Reason);
 
 	bool CanEverTick() const { return bCanEverTick; }
 
 	virtual class AActor* GetOwner() const;
-	virtual void SetOwner(class AActor* InOwner) { Owner = InOwner; }
+	virtual void SetOwner(AActor* InOwner) { Owner = InOwner; }
+
+	FVector GetActorLocation() const;
 
 protected:
 	bool bCanEverTick = true;
-	class AActor* Owner = nullptr;
+	AActor* Owner = nullptr;
 };
 

@@ -177,14 +177,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Static\FUUIDBillBoard.cpp" />
+    <ClCompile Include="Source\Core\Math\Rotator.cpp" />
     <ClCompile Include="Source\Core\Config\ConfigManager.cpp" />
+    <ClCompile Include="Source\Core\UObject\Casts.cpp" />
+    <ClCompile Include="Source\Core\UObject\Class.cpp" />
+    <ClCompile Include="Source\Core\Math\Ray.cpp" />
     <ClCompile Include="Source\Core\Rendering\FDevice.cpp" />
     <ClCompile Include="Source\Core\Rendering\FDeviceResource.cpp" />
     <ClCompile Include="Source\Core\Utils\JsonSaveHelper.cpp" />
     <ClCompile Include="Source\Object\Assets\AssetManager.cpp" />
     <ClCompile Include="Source\Object\Assets\SceneAsset.cpp" />
     <ClCompile Include="Source\Object\Assets\Asset.cpp" />
-    <ClCompile Include="Source\Core\Math\Plane.cpp" />
+    <ClCompile Include="Source\Core\Math\Quat.cpp" />
     <ClCompile Include="Source\Core\UObject\NameTypes.cpp" />
     <ClCompile Include="Source\Core\UObject\Object.cpp" />
     <ClCompile Include="Source\Object\Actor\Camera.cpp" />
@@ -281,7 +286,13 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Static\FUUIDBillBoard.h" />
+    <ClInclude Include="Source\Core\Math\Rotator.h" />
     <ClInclude Include="Source\Core\Config\ConfigManager.h" />
+    <ClInclude Include="Source\Core\UObject\Casts.h" />
+    <ClInclude Include="Source\Core\UObject\Class.h" />
+    <ClInclude Include="Source\Core\UObject\ObjectMacros.h" />
+    <ClInclude Include="Source\Core\Math\Ray.h" />
     <ClInclude Include="Source\Core\Rendering\FDevice.h" />
     <ClInclude Include="Source\Core\Utils\JsonSaveHelper.h" />
     <ClInclude Include="Source\Object\Assets\AssetManager.h" />
@@ -307,7 +318,7 @@
     <ClInclude Include="Source\Core\HAL\PlatformType.h" />
     <ClInclude Include="Source\Core\Math\MathUtility.h" />
     <ClInclude Include="Source\Core\Math\Matrix.h" />
-    <ClInclude Include="Source\Core\Math\Plane.h" />
+    <ClInclude Include="Source\Core\Math\Quat.h" />
     <ClInclude Include="Source\Core\Math\Vector.h" />
     <ClInclude Include="Source\Core\Math\Transform.h" />
     <ClInclude Include="Source\Object\Actor\Cylinder.h" />

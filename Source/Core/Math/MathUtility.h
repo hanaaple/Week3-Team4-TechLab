@@ -182,4 +182,27 @@ struct FMath
 	{
 		return static_cast<int32>(ceil(Value));
 	}
+
+	[[nodiscard]] static FORCEINLINE void SinCos(float* ScalarSin, float* ScalarCos, float Value)
+	{
+		*ScalarSin = sinf(Value);
+		*ScalarCos = cosf(Value);
+	}
+	[[nodiscard]] static FORCEINLINE void SinCos(double* ScalarSin, double* ScalarCos, double Value)
+	{
+		*ScalarSin = sin(Value);
+		*ScalarCos = cos(Value);
+	}
+	[[nodiscard]] static FORCEINLINE float UnwindDegrees(float A)
+	{
+		while (A > 180.0f)
+		{
+			A -= 360.0f;
+		}
+		while (A < -180.0f)
+		{
+			A += 360.0f;
+		}
+		return A;
+	}
 };

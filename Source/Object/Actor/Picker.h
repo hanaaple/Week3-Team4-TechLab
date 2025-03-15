@@ -4,7 +4,8 @@
 
 class APicker : public AActor
 {
-    using Super = AActor;
+	DECLARE_CLASS(APicker, AActor)
+
 public:
     APicker();
     ~APicker() = default;

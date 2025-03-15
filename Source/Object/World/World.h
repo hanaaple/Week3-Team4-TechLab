@@ -16,6 +16,8 @@ class AActor;
 
 class UWorld :public UObject
 {
+	DECLARE_CLASS(UWorld, UObject)
+
 public:
 	UWorld() = default;
 	virtual ~UWorld() = default;
@@ -50,6 +52,8 @@ public:
 
 	inline class ACamera* GetCamera() const { return Camera; }
 	void SetCamera(class ACamera* NewCamera) { Camera = NewCamera; }
+
+	void RayCasting(const FVector& MouseNDCPos);
 
 	TArray<AActor*>& GetActors() { return Actors; }
 private:

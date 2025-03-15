@@ -107,7 +107,7 @@ bool APlayerInput::IsKeyDown(EKeyCode code) const
 	return GetAsyncKeyState(static_cast<int>(code)) & 0x8000;
 }
 
-void APlayerInput::SetMousePos(HWND hWnd, uint32 Width, uint32 Height)
+void APlayerInput::SetMousePos(HWND hWnd, uint32 FrameBufferWidth, uint32 FrameBufferHeight)
 {
 	MousePreNDCPos = MouseNDCPos;
 	POINT Pts = {};
@@ -116,16 +116,16 @@ void APlayerInput::SetMousePos(HWND hWnd, uint32 Width, uint32 Height)
 	ScreenToClient(hWnd, &Pts);
 
 	MousePos = FVector(Pts.x, Pts.y, 0);
-	MouseNDCPos = CalNDCPos(MousePos, FVector(Width, Height, 0));
+	MouseNDCPos = CalNDCPos(MousePos, FVector(FrameBufferWidth, FrameBufferHeight, 0));
 }
 
-void APlayerInput::Update(HWND hWnd, uint32 Width, uint32 Height)
+void APlayerInput::Update(HWND hWnd, uint32 FramaeBufferWidth, uint32 FramaeBufferHeight)
 {
 	for (FKey& key : Keys)
 	{
 		UpdateKey(key);
 	}		
-	SetMousePos(hWnd, Width, Height);
+	SetMousePos(hWnd, FramaeBufferWidth, FramaeBufferHeight);
 
 
 	for (const auto& [Key, Callbacks] : KeyDownCallbacks)
@@ -198,5 +198,5 @@ void APlayerInput::Update(HWND hWnd, uint32 Width, uint32 Height)
 
 FVector APlayerInput::CalNDCPos(FVector InMousePos, FVector WindowSize) const
 {
-    return {( InMousePos.X / ( WindowSize.X / 2 ) ) - 1, ( InMousePos.Y / ( WindowSize.Y / 2 ) ) - 1, 0};
+    return { (2.0f * InMousePos.X) / WindowSize.X - 1.0f,  (-2.0f * InMousePos.Y) / WindowSize.Y + 1.0f, 0};
 }

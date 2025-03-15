@@ -3,13 +3,13 @@
 #include "Core/Engine.h"
 #include "Object/USceneComponent.h"
 #include "Primitive/PrimitiveVertices.h"
-#include "Core/Math/Plane.h"
 #include "Resource/DirectResource/Vertexbuffer.h"
 #include "Resource/DirectResource/IndexBuffer.h"
 
 class UPrimitiveComponent : public USceneComponent
 {
-	using Super = USceneComponent;
+	DECLARE_CLASS(UPrimitiveComponent, USceneComponent)
+
 public:
 	UPrimitiveComponent();
 	virtual ~UPrimitiveComponent() override;
@@ -22,17 +22,15 @@ public:
 	virtual void Render();
 	virtual void CalculateModelMatrix(FMatrix& OutMatrix);
 
-	//virtual void 
-	
 	//테스트 임시 메쉬
-	class std::shared_ptr<class FVertexBuffer> VertexBuffer = nullptr;
-	class std::shared_ptr<class FIndexBuffer> IndexBuffer = nullptr;
-	class std::shared_ptr<class FInputLayout> InputLayout = nullptr;
+	std::shared_ptr<class FVertexBuffer> VertexBuffer = nullptr;
+	std::shared_ptr<class FIndexBuffer> IndexBuffer = nullptr;
+	std::shared_ptr<class FInputLayout> InputLayout = nullptr;
 	D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 	// 테스트 임시 메테리얼
-	class std::shared_ptr<class FPixelShader> PixelShader = nullptr;
-	class std::shared_ptr<class FVertexShader> VertexShader = nullptr;
+	std::shared_ptr<class FPixelShader> PixelShader = nullptr;
+	std::shared_ptr<class FVertexShader> VertexShader = nullptr;
 	
 
 
@@ -71,12 +69,12 @@ protected:
 
 class UCubeComp : public UPrimitiveComponent
 {
-	using Super = UPrimitiveComponent;
+	DECLARE_CLASS(UCubeComp, UPrimitiveComponent)
+
 public:
 	UCubeComp();
 
-	virtual ~UCubeComp() = default;
-	EPrimitiveType GetType() override
+	virtual EPrimitiveType GetType() override
 	{
 
 		return EPrimitiveType::EPT_Cube;
@@ -85,12 +83,12 @@ public:
 
 class USphereComp : public UPrimitiveComponent
 {
-	using Super = UPrimitiveComponent;
+	DECLARE_CLASS(USphereComp, UPrimitiveComponent)
+
 public:
 	USphereComp();
 
-	virtual ~USphereComp() = default;
-	EPrimitiveType GetType() override
+	virtual EPrimitiveType GetType() override
 	{
 		return EPrimitiveType::EPT_Sphere;
 	}
@@ -98,12 +96,12 @@ public:
 
 class UTriangleComp : public UPrimitiveComponent
 {
-	using Super = UPrimitiveComponent;
+	DECLARE_CLASS(UTriangleComp, UPrimitiveComponent)
+
 public:
 	UTriangleComp();
 
-	virtual ~UTriangleComp() = default;
-	EPrimitiveType GetType() override
+	virtual EPrimitiveType GetType() override
 	{
 		return EPrimitiveType::EPT_Triangle;
 	}
@@ -111,13 +109,13 @@ public:
 
 class ULineComp : public UPrimitiveComponent
 {
-	using Super = UPrimitiveComponent;
+	DECLARE_CLASS(ULineComp, UPrimitiveComponent)
+
 
 public:
 	ULineComp();
 
-	virtual ~ULineComp() = default;
-	EPrimitiveType GetType() override
+	virtual EPrimitiveType GetType() override
 	{
 		return EPrimitiveType::EPT_Line;
 	}
@@ -125,13 +123,13 @@ public:
 
 class UCylinderComp : public UPrimitiveComponent
 {
-	using Super = UPrimitiveComponent;
+	DECLARE_CLASS(UCylinderComp, UPrimitiveComponent)
+
 
 public:
 	UCylinderComp();
-	;
-	virtual ~UCylinderComp() = default;
-	EPrimitiveType GetType() override
+
+	virtual EPrimitiveType GetType() override
 	{
 		return EPrimitiveType::EPT_Cylinder;
 	}
@@ -139,11 +137,12 @@ public:
 
 class UConeComp : public UPrimitiveComponent
 {
-	using Super = UPrimitiveComponent;
+	DECLARE_CLASS(UConeComp, UPrimitiveComponent)
+
 public:
 	UConeComp();
-	virtual ~UConeComp() = default;
-	EPrimitiveType GetType() override
+
+	virtual EPrimitiveType GetType() override
 	{
 		return EPrimitiveType::EPT_Cone;
 	}
@@ -151,14 +150,15 @@ public:
 
 class UQuadComp : public UPrimitiveComponent
 {
-	using Super = UPrimitiveComponent;
+	DECLARE_CLASS(UQuadComp, UPrimitiveComponent)
+
 public:
 	UQuadComp()
 	{
 		bCanBeRendered = true;
 	}
-	virtual ~UQuadComp() = default;
-	EPrimitiveType GetType() override
+
+	virtual EPrimitiveType GetType() override
 	{
 		return EPrimitiveType::EPT_Quad;
 	}

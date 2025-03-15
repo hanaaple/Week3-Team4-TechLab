@@ -104,11 +104,12 @@ public:
 
 
 
+    
+	void OnUpdateWindowSize(uint32 Width, uint32 Height);
 
-
-	//픽킹용으로 남겨둠
-	void OnUpdateWindowSize(int Width, int Height); 
 	void OnResizeComplete();
+
+	
 
 protected:
 
@@ -192,4 +193,8 @@ public:
 
 	void RenderPickingTexture();
 #pragma endregion picking
+
+#pragma region Ray
+public:
+	FVector GetFrameBufferWindowSize() const;
 };

@@ -1,9 +1,10 @@
-﻿#pragma once
+#pragma once
 #include "Core/EngineTypes.h"
 #include "Core/UObject/Object.h"
 #include "Object/ActorComponent/ActorComponent.h"
 #include "Core/Math/Transform.h"
 #include "Core/Container/Set.h"
+#include "Core/UObject/ObjectMacros.h"
 #include "Object/ObjectFactory.h"
 #include "Object/USceneComponent.h"
 
@@ -11,6 +12,8 @@ class UWorld;
 
 class AActor : public UObject
 {
+	DECLARE_CLASS(AActor, UObject)
+
 	friend class FEditorManager;
 public:
 	AActor();
@@ -79,6 +82,20 @@ public:
 	void RemoveComponent(T* Object)
 	{
 		Components.Remove(Object);
+	}
+
+	template<typename T>
+		requires std::derived_from<T, UActorComponent>
+	T* GetComponentByClass()
+	{
+		for (UActorComponent* Component : Components)
+		{
+			if (T* CastedComponent = dynamic_cast<T*>(Component))
+			{
+				return CastedComponent;
+			}
+		}
+		return nullptr;
 	}
 
 	FTransform GetActorTransform() const;
