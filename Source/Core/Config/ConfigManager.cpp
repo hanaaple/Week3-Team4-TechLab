@@ -8,14 +8,6 @@
 
 using namespace std;
 
-UConfigManager::UConfigManager()
-{
-}
-
-UConfigManager::~UConfigManager()
-{
-}
-
 bool UConfigManager::LoadConfig(const std::string& InConfigName)
 {
 	if (IsDebuggerPresent())
