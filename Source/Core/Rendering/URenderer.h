@@ -50,6 +50,7 @@ private:
   //  };
 
 public:
+	
     /** Renderer를 초기화 합니다. */
     void Create(HWND hWindow);
 
@@ -147,12 +148,11 @@ protected:
 
 
     // Shader를 렌더링할 때 사용되는 변수들
-    ID3D11VertexShader* SimpleVertexShader = nullptr;       // Vertex 데이터를 처리하는 Vertex 셰이더
-    ID3D11PixelShader* SimplePixelShader = nullptr;         // Pixel의 색상을 결정하는 Pixel 셰이더
+	
 	ID3D11VertexShader* FontVertexShader = nullptr;       // Vertex 데이터를 처리하는 Vertex 셰이더
 	ID3D11PixelShader* FontPixelShader = nullptr;         // Pixel의 색상을 결정하는 Pixel 셰이더
 
-    ID3D11InputLayout* SimpleInputLayout = nullptr;         // Vertex 셰이더 입력 레이아웃 정의
+    //ID3D11InputLayout* SimpleInputLayout = nullptr;         // Vertex 셰이더 입력 레이아웃 정의
     unsigned int Stride = 0;                                // Vertex 버퍼의 각 요소 크기
 
 	ID3D11DepthStencilState* DepthStencilState = nullptr;   // DepthStencil 상태(깊이 테스트, 스텐실 테스트 등 정의)
@@ -192,7 +192,7 @@ public:
     void UpdateConstantDepth(int Depth) const;
 
     void PrepareMain();
-	void PrepareMainShader();
+	//void PrepareMainShader();
 
 	FVector4 GetPixel(FVector MPos);
 

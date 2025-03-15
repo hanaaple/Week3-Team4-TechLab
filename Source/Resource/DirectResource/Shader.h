@@ -22,8 +22,8 @@ class FShader
 public:
 
 	// constrcuter destructer
-	FShader();
-	~FShader();
+	FShader() = default;
+	~FShader()= default;
 
 	// delete Function
 	FShader(const FShader& _Other) = delete;

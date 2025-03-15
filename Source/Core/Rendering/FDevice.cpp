@@ -7,6 +7,8 @@ void FDevice::Init(HWND _hwnd)
 	CreateDeviceAndSwapChain(_hwnd);
 	CreateFrameBuffer();
 	CreateDepthStencilBuffer();
+	
+	InitResource();
 
 	bIsInit = true;
 }
@@ -158,6 +160,7 @@ void FDevice::OnResizeComplete()
 	// 깊이 스텐실 버퍼를 재생성
 	CreateDepthStencilBuffer();
 }
+
 
 
 void FDevice::CreateDepthStencilBuffer()

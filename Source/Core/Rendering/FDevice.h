@@ -51,6 +51,9 @@ public:
 
 	void OnResizeComplete();
 
+	//렌더러에 필요한 기본 리소스 생성
+	void InitResource();
+
 	
 private:
 	// Direct3D 11 장치(Device)와 장치 컨텍스트(Device Context) 및 스왑 체인(Swap Chain)을 관리하기 위한 포인터들

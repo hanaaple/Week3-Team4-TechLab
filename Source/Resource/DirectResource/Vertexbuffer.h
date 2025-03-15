@@ -12,10 +12,9 @@
 class FVertexBuffer :
 	public FResource<FVertexBuffer> , public FDirectBuffer
 {
+
+
 public:
-	static D3D11_INPUT_ELEMENT_DESC Layout[]; 
-
-
 
 	
 	template<typename VertexType>

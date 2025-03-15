@@ -8,6 +8,11 @@
 #include "Resource/DirectResource/Vertexbuffer.h"
 #include "DirectXTK/WICTextureLoader.h"
 #include "FDevice.h"
+#include "Debug/DebugConsole.h"
+#include "Object/Assets/SceneAsset.h"
+#include "Resource/DirectResource/PixelShader.h"
+#include "Resource/DirectResource/VertexShader.h"
+#include "Resource/DirectResource/InputLayout.h"
 
 
 void URenderer::Create(HWND hWindow)
@@ -41,19 +46,19 @@ void URenderer::Release()
 
 void URenderer::CreateShader()
 {
-    /**
-         * 컴파일된 셰이더의 바이트코드를 저장할 변수 (ID3DBlob)
-         *
-         * 범용 메모리 버퍼를 나타내는 형식
-         *   - 여기서는 shader object bytecode를 담기위해 쓰임
-         * 다음 두 메서드를 제공한다.
-         *   - LPVOID GetBufferPointer
-         *     - 버퍼를 가리키는 void* 포인터를 돌려준다.
-         *   - SIZE_T GetBufferSize
-         *     - 버퍼의 크기(바이트 갯수)를 돌려준다
-         */
-    ID3DBlob* VertexShaderCSO;
-    ID3DBlob* PixelShaderCSO;
+    // /**
+    //      * 컴파일된 셰이더의 바이트코드를 저장할 변수 (ID3DBlob)
+    //      *
+    //      * 범용 메모리 버퍼를 나타내는 형식
+    //      *   - 여기서는 shader object bytecode를 담기위해 쓰임
+    //      * 다음 두 메서드를 제공한다.
+    //      *   - LPVOID GetBufferPointer
+    //      *     - 버퍼를 가리키는 void* 포인터를 돌려준다.
+    //      *   - SIZE_T GetBufferSize
+    //      *     - 버퍼의 크기(바이트 갯수)를 돌려준다
+    //      */
+    // ID3DBlob* VertexShaderCSO;
+    // ID3DBlob* PixelShaderCSO;
 
     ID3DBlob* PickingShaderCSO;
     
@@ -62,12 +67,6 @@ void URenderer::CreateShader()
 
 	ID3DBlob* ErrorMsg = nullptr;
 
-    // 셰이더 컴파일 및 생성
-    D3DCompileFromFile(L"Shaders/ShaderW0.hlsl", nullptr, nullptr, "mainVS", "vs_5_0", 0, 0, &VertexShaderCSO, &ErrorMsg);
-    FDevice::Get().GetDevice()->CreateVertexShader(VertexShaderCSO->GetBufferPointer(), VertexShaderCSO->GetBufferSize(), nullptr, &SimpleVertexShader);
-
-    D3DCompileFromFile(L"Shaders/ShaderW0.hlsl", nullptr, nullptr, "mainPS", "ps_5_0", 0, 0, &PixelShaderCSO, &ErrorMsg);
-    FDevice::Get().GetDevice()->CreatePixelShader(PixelShaderCSO->GetBufferPointer(), PixelShaderCSO->GetBufferSize(), nullptr, &SimplePixelShader);
 
     D3DCompileFromFile(L"Shaders/ShaderW0.hlsl", nullptr, nullptr, "PickingPS", "ps_5_0", 0, 0, &PickingShaderCSO, nullptr);
     FDevice::Get().GetDevice()->CreatePixelShader(PickingShaderCSO->GetBufferPointer(), PickingShaderCSO->GetBufferSize(), nullptr, &PickingPixelShader);
@@ -85,17 +84,15 @@ void URenderer::CreateShader()
 		ErrorMsg->Release();
 	}
 
-    // 입력 레이아웃 정의 및 생성
-    D3D11_INPUT_ELEMENT_DESC Layout[] =
-    {
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-    };
+    // // 입력 레이아웃 정의 및 생성
+    // D3D11_INPUT_ELEMENT_DESC Layout[] =
+    // {
+    //     { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+    //     { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+    // };
+    //
+    // FDevice::Get().GetDevice()->CreateInputLayout(Layout, ARRAYSIZE(Layout), VertexShaderCSO->GetBufferPointer(), VertexShaderCSO->GetBufferSize(), &SimpleInputLayout);
 
-    FDevice::Get().GetDevice()->CreateInputLayout(Layout, ARRAYSIZE(Layout), VertexShaderCSO->GetBufferPointer(), VertexShaderCSO->GetBufferSize(), &SimpleInputLayout);
-
-    VertexShaderCSO->Release();
-    PixelShaderCSO->Release();
     PickingShaderCSO->Release();
 
     // 정점 하나의 크기를 설정 (바이트 단위)
@@ -104,23 +101,7 @@ void URenderer::CreateShader()
 
 void URenderer::ReleaseShader()
 {
-    if (SimpleInputLayout)
-    {
-        SimpleInputLayout->Release();
-        SimpleInputLayout = nullptr;
-    }
-
-    if (SimplePixelShader)
-    {
-        SimplePixelShader->Release();
-        SimplePixelShader = nullptr;
-    }
-
-    if (SimpleVertexShader)
-    {
-        SimpleVertexShader->Release();
-        SimpleVertexShader = nullptr;
-    }
+    
 }
 
 void URenderer::CreateConstantBuffer()
@@ -181,7 +162,7 @@ void URenderer::Prepare() const
      * OutputMerger 설정
      * 렌더링 파이프라인의 최종 단계로써, 어디에 그릴지(렌더 타겟)와 어떻게 그릴지(블렌딩)를 지정
      */
-    FDevice::Get().GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    //FDevice::Get().GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     FDevice::Get().GetDeviceContext()->RSSetState(RasterizerState);
     FDevice::Get().GetDeviceContext()->OMSetBlendState(nullptr, nullptr, 0xffffffff);
 }
@@ -189,9 +170,9 @@ void URenderer::Prepare() const
 void URenderer::PrepareShader() const
 {
     // 기본 셰이더랑 InputLayout을 설정
-    FDevice::Get().GetDeviceContext()->VSSetShader(SimpleVertexShader, nullptr, 0);
-    FDevice::Get().GetDeviceContext()->PSSetShader(SimplePixelShader, nullptr, 0);
-    FDevice::Get().GetDeviceContext()->IASetInputLayout(SimpleInputLayout);
+    //FDevice::Get().GetDeviceContext()->VSSetShader(SimpleVertexShader, nullptr, 0);
+    //FDevice::Get().GetDeviceContext()->PSSetShader(SimplePixelShader, nullptr, 0);
+    //FDevice::Get().GetDeviceContext()->IASetInputLayout(SimpleInputLayout);
 
     // 버텍스 쉐이더에 상수 버퍼를 설정
     if (ConstantBuffer)
@@ -235,25 +216,44 @@ void URenderer::RenderPrimitiveInternal(class UPrimitiveComponent& PrimitiveComp
     UINT Offset = 0;
 
 	//임시로 만듦 각 렌더러에 맞는 쉐이더를 넣어야함
-	FDevice::Get().GetDeviceContext()->VSSetShader(SimpleVertexShader, nullptr, 0);
-	FDevice::Get().GetDeviceContext()->PSSetShader(SimplePixelShader, nullptr, 0);
-	FDevice::Get().GetDeviceContext()->IASetInputLayout(SimpleInputLayout);
+	//FDevice::Get().GetDeviceContext()->VSSetShader(SimpleVertexShader, nullptr, 0);
+	//FDevice::Get().GetDeviceContext()->PSSetShader(SimplePixelShader, nullptr, 0);
 
-	if (PrimitiveComp.VertexBuffer != nullptr)
+	if (PrimitiveComp.VertexShader == nullptr)
 	{
-		
+		UE_LOG("Error: VertexShader has not been set.");
 	}
 	else
 	{
-		//FDevice::Get().GetDeviceContext()->IASetVertexBuffers(0, 1, &vertexBuffer, &Stride, &Offset);
-	}
-		
-
 	
-    
-	PrimitiveComp.VertexBuffer->Setting();
-	PrimitiveComp.IndexBuffer->Setting();
-	//FDevice::Get().GetDeviceContext()->IASetPrimitiveTopology(PrimitiveComp.Topology);
+	}
+	
+	if (PrimitiveComp.PixelShader == nullptr)
+	{
+		UE_LOG("Error: PixelShader has not been set.");
+	}
+	
+	if (PrimitiveComp.VertexBuffer == nullptr)
+	{
+		UE_LOG("Error: VertexBuffer has not been set.");
+		
+	}
+	
+	if (PrimitiveComp.IndexBuffer == nullptr)
+	{
+		UE_LOG("Error: IndexBuffer has not been set.");
+	}
+	
+		PrimitiveComp.VertexBuffer->Setting();
+		PrimitiveComp.VertexShader->Setting();
+		PrimitiveComp.PixelShader->Setting();
+		PrimitiveComp.IndexBuffer->Setting();
+		PrimitiveComp.InputLayout->Setting();
+
+	FDevice::Get().GetDeviceContext()->IASetPrimitiveTopology(PrimitiveComp.Topology);
+	
+	FDevice::Get().GetDeviceContext()->RSSetState(RasterizerState);
+	
 
     FDevice::Get().GetDeviceContext()->DrawIndexed(PrimitiveComp.IndexBuffer->GetIndexCount(), 0, 0);
 }
@@ -547,10 +547,10 @@ void URenderer::PrepareMain()
     FDevice::Get().GetDeviceContext()->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
 }
 
-void URenderer::PrepareMainShader()
-{
-    FDevice::Get().GetDeviceContext()->PSSetShader(SimplePixelShader, nullptr, 0);
-}
+// void URenderer::PrepareMainShader()
+// {
+//     FDevice::Get().GetDeviceContext()->PSSetShader(SimplePixelShader, nullptr, 0);
+// }
 
 FVector4 URenderer::GetPixel(FVector MPos)
 {
