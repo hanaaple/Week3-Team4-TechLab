@@ -33,6 +33,9 @@ public:
 	// 테스트 임시 메테리얼
 	class std::shared_ptr<class FPixelShader> PixelShader = nullptr;
 	class std::shared_ptr<class FVertexShader> VertexShader = nullptr;
+	class std::shared_ptr<class FBlendState> BlendState = nullptr;
+	class std::shared_ptr<class FDepthStencilState> DepthStencilStat = nullptr;
+	class std::shared_ptr<class FRasterizer> Rasterizer = nullptr;
 	
 
 

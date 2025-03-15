@@ -8,6 +8,9 @@
 #include "Resource/DirectResource/VertexShader.h"
 #include "Resource/DirectResource/PixelShader.h"
 #include "Resource/DirectResource/InputLayout.h"
+#include "Resource/DirectResource/BlendState.h"
+#include "Resource/DirectResource/DepthStencilState.h"
+#include "Resource/DirectResource/Rasterizer.h"
 
 //#include ""
 
@@ -19,6 +22,10 @@ UPrimitiveComponent::UPrimitiveComponent()
 
 	// TODO: 이거는 나중에 매쉬같은데서  만들어야함
 	InputLayout = FInputLayout::Find("Simple_VS");
+
+	BlendState = FBlendState::Find("DefaultBlendState");
+	DepthStencilStat = FDepthStencilState::Find("DefaultDepthStencilState");
+	Rasterizer = FRasterizer::Find("DefaultRasterizer");
 	
 }
 

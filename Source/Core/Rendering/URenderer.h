@@ -126,23 +126,17 @@ protected:
 	/** 뎁스 스텐실 리소스는 디바이스 뎁스 설정은 여기서 날린다. */
 	void ReleaseDepthStencilBuffer();
 	
-    /** 레스터라이즈 상태를 생성합니다. */
-    void CreateRasterizerState();
 
-    /** 레스터라이저 상태를 해제합니다. */
-    void ReleaseRasterizerState();
+
 
 
 protected:
 
 
 
-
-	
-    ID3D11RasterizerState* RasterizerState = nullptr;       // 래스터라이저 상태(컬링, 채우기 모드 등 정의)
     ID3D11Buffer* ConstantBuffer = nullptr;                 // 쉐이더에 데이터를 전달하기 위한 상수 버퍼
 
-
+	
     // Shader를 렌더링할 때 사용되는 변수들
 	
 	ID3D11VertexShader* FontVertexShader = nullptr;       // Vertex 데이터를 처리하는 Vertex 셰이더
@@ -151,16 +145,13 @@ protected:
     //ID3D11InputLayout* SimpleInputLayout = nullptr;         // Vertex 셰이더 입력 레이아웃 정의
     unsigned int Stride = 0;                                // Vertex 버퍼의 각 요소 크기
 
-	ID3D11DepthStencilState* DepthStencilState = nullptr;   // DepthStencil 상태(깊이 테스트, 스텐실 테스트 등 정의)
     ID3D11DepthStencilState* GizmoDepthStencilState = nullptr; // 기즈모용 스텐실 스테이트. Z버퍼 테스트 하지않고 항상 앞에렌더
 	
-	// Blend state
-	ID3D11BlendState* BlendState = nullptr;
-	float BlendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 
 
-	D3D_PRIMITIVE_TOPOLOGY CurrentTopology = D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
+
+	//D3D_PRIMITIVE_TOPOLOGY CurrentTopology = D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
 
 	
 #pragma region picking
