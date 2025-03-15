@@ -7,6 +7,7 @@
 #include "Static/FLineBatchManager.h"
 #include "Resource/DirectResource/Vertexbuffer.h"
 #include "DirectXTK/WICTextureLoader.h"
+#include "Object/World/World.h"
 
 void URenderer::Create(HWND hWindow)
 {
@@ -20,7 +21,6 @@ void URenderer::Create(HWND hWindow)
 
 	FLineBatchManager::Get().Create();
     
-    InitMatrix();
 
 	LoadTexture(L"font_atlas.png");
 }
@@ -214,15 +214,16 @@ void URenderer::PrepareShader() const
     }
 }
 
-void URenderer::RenderPrimitive(class UPrimitiveComponent& PrimitiveComp, const class FMatrix& ModelMatrix)
+void URenderer::RenderPrimitive(class UPrimitiveComponent& PrimitiveComp, const FMatrix& ModelMatrix)
 {
 
-
+	const FMatrix& ViewProjectionMatrix = UEngine::Get().GetWorld()->GetCamera()->GetViewProjectionMatrix();
+	//const FMatrix& ProjectionMatrix = FEditorManager::Get().GetCamera()->GetProjectionMatrix();
+	
 
 	FMatrix MVP = FMatrix::Transpose(
 		ModelMatrix *
-	ViewMatrix *
-	ProjectionMatrix
+		ViewProjectionMatrix
 );
 
 	FConstants UpdateInfo{
@@ -589,12 +590,7 @@ void URenderer::ReleaseRasterizerState()
 }
 
 
-void URenderer::InitMatrix()
-{
-	WorldMatrix = FMatrix::Identity();
-	ViewMatrix = FMatrix::Identity();
-	ProjectionMatrix = FMatrix::Identity();
-}
+
 
 void URenderer::ReleasePickingFrameBuffer()
 {
@@ -775,31 +771,8 @@ FVector4 URenderer::GetPixel(FVector MPos)
     return color;
 }
 
-void URenderer::UpdateViewMatrix(const FTransform& CameraTransform)
-{
-    ViewMatrix = CameraTransform.GetViewMatrix();
-}
 
-void URenderer::UpdateProjectionMatrix(ACamera* Camera)
-{
-    float AspectRatio = UEngine::Get().GetScreenRatio();
 
-    float FOV = FMath::DegreesToRadians(Camera->GetFieldOfView());
-    float Near = Camera->GetNear();
-    float Far = Camera->GetFar();
-
-    if (Camera->ProjectionMode == ECameraProjectionMode::Perspective)
-    {
-        ProjectionMatrix = FMatrix::PerspectiveFovLH(FOV, AspectRatio, Near, Far);
-    }
-    else if (Camera->ProjectionMode == ECameraProjectionMode::Perspective)
-    {
-        ProjectionMatrix = FMatrix::PerspectiveFovLH(FOV, AspectRatio, Near, Far);
-
-        // TODO: 추가 필요.
-        // ProjectionMatrix = FMatrix::OrthoForLH(FOV, AspectRatio, Near, Far);
-    }
-}
 
 void URenderer::OnUpdateWindowSize(int Width, int Height)
 {

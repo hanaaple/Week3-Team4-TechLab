@@ -29,6 +29,12 @@ private:
     // 화면각
     float FieldOfView;
 
+	
+	FMatrix ViewMatrix;
+	FMatrix ProjectionMatrix;
+	FMatrix ViewProjectionMatrix;
+
+
 public:
     const float MaxYDegree = 89.8f;
     //카메라 스피드 IMGui용 나중에 Velocity로 관리하면 없어질애라 편하게 public에서 관리
@@ -49,6 +55,15 @@ public:
     float GetNear() const;
     float GetFar() const;
 
+
+	
+	const FMatrix& GetProjectionMatrix() const { return ProjectionMatrix; }
+	const FMatrix& GetViewProjectionMatrix() const { return ViewProjectionMatrix; }
+	const FMatrix& GetViewMatrix() const { return ViewMatrix; }
+	
+	
+	void InitMatrix();
+
         
     FVector GetForward() const
     {
@@ -65,11 +80,11 @@ public:
         return GetActorTransform().GetUp();
     }
 
-    FMatrix GetViewMatrix() const
-    {
-        return GetActorTransform().GetViewMatrix();
-    }
+    
 
+	/** Projection 변환 Matrix를 업데이트 합니다. */
+	void UpdateCameraMatrix();
+	
 	void MoveForward();
 	void MoveBackward();
 	void MoveLeft();

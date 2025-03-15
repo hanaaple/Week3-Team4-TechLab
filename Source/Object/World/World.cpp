@@ -75,8 +75,7 @@ void UWorld::Render()
 	}
 
 	ACamera* cam = FEditorManager::Get().GetCamera();
-	Renderer->UpdateViewMatrix(cam->GetActorTransform());
-	Renderer->UpdateProjectionMatrix(cam);
+	cam->UpdateCameraMatrix();
 	
 	if (APlayerInput::Get().GetKeyDown(EKeyCode::LButton))
 	{

@@ -105,11 +105,8 @@ public:
     ID3D11Device* GetDevice() const;
     ID3D11DeviceContext* GetDeviceContext() const;
 
-    /** View 변환 Matrix를 업데이트 합니다. */
-    void UpdateViewMatrix(const FTransform& CameraTransform);
 
-    /** Projection 변환 Matrix를 업데이트 합니다. */
-    void UpdateProjectionMatrix(ACamera* Camera);
+
 
 	void OnUpdateWindowSize(int Width, int Height);
 
@@ -146,7 +143,6 @@ protected:
     /** 레스터라이저 상태를 해제합니다. */
     void ReleaseRasterizerState();
 
-    void InitMatrix();
 
 protected:
     // Direct3D 11 장치(Device)와 장치 컨텍스트(Device Context) 및 스왑 체인(Swap Chain)을 관리하기 위한 포인터들
@@ -182,9 +178,7 @@ protected:
 	ID3D11BlendState* BlendState = nullptr;
 	float BlendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
-	FMatrix WorldMatrix;
-    FMatrix ViewMatrix;
-	FMatrix ProjectionMatrix;
+
 
 	D3D_PRIMITIVE_TOPOLOGY CurrentTopology = D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
 
@@ -217,6 +211,5 @@ public:
 	FVector4 GetPixel(FVector MPos);
 
 	void RenderPickingTexture();
-	FMatrix GetProjectionMatrix() const { return ProjectionMatrix; }
 #pragma endregion picking
 };
