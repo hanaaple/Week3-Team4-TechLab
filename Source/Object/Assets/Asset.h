@@ -3,6 +3,8 @@
 #include "Core/EngineTypes.h"
 #include <string>
 
+#include "Core/UObject/ObjectMacros.h"
+
 enum class EAssetType
 {
 	Texture,
@@ -105,6 +107,8 @@ private:
 
 class UAsset : public UObject
 {
+	DECLARE_CLASS(UAsset, UObject)
+	
 public:
 	UAsset() : UObject() {}
 	virtual ~UAsset();

@@ -3,7 +3,8 @@
 
 class ACone : public AActor
 {
-    using Super = AActor;
+	DECLARE_CLASS(ACone, AActor)
+
 public:
     ACone();
     virtual ~ACone() = default;

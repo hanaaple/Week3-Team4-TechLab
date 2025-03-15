@@ -50,8 +50,9 @@ struct FSceneData
 
 class USceneAsset : public UAsset
 {
+	DECLARE_CLASS(USceneAsset, UAsset)
+
 public:
-	using Super = UAsset;
 	USceneAsset() : UAsset() {}
 	virtual ~USceneAsset() = default;
 	virtual bool RegisterAsset() override;

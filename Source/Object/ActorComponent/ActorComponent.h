@@ -1,9 +1,12 @@
 ﻿#pragma once
 #include "Core/EngineTypes.h"
 #include "Core/UObject/Object.h"
+#include "Core/UObject/ObjectMacros.h"
 
 class UActorComponent : public UObject
 {
+	DECLARE_CLASS(UActorComponent, UObject)
+
 public:
 	UActorComponent() = default;
 

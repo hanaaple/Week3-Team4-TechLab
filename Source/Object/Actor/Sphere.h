@@ -3,7 +3,8 @@
 
 class ASphere : public AActor
 {
-	using Super = AActor;
+	DECLARE_CLASS(ASphere, AActor)
+
 public:
 	ASphere();
 	virtual ~ASphere() = default;

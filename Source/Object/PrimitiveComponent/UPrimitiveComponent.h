@@ -8,10 +8,10 @@
 
 class UPrimitiveComponent : public USceneComponent
 {
-	using Super = USceneComponent;
+	DECLARE_CLASS(UPrimitiveComponent, USceneComponent)
+
 public:
 	UPrimitiveComponent() = default;
-	virtual ~UPrimitiveComponent() = default;
 
 public:
 	virtual void BeginPlay() override;
@@ -20,10 +20,6 @@ public:
 	void UpdateConstantDepth(const URenderer& Renderer, int Depth) const;
 	virtual void Render();
 	virtual void CalculateModelMatrix(FMatrix& OutMatrix);
-
-	//virtual void 
-	
-
 
 
 	virtual EPrimitiveType GetType() { return EPrimitiveType::EPT_None; }
@@ -61,15 +57,16 @@ protected:
 
 class UCubeComp : public UPrimitiveComponent
 {
-	using Super = UPrimitiveComponent;
+	DECLARE_CLASS(UCubeComp, UPrimitiveComponent)
+
 public:
 	UCubeComp()
 	{
 
 		bCanBeRendered = true;
 	}
-	virtual ~UCubeComp() = default;
-	EPrimitiveType GetType() override
+
+	virtual EPrimitiveType GetType() override
 	{
 		return EPrimitiveType::EPT_Cube;
 	}
@@ -77,14 +74,15 @@ public:
 
 class USphereComp : public UPrimitiveComponent
 {
-	using Super = UPrimitiveComponent;
+	DECLARE_CLASS(USphereComp, UPrimitiveComponent)
+
 public:
 	USphereComp()
 	{
 		bCanBeRendered = true;
 	}
-	virtual ~USphereComp() = default;
-	EPrimitiveType GetType() override
+
+	virtual EPrimitiveType GetType() override
 	{
 		return EPrimitiveType::EPT_Sphere;
 	}
@@ -92,14 +90,15 @@ public:
 
 class UTriangleComp : public UPrimitiveComponent
 {
-	using Super = UPrimitiveComponent;
+	DECLARE_CLASS(UTriangleComp, UPrimitiveComponent)
+
 public:
 	UTriangleComp()
 	{
 		bCanBeRendered = true;
 	}
-	virtual ~UTriangleComp() = default;
-	EPrimitiveType GetType() override
+
+	virtual EPrimitiveType GetType() override
 	{
 		return EPrimitiveType::EPT_Triangle;
 	}
@@ -107,15 +106,16 @@ public:
 
 class ULineComp : public UPrimitiveComponent
 {
-	using Super = UPrimitiveComponent;
+	DECLARE_CLASS(ULineComp, UPrimitiveComponent)
+
 
 public:
 	ULineComp()
 	{
 		bCanBeRendered = true;
 	}
-	virtual ~ULineComp() = default;
-	EPrimitiveType GetType() override
+
+	virtual EPrimitiveType GetType() override
 	{
 		return EPrimitiveType::EPT_Line;
 	}
@@ -123,15 +123,16 @@ public:
 
 class UCylinderComp : public UPrimitiveComponent
 {
-	using Super = UPrimitiveComponent;
+	DECLARE_CLASS(UCylinderComp, UPrimitiveComponent)
+
 
 public:
 	UCylinderComp()
 	{
 		bCanBeRendered = true;
 	}
-	virtual ~UCylinderComp() = default;
-	EPrimitiveType GetType() override
+
+	virtual EPrimitiveType GetType() override
 	{
 		return EPrimitiveType::EPT_Cylinder;
 	}
@@ -139,14 +140,15 @@ public:
 
 class UConeComp : public UPrimitiveComponent
 {
-	using Super = UPrimitiveComponent;
+	DECLARE_CLASS(UConeComp, UPrimitiveComponent)
+
 public:
 	UConeComp()
 	{
 		bCanBeRendered = true;
 	}
-	virtual ~UConeComp() = default;
-	EPrimitiveType GetType() override
+
+	virtual EPrimitiveType GetType() override
 	{
 		return EPrimitiveType::EPT_Cone;
 	}
@@ -154,14 +156,15 @@ public:
 
 class UQuadComp : public UPrimitiveComponent
 {
-	using Super = UPrimitiveComponent;
+	DECLARE_CLASS(UQuadComp, UPrimitiveComponent)
+
 public:
 	UQuadComp()
 	{
 		bCanBeRendered = true;
 	}
-	virtual ~UQuadComp() = default;
-	EPrimitiveType GetType() override
+
+	virtual EPrimitiveType GetType() override
 	{
 		return EPrimitiveType::EPT_Quad;
 	}
