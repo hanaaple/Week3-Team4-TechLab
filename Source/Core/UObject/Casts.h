@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <cassert>
 #include <concepts>
 #include "Object.h"
 
@@ -27,4 +28,16 @@ FORCEINLINE To* Cast(From* Src)
 	}
 
 	return nullptr;
+}
+
+template<typename To, typename From>
+FORCEINLINE To* CastChecked(From* Src)
+{
+	static_assert(sizeof(From) > 0 && sizeof(To) > 0, "Attempting to cast between incomplete types");
+	assert(Src);    // nullptr!
+
+	To* Result = Cast<To>(Src);
+	assert(Result); // nullptr!
+
+	return Result;
 }
