@@ -123,7 +123,7 @@ void UWorld::RenderPickingTexture(URenderer& Renderer)
 void UWorld::RenderMainTexture(URenderer& Renderer)
 {
 	Renderer.PrepareMain();
-	Renderer.PrepareMainShader();
+	//Renderer.PrepareMainShader();
 	for (auto& RenderComponent : RenderComponents)
 	{
 		if (RenderComponent->GetOwner()->GetDepth() > 0)

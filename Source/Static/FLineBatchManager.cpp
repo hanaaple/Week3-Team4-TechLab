@@ -2,6 +2,7 @@
 #include "Core/Engine.h"
 #include "Core/Rendering/URenderer.h"
 #include <d3dcompiler.h>
+#include "Core/Rendering/FDevice.h"
 
 void FLineBatchManager::AddLine(const FVector& Start, const FVector& End, const FVector4& Color, float Thickness)
 {
@@ -90,7 +91,7 @@ void FLineBatchManager::Render()
 		return;
 
 	//Prepare
-	ID3D11DeviceContext* DeviceContext = UEngine::Get().GetRenderer()->GetDeviceContext();
+	ID3D11DeviceContext* DeviceContext = FDevice::Get().GetDeviceContext();
 	
 
 
@@ -155,8 +156,8 @@ void FLineBatchManager::Render()
 
 void FLineBatchManager::Create()
 {
-	ID3D11Device* Device = UEngine::Get().GetRenderer()->GetDevice();
-	ID3D11DeviceContext* DeviceContext = UEngine::Get().GetRenderer()->GetDeviceContext();
+	ID3D11Device* Device = FDevice::Get().GetDevice();
+	ID3D11DeviceContext* DeviceContext = FDevice::Get().GetDeviceContext();
 
 	D3D11_BUFFER_DESC vertexBufferDesc = {};
 	vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;

@@ -6,7 +6,6 @@ FDirectBuffer::FDirectBuffer()
 
 FDirectBuffer::~FDirectBuffer()
 {
-	
 	BufferRelease();
 }
 

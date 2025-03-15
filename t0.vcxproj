@@ -180,6 +180,8 @@
     <ClCompile Include="Source\Core\Math\Rotator.cpp" />
     <ClCompile Include="Source\Core\Config\ConfigManager.cpp" />
     <ClCompile Include="Source\Core\Math\Ray.cpp" />
+    <ClCompile Include="Source\Core\Rendering\FDevice.cpp" />
+    <ClCompile Include="Source\Core\Rendering\FDeviceResource.cpp" />
     <ClCompile Include="Source\Core\Utils\JsonSaveHelper.cpp" />
     <ClCompile Include="Source\Object\Assets\AssetManager.cpp" />
     <ClCompile Include="Source\Object\Assets\SceneAsset.cpp" />
@@ -211,7 +213,11 @@
     <ClCompile Include="Source\Primitive\UGeometryGenerator.cpp" />
     <ClCompile Include="Source\Resource\DirectResource\DirectBuffer.cpp" />
     <ClCompile Include="Source\Resource\DirectResource\IndexBuffer.cpp" />
+    <ClCompile Include="Source\Resource\DirectResource\InputLayout.cpp" />
+    <ClCompile Include="Source\Resource\DirectResource\PixelShader.cpp" />
+    <ClCompile Include="Source\Resource\DirectResource\Shader.cpp" />
     <ClCompile Include="Source\Resource\DirectResource\Vertexbuffer.cpp" />
+    <ClCompile Include="Source\Resource\DirectResource\VertexShader.cpp" />
     <ClCompile Include="Source\Resource\RenderResourceManager.cpp" />
     <ClCompile Include="Source\Resource\Resource.cpp" />
     <ClCompile Include="Source\Static\FLineBatchManager.cpp" />
@@ -280,6 +286,7 @@
     <ClInclude Include="Source\Core\Math\Rotator.h" />
     <ClInclude Include="Source\Core\Config\ConfigManager.h" />
     <ClInclude Include="Source\Core\Math\Ray.h" />
+    <ClInclude Include="Source\Core\Rendering\FDevice.h" />
     <ClInclude Include="Source\Core\Utils\JsonSaveHelper.h" />
     <ClInclude Include="Source\Object\Assets\AssetManager.h" />
     <ClInclude Include="Source\Object\Assets\SceneAsset.h" />
@@ -313,10 +320,15 @@
     <ClInclude Include="Source\Object\ObjectFactory.h" />
     <ClInclude Include="Source\Object\PrimitiveComponent\UPrimitiveComponent.h" />
     <ClInclude Include="Source\Object\World\World.h" />
+    <ClInclude Include="Source\Primitive\PrimitiveVertices.h" />
     <ClInclude Include="Source\Primitive\UGeometryGenerator.h" />
     <ClInclude Include="Source\Resource\DirectResource\DirectBuffer.h" />
     <ClInclude Include="Source\Resource\DirectResource\IndexBuffer.h" />
+    <ClInclude Include="Source\Resource\DirectResource\InputLayout.h" />
+    <ClInclude Include="Source\Resource\DirectResource\PixelShader.h" />
+    <ClInclude Include="Source\Resource\DirectResource\Shader.h" />
     <ClInclude Include="Source\Resource\DirectResource\Vertexbuffer.h" />
+    <ClInclude Include="Source\Resource\DirectResource\VertexShader.h" />
     <ClInclude Include="Source\Resource\RenderResourceManager.h" />
     <ClInclude Include="Source\Resource\Resource.h" />
     <ClInclude Include="Source\Static\FLineBatchManager.h" />

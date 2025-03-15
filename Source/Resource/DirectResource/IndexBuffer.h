@@ -16,7 +16,7 @@ class FIndexBuffer :
 {
 public:
 	
-static std::shared_ptr<FIndexBuffer> Create(FString _Name, const TArray<uint32>& _Data)
+static std::shared_ptr<FIndexBuffer> Create(const FString&  _Name, const TArray<uint32>& _Data)
 	{
 		std::shared_ptr<FIndexBuffer> Res = FIndexBuffer::CreateRes(_Name);
 		Res->ResCreate(&_Data[0], _Data.Num());
@@ -35,7 +35,7 @@ private:
 	void ResCreate(const void* _Data, size_t _IndexCount);
 
 	DXGI_FORMAT Format = DXGI_FORMAT::DXGI_FORMAT_R32_UINT;
-	uint32 IndexSize = sizeof(uint32);
+	uint32 IndexSize = 4;
 	uint32 IndexCount = 0;
 	uint32 Offset = 0;
 

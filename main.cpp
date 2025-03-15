@@ -10,6 +10,18 @@
 #include "Core/Config/ConfigManager.h"
 
 
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
+// 그 다음 질문에 있는 코드 블록 추가
+#ifdef _DEBUG
+#ifndef DBG_NEW
+#define DBG_NEW new (_NORMAL_BLOCK, __FILE__, __LINE__)
+#define new DBG_NEW
+#endif
+#endif // _DEBUG
+
 namespace
 {
 // 예외 처리기 및 메모리 덤프 생성
@@ -61,6 +73,8 @@ LONG WINAPI ExceptionCallBack(EXCEPTION_POINTERS* exceptionInfo)
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nShowCmd)
 {
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	//_CrtSetBreakAlloc(274); // 예: _CrtSetBreakAlloc(74);
 	// 사용 안하는 파라미터들
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
@@ -81,5 +95,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	UConfigManager::Get().SaveConfig("editor.ini");
 
+	_CrtDumpMemoryLeaks();
+	
     return 0;
 }
