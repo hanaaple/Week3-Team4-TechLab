@@ -11,6 +11,8 @@
 #include "Object/Actor/Sphere.h"
 #include "Static/FEditorManager.h"
 #include "Static/FLineBatchManager.h"
+#include "Core/Rendering/FDevice.h"
+
 
 class AArrow;
 class APicker;
@@ -59,6 +61,8 @@ void UEngine::Initialize(
     ScreenHeight = InScreenHeight;
 
     InitWindow(InScreenWidth, InScreenHeight);
+
+	FDevice::Get().Init(WindowHandle);
     InitRenderer();
 
     InitWorld();
@@ -66,7 +70,7 @@ void UEngine::Initialize(
     InitializedScreenWidth = ScreenWidth;
     InitializedScreenHeight = ScreenHeight;
     
-    ui.Initialize(WindowHandle, *Renderer, ScreenWidth, ScreenHeight);
+    ui.Initialize(WindowHandle, FDevice::Get(), ScreenWidth, ScreenHeight);
     
 	UE_LOG("Engine Initialized!");
 }
@@ -115,6 +119,8 @@ void UEngine::Run()
 		APlayerController::Get().ProcessPlayerInput(EngineDeltaTime);
 
 		// Renderer Update
+
+    	FDevice::Get().Prepare();
         Renderer->Prepare();
         Renderer->PrepareShader();
 
@@ -134,7 +140,7 @@ void UEngine::Run()
 		// ui Update
         ui.Update();
 
-        Renderer->SwapBuffer();
+        FDevice::Get().SwapBuffer();
 
         // FPS 제한
         double ElapsedTime;
@@ -148,6 +154,9 @@ void UEngine::Run()
             ElapsedTime = static_cast<double>(CurrentTime.QuadPart - StartTime.QuadPart) * 1000.0 / static_cast<double>(Frequency.QuadPart);
         } while (ElapsedTime < TargetDeltaTime);
     }
+
+	Renderer->Release();
+	FDevice::Get().Release();
 }
 
 
@@ -246,6 +255,14 @@ void UEngine::UpdateWindowSize(UINT InScreenWidth, UINT InScreenHeight)
 	ScreenWidth = InScreenWidth;
 	ScreenHeight = InScreenHeight;
 
+	//디바이스 초기화전에 진입막음
+	if (FDevice::Get().IsInit() == false)
+	{
+		return;
+	}
+	
+	FDevice::Get().OnUpdateWindowSize(ScreenWidth, ScreenHeight);
+
     if(Renderer)
     {
         Renderer->OnUpdateWindowSize(ScreenWidth, ScreenHeight);
@@ -255,7 +272,8 @@ void UEngine::UpdateWindowSize(UINT InScreenWidth, UINT InScreenHeight)
 	{
 		ui.OnUpdateWindowSize(ScreenWidth, ScreenHeight);
 	}
-
+	
+	FDevice::Get().OnResizeComplete();
 	if (Renderer)
 	{
 		Renderer->OnResizeComplete();

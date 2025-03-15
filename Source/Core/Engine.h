@@ -57,6 +57,7 @@ public:
 
 private:
     void InitWindow(int InScreenWidth, int InScreenHeight);
+    //void InitDevice();
     void InitRenderer();
     void InitWorld();
     void ShutdownWindow();

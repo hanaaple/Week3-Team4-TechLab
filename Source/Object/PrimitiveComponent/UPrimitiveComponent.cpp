@@ -5,12 +5,27 @@
 #include "Object/Actor/Camera.h"
 #include "Primitive/UGeometryGenerator.h"
 #include "Resource/DirectResource/Vertexbuffer.h"
+#include "Resource/DirectResource/VertexShader.h"
+#include "Resource/DirectResource/PixelShader.h"
+#include "Resource/DirectResource/InputLayout.h"
 
 //#include ""
 
 UPrimitiveComponent::UPrimitiveComponent()
 {
 	bCanBeRendered = true;
+	VertexShader = FVertexShader::Find("Simple_VS");
+	PixelShader = FPixelShader::Find("Simple_PS");
+
+	// TODO: 이거는 나중에 매쉬같은데서  만들어야함
+	InputLayout = FInputLayout::Find("Simple_VS");
+	
+}
+
+UPrimitiveComponent::~UPrimitiveComponent()
+{
+	class std::shared_ptr<class FVertexBuffer> VertexBuffer = nullptr;
+	class std::shared_ptr<class FIndexBuffer> IndexBuffer = nullptr;
 }
 
 void UPrimitiveComponent::BeginPlay()
@@ -181,8 +196,6 @@ UTriangleComp::UTriangleComp()
 	IndexBuffer = FIndexBuffer::Find("Triangle");
 	if (VertexBuffer == nullptr)
 	{
-		
-		
 		FVertexSimple tempArray[] =
 		{
 			{  0.0f, 0.0f, 1.0f,  1.0f, 0.0f, 0.0f, 1.0f },
@@ -219,6 +232,8 @@ ULineComp::ULineComp()
 {//없으면 만든다.
 	VertexBuffer= FVertexBuffer::Find("Line");
 	IndexBuffer = FIndexBuffer::Find("Line");
+
+	Topology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
 	if (VertexBuffer == nullptr)
 	{
 		

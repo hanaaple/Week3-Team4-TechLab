@@ -12,7 +12,7 @@ class UPrimitiveComponent : public USceneComponent
 	using Super = USceneComponent;
 public:
 	UPrimitiveComponent();
-	virtual ~UPrimitiveComponent() = default;
+	virtual ~UPrimitiveComponent() override;
 
 public:
 	virtual void BeginPlay() override;
@@ -27,7 +27,12 @@ public:
 	//테스트 임시 메쉬
 	class std::shared_ptr<class FVertexBuffer> VertexBuffer = nullptr;
 	class std::shared_ptr<class FIndexBuffer> IndexBuffer = nullptr;
+	class std::shared_ptr<class FInputLayout> InputLayout = nullptr;
 	D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+	// 테스트 임시 메테리얼
+	class std::shared_ptr<class FPixelShader> PixelShader = nullptr;
+	class std::shared_ptr<class FVertexShader> VertexShader = nullptr;
 	
 
 

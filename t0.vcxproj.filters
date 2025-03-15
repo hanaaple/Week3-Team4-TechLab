@@ -63,27 +63,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ThirdParty\ImGui\imgui.cpp">
-      <Filter>ThirdParty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ThirdParty\ImGui\imgui_demo.cpp">
-      <Filter>ThirdParty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ThirdParty\ImGui\imgui_draw.cpp">
-      <Filter>ThirdParty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ThirdParty\ImGui\imgui_impl_dx11.cpp">
-      <Filter>ThirdParty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ThirdParty\ImGui\imgui_impl_win32.cpp">
-      <Filter>ThirdParty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ThirdParty\ImGui\imgui_tables.cpp">
-      <Filter>ThirdParty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ThirdParty\ImGui\imgui_widgets.cpp">
-      <Filter>ThirdParty\ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Core\Math\Vector.cpp">
       <Filter>Source Files\Core\Math</Filter>
     </ClCompile>
@@ -112,9 +91,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Object\PrimitiveComponent\UPrimitiveComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\Rendering\BufferCache.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Object\Actor\Actor.cpp">
@@ -207,6 +183,60 @@
     <ClCompile Include="Source\Core\Utils\JsonSaveHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\Rendering\FDevice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Rendering\FDeviceResource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Resource\DirectResource\DirectBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Resource\DirectResource\IndexBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Resource\DirectResource\InputLayout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Resource\DirectResource\PixelShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Resource\DirectResource\Shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Resource\DirectResource\Vertexbuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Resource\DirectResource\VertexShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Resource\RenderResourceManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Resource\Resource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_demo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_draw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_impl_dx11.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_impl_win32.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_tables.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_widgets.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\ShaderW0.hlsl">
@@ -218,30 +248,6 @@
     <FxCompile Include="Shaders\ShaderLine_VS.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\ThirdParty\ImGui\imstb_truetype.h">
-      <Filter>ThirdParty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ThirdParty\ImGui\imconfig.h">
-      <Filter>ThirdParty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ThirdParty\ImGui\imgui.h">
-      <Filter>ThirdParty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ThirdParty\ImGui\imgui_impl_dx11.h">
-      <Filter>ThirdParty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ThirdParty\ImGui\imgui_impl_win32.h">
-      <Filter>ThirdParty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ThirdParty\ImGui\imgui_internal.h">
-      <Filter>ThirdParty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ThirdParty\ImGui\imstb_rectpack.h">
-      <Filter>ThirdParty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ThirdParty\ImGui\imstb_textedit.h">
-      <Filter>ThirdParty\ImGui</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Core\Container\Array.h">
       <Filter>Header Files\Core\Container</Filter>
     </ClInclude>
@@ -293,13 +299,7 @@
     <ClInclude Include="Source\Core\Math\Transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\Rendering\BufferCache.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Object\Actor\Actor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ThirdParty\SimpleJSON\Json.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Object\World\World.h">
@@ -432,6 +432,132 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Object\Gizmo\Axis.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Rendering\FDevice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Resource\DirectResource\DirectBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Resource\DirectResource\IndexBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Resource\DirectResource\InputLayout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Resource\DirectResource\PixelShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Resource\DirectResource\Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Resource\DirectResource\Vertexbuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Resource\DirectResource\VertexShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Resource\RenderResourceManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Resource\Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\Audio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\BufferHelpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\CommonStates.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\DDSTextureLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\DirectXHelpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\Effects.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\GamePad.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\GeometricPrimitive.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\GraphicsMemory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\Keyboard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\Mouse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\PostProcess.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\PrimitiveBatch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\ScreenGrab.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\SimpleMath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\SimpleMath.inl">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\SpriteBatch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\SpriteFont.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\VertexTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\WICTextureLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\XboxDDSTextureLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imconfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imgui.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imgui_impl_dx11.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imgui_impl_win32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imgui_internal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imstb_rectpack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imstb_textedit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imstb_truetype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\SimpleJSON\include\SimpleJSON\Json.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Primitive\PrimitiveVertices.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
