@@ -3,7 +3,6 @@
 #include "Core/Engine.h"
 #include "Object/USceneComponent.h"
 #include "Primitive/PrimitiveVertices.h"
-#include "Core/Math/Plane.h"
 #include "Resource/DirectResource/Vertexbuffer.h"
 #include "Resource/DirectResource/IndexBuffer.h"
 

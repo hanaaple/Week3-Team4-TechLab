@@ -626,7 +626,7 @@ void URenderer::UpdateViewMatrix(const FTransform& CameraTransform)
 
 void URenderer::UpdateProjectionMatrix(ACamera* Camera)
 {
-    float AspectRatio = UEngine::Get().GetScreenRatio();
+	float AspectRatio = ViewportInfo.Width / ViewportInfo.Height;
 
     float FOV = FMath::DegreesToRadians(Camera->GetFieldOfView());
     float Near = Camera->GetNear();
@@ -645,7 +645,7 @@ void URenderer::UpdateProjectionMatrix(ACamera* Camera)
     }
 }
 
-void URenderer::OnUpdateWindowSize(int Width, int Height)
+void URenderer::OnUpdateWindowSize(uint32 Width, uint32 Height)
 {
 	
 	ReleasePickingFrameBuffer();
@@ -654,6 +654,7 @@ void URenderer::OnUpdateWindowSize(int Width, int Height)
 void URenderer::OnResizeComplete()
 {
 	CreatePickingTexture(UEngine::Get().GetWindowHandle());
+
 
 	// 깊이 스텐실 버퍼를 재생성
 }
@@ -665,4 +666,12 @@ void URenderer::RenderPickingTexture()
 	FDevice::Get().GetSwapChain()->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&backBuffer));
     FDevice::Get().GetDeviceContext()->CopyResource(backBuffer, PickingFrameBuffer);
     backBuffer->Release();
+}
+
+FVector URenderer::GetFrameBufferWindowSize() const
+{
+	DXGI_SWAP_CHAIN_DESC SwapChainDesc;
+	SwapChain->GetDesc(&SwapChainDesc);
+
+	return FVector(static_cast<float>(SwapChainDesc.BufferDesc.Width), static_cast<float>(SwapChainDesc.BufferDesc.Height), 0);
 }

@@ -1,4 +1,4 @@
-﻿#include "Plane.h"
+#include "Quat.h"
 #include "Core/Math/Matrix.h"
 
 FQuat FQuat::AxisAngleToQuaternion(const FVector& Axis, float AngleInDegrees) {
