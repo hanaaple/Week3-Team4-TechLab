@@ -1,34 +1,74 @@
 ﻿#pragma once
-#include <cassert>
-#include "NameTypes.h"
+#include <concepts>
+#include "Object.h"
 
 
-class UClass
+/**
+ * UObject의 RTTI를 가지고 있는 클래스
+ */
+class UClass : public UObject
 {
-private:
-	FName ClassName;
-	int32 ClassSize;
-
 public:
-	UClass();
+	UClass(const char* InClassName, uint32 InClassSize, uint32 InAlignment, UClass* InSuperClass);
+	virtual ~UClass() = default;
 
-	bool IsChildOf(const UClass* SomeBase) const
+	// 복사 & 이동 생성자 제거
+	UClass(const UClass&) = delete;
+	UClass& operator=(const UClass&) = delete;
+	UClass(UClass&&) = delete;
+	UClass& operator=(UClass&&) = delete;
+
+
+	/** SomeBase의 자식 클래스인지 확인합니다. */
+	bool IsChildOf(const UClass* SomeBase) const;
+
+	template <typename T>
+		requires std::derived_from<T, UObject>
+	bool IsChildOf() const
 	{
-		assert(this);
-		if (!SomeBase) return false;
-
-		for (const UClass* TempClass=this; TempClass; TempClass=TempClass->GetSuperClass())
-		{
-			if (TempClass == SomeBase)
-			{
-				return true;
-			}
-		}
-		return false;
+		return IsChildOf(T::StaticClass());
 	}
 
+	/**
+	 * 부모의 UClass를 가져옵니다.
+	 *
+	 * @note AActor::StaticClass()->GetSuperClass() == UObject::StaticClass()
+	 */
 	UClass* GetSuperClass() const
 	{
-		
+		return SuperClass;
+	}
+
+	UObject* GetDefaultObject() const
+	{
+		if (!ClassDefaultObject)
+		{
+			const_cast<UClass*>(this)->CreateDefaultObject();
+		}
+		return ClassDefaultObject;
+	}
+
+protected:
+	virtual UObject* CreateDefaultObject();
+
+private:
+	[[maybe_unused]]
+	uint32 ClassSize;
+
+	[[maybe_unused]]
+	uint32 ClassAlignment;
+
+	UClass* SuperClass = nullptr;
+
+	UObject* ClassDefaultObject = nullptr;
+};
+
+
+struct UClassDeleter
+{
+	void operator()(UClass* ClassPtr) const
+	{
+		ClassPtr->~UClass();
+		FPlatformMemory::Free<EAT_Object>(ClassPtr, sizeof(UClass));
 	}
 };
