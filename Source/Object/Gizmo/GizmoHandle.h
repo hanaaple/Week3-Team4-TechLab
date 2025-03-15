@@ -19,7 +19,8 @@ enum class EGizmoType : uint8
 
 class AGizmoHandle : public AActor
 {
-	using Super = AActor;
+	DECLARE_CLASS(AGizmoHandle, AActor)
+
 public:
 	AGizmoHandle();
 

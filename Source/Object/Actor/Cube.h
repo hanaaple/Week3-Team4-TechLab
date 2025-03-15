@@ -2,7 +2,8 @@
 #include "Actor.h"
 class ACube : public AActor
 {
-	using Super = AActor;
+	DECLARE_CLASS(ACube, AActor)
+
 public:
 	ACube();
 	virtual ~ACube() = default;

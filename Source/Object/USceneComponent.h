@@ -8,8 +8,9 @@
 
 class USceneComponent : public UActorComponent
 {
+	DECLARE_CLASS(USceneComponent, UActorComponent)
+
 	friend class AActor;
-	using Super = UActorComponent;
 public:
 	USceneComponent() = default;
 

@@ -1,8 +1,10 @@
 ﻿#pragma once
 #include "Core/Engine.h"
 #include "Core/EngineStatics.h"
+#include "Core/Container/String.h"
 #include "Core/HAL/PlatformMemory.h"
 #include "Debug/DebugConsole.h"
+
 
 class UObject;
 
@@ -30,6 +32,9 @@ public:
             FPlatformMemory::Free<EAT_Object>(Obj, ObjectSize);
         });
         NewObject->UUID = UEngineStatics::GenUUID();
+    	// NewObject->NamePrivate = T::StaticClass()->GetName() + "__" + FString::FromInt(NewObject->UUID); // TODO: FName Resolve 고치면 이거 사용
+    	NewObject->NamePrivate = FString(typeid(T).name()) + "__" + FString::FromInt(NewObject->UUID);
+    	NewObject->ClassPrivate = T::StaticClass();
 
         // Object 제거시 Index가 달라지기 때문에 임시 주석처리 <- RemoveSwap으로 해결 가능
         // NewObject->InternalIndex = UEngine::Get().GObjects.Add(NewObject);

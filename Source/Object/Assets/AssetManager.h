@@ -9,8 +9,6 @@
 class UAssetManager : public TSingleton<UAssetManager>
 {
 public:
-	UAssetManager() = default;
-
 	void RegisterAssetMetaDatas();
 	void RegisterAssetMetaData(const std::string& name, const std::string& path, uint64 size, const std::string& extension);
 

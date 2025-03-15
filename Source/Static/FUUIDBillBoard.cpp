@@ -2,7 +2,6 @@
 #include "Core/Engine.h"
 #include "Core/Rendering/URenderer.h"
 #include "FontAtlas.h"
-#include "Core/Engine.h"
 #include "Object/World/World.h"
 #include "Object/Actor/Actor.h"
 #include "Object/Actor/Camera.h"
@@ -132,7 +131,11 @@ void FUUIDBillBoard::Render()
 		FFontConstantInfo Constants;
 		URenderer* Renderer = UEngine::Get().GetRenderer();
 
-		Constants.ViewProjectionMatrix = FMatrix::Transpose(ModelMatrix * Renderer->GetViewMatrix() * Renderer->GetProjectionMatrix());
+		Constants.ViewProjectionMatrix = FMatrix::Transpose(
+			ModelMatrix
+			* UEngine::Get().GetWorld()->GetCamera()->GetViewMatrix()
+			* Renderer->GetProjectionMatrix()
+		);
 
 		// D3D11_MAP_WRITE_DISCARD는 이전 내용을 무시하고 새로운 데이터로 덮어쓰기 위해 사용
 		DeviceContext->Map(FontConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ConstantBufferMSR);

@@ -8,21 +8,13 @@
 #if USE_WIDECHAR
 std::wstring FString::ConvertWideChar(const ANSICHAR* NarrowStr)
 {
-    const int Size = MultiByteToWideChar(CP_UTF8, 0, NarrowStr, -1, nullptr, 0);
-    std::wstring Str(Size, 0);
-    MultiByteToWideChar(CP_UTF8, 0, NarrowStr, -1, Str.data(), Size);
-    return Str;
+	const int Size = MultiByteToWideChar(CP_UTF8, 0, NarrowStr, -1, nullptr, 0);
+	std::wstring Str(Size, 0);
+	MultiByteToWideChar(CP_UTF8, 0, NarrowStr, -1, Str.data(), Size);
+	return Str;
 }
 #endif
 
-FString FString::FromInt(int32 Num)
-{
-#if USE_WIDECHAR
-    return FString{std::to_wstring(Num)};
-#else
-    return FString{std::to_string(Num)};
-#endif
-}
 
 FString FString::SanitizeFloat(float InFloat)
 {
