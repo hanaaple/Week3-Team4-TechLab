@@ -1,14 +1,12 @@
 struct VS_INPUT
 {
 	float4 Pos : POSITION;
-	float4 Color : COLOR;
 	float2 Tex : TEXCOORD;
 };
 
 struct VS_OUTPUT
 {
 	float4 Pos : SV_POSITION;
-	float4 Color : COLOR;
 	float2 Tex : TEXCOORD;
 };
 
@@ -33,7 +31,6 @@ VS_OUTPUT Font_VS(VS_INPUT input)
 	VS_OUTPUT output;
 
 	output.Pos = mul(float4(input.Pos.xyz, 1.0f), MVP);
-	output.Color = bUseVertexColor == 1 ? input.Color : CustomColor;
 	output.Tex = input.Tex;
 
 	return output;

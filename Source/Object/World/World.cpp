@@ -14,6 +14,7 @@
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
 #include "Static/FEditorManager.h"
 #include "Static/FLineBatchManager.h"
+#include "Static/FUUIDBillBoard.h"
 #include <Core/Math/Ray.h>
 
 
@@ -90,6 +91,7 @@ void UWorld::Render()
 
 
 	FLineBatchManager::Get().Render();
+	FUUIDBillBoard::Get().Render();
 	// DisplayPickingTexture(*Renderer);
 
 }
@@ -324,6 +326,7 @@ void UWorld::RayCasting(const FVector& MouseNDCPos)
 			{
 				minDistance = distance;
 				SelectedActor = Actor;
+				FUUIDBillBoard::Get().SetTarget(SelectedActor);
 			}
 		}
 	}
