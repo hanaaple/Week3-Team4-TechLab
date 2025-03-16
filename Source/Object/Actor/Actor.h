@@ -51,7 +51,7 @@ public:
 public:
 	template<typename T>
 		requires std::derived_from<T, UActorComponent>
-	T* AddComponent()
+	T* AddComponent(const FTransform& RelativeTransform = FTransform())
 	{
 		T* ObjectInstance = FObjectFactory::ConstructObject<T>();
 		Components.Add(ObjectInstance);
@@ -69,7 +69,7 @@ public:
 				ObjectInstance->SetupAttachment(RootComponent);
 			}
 
-			ObjectInstance->SetRelativeTransform(FTransform());
+			ObjectInstance->SetRelativeTransform(RelativeTransform);
 		}
 
 		return ObjectInstance;

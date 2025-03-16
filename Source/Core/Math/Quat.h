@@ -30,8 +30,6 @@ struct alignas(16) FQuat : public FVector4{
 	FVector RotateVector(const FVector& V) const;
     FVector GetEuler() const { return QuaternionToEuler(*this); }
 
-	FQuat operator*(const FQuat& Other);
-
 	bool Equals(const FQuat& Other, const float Tolerance = KINDA_SMALL_NUMBER) const;
 
 };

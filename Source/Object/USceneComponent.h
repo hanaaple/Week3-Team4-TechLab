@@ -101,7 +101,7 @@ public:
 	{
 		if (bComponentToWorldUpdated == false)
 		{
-			UpdateComponentToWorldWithParent(Parent, RelativeTransform.GetRotation());
+			UpdateComponentToWorld();
 		}
 	}
 

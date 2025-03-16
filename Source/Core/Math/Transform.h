@@ -24,9 +24,9 @@ public:
 
 	FTransform(FVector InPosition, FVector InRotation, FVector InScale)
 		: Position(InPosition)
-		, Rotation(InRotation)
 		, Scale(InScale)
 	{
+		Rotation = FQuat(InRotation);
 	}
 
 	FTransform(FVector InPosition, FQuat InQuat, FVector InScale)
@@ -276,7 +276,7 @@ public:
 		FVector ScaleB = B.GetScale();
 
 		// 회전 합성: A의 회전 후 B의 회전을 적용
-		Result.Rotation = QuatB * QuatA;
+		Result.Rotation = FQuat::MultiplyQuaternions(QuatB, QuatA);
 
 		// Translation 합성:
 		// A.Translation에 B.Scale을 적용한 후, B의 회전으로 회전시키고, B.Translation을 더함.
@@ -400,7 +400,7 @@ public:
 	// 결과 = 현재 Rotation^-1 * InRotation.
 	FQuat InverseTransformRotation(const FQuat& InRotation) const
 	{
-		return Rotation.GetInverse() * InRotation;
+		return FQuat::MultiplyQuaternions(Rotation.GetInverse(), InRotation);
 	}
 
 	/**
@@ -435,7 +435,7 @@ public:
 		FVector VTranslation = VR * Other.Scale;
 
 		// Rotation = Q(B)(-1) * Q(A)	
-		FQuat VRotation = Other.Rotation.GetInverse() * Rotation;
+		FQuat VRotation = FQuat::MultiplyQuaternions(Other.Rotation.GetInverse(), Rotation);
 
 		Result.Scale = VScale3D;
 		Result.Position = VTranslation;
@@ -541,7 +541,7 @@ public:
 
 		// 3. Rotation:
 		// 상대 회전 = Inverse(Parent.Rotation) * this->Rotation
-		Result.Rotation = InverseParentRot * myTransform.Rotation;
+		Result.Rotation = FQuat::MultiplyQuaternions(InverseParentRot, myTransform.Rotation);
 	}
 
 	/**

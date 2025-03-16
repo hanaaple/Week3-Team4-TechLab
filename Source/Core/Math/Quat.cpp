@@ -201,16 +201,6 @@ FVector FQuat::RotateVector(const FVector& V) const
 	return FVector(Result.X, Result.Y, Result.Z);
 }
 
-FQuat FQuat::operator*(const FQuat& Other)
-{
-	X *= Other.X;
-	Y *= Other.Y;
-	Z *= Other.Z;
-	W *= Other.W;
-
-	return *this;
-}
-
 bool FQuat::Equals(const FQuat& Other, float Tolerance) const
 {
 	const FVector A(X, Y, Z);

@@ -236,7 +236,7 @@ FQuat USceneComponent::GetRelativeRotationFromWorld(const FQuat& NewRotation) co
 		
 		const FQuat ParentToWorldQuat = parentToWorld.GetRotation();
 
-		const FQuat NewRelativeQuat = ParentToWorldQuat.GetInverse() * NewRotation;
+		const FQuat NewRelativeQuat = FQuat::MultiplyQuaternions(ParentToWorldQuat.GetInverse(), NewRotation);
 
 		NewRelRotation = NewRelativeQuat;
 	}
@@ -307,7 +307,7 @@ void USceneComponent::AddRelativePosition(const FVector& Delta)
 
 void USceneComponent::AddRelativeRotation(const FVector& Delta)
 {
-	SetRelativePositionAndRotation(GetRelativePosition(), FQuat(Delta) * RelativeTransform.GetRotation());
+	SetRelativePositionAndRotation(GetRelativePosition(), FQuat::MultiplyQuaternions(FQuat(Delta), RelativeTransform.GetRotation()));
 }
 
 void USceneComponent::AddRelativeRotation(const FQuat& Delta)
@@ -435,7 +435,7 @@ void USceneComponent::AddWorldOffset(const FVector& Delta)
 
 void USceneComponent::AddWorldRotation(const FVector& Delta)
 {
-	const FQuat NewRotation = FQuat(Delta) * GetWorldTransform().GetRotation();
+	const FQuat NewRotation = FQuat::MultiplyQuaternions(FQuat(Delta), GetWorldTransform().GetRotation());
 	SetWorldRotation(NewRotation);
 }
 
