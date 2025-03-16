@@ -1,6 +1,7 @@
 #pragma once
 #include "MathUtility.h"
 
+struct FQuat;
 
 struct FVector
 {
@@ -265,6 +266,12 @@ struct FVector4 : public FVector
 	static FVector4 MultiplyVector4(const FVector4& a, const FVector4& b);
 	static FVector4 VectorQuaternionRotateVector(const FVector4& Q, const FVector4& V);
 	static FVector4 CrossProduct(const FVector4& A, const FVector4& B);
+
+	static FVector4 VectorMultiplyAdd(const FVector4& A, const FVector4& B, const FVector4& C)
+	{
+		return { A.X * B.X + C.X, A.Y * B.Y + C.Y, A.Z * B.Z + C.Z, A.W * B.W + C.W};
+	}
+
 	static const FVector4 ONE;
 	static const FVector4 ONENULL;
 

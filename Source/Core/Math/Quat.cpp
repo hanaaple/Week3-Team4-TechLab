@@ -201,6 +201,24 @@ FVector FQuat::RotateVector(const FVector& V) const
 	return FVector(Result.X, Result.Y, Result.Z);
 }
 
+FVector4 FQuat::VectorQuaternionRotateVector(const FQuat& Quat, FVector4 VectorW0)
+{
+	const FQuat QW = FQuat(Quat.Z, Quat.Z, Quat.Z, Quat.Z);
+	FVector4 T = FVector4::CrossProduct(Quat, VectorW0);
+	T = FVector4(T.X + T.X, T.Y + T.Y, T.Z + T.Z, T.W + T.W);
+
+	const FVector4 VTemp0 = FVector4::VectorMultiplyAdd(QW, T, VectorW0);
+	const FVector4 VTemp1 = FVector4::CrossProduct(Quat, T);
+	const FVector4 Rotated = FVector4(VTemp0.X + VTemp1.X, VTemp0.Y + VTemp1.Y, VTemp0.Z + VTemp1.Z, VTemp0.W + VTemp1.W);
+	return Rotated;
+}
+
+FVector4 FQuat::VectorQuaternionInverseRotatedVector(const FQuat& Q, const FVector4& W0)
+{
+	const FQuat QInv = FQuat(-Q.X, -Q.Y, -Q.Z, -Q.W);
+	return VectorQuaternionRotateVector(QInv, W0);
+}
+
 bool FQuat::Equals(const FQuat& Other, float Tolerance) const
 {
 	const FVector A(X, Y, Z);
