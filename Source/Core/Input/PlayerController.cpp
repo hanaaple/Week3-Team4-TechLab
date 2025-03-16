@@ -64,5 +64,5 @@ void APlayerController::HandleGizmoMovement(float DeltaTime)
 void APlayerController::ProcessPlayerInput(float DeltaTime) {
 
     HandleGizmoMovement(DeltaTime);
-    HandleCameraMovement(DeltaTime);
+    // HandleCameraMovement(DeltaTime);
 }
