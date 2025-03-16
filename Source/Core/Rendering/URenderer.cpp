@@ -23,6 +23,7 @@ void URenderer::Create(HWND hWindow)
 	CreateBlendState();
     CreatePickingTexture(hWindow);
 
+	FViewMode::Get().Initialize(FDevice::Get().GetDevice());
 	FLineBatchManager::Get().Create();
 	FUUIDBillBoard::Get().Create();
 
@@ -109,7 +110,7 @@ void URenderer::Prepare() const
      * OutputMerger 설정
      * 렌더링 파이프라인의 최종 단계로써, 어디에 그릴지(렌더 타겟)와 어떻게 그릴지(블렌딩)를 지정
      */
-    FDevice::Get().GetDeviceContext()->RSSetState(RasterizerState);
+	FViewMode::Get().ApplyViewMode(FDevice::Get().GetDeviceContext());
     FDevice::Get().GetDeviceContext()->OMSetBlendState(nullptr, nullptr, 0xffffffff);
 }
 
@@ -177,7 +178,6 @@ void URenderer::RenderPrimitiveInternal(class UPrimitiveComponent& PrimitiveComp
 	PrimitiveComp.InputLayout->Setting();
 
 	FDevice::Get().GetDeviceContext()->IASetPrimitiveTopology(PrimitiveComp.Topology);
-	FDevice::Get().GetDeviceContext()->RSSetState(RasterizerState);
     FDevice::Get().GetDeviceContext()->DrawIndexed(PrimitiveComp.IndexBuffer->GetIndexCount(), 0, 0);
 }
 
@@ -507,4 +507,14 @@ FVector URenderer::GetFrameBufferWindowSize() const
 	FDevice::Get().GetSwapChain()->GetDesc(&SwapChainDesc);
 
 	return FVector(static_cast<float>(SwapChainDesc.BufferDesc.Width), static_cast<float>(SwapChainDesc.BufferDesc.Height), 0);
+}
+
+void URenderer::SetViewMode(EViewModeIndex ViewMode)
+{
+	FViewMode::Get().SetViewMode(ViewMode);
+}
+
+EViewModeIndex URenderer::GetViewMode() const
+{
+	return FViewMode::Get().GetViewMode();
 }
