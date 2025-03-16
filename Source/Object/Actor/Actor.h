@@ -60,19 +60,19 @@ public:
 		Components.Add(ObjectInstance);
 		ObjectInstance->SetOwner(this);
 
-		//만약 SceneComponent를 상속 받았다면
-		if constexpr (std::is_base_of_v<USceneComponent, T>)
+		USceneComponent* NewSceneComp = dynamic_cast<USceneComponent*>(ObjectInstance);
+		if (NewSceneComp != nullptr)
 		{
 			if (RootComponent == nullptr)
 			{
-				RootComponent = ObjectInstance;
+				RootComponent = NewSceneComp;
 			}
 			else
 			{
-				ObjectInstance->SetupAttachment(RootComponent);
+				NewSceneComp->SetupAttachment(RootComponent);
 			}
 
-			ObjectInstance->SetRelativeTransform(RelativeTransform);
+			NewSceneComp->SetRelativeTransform(RelativeTransform);
 		}
 
 		return ObjectInstance;

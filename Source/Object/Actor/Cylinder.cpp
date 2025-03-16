@@ -1,6 +1,7 @@
 #include "Cylinder.h"
 
 #include <Object/PrimitiveComponent/UPrimitiveComponent.h>
+#include "Core/Input/PlayerInput.h"
 
 ACylinder::ACylinder()
 {
@@ -23,6 +24,45 @@ void ACylinder::BeginPlay()
 void ACylinder::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
+	
+	FTransform NewTransform = GetActorTransform();
+	FVector NewPosition = NewTransform.GetPosition();
+	FVector NewRotation = NewTransform.GetRotation().GetEuler();
+
+	if (APlayerInput::Get().GetKeyDown(EKeyCode::Up))
+	{
+		NewPosition += FVector(0, 0, 1);
+	}
+	if (APlayerInput::Get().GetKeyDown(EKeyCode::Down))
+	{
+		NewPosition += FVector(0, 0, -1);
+	}
+	if (APlayerInput::Get().GetKeyDown(EKeyCode::Left))
+	{
+		NewPosition += FVector(0, 1, 0);
+	}
+	if (APlayerInput::Get().GetKeyDown(EKeyCode::Right))
+	{
+		NewPosition += FVector(0, -1, 0);
+	}
+
+	if (APlayerInput::Get().GetKeyPress(EKeyCode::Z))
+	{
+		NewRotation += FVector(1, 0, 0);
+	}
+	if (APlayerInput::Get().GetKeyPress(EKeyCode::X))
+	{
+		NewRotation += FVector(0, 1, 0);
+	}
+	if (APlayerInput::Get().GetKeyPress(EKeyCode::C))
+	{
+		NewRotation += FVector(0, 0, 1);
+	}
+
+	NewTransform.SetPosition(NewPosition);
+	NewTransform.SetRotation(FQuat(NewRotation));
+	SetActorTransform(NewTransform);
+
 }
 
 const char* ACylinder::GetTypeName()

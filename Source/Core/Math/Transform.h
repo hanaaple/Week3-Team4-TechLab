@@ -281,8 +281,8 @@ public:
 		// Translation 합성:
 		// A.Translation에 B.Scale을 적용한 후, B의 회전으로 회전시키고, B.Translation을 더함.
 		FVector ScaledTransA = TranslationA * ScaleB;
-		FVector RotatedTranslate = QuatB.RotateVector(ScaledTransA);
-		Result.Position = RotatedTranslate + TranslationB;
+		FVector4 RotatedTranslate = FQuat::VectorQuaternionRotateVector(QuatB, FVector4(ScaledTransA, 0));
+		Result.Position = FVector(RotatedTranslate.X + TranslationB.X, RotatedTranslate.Y + TranslationB.Y, RotatedTranslate.Z + TranslationB.Z);
 
 		// 스케일 합성 (성분별 곱셈)
 		Result.Scale = ScaleA * ScaleB;
@@ -360,11 +360,17 @@ public:
 	FVector InverseTransformPosition(const FVector& Vector) const
 	{
 		// Translation 제거
+		FVector InputVec = Vector;
+
+		FVector translatedVec = InputVec - Position;
+
 		FVector temp = { Vector.X - Position.X, Vector.Y - Position.Y, Vector.Z - Position.Z };
-		// 역회전 적용
-		FVector rotated = Rotation.GetInverse().RotateVector(temp);
-		// Scale 역수 적용 (각 축 나누기)
-		return { rotated.X / Scale.X, rotated.Y / Scale.Y, rotated.Z / Scale.Z };
+
+        FVector4 VR = FQuat::VectorQuaternionInverseRotatedVector(Rotation, FVector4(translatedVec, 0.0f));
+
+		FVector VResult = FVector(VR.X / Scale.X, VR.Y / Scale.Y, VR.Z / Scale.Z);
+
+		return VResult;
 	}
 
 	// 스케일 없이 점(위치)에 대한 역변환: P = Q^-1.Rotate(P' - T)

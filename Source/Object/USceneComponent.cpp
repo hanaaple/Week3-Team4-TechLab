@@ -67,16 +67,6 @@ USceneComponent* USceneComponent::GetParent() const
 
 bool USceneComponent::MoveComponent(const FVector& Delta, const FQuat& NewRotation)
 {
-	if (Parent == nullptr)
-	{
-		if ((Delta.X == 0 && Delta.Y == 0 && Delta.Z == 0) && NewRotation.Equals(GetRelativeRotation()))
-		{
-			return true;
-		}
-
-		return MoveComponentImpl(Delta, NewRotation);
-	}
-	
 	return MoveComponentImpl(Delta, NewRotation);
 }
 
@@ -90,6 +80,10 @@ void USceneComponent::UpdateChildTransforms()
 	for (auto& Child : Children)
 	{
 		if (Child->bComponentToWorldUpdated == false)
+		{
+			Child->UpdateComponentToWorld();
+		}
+		else
 		{
 			Child->UpdateComponentToWorld();
 		}
@@ -124,11 +118,11 @@ bool USceneComponent::InternalSetWorldPositionAndRotation(FVector& InPosition, c
 		FTransform parentToWorld = Parent->GetWorldTransform();
 
 		InPosition = parentToWorld.InverseTransformPosition(InPosition);
-		NewRotation = parentToWorld.InverseTransformRotation(InRotation);
+		NewRotation = FQuat::MultiplyQuaternions(parentToWorld.GetRotation().GetInverse(), NewRotation);
 	}
 
-	bool bDiffPosition = InPosition != GetWorldTransform().GetPosition();
-	bool bDiffRotation = NewRotation != GetWorldTransform().GetRotation();
+	bool bDiffPosition = InPosition != GetRelativePosition();
+	bool bDiffRotation = NewRotation != GetRelativeRotation();
 
 	if (bDiffPosition || bDiffRotation)
 	{
@@ -180,23 +174,19 @@ void USceneComponent::UpdateComponentToWorldWithParent(USceneComponent* Parent, 
 	if (bHasChanged)
 	{
 		WorldTransform = NewTransform;
-		PropagateTransform(true);
+		PropagateTransformUpdate(true);
 	}
 	else
 	{
-		PropagateTransform(false);
+		PropagateTransformUpdate(false);
 	}
 }
 
-void USceneComponent::PropagateTransform(bool bTransformChanged)
+void USceneComponent::PropagateTransformUpdate(bool bTransformChanged)
 {
 	if (bTransformChanged)
 	{
-		// TODO: Update Bounds
-		for (auto& Child : Children)
-		{
-			Child->UpdateComponentToWorld();
-		}
+		UpdateChildTransforms();
 	}
 	else
 	{
@@ -209,7 +199,7 @@ bool USceneComponent::MoveComponentImpl(const FVector& Delta, const FQuat& NewRo
 {
 	ConditionalUpdateComponentToWorld();
 
-	if (Delta.X == 0 && Delta.Y == 0 && Delta.Z == 0 && NewRotation.Equals(GetRelativeRotation()))
+	if (Delta.X == 0 && Delta.Y == 0 && Delta.Z == 0 && NewRotation.Equals(GetWorldTransform().GetRotation()))
 	{
 		return true;
 	}
