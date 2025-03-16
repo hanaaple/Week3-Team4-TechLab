@@ -120,7 +120,7 @@ void ACamera::Rotate(const FVector& mouseDelta)
 {
 	FTransform tr = GetActorTransform();
 	FVector TargetRotation = tr.GetRotation().GetEuler();
-	TargetRotation.Y -= Sensitivity * mouseDelta.Y;
+	TargetRotation.Y += Sensitivity * mouseDelta.Y;
 	TargetRotation.Z += Sensitivity * mouseDelta.X;
 	TargetRotation.Y = FMath::Clamp(TargetRotation.Y, -MaxYDegree, MaxYDegree);
 	tr.SetRotation(TargetRotation);
