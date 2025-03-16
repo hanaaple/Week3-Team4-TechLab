@@ -10,8 +10,8 @@ ACamera::ACamera()
 {
     bIsGizmo = true;
     
-    Near = 1.f;
-    Far = 100.f;
+    Near = .1f;
+    Far = 1000.f;
     FieldOfView = 45.f;
     ProjectionMode = ECameraProjectionMode::Perspective;
 	CameraSpeed = 1.0f;
@@ -154,9 +154,8 @@ void ACamera::Rotate(const FVector& mouseDelta)
 {
 	FTransform tr = GetActorTransform();
 	FVector TargetRotation = tr.GetRotation().GetEuler();
-	TargetRotation.Y += Sensitivity * mouseDelta.Y;
+	TargetRotation.Y -= FMath::Clamp(Sensitivity * mouseDelta.Y, -MaxYDegree, MaxYDegree);
 	TargetRotation.Z += Sensitivity * mouseDelta.X;
-	TargetRotation.Y = FMath::Clamp(TargetRotation.Y, -MaxYDegree, MaxYDegree);
 	tr.SetRotation(TargetRotation);
 
 	SetActorTransform(tr);
