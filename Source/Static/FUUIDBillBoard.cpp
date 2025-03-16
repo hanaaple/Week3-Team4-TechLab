@@ -12,6 +12,8 @@ void FUUIDBillBoard::UpdateString(const std::wstring& String)
 	Flush();
 
 	float cursorX = 0.0f;
+	float AspectRatio = FFontAtlas::Get().GlyphAspectRatio;
+	AspectRatio;
 	uint32 StringLen = String.size();
 
 	for (size_t i = 0; i < StringLen; ++i)
@@ -21,10 +23,10 @@ void FUUIDBillBoard::UpdateString(const std::wstring& String)
 
 		FVertexTexture vertices[4] =
 		{
-			{ 0.0f, -0.4375f + cursorX - (StringLen - 1) * 0.4375f, 1.0f, glyph.u, glyph.v },
-			{ 0.0f, 0.4375f + cursorX - (StringLen - 1) * 0.4375f, 1.0f, glyph.u + glyph.width, glyph.v },
-			{ 0.0f, 0.4375f + cursorX - (StringLen - 1) * 0.4375f, -1.0f, glyph.u + glyph.width, glyph.v + glyph.height },
-			{ 0.0f, -0.4375f + cursorX - (StringLen - 1) * 0.4375f, -1.0f, glyph.u, glyph.v + glyph.height }
+			{ 0.0f, -AspectRatio + cursorX - (StringLen - 1) * AspectRatio, 1.0f, glyph.u, glyph.v },
+			{ 0.0f, AspectRatio + cursorX - (StringLen - 1) * AspectRatio, 1.0f, glyph.u + glyph.width, glyph.v },
+			{ 0.0f, AspectRatio + cursorX - (StringLen - 1) * AspectRatio, -1.0f, glyph.u + glyph.width, glyph.v + glyph.height },
+			{ 0.0f, -AspectRatio + cursorX - (StringLen - 1) * AspectRatio, -1.0f, glyph.u, glyph.v + glyph.height }
 		};
 
 		for (int j = 0; j < 4; ++j)
@@ -82,7 +84,7 @@ void FUUIDBillBoard::SetTarget(AActor* Target)
 {
 	TargetObject = Target->GetRootComponent();
 
-	std::wstring string = L"UUID: ";
+	std::wstring string = L"UUID:";
 	UpdateString(string.append(std::to_wstring(Target->GetUUID())));
 }
 
