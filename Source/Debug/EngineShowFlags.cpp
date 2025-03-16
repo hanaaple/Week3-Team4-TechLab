@@ -28,24 +28,24 @@ void FEngineShowFlags::ToggleSingleFlag(EEngineShowFlags Flag)
 	ShowFlagBits ^= static_cast<uint64>(Flag);
 }
 
-bool FEngineShowFlags::SetFlagByName(const std::string& FlagName, bool bEnabled)
+bool FEngineShowFlags::SetFlagByName(const FString& FlagName, bool bEnabled)
 {
-	auto it = NameToFlagMap.find(FlagName);
-	if (it != NameToFlagMap.end())
+	auto res = NameToFlagMap.Find(FlagName);
+	if (res)
 	{
-		SetSingleFlag(it->second, bEnabled);
+		SetSingleFlag(*res, bEnabled);
 		return true;
 	}
 	return false;
 }
 
-int32 FEngineShowFlags::FindIndexByName(const std::string& FlagName)
+int32 FEngineShowFlags::FindIndexByName(const FString& FlagName)
 {
 	auto& Instance = Get();
-	auto it = Instance.NameToFlagMap.find(FlagName);
-	if (it != Instance.NameToFlagMap.end())
+	auto res = Instance.NameToFlagMap.Find(FlagName);
+	if (res)
 	{
-		return static_cast<int32>(it->second);
+		return static_cast<int32>(*res);
 	}
 	return -1;
 }
