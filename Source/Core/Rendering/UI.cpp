@@ -8,6 +8,7 @@
 #include "ImGui/imgui_impl_dx11.h"
 #include "ImGui/imgui_impl_win32.h"
 #include "Debug/DebugConsole.h"
+#include "Debug/EngineShowFlags.h"
 #include "ImGui/imgui_internal.h"
 #include "Object/Actor/Actor.h"
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
@@ -78,6 +79,7 @@ void UI::Update()
 	RenderSceneManager();
     RenderControlPanel();
     RenderPropertyWindow();
+	RenderShowFlagsPanel();
 
     Debug::ShowConsole(bWasWindowSizeUpdated, PreRatio, CurRatio);
 
@@ -471,3 +473,21 @@ void UI::RenderSceneManager()
 	ImGui::End();
 }
 
+void UI::RenderShowFlagsPanel()
+{
+	if (ImGui::Begin("Show Flags"))
+	{
+		bool bPrimitives = FEngineShowFlags::Get().GetSingleFlag(EEngineShowFlags::SF_Primitives);
+		if (ImGui::Checkbox("Primitives", &bPrimitives))
+		{
+			FEngineShowFlags::Get().SetSingleFlag(EEngineShowFlags::SF_Primitives, bPrimitives);
+		}
+
+		bool bBillboardText = FEngineShowFlags::Get().GetSingleFlag(EEngineShowFlags::SF_BillboardText);
+		if (ImGui::Checkbox("Billboard Text", &bBillboardText))
+		{
+			FEngineShowFlags::Get().SetSingleFlag(EEngineShowFlags::SF_BillboardText, bBillboardText);
+		}
+	}
+	ImGui::End();
+}

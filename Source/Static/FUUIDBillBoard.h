@@ -5,6 +5,7 @@
 #include "Primitive/PrimitiveVertices.h"
 #include "Core/Container/Array.h"
 #include "Core/Rendering/FDevice.h"
+#include "Debug/EngineShowFlags.h"
 
 struct FFontConstantInfo
 {

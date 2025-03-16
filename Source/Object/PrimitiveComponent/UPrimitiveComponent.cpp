@@ -8,6 +8,7 @@
 #include "Resource/DirectResource/VertexShader.h"
 #include "Resource/DirectResource/PixelShader.h"
 #include "Resource/DirectResource/InputLayout.h"
+#include "Debug/EngineShowFlags.h"
 
 //#include ""
 
@@ -51,7 +52,7 @@ void UPrimitiveComponent::UpdateConstantDepth(const URenderer& Renderer, const i
 void UPrimitiveComponent::Render()
 {
 	URenderer* Renderer = UEngine::Get().GetRenderer();
-	if (Renderer == nullptr || !bCanBeRendered)
+	if (Renderer == nullptr || !FEngineShowFlags::Get().GetSingleFlag(EEngineShowFlags::SF_Primitives) || !bCanBeRendered)
 	{
 		return;
 	}
@@ -158,11 +159,7 @@ UCubeComp::UCubeComp()
 		VertexBuffer = FVertexBuffer::Create(FString("Cube"), vertices);
 		IndexBuffer = FIndexBuffer::Create(FString("Cube"), indices);
 	}
-
-		
-	
 	bCanBeRendered = true;
-	
 }
 
 USphereComp::USphereComp()
@@ -184,9 +181,7 @@ USphereComp::USphereComp()
 		VertexBuffer = FVertexBuffer::Create(FString("Sphere"), vertices);
 		IndexBuffer = FIndexBuffer::Create(FString("Sphere"), indices);
 	}
-	
 	bCanBeRendered = true;
-
 }
 
 UTriangleComp::UTriangleComp()

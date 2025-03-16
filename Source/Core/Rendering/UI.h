@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Core/Container/Array.h"
 #include "Core/Container/Map.h"
 #include "Core/Container/String.h"
@@ -28,6 +28,7 @@ public:// UIWindows
     void RenderCameraSettings();
     void RenderPropertyWindow();
     void RenderSceneManager();
+	void RenderShowFlagsPanel();
 
 private:
 	// Mouse 전용
