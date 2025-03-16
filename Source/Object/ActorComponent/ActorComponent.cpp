@@ -18,10 +18,12 @@ AActor* UActorComponent::GetOwner() const
 	return Owner;
 }
 
-FVector UActorComponent::GetActorLocation() const
+FVector UActorComponent::GetActorPosition() const
 {
 	if (Owner)
 	{
 		return Owner->GetActorTransform().GetPosition();
 	}
+
+	return FVector();
 }

@@ -177,6 +177,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Core\Math\BoxSphereBounds.cpp" />
+    <ClCompile Include="Source\Object\Gizmo\GizmoActor.cpp" />
     <ClCompile Include="Source\Static\FUUIDBillBoard.cpp" />
     <ClCompile Include="Source\Core\Math\Rotator.cpp" />
     <ClCompile Include="Source\Core\Config\ConfigManager.cpp" />
@@ -284,6 +286,8 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Core\Math\BoxSphereBounds.h" />
+    <ClInclude Include="Source\Object\Gizmo\GizmoActor.h" />
     <ClInclude Include="Source\Static\FUUIDBillBoard.h" />
     <ClInclude Include="Source\Core\Math\Rotator.h" />
     <ClInclude Include="Source\Core\Config\ConfigManager.h" />

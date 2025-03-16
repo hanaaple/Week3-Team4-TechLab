@@ -13,6 +13,7 @@
 
 class AActor;
 
+class UPrimitiveComponent;
 
 class UWorld :public UObject
 {

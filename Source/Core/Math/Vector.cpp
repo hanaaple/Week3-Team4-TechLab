@@ -41,3 +41,37 @@ const FVector4 FVector4::UP = { 0.0f, 1.0f, 0.0f, 0.0f };
 const FVector4 FVector4::DOWN = { 0.0f, -1.0f, 0.0f, 0.0f };
 const FVector4 FVector4::FORWARD = { 0.0f, 0.0f, 1.0f, 0.0f };
 const FVector4 FVector4::BACKWARD = { 0.0f, 0.0f, -1.0f, 0.0f };
+
+
+
+FVector4 FVector4::operator+(const FVector4& Other) const
+{
+	return FVector4(X + Other.X, Y + Other.Y, Z + Other.Z, W + Other.W);
+}
+
+FVector4 FVector4::operator*(float Scalar) const
+{
+	return FVector4(X*Scalar, Y*Scalar, Z*Scalar, W*Scalar);
+}
+
+FVector4 FVector4::MultiplyVector4(const FVector4& a, const FVector4& b)
+{
+	return FVector4(a.X * b.X, a.Y * b.Y, a.Z * b.Z, a.W * b.W);
+}
+
+FVector4 FVector4::VectorQuaternionRotateVector(const FVector4& Q, const FVector4& V)
+{
+	FVector4 T = FVector4::CrossProduct(Q, V) * 2.0f;
+
+	FVector4 Result = V + T * Q.W + FVector4::CrossProduct(Q, T);
+
+	return Result;
+}
+
+FVector4 FVector4::CrossProduct(const FVector4& A, const FVector4& B)
+{
+	return { A.Y * B.Z - A.Z * B.Y,
+			   A.Z * B.X - A.X * B.Z,
+			   A.X * B.Y - A.Y * B.X,
+			   0.0f };
+}

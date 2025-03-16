@@ -2,6 +2,8 @@
 #include "Core/EngineTypes.h"
 #include "Core/UObject/Object.h"
 
+struct FVector;
+
 class UActorComponent : public UObject
 {
 public:
@@ -16,7 +18,7 @@ public:
 	virtual class AActor* GetOwner() const;
 	virtual void SetOwner(class AActor* InOwner) { Owner = InOwner; }
 
-	FVector GetActorLocation() const;
+	FVector GetActorPosition() const;
 
 protected:
 	bool bCanEverTick = true;

@@ -42,6 +42,8 @@ public:
     static float DotProduct(const FVector& A, const FVector& B);
     static FVector CrossProduct(const FVector& A, const FVector& B);
 
+	static FVector CompouteNormalFromThreePoints(const FVector& A, const FVector& B, const FVector& C);
+
     static float Distance(const FVector& V1, const FVector& V2);
 
     float Length() const;
@@ -73,6 +75,16 @@ public:
 
     bool operator==(const FVector& Other) const;
     bool operator!=(const FVector& Other) const;
+
+    inline bool operator>(const FVector& Other) const
+    {
+        return X > Other.X && Y > Other.Y && Z > Other.Z;
+    }
+
+    inline bool operator<(const FVector& Other) const
+    {
+        return X < Other.X && Y < Other.Y && Z < Other.Z;
+    }
 };
 
 inline float FVector::DotProduct(const FVector& A, const FVector& B)
@@ -87,6 +99,14 @@ inline FVector FVector::CrossProduct(const FVector& A, const FVector& B)
         A.Z * B.X - A.X * B.Z,
         A.X * B.Y - A.Y * B.X
     };
+}
+
+inline FVector FVector::CompouteNormalFromThreePoints(const FVector& A, const FVector& B, const FVector& C)
+{
+	FVector AB = B - A;
+	FVector AC = C - A;
+	FVector Normal = CrossProduct(AB, AC);
+	return Normal;
 }
 
 inline float FVector::Distance(const FVector& V1, const FVector& V2)
@@ -239,7 +259,12 @@ struct FVector4 : public FVector
     {
     }
 
+	FVector4 operator+(const FVector4& Other) const;
+	FVector4 operator*(float Scalar) const;
 
+	static FVector4 MultiplyVector4(const FVector4& a, const FVector4& b);
+	static FVector4 VectorQuaternionRotateVector(const FVector4& Q, const FVector4& V);
+	static FVector4 CrossProduct(const FVector4& A, const FVector4& B);
 	static const FVector4 ONE;
 	static const FVector4 ONENULL;
 

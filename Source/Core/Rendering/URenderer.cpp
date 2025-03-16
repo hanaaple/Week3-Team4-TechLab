@@ -71,12 +71,12 @@ void URenderer::CreateShader()
     D3DCompileFromFile(L"Shaders/ShaderW0.hlsl", nullptr, nullptr, "PickingPS", "ps_5_0", 0, 0, &PickingShaderCSO, nullptr);
     FDevice::Get().GetDevice()->CreatePixelShader(PickingShaderCSO->GetBufferPointer(), PickingShaderCSO->GetBufferSize(), nullptr, &PickingPixelShader);
     
-	// Font Shaders
-	D3DCompileFromFile(L"Shaders/Font_VS.hlsl", nullptr, nullptr, "Font_VS", "vs_5_0", 0, 0, &FontVertexShaderCSO, &ErrorMsg);
-	FDevice::Get().GetDevice()->CreateVertexShader(FontVertexShaderCSO->GetBufferPointer(), FontVertexShaderCSO->GetBufferSize(), nullptr, &FontVertexShader);
+	//// Font Shaders
+	//D3DCompileFromFile(L"Shaders/Font_VS.hlsl", nullptr, nullptr, "Font_VS", "vs_5_0", 0, 0, &FontVertexShaderCSO, &ErrorMsg);
+	//FDevice::Get().GetDevice()->CreateVertexShader(FontVertexShaderCSO->GetBufferPointer(), FontVertexShaderCSO->GetBufferSize(), nullptr, &FontVertexShader);
 
-	D3DCompileFromFile(L"Shaders/Font_PS.hlsl", nullptr, nullptr, "Font_PS", "ps_5_0", 0, 0, &FontPixelShaderCSO, nullptr);
-	FDevice::Get().GetDevice()->CreatePixelShader(FontPixelShaderCSO->GetBufferPointer(), FontPixelShaderCSO->GetBufferSize(), nullptr, &FontPixelShader);
+	//D3DCompileFromFile(L"Shaders/Font_PS.hlsl", nullptr, nullptr, "Font_PS", "ps_5_0", 0, 0, &FontPixelShaderCSO, nullptr);
+	//FDevice::Get().GetDevice()->CreatePixelShader(FontPixelShaderCSO->GetBufferPointer(), FontPixelShaderCSO->GetBufferSize(), nullptr, &FontPixelShader);
 
 	if (ErrorMsg)
 	{
@@ -626,7 +626,7 @@ void URenderer::UpdateViewMatrix(const FTransform& CameraTransform)
 
 void URenderer::UpdateProjectionMatrix(ACamera* Camera)
 {
-	float AspectRatio = ViewportInfo.Width / ViewportInfo.Height;
+	float AspectRatio = FDevice::Get().GetViewPortInfo().Width / FDevice::Get().GetViewPortInfo().Height;
 
     float FOV = FMath::DegreesToRadians(Camera->GetFieldOfView());
     float Near = Camera->GetNear();
@@ -671,7 +671,7 @@ void URenderer::RenderPickingTexture()
 FVector URenderer::GetFrameBufferWindowSize() const
 {
 	DXGI_SWAP_CHAIN_DESC SwapChainDesc;
-	SwapChain->GetDesc(&SwapChainDesc);
+	FDevice::Get().GetSwapChain()->GetDesc(&SwapChainDesc);
 
 	return FVector(static_cast<float>(SwapChainDesc.BufferDesc.Width), static_cast<float>(SwapChainDesc.BufferDesc.Height), 0);
 }

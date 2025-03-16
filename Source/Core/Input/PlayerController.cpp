@@ -38,44 +38,7 @@ void APlayerController::HandleCameraMovement(float DeltaTime) {
     CameraTransform.SetRotation(TargetRotation);
 
     
-    //CameraTransform.Rotate({0, Camera->CameraSpeed * DeltaPos.Y * DeltaTime, Camera->CameraSpeed * DeltaPos.X * DeltaTime});
-
-    /*FQuat xDelta = FQuat(FVector(0, 0, 1), DeltaPos.X * DeltaTime);
-	FQuat yDelta = FQuat(FVector(0, 1, 0), DeltaPos.Y * DeltaTime);
-	FQuat newRot = FQuat::MultiplyQuaternions(CameraRot, xDelta);
-	newRot = FQuat::MultiplyQuaternions(newRot, yDelta);*/
-
-
-    //FTransform NewTransf = Camera->GetActorTransform();
-    //NewTransf.SetRotation(FQuat::AddQuaternions(CameraRot, DeltaQuaternion));
-    //Camera->SetActorTransform(NewTransf);
-    
     float CamSpeed = Camera->CameraSpeed;
-
-    /*if (APlayerInput::Get().GetKeyPress(EKeyCode::A)) {
-        NewVelocity -= Camera->GetRight();
-    }
-    if (APlayerInput::Get().GetKeyPress(EKeyCode::D)) {
-        NewVelocity += Camera->GetRight();
-    }
-    if (APlayerInput::Get().GetKeyPress(EKeyCode::W)) {
-        NewVelocity += Camera->GetForward();
-    }
-    if (APlayerInput::Get().GetKeyPress(EKeyCode::S)) {
-        NewVelocity -= Camera->GetForward();
-    }
-    if (APlayerInput::Get().GetKeyPress(EKeyCode::Q))
-    {
-        NewVelocity -= {0.0f, 0.0f, 1.0f};
-    }
-    if (APlayerInput::Get().GetKeyPress(EKeyCode::E))
-    {
-        NewVelocity += {0.0f, 0.0f, 1.0f};
-    }
-    if (NewVelocity.Length() > 0.001f)
-    {
-        NewVelocity = NewVelocity.GetSafeNormal();
-    }*/
 
     //회전이랑 마우스클릭 구현 카메라로 해야할듯?
     CameraTransform.Translate(NewVelocity * DeltaTime * CamSpeed);

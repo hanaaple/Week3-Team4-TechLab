@@ -18,7 +18,7 @@ void FDevice::InitResource()
 		//FInputLayout::Create("Font_VS" , VS);
 	}
 	
-	FPixelShader::Load(L"Shaders/Font_PS.hlsl","Font_PS","Font_PS");
+	//FPixelShader::Load(L"Shaders/Font_PS.hlsl","Font_PS","Font_PS");
 
 	
 	

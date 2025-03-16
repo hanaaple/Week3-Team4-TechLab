@@ -356,7 +356,7 @@ void UI::RenderPropertyWindow()
             selectedTransform.SetScale(scale[0], scale[1], scale[2]);
             selectedActor->SetActorTransform(selectedTransform);
         }
-		if (FEditorManager::Get().GetGizmoHandle() != nullptr)
+		/*if (FEditorManager::Get().GetGizmoHandle() != nullptr)
 		{
 			AGizmoHandle* Gizmo = FEditorManager::Get().GetGizmoHandle();
             if(Gizmo->GetGizmoType() == EGizmoType::Translate)
@@ -371,7 +371,7 @@ void UI::RenderPropertyWindow()
 			{
 				ImGui::Text("GizmoType: Scale");
 			}
-		}
+		}*/
     }
     ImGui::End();
 }

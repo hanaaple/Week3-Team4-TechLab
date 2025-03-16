@@ -63,6 +63,9 @@ public:
 	{
 		return FVector::CrossProduct(Direction, Point - Origin).LengthSquared();
 	}
+
+	// Helper: 월드 레이를 로컬 좌표계로 변환 (프리미티브의 월드 행렬을 사용)
+	static FRay TransformRayToLocal(const FRay& worldRay, const FMatrix& primWorldMat);
 };
 
 struct FRayCast

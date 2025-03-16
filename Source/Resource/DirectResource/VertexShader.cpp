@@ -22,9 +22,11 @@ void FVertexShader::Setting()
 void FVertexShader::ShaderLoad(const LPCWSTR& _Path, const FString& _EntryPoint, UINT _VersionHight, UINT _VersionLow)
 {	// std::string*
 	ID3DBlob* Error = nullptr;
-
+	DWORD shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
+	shaderFlags |= D3DCOMPILE_DEBUG;
+	shaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
 	
-	D3DCompileFromFile(_Path, nullptr, nullptr, *_EntryPoint, "vs_5_0", 0, 0, &BinaryCode, &Error);
+	D3DCompileFromFile(_Path, nullptr, nullptr, *_EntryPoint, "vs_5_0", shaderFlags, 0, &BinaryCode, &Error);
 	FDevice::Get().GetDevice()->CreateVertexShader(BinaryCode->GetBufferPointer(), BinaryCode->GetBufferSize(), nullptr, &ShaderPtr);
 
 }

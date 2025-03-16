@@ -2,6 +2,7 @@
 #include "Vector.h"
 
 #define PIDIV2 3.141592654/2
+struct FMatrix;
 
 struct alignas(16) FQuat : public FVector4{
     using FVector::X;
@@ -13,6 +14,7 @@ struct alignas(16) FQuat : public FVector4{
 	explicit FQuat(float InX, float InY, float InZ, float InW) : FVector4(InX, InY, InZ, InW) {}
     explicit FQuat(FVector Rotation) : FVector4(EulerToQuaternion(Rotation)) {}
     FQuat(const FVector& Axis, float AngleInDegrees) : FVector4(AxisAngleToQuaternion(Axis, AngleInDegrees)) {}
+	FQuat(const FMatrix& M);
 
     static FQuat EulerToQuaternion(FVector Euler);
     static FVector QuaternionToEuler(const FQuat& quaternion);
@@ -23,5 +25,13 @@ struct alignas(16) FQuat : public FVector4{
     static FQuat SubtractQuaternions(const FQuat& q1, const FQuat& q2);
 
     static FQuat MakeFromRotationMatrix(const struct FMatrix& M);
+
+	FQuat GetInverse() const { return FQuat (-X, -Y, -Z, W); }
+	FVector RotateVector(const FVector& V) const;
     FVector GetEuler() const { return QuaternionToEuler(*this); }
+
+	FQuat operator*(const FQuat& Other);
+
+	bool Equals(const FQuat& Other, const float Tolerance = KINDA_SMALL_NUMBER) const;
+
 };

@@ -5,6 +5,7 @@ struct FVector4;
 struct FVector;
 struct FQuat;
 struct FRotator;
+struct FTransform;
 
 struct alignas(16) FMatrix
 {
@@ -33,8 +34,11 @@ struct alignas(16) FMatrix
 	static FMatrix GetScaleMatrix(float X, float Y, float Z);
 	static FMatrix GetScaleMatrix(const FVector& InScale);
 	static FMatrix GetRotateMatrix(const FQuat& Q);
+	static FMatrix GetQuatToRotationMatrixScaleMatrix(const FQuat& Q, const FVector& Scale);
 	static FMatrix LookAtLH(const FVector& EyePosition, const FVector& FocusPoint, const FVector& cameraUp);
 	static FMatrix PerspectiveFovLH(float FieldOfView, float AspectRatio, float NearPlane, float FarPlane);
+	static FMatrix OrthoForLH(float ViewWidth, float VeiwHeight, float NearPlane, float FarPlane);
+
 	static FMatrix InverseGaussJordan(FMatrix& mat);
 
 	FMatrix operator+(const FMatrix& Other) const;
@@ -57,10 +61,10 @@ struct alignas(16) FMatrix
 	FVector GetRotation() const;
 
 	FVector TransformVector(const FVector& Vector) const;
+	FVector4 TransformVector(const FVector4& Vector) const;
 	FVector4 TransformVector4(const FVector4& Vector) const;
-	FVector4 TransformVector4Ex(const FVector4& Vector) const;
 
-	class FTransform GetTransform() const;
+	FTransform GetTransform() const;
 
 	static FMatrix RotateRoll(float Angle);
 
@@ -69,6 +73,16 @@ struct alignas(16) FMatrix
 	static FMatrix RotateYaw(float Angle);
 
 	static FMatrix RotateToMatrix(float X, float Y, float Z);
+
+	FVector ExtractScale(float Tolerance = 1e-8f);
+
+	void RemoveScaling(float Tolerance = 1e-8f);
+
+	FTransform ConstructTransformFromMatrixWithDesiredScale(FMatrix& AMatrix, FMatrix& BMatrix, FVector DesiredScale);
+
+	void SetAxis(int32 i, const FVector& Axis);
+
+	FVector GetAxis(int32 i) const;
 };
 
 

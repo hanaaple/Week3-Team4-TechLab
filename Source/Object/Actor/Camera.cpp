@@ -34,7 +34,7 @@ void ACamera::BeginPlay()
 	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::Q, [this] { MoveDown(); }, GetUUID());
 	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::E, [this] { MoveUp(); }, GetUUID());
 
-	///APlayerInput::Get().RegisterMousePressCallback(EKeyCode::RButton, std::bind(&ACamera::Rotate, this, std::placeholders::_1), GetUUID());
+	APlayerInput::Get().RegisterMousePressCallback(EKeyCode::RButton, std::bind(&ACamera::Rotate, this, std::placeholders::_1), GetUUID());
 
 	UConfigManager::Get().SetValue("Camera", "Sensitivity", std::to_string(Sensitivity));
 }
@@ -120,11 +120,19 @@ void ACamera::Rotate(const FVector& mouseDelta)
 {
 	FTransform tr = GetActorTransform();
 	FVector TargetRotation = tr.GetRotation().GetEuler();
-	TargetRotation.Y += CameraSpeed * mouseDelta.Y;
-	TargetRotation.Z += CameraSpeed * mouseDelta.X;
+	TargetRotation.Y -= Sensitivity * mouseDelta.Y;
+	TargetRotation.Z += Sensitivity * mouseDelta.X;
 	TargetRotation.Y = FMath::Clamp(TargetRotation.Y, -MaxYDegree, MaxYDegree);
 	tr.SetRotation(TargetRotation);
-	tr.Rotate(FVector(-mouseDelta.X, - mouseDelta.Y, 0));
 
 	SetActorTransform(tr);
+	//TargetRotation.Y = FMath::Clamp(TargetRotation.Y, -Camera->MaxYDegree, Camera->MaxYDegree);
+	//CameraTransform.SetRotation(TargetRotation);
+
+
+	//float CamSpeed = Camera->CameraSpeed;
+
+	////회전이랑 마우스클릭 구현 카메라로 해야할듯?
+	//CameraTransform.Translate(NewVelocity * DeltaTime * CamSpeed);
+	//Camera->SetActorTransform(CameraTransform); //임시용
 }
