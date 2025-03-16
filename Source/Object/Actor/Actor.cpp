@@ -1,4 +1,4 @@
-﻿#include "Actor.h"
+#include "Actor.h"
 #include "Object/USceneComponent.h"
 #include "Debug/DebugConsole.h"
 #include "Object/World/World.h"
@@ -66,6 +66,65 @@ void AActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	Components.Empty();
 }
 
+const FTransform& AActor::GetActorTransform() const
+{
+	if (RootComponent)
+	{
+		return RootComponent->GetComponentTransform();
+	}
+	else
+	{
+		return FTransform();
+	}
+}
+
+const FTransform& AActor::ActorToWorld() const
+{
+	return (RootComponent != nullptr) ? RootComponent->GetWorldTransform() : FTransform();
+}
+
+FVector AActor::GetActorForwardVector() const
+{
+	return (RootComponent != nullptr) ? RootComponent->GetForwardVector() : FVector::ForwardVector;
+}
+
+FVector AActor::GetActorRightVector() const
+{
+	return (RootComponent != nullptr) ? RootComponent->GetRightVector() : FVector::ForwardVector;
+}
+
+FVector AActor::GetActorUpVector() const
+{
+	return (RootComponent != nullptr) ? RootComponent->GetUpVector() : FVector::ForwardVector;
+}
+
+FVector AActor::GetActorPosition() const
+{
+	if (RootComponent)
+	{
+		return RootComponent->GetComponentTransform().GetPosition();
+	}
+	return FVector();
+}
+
+FVector AActor::GetActorRotation() const
+{
+	if (RootComponent)
+	{
+		return RootComponent->GetComponentTransform().GetRotation().GetEuler();
+	}
+	return FVector();
+}
+
+FQuat AActor::GetActorRotationQuat() const
+{
+	if (RootComponent)
+	{
+		return RootComponent->GetComponentTransform().GetRotation();
+	}
+	return FQuat();
+}
+
 void AActor::Pick()
 {
 	if (RootComponent)
@@ -84,9 +143,138 @@ void AActor::UnPick()
 	}	
 }
 
-FTransform AActor::GetActorTransform() const
+bool AActor::SetActorPosition(const FVector& InPosition)
 {
-	return RootComponent != nullptr ? RootComponent->GetComponentTransform() : FTransform();
+	if (RootComponent)
+	{
+		const FVector Delta = InPosition - GetActorPosition();
+		return RootComponent->MoveComponent(Delta, GetActorRotation());
+	}
+
+	return false;
+}
+
+bool AActor::SetActorRotation(const FVector& InRotation)
+{
+	return SetActorRotation(FQuat(InRotation));
+}
+
+bool AActor::SetActorRotation(const FQuat& InQuat)
+{
+	if (RootComponent)
+	{
+		return RootComponent->MoveComponent(FVector::ZeroVector, InQuat);
+	}
+}
+
+bool AActor::SetActorPositionAndRotation(const FVector& InPosition, const FVector& InRotation)
+{
+	if (RootComponent)
+	{
+		const FVector Delta = InPosition - GetActorPosition();
+		return RootComponent->MoveComponent(Delta, FQuat(InRotation));
+	}
+}
+
+bool AActor::SetActorPositionAndRotation(const FVector& InPosition, const FQuat& InQuat)
+{
+	if (RootComponent)
+	{
+		const FVector Delta = InPosition - GetActorPosition();
+		return RootComponent->MoveComponent(Delta, InQuat);
+	}
+}
+
+bool AActor::SetActorScale(const FVector& InScale)
+{
+	if (RootComponent)
+	{
+		RootComponent->SetWorldScale(InScale);
+		return true;
+	}
+
+	return false;
+}
+
+FVector AActor::GetActorScale() const
+{
+	if (RootComponent)
+	{
+		return RootComponent->GetComponentScale();
+	}
+	return FVector::OneVector;
+}
+
+void AActor::AddWorldOffset(const FVector& Delta)
+{
+	if (RootComponent)
+	{
+		RootComponent->AddWorldOffset(Delta);
+	}
+}
+
+void AActor::AddActorWorldRotation(const FVector& Delta)
+{
+	if (RootComponent)
+	{
+		RootComponent->AddWorldRotation(Delta);
+	}
+}
+
+void AActor::AddActorWorldRotation(const FQuat& Delta)
+{
+	if (RootComponent)
+	{
+		RootComponent->AddWorldRotation(Delta);
+	}
+}
+
+void AActor::AddActorWorldTransform(const FTransform& Delta)
+{
+	if (RootComponent)
+	{
+		RootComponent->AddWorldTransform(Delta);
+	}
+}
+
+void AActor::AddActorWorldTransformKeepScale(const FTransform& Delta)
+{
+	if (RootComponent)
+	{
+		RootComponent->AddWorldTransformKeepScale(Delta);
+	}
+}
+
+void AActor::AddActorLocalOffset(const FVector& Delta)
+{
+	if (RootComponent)
+	{
+		RootComponent->AddLocalOffset(Delta);
+	}
+}
+
+void AActor::AddActorLocalRotation(const FVector& Delta)
+{
+	if (RootComponent)
+	{
+		RootComponent->AddLocalRotation(Delta);
+	}
+}
+
+void AActor::AddActorLocalRotation(const FQuat& Delta)
+{
+	if (RootComponent)
+	{
+		RootComponent->AddLocalRotation(Delta);
+	}
+}
+
+void AActor::AddActorLocalTransform(const FTransform& Delta)
+{
+	if (RootComponent)
+	{
+		RootComponent->AddLocalTransform(Delta);
+	}
 }
 
 void AActor::SetActorTransform(const FTransform& InTransform)
@@ -94,12 +282,62 @@ void AActor::SetActorTransform(const FTransform& InTransform)
 	// InTransform은 월드 기준임
 	if (RootComponent)
 	{
-		RootComponent->SetRelativeTransform(InTransform);
+		RootComponent->SetWorldTransform(InTransform);
 	}
 	else
 	{
 		UE_LOG("RootComponent is nullptr");
 	}
+}
+
+void AActor::SetActorRelativePosition(const FVector& InPosition)
+{
+	if (RootComponent)
+	{
+		RootComponent->SetRelativePosition(InPosition);
+	}
+}
+
+void AActor::SetActorRelativeRotation(const FVector& InRotation)
+{
+	if (RootComponent)
+	{
+		RootComponent->SetRelativeRotation(InRotation);
+	}
+}
+
+void AActor::SetActorRelativeRotation(const FQuat& InRotation)
+{
+	if (RootComponent)
+	{
+		RootComponent->SetRelativeRotation(InRotation);
+	}
+}
+
+
+void AActor::SetActorRelativeTransform(const FTransform& InTransform)
+{
+	if (RootComponent)
+	{
+		RootComponent->SetRelativeTransform(InTransform);
+	}	
+}
+
+void AActor::SetActorRelativeScale(const FVector& InScale)
+{
+	if (RootComponent)
+	{
+		RootComponent->SetRelativeScale(InScale);
+	}
+}
+
+FVector AActor::GetActorRelativeScale() const
+{
+	if (RootComponent)
+	{
+		return RootComponent->GetRelativeScale();
+	}
+	return FVector::OneVector;
 }
 
 const char* AActor::GetTypeName()
@@ -109,7 +347,27 @@ const char* AActor::GetTypeName()
 
 bool AActor::Destroy()
 {
-	return GetWorld()->DestroyActor(this);
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		World->DestroyActor(this);
+	}
+
+	return true;
+}
+
+void AActor::SetRootComponent(USceneComponent* InRootComponent)
+{
+	if (InRootComponent == nullptr || InRootComponent->GetOwner() == this)
+	{
+		if (RootComponent != InRootComponent)
+		{
+			USceneComponent* OldRootComponent = RootComponent;
+			RootComponent = InRootComponent;
+
+			OldRootComponent->SetupAttachment(RootComponent);
+		}
+	}
 }
 
 void AActor::SetColor(FVector4 InColor)

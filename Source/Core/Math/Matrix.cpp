@@ -297,6 +297,41 @@ FMatrix FMatrix::GetRotateMatrix(const FQuat& Q)
 
 	return Result;
 }
+FMatrix FMatrix::GetQuatToRotationMatrixScaleMatrix(const FQuat& q, const FVector& scale)
+{
+	// 쿼터니언 요소 추출
+	const float x = q.X, y = q.Y, z = q.Z, w = q.W;
+
+	// 중간 계산값
+	const float xx = x * x, yy = y * y, zz = z * z;
+	const float xy = x * y, xz = x * z, yz = y * z;
+	const float wx = w * x, wy = w * y, wz = w * z;
+
+	// 회전 행렬 구성
+	FMatrix Result;
+
+	Result.M[0][0] = 1.0f - 2.0f * (yy + zz) * scale.X;
+	Result.M[0][1] = 2.0f * (xy - wz);
+	Result.M[0][2] = 2.0f * (xz + wy);
+	Result.M[0][3] = 0.0f;
+
+	Result.M[1][0] = 2.0f * (xy + wz);
+	Result.M[1][1] = 1.0f - 2.0f * (xx + zz) * scale.Y;
+	Result.M[1][2] = 2.0f * (yz - wx);
+	Result.M[1][3] = 0.0f;
+
+	Result.M[2][0] = 2.0f * (xz - wy);
+	Result.M[2][1] = 2.0f * (yz + wx);
+	Result.M[2][2] = 1.0f - 2.0f * (xx + yy) * scale.Z;
+	Result.M[2][3] = 0.0f;
+
+	Result.M[3][0] = 0.0f;
+	Result.M[3][1] = 0.0f;
+	Result.M[3][2] = 0.0f;
+	Result.M[3][3] = 1.0f; // 4x4 행렬이므로 마지막 값은 1
+
+	return Result;
+}
 /// <summary>
 /// 뷰 변환 행렬을 생성합니다.
 /// </summary>
@@ -315,7 +350,7 @@ FMatrix FMatrix::LookAtLH(const FVector& EyePosition, const FVector& FocusPoint,
 	Result.M[0][0] = Right.X; Result.M[0][1] = Up.X; Result.M[0][2] = Forward.X; Result.M[0][3] = 0.0f;
 	Result.M[1][0] = Right.Y; Result.M[1][1] = Up.Y; Result.M[1][2] = Forward.Y; Result.M[1][3] = 0.0f;
 	Result.M[2][0] = Right.Z; Result.M[2][1] = Up.Z; Result.M[2][2] = Forward.Z; Result.M[2][3] = 0.0f;
-	Result.M[3][0] = FVector::DotProduct(Right, -EyePosition); Result.M[3][1] = FVector::DotProduct(Up, -EyePosition); Result.M[3][2] = FVector::DotProduct(Forward, -EyePosition); Result.M[3][3] = 1.0f;
+	Result.M[3][0] = -FVector::DotProduct(Right, EyePosition); Result.M[3][1] = -FVector::DotProduct(Up, EyePosition); Result.M[3][2] = -FVector::DotProduct(Forward, EyePosition); Result.M[3][3] = 1.0f;
 
 	return Result;
 }
@@ -330,6 +365,23 @@ FMatrix FMatrix::PerspectiveFovLH(float FieldOfView, float AspectRatio, float Ne
 	Result.M[2][3] = 1.0f;
 	Result.M[3][2] = -NearPlane * FarPlane / (FarPlane - NearPlane);
 	Result.M[3][3] = 0.0f;
+	return Result;
+}
+
+FMatrix FMatrix::OrthoForLH(float ViewWidth, float VeiwHeight, float NearPlane, float FarPlane)
+{
+	FMatrix Result;
+	Result.M[0][0] = 2 / ViewWidth;
+	Result.M[1][1] = 2 / VeiwHeight;
+	Result.M[2][2] = 1 / (FarPlane - NearPlane);
+	Result.M[3][2] = NearPlane / (NearPlane - FarPlane);
+	Result.M[3][3] = 1.0f;
+
+	// 일반적으로 left, right, top, bottom을 받는 경우와 비교하여
+	// ViewWidth = right - left;
+	// ViewHeight = top - bottom
+	// 으로 접근하여 작성하였습니다.
+
 	return Result;
 }
 
@@ -365,6 +417,16 @@ FVector FMatrix::TransformVector(const FVector& Vector) const
 	};
 }
 
+FVector4 FMatrix::TransformVector(const FVector4& Vector) const
+{
+	return {
+		Vector.X * M[0][0] + Vector.Y * M[1][0] + Vector.Z * M[2][0] + Vector.W * M[3][0],
+		Vector.X * M[0][1] + Vector.Y * M[1][1] + Vector.Z * M[2][1] + Vector.W * M[3][1],
+		Vector.X * M[0][2] + Vector.Y * M[1][2] + Vector.Z * M[2][2] + Vector.W * M[3][2],
+		Vector.X * M[0][3] + Vector.Y * M[1][3] + Vector.Z * M[2][3] + Vector.W * M[3][3],
+	};
+}
+
 FVector4 FMatrix::TransformVector4(const FVector4& Vector) const
 {
 	return {
@@ -372,16 +434,6 @@ FVector4 FMatrix::TransformVector4(const FVector4& Vector) const
 			Vector.X * M[0][1] + Vector.Y * M[1][1] + Vector.Z * M[2][1] + Vector.W * M[3][1],
 			Vector.X * M[0][2] + Vector.Y * M[1][2] + Vector.Z * M[2][2] + Vector.W * M[3][2],
 			Vector.X * M[0][3] + Vector.Y * M[1][3] + Vector.Z * M[2][3] + Vector.W * M[3][3]
-	};
-}
-
-FVector4 FMatrix::TransformVector4Ex(const FVector4& Vector) const
-{
-	return {
-			Vector.X * M[0][0] + Vector.Y * M[0][1] + Vector.Z * M[0][2] + Vector.W * M[0][3],
-			Vector.X * M[1][0] + Vector.Y * M[1][1] + Vector.Z * M[1][2] + Vector.W * M[1][3],
-			Vector.X * M[2][0] + Vector.Y * M[2][1] + Vector.Z * M[2][2] + Vector.W * M[2][3],
-			Vector.X * M[3][0] + Vector.Y * M[3][1] + Vector.Z * M[3][2] + Vector.W * M[3][3]
 	};
 }
 
@@ -448,4 +500,117 @@ FMatrix FMatrix::RotateToMatrix(float X, float Y, float Z)
 		return RotateRoll(X) * RotatePitch(Y) * RotateYaw(Z);
 	}
 	return  RotateRoll(X) * RotateYaw(Z) * RotatePitch(Y);
+}
+
+FVector FMatrix::ExtractScale(float Tolerance)
+{
+	FVector Scale3D(0, 0, 0);
+
+	// For each row, find magnitude, and if its non-zero re-scale so its unit length.
+	const float SquareSum0 = (M[0][0] * M[0][0]) + (M[0][1] * M[0][1]) + (M[0][2] * M[0][2]);
+	const float SquareSum1 = (M[1][0] * M[1][0]) + (M[1][1] * M[1][1]) + (M[1][2] * M[1][2]);
+	const float SquareSum2 = (M[2][0] * M[2][0]) + (M[2][1] * M[2][1]) + (M[2][2] * M[2][2]);
+
+	if (SquareSum0 > Tolerance)
+	{
+		float Scale0 = FMath::Sqrt(SquareSum0);
+		Scale3D.X = Scale0;
+		float InvScale0 = 1.f / Scale0;
+		M[0][0] *= InvScale0;
+		M[0][1] *= InvScale0;
+		M[0][2] *= InvScale0;
+	}
+	else
+	{
+		Scale3D.X = 0;
+	}
+
+	if (SquareSum1 > Tolerance)
+	{
+		float Scale1 = FMath::Sqrt(SquareSum1);
+		Scale3D.X = Scale1;
+		float InvScale1 = 1.f / Scale1;
+		M[1][0] *= InvScale1;
+		M[1][1] *= InvScale1;
+		M[1][2] *= InvScale1;
+	}
+	else
+	{
+		Scale3D.Y	 = 0;
+	}
+
+	if (SquareSum2 > Tolerance)
+	{
+		float Scale2 = FMath::Sqrt(SquareSum2);
+		Scale3D.Z = Scale2;
+		float InvScale2 = 1.f / Scale2;
+		M[2][0] *= InvScale2;
+		M[2][1] *= InvScale2;
+		M[2][2] *= InvScale2;
+	}
+	else
+	{
+		Scale3D.Z = 0;
+	}
+
+	return Scale3D;
+}
+
+void FMatrix::RemoveScaling(float Tolerance)
+{
+	// 첫 3행(회전-스케일 블록) 각각에 대해 스케일 크기를 구한 뒤, 
+	// 해당 행의 요소들을 단위 길이로 만듭니다.
+	for (int i = 0; i < 3; ++i)
+	{
+		float SquareSum = M[i][0] * M[i][0] + M[i][1] * M[i][1] + M[i][2] * M[i][2];
+		float Scale = (SquareSum > Tolerance) ? FMath::InvSqrt(SquareSum) : float(1);
+		M[i][0] *= Scale;
+		M[i][1] *= Scale;
+		M[i][2] *= Scale;
+	}
+}
+
+FTransform FMatrix::ConstructTransformFromMatrixWithDesiredScale(FMatrix& AMatrix, FMatrix& BMatrix, FVector DesiredScale)
+{
+	FMatrix M = AMatrix * BMatrix;	
+	M.RemoveScaling();
+
+	M.SetAxis(0, M.GetAxis(0));
+	M.SetAxis(1, M.GetAxis(1));
+	M.SetAxis(2, M.GetAxis(2));
+
+	FQuat Rotation = FQuat(M);
+	Rotation.Normalize();
+
+	FTransform Result;
+
+	Result.SetScale(DesiredScale);
+	Result.SetRotation(Rotation);
+	M.GetTranslation().Normalize();
+	Result.SetPosition(M.GetTranslation());
+
+	return Result;
+}
+
+void FMatrix::SetAxis(int32 i, const FVector& Axis)
+{
+	M[i][0] = Axis.X;
+	M[i][1] = Axis.Y;
+	M[i][2] = Axis.Z;
+}
+
+FVector FMatrix::GetAxis(int32 i) const
+{
+	if (0) // x
+	{
+		return FVector(M[0][0], M[0][1], M[0][2]);
+	}
+	else if(1) // y
+	{
+		return FVector(M[1][0], M[1][1], M[2][2]);
+	}
+	else // z
+	{
+		return FVector(M[2][0], M[2][1], M[2][2]);
+	}
 }

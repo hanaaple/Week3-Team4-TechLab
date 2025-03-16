@@ -4,6 +4,8 @@
 #include "Core/UObject/Object.h"
 #include "Core/UObject/ObjectMacros.h"
 
+struct FVector;
+
 class UActorComponent : public UObject
 {
 	DECLARE_CLASS(UActorComponent, UObject)
@@ -20,7 +22,7 @@ public:
 	virtual class AActor* GetOwner() const;
 	virtual void SetOwner(AActor* InOwner) { Owner = InOwner; }
 
-	FVector GetActorLocation() const;
+	FVector GetActorPosition() const;
 
 protected:
 	bool bCanEverTick = true;

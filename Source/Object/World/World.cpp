@@ -17,6 +17,7 @@
 #include <Core/Math/Ray.h>
 
 
+
 void UWorld::BeginPlay()
 {
 	for (const auto& Actor : Actors)
@@ -251,60 +252,56 @@ void UWorld::LoadWorld(const char* SceneName)
 void UWorld::RayCasting(const FVector& MouseNDCPos)
 {
 	FVector winSize = UEngine::Get().GetRenderer()->GetFrameBufferWindowSize();
-
 	URenderer* Renderer = UEngine::Get().GetRenderer();
 	
-
 	FMatrix ProjMatrix = Camera->GetProjectionMatrix(winSize.X, winSize.Y); 
-	FRay ray = FRay(Camera->GetViewMatrix(), ProjMatrix, MouseNDCPos.X, MouseNDCPos.Y);
+	FRay worldRay = FRay(Camera->GetViewMatrix(), ProjMatrix, MouseNDCPos.X, MouseNDCPos.Y);
 
+	FLineBatchManager::Get().AddLine(worldRay.GetOrigin(), worldRay.GetDirection() * Camera->GetFar(), FVector4::CYAN);
 
-	FLineBatchManager::Get().AddLine(ray.GetOrigin(), ray.GetDirection() * Camera->GetFar(), FVector4::CYAN);
+	AActor* SelectedActor = nullptr;
+	float minDistance = FLT_MAX;
 
 	for (auto& Actor : Actors)
 	{
 		UCubeComp* PrimitiveComponent = Actor->GetComponentByClass<UCubeComp>();
-
 		if (PrimitiveComponent == nullptr)
 		{
 			continue;
 		}
 
 		FMatrix primWorldMat = PrimitiveComponent->GetComponentTransform().GetMatrix();
+		FRay localRay = FRay::TransformRayToLocal(worldRay, primWorldMat.Inverse());
 
-		FVector4 localOrigin = primWorldMat.TransformVector4(FVector4(ray.GetOrigin(), 1));
-		localOrigin /= localOrigin.W;
-
-		FVector4 localDir = primWorldMat.TransformVector4(FVector4(ray.GetDirection(), 0));
-
-		FRay localRay = FRay(FVector(localOrigin.X, localOrigin.Y, localOrigin.Z), FVector(localDir.X, localDir.Y, localDir.Z));
+		float outT = 0.0f;
+		bool bHit = false;
 
 		switch (PrimitiveComponent->GetType())
 		{
 		case EPrimitiveType::EPT_Cube:
 		{
-			float outT = 0;
-			if (FRayCast::IntersectRayAABB(localRay, FVector(-0.5f, -0.5f, -0.5f), FVector(0.5f, 0.5f, 0.5f), outT))
+			bHit = FRayCast::IntersectRayAABB(localRay, FVector(-0.5f, -0.5f, -0.5f), FVector(0.5f, 0.5f, 0.5f), outT);
+			if (bHit)
 			{
-				UE_LOG("Hit Cube");
+				UE_LOG("Cube Hit");
 			}
 			break;
 		}
 		case EPrimitiveType::EPT_Sphere:
 		{
-			float outT = 0;
-			if (FRayCast::InserSectRaySphere(localRay, PrimitiveComponent->GetActorLocation(), 0.5f, outT))
+			bHit = FRayCast::InserSectRaySphere(localRay, PrimitiveComponent->GetActorPosition(), 0.5f, outT);
+			if (bHit)
 			{
-				UE_LOG("Hit Sphere");
+				UE_LOG("Sphere Hit");
 			}
 			break;
 		}
 		case EPrimitiveType::EPT_Cylinder:
 		{
-			float outT = 0;
-			if (FRayCast::IntersectRayAABB(localRay, FVector(0, -0.5f, 0), FVector(0, 0.5f, 0), outT))
+			bHit = FRayCast::IntersectRayAABB(localRay, FVector(0, -0.5f, 0), FVector(0, 0.5f, 0), outT);
+			if (bHit)
 			{
-				UE_LOG("Hit Cylinder");
+				UE_LOG("Cylinder Hit");
 			}
 			break;
 		}
@@ -319,6 +316,21 @@ void UWorld::RayCasting(const FVector& MouseNDCPos)
 		default:
 			break;
 		}
+		// 4. 교차가 발생했다면, 월드 좌표에서의 거리를 비교하여 최소 거리를 가진 액터 선택
+		if (bHit)
+		{
+			float distance = worldRay.GetPoint(outT).Length();
+			if (distance < minDistance)
+			{
+				minDistance = distance;
+				SelectedActor = Actor;
+			}
+		}
+	}
+
+	if (SelectedActor)
+	{
+		FEditorManager::Get().SelectActor(SelectedActor);
 	}
 }
 

@@ -54,24 +54,26 @@ public:
 public:
 	template<typename T>
 		requires std::derived_from<T, UActorComponent>
-	T* AddComponent()
+	T* AddComponent(const FTransform& RelativeTransform = FTransform())
 	{
 		T* ObjectInstance = FObjectFactory::ConstructObject<T>();
 		Components.Add(ObjectInstance);
 		ObjectInstance->SetOwner(this);
 
-		// 만약 SceneComponent를 상속 받았다면
-		//if constexpr (std::is_base_of_v<USceneComponent, T>)
-		//{
-		//	if (RootComponent == nullptr)
-		//	{
-		//		RootComponent = ObjectInstance;
-		//	}
-		//	else
-		//	{
-		//		ObjectInstance->SetupAttachment(RootComponent);
-		//	}
-		//}
+		//만약 SceneComponent를 상속 받았다면
+		if constexpr (std::is_base_of_v<USceneComponent, T>)
+		{
+			if (RootComponent == nullptr)
+			{
+				RootComponent = ObjectInstance;
+			}
+			else
+			{
+				ObjectInstance->SetupAttachment(RootComponent);
+			}
+
+			ObjectInstance->SetRelativeTransform(RelativeTransform);
+		}
 
 		return ObjectInstance;
 	}
@@ -98,8 +100,55 @@ public:
 		return nullptr;
 	}
 
-	FTransform GetActorTransform() const;
+public:
+	const FTransform& GetActorTransform() const;
+	const FTransform& ActorToWorld() const;
+
+	FVector GetActorForwardVector() const;
+	FVector GetActorRightVector() const;
+	FVector GetActorUpVector() const;
+
+	FVector GetActorPosition() const;
+	FVector GetActorRotation() const;
+	FQuat GetActorRotationQuat() const;
+	FVector GetActorScale() const;
+
+
+	//TODO: Bounding Box
+
+	bool SetActorPosition(const FVector& InePosition);
+	bool SetActorRotation(const FVector& InRotation);
+	bool SetActorRotation(const FQuat& InQuat);
+
+	bool SetActorPositionAndRotation(const FVector& InPosition, const FVector& InRotation);
+	bool SetActorPositionAndRotation(const FVector& Ineosition, const FQuat& InQuat);
+
+	bool SetActorScale(const FVector& InScale);
+
 	void SetActorTransform(const FTransform& InTransform);
+	void SetActorRelativePosition(const FVector& InPosition);
+
+	void SetActorRelativeRotation(const FVector& InRotation);
+	void SetActorRelativeRotation(const FQuat& InRotation);
+	void SetActorRelativeTransform(const FTransform& InTransform);
+
+	void SetActorRelativeScale(const FVector& InScale);
+	FVector GetActorRelativeScale() const;
+
+	void AddWorldOffset(const FVector& Delta);
+	void AddActorWorldRotation(const FVector& Delta);
+	void AddActorWorldRotation(const FQuat& Delta);
+
+	void AddActorWorldTransform(const FTransform& Delta);
+	void AddActorWorldTransformKeepScale(const FTransform& Delta);
+
+	void AddActorLocalOffset(const FVector& Delta);
+
+	void AddActorLocalRotation(const FVector& Delta);
+	void AddActorLocalRotation(const FQuat& Delta);
+
+	void AddActorLocalTransform(const FTransform& Delta);
+
 	bool CanEverTick() const { return bCanEverTick; }
 	virtual const char* GetTypeName();
 
@@ -107,7 +156,7 @@ public:
 
 public:
 	USceneComponent* GetRootComponent() const { return RootComponent; }
-	void SetRootComponent(USceneComponent* InRootComponent) { RootComponent = InRootComponent; }
+	void SetRootComponent(USceneComponent* InRootComponent);
 
 public:
 	void SetColor(FVector4 InColor);
@@ -121,5 +170,11 @@ protected:
 private:
 	UWorld* World = nullptr;
 	TSet<UActorComponent*> Components;
+
+public:
+	AActor* Owner = nullptr;
+
+//Editor Only
+	AActor* GroupActor = nullptr;
 };
 

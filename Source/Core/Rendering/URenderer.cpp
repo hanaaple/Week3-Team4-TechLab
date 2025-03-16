@@ -45,7 +45,7 @@ void URenderer::CreateShader()
 
     D3DCompileFromFile(L"Shaders/ShaderW0.hlsl", nullptr, nullptr, "PickingPS", "ps_5_0", 0, 0, &PickingShaderCSO, nullptr);
     FDevice::Get().GetDevice()->CreatePixelShader(PickingShaderCSO->GetBufferPointer(), PickingShaderCSO->GetBufferSize(), nullptr, &PickingPixelShader);
- 
+  
 	if (ErrorMsg)
 	{
 		std::cout << (char*)ErrorMsg->GetBufferPointer() << std::endl;
@@ -479,9 +479,6 @@ FVector4 URenderer::GetPixel(FVector MPos)
 
     return color;
 }
-
-
-
 
 void URenderer::OnUpdateWindowSize(uint32 Width, uint32 Height)
 {

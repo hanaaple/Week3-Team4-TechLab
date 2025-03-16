@@ -13,6 +13,59 @@ FQuat FQuat::AxisAngleToQuaternion(const FVector& Axis, float AngleInDegrees) {
     );
 }
 
+FQuat::FQuat(const FMatrix& M)
+{
+	//const MeReal *const t = (MeReal *) tm;
+	float s;
+
+	// Check diagonal (trace)
+	const float tr = M.M[0][0] + M.M[1][1] + M.M[2][2];
+
+	if (tr > 0.0f)
+	{
+		float InvS = FMath::InvSqrt(tr + float(1.f));
+		this->W = float(float(0.5f) * (float(1.f) / InvS));
+		s = float(0.5f) * InvS;
+
+		this->X = ((M.M[1][2] - M.M[2][1]) * s);
+		this->Y = ((M.M[2][0] - M.M[0][2]) * s);
+		this->Z = ((M.M[0][1] - M.M[1][0]) * s);
+	}
+	else
+	{
+		// diagonal is negative
+		int32 i = 0;
+
+		if (M.M[1][1] > M.M[0][0])
+			i = 1;
+
+		if (M.M[2][2] > M.M[i][i])
+			i = 2;
+
+		static constexpr int32 nxt[3] = { 1, 2, 0 };
+		const int32 j = nxt[i];
+		const int32 k = nxt[j];
+
+		s = M.M[i][i] - M.M[j][j] - M.M[k][k] + (1.0f);
+
+		float InvS = FMath::InvSqrt(s);
+
+		float qt[4];
+		qt[i] = float(0.5f) * (float(1.f) / InvS);
+
+		s = float(0.5f) * InvS;
+
+		qt[3] = (M.M[j][k] - M.M[k][j]) * s;
+		qt[j] = (M.M[i][j] + M.M[j][i]) * s;
+		qt[k] = (M.M[i][k] + M.M[k][i]) * s;
+
+		this->X = qt[0];
+		this->Y = qt[1];
+		this->Z = qt[2];
+		this->W = qt[3];
+	}
+}
+
 FQuat FQuat::EulerToQuaternion(FVector Euler)
 {
     float roll = FMath::DegreesToRadians(Euler.X);
@@ -130,4 +183,31 @@ FQuat FQuat::MakeFromRotationMatrix(const FMatrix& M)
     }
 
     return Q;
+}
+
+FVector FQuat::RotateVector(const FVector& V) const
+{
+	// v' = q * v * q^(-1) 구현
+
+	// 벡터를 순수 쿼터니언으로 변환 (실수부 0, 벡터부 V)
+	FQuat VectorQuat(V.X, V.Y, V.Z, 0.0f);
+	FQuat Conjugate = GetInverse();
+	FQuat temp = MultiplyQuaternions(*this, VectorQuat);
+
+	// 쿼터니언 회전 수행: q * v * q^(-1)
+	FQuat Result = MultiplyQuaternions(temp, Conjugate);
+
+	// 결과에서 벡터 부분만 추출
+	return FVector(Result.X, Result.Y, Result.Z);
+}
+
+bool FQuat::Equals(const FQuat& Other, float Tolerance) const
+{
+	const FVector A(X, Y, Z);
+	const FVector B(Other.X, Other.Y, Other.Z);
+
+	FVector NormalDelta = (A - B).GetSafeNormal();
+	FVector AbsDelta = FVector(FMath::Abs(NormalDelta.X), FMath::Abs(NormalDelta.Y), FMath::Abs(NormalDelta.Z));
+
+	return AbsDelta.X <= Tolerance && AbsDelta.Y <= Tolerance && AbsDelta.Z <= Tolerance && FMath::Abs(W - Other.W) <= Tolerance;
 }

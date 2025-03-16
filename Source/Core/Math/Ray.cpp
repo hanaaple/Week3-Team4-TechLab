@@ -20,6 +20,19 @@ FRay::FRay(const FMatrix& ViewMatrix, const FMatrix& ProjMatrix, float MouseNDCX
 	Direction = (ViewToWorldEnd -ViewToWorldStart).GetSafeNormal();
 }
 
+FRay FRay::TransformRayToLocal(const FRay& worldRay, const FMatrix& primWorldMat)
+{
+	// 로컬 좌표로 변환: 원점 (w=1)
+	FVector4 localOrigin = primWorldMat.TransformVector4(FVector4(worldRay.GetOrigin(), 1.0f));
+	localOrigin /= localOrigin.W;
+
+	// 방향 변환 (w=0)
+	FVector4 localDir = primWorldMat.TransformVector4(FVector4(worldRay.GetDirection(), 0.0f));
+
+	return FRay(FVector(localOrigin.X, localOrigin.Y, localOrigin.Z),
+		FVector(localDir.X, localDir.Y, localDir.Z));
+}
+
 bool FRayCast::InserSectRaySphere(const FRay& Ray, const FVector& SphereCenter, float SphereRadius, OUT float& OutT)
 {
 	// Ray : Origin + tD
