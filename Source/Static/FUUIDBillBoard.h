@@ -15,12 +15,13 @@ struct FFontConstantInfo
 class FUUIDBillBoard : public TSingleton<FUUIDBillBoard>
 {
 public:
-	void UpdateString(const std::wstring& String);
-	void Flush();
 	void Create();
 	void Render();
-	void CalculateModelMatrix(FMatrix& OutMatrix);
 	void SetTarget(AActor* Target);
+	void UpdateString(const std::wstring& String);
+private:
+	void CalculateModelMatrix(FMatrix& OutMatrix);
+	void Flush();
 private:
 	USceneComponent* TargetObject;
 

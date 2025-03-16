@@ -5,6 +5,7 @@
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
 #include "Static/FEditorManager.h"
 #include "Static/FLineBatchManager.h"
+#include "Static/FUUIDBillBoard.h"
 #include "Resource/DirectResource/Vertexbuffer.h"
 #include "DirectXTK/WICTextureLoader.h"
 #include "FDevice.h"
@@ -13,7 +14,6 @@
 #include "Resource/DirectResource/PixelShader.h"
 #include "Resource/DirectResource/VertexShader.h"
 #include "Resource/DirectResource/InputLayout.h"
-
 #include "Object/World/World.h"
 
 void URenderer::Create(HWND hWindow)
@@ -24,7 +24,7 @@ void URenderer::Create(HWND hWindow)
     CreatePickingTexture(hWindow);
 
 	FLineBatchManager::Get().Create();
-    
+	FUUIDBillBoard::Get().Create();
 
 	LoadTexture(L"font_atlas.png");
 }

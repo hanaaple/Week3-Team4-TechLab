@@ -56,8 +56,8 @@ void FUUIDBillBoard::CalculateModelMatrix(FMatrix& OutMatrix)
 
 	FVector cameraPosition = cam->GetActorTransform().GetPosition();
 
-	FVector objectPosition = TargetObject->GetWorldTransform().GetPosition();
-	FVector objectScale(0.1f, 0.1f, 0.1f);
+	FVector objectPosition = TargetObject->GetWorldTransform().GetPosition() + FVector(0.0f, 0.0f, 1.0f);
+	FVector objectScale(0.2f, 0.2f, 0.2f);
 
 	FVector lookDir = (objectPosition - cameraPosition).GetSafeNormal();
 	FVector right = FVector(0, 0, 1).Cross(lookDir).GetSafeNormal();
@@ -81,6 +81,9 @@ void FUUIDBillBoard::CalculateModelMatrix(FMatrix& OutMatrix)
 void FUUIDBillBoard::SetTarget(AActor* Target)
 {
 	TargetObject = Target->GetRootComponent();
+
+	std::wstring string = L"UUID: ";
+	UpdateString(string.append(std::to_wstring(Target->GetUUID())));
 }
 
 void FUUIDBillBoard::Render()
@@ -165,12 +168,12 @@ void FUUIDBillBoard::Create()
 	{
 		return;
 	}
-	// 인덱스 버퍼 설명
+
 	D3D11_BUFFER_DESC IndexBufferDesc = {};
-	IndexBufferDesc.ByteWidth = sizeof(uint32) * MaxIndicesPerBatch; // LineVertex가 아닌 UINT로 수정
-	IndexBufferDesc.Usage = D3D11_USAGE_DYNAMIC; // IMMUTABLE에서 DYNAMIC으로 변경 (Add 함수에서 업데이트하기 위함)
+	IndexBufferDesc.ByteWidth = sizeof(uint32) * MaxIndicesPerBatch;
+	IndexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 	IndexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	IndexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE; // 쓰기 접근 권한 추가
+	IndexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
 	// 인덱스 버퍼 생성
 	hr = Device->CreateBuffer(&IndexBufferDesc, nullptr, &FontIndexBuffer);
@@ -178,7 +181,6 @@ void FUUIDBillBoard::Create()
 	{
 	}
 
-	// 라인 쉐이더 컴파일 및 생성
 	ID3DBlob* vsBlob = nullptr;
 	ID3DBlob* psBlob = nullptr;
 	ID3DBlob* errorBlob = nullptr;
