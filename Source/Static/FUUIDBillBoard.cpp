@@ -88,7 +88,7 @@ void FUUIDBillBoard::SetTarget(AActor* Target)
 
 void FUUIDBillBoard::Render()
 {
-	if (VertexBuffer.Num() == 0 || !TargetObject)
+	if (VertexBuffer.Num() == 0 || !FEngineShowFlags::Get().GetSingleFlag(EEngineShowFlags::SF_BillboardText) || !TargetObject)
 		return;
 
 	//Prepare
