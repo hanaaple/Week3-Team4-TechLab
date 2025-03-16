@@ -18,7 +18,6 @@
 
 void URenderer::Create(HWND hWindow)
 {
-    CreateRasterizerState();
     CreateDepthStencilState();
 	CreateBlendState();
     CreatePickingTexture(hWindow);
@@ -32,7 +31,6 @@ void URenderer::Create(HWND hWindow)
 
 void URenderer::Release()
 {
-    ReleaseRasterizerState();
     ReleaseDepthStencilBuffer();
 
     // 렌더 타겟을 초기화
@@ -283,28 +281,6 @@ void URenderer::ReleaseDepthStencilBuffer()
         IgnoreDepthStencilState = nullptr;
     }
 }
-
-void URenderer::CreateRasterizerState()
-{
-    D3D11_RASTERIZER_DESC RasterizerDesc = {};
-    RasterizerDesc.FillMode = D3D11_FILL_SOLID; // 채우기 모드
-    RasterizerDesc.CullMode = D3D11_CULL_BACK;  // 백 페이스 컬링
-    RasterizerDesc.FrontCounterClockwise = FALSE;
-
-    FDevice::Get().GetDevice()->CreateRasterizerState(&RasterizerDesc, &RasterizerState);
-}
-
-void URenderer::ReleaseRasterizerState()
-{
-    if (RasterizerState)
-    {
-        RasterizerState->Release();
-        RasterizerState = nullptr;
-    }
-}
-
-
-
 
 void URenderer::ReleasePickingFrameBuffer()
 {
