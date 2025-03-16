@@ -22,6 +22,9 @@ Intermediate/
 *.gch
 *.pch
 
+# Config initialization files
+*.ini 
+
 # Compiled Dynamic libraries
 *.so
 *.dylib
