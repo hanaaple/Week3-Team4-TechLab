@@ -8,8 +8,8 @@
 // #include "Object/Actor/Camera.h"
 #include "Core/Math/Matrix.h"
 #include "Core/Engine.h"
+#include "Core/Rendering/FViewMode.h"
 #include "Primitive/PrimitiveVertices.h"
-
 
 struct FVertexSimple;
 struct FVector4;
@@ -84,13 +84,15 @@ public:
 
     /** Constant Data를 업데이트 합니다. */
     void UpdateConstant(const FConstants& UpdateInfo) const;
-
-
-
     
 	void OnUpdateWindowSize(uint32 Width, uint32 Height);
 
 	void OnResizeComplete();
+	
+	// View mode setting
+	void SetViewMode(EViewModeIndex ViewMode);
+
+	EViewModeIndex GetViewMode() const;
 protected:
     /** 뎁스 스텐실 상태를 생성합니다. */
 	void CreateDepthStencilState();

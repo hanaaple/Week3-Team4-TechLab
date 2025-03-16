@@ -119,6 +119,7 @@ void FUUIDBillBoard::Render()
 	DeviceContext->PSSetShader(FontPixelShader, nullptr, 0);
 	DeviceContext->IASetInputLayout(FontInputLayout);
 
+	DeviceContext->RSSetState(RasterizerState);
 	DeviceContext->OMSetBlendState(BlendState, BlendFactor, 0xffffffff);
 
 	// Billboard
@@ -239,7 +240,7 @@ void FUUIDBillBoard::Create()
 	if (vsBlob) vsBlob->Release();
 	if (psBlob) psBlob->Release();
 
-	// 라인 렌더링을 위한 래스터라이저 상태 설정
+	// 래스터라이저 상태 설정
 	D3D11_RASTERIZER_DESC rasterizerDesc = {};
 	rasterizerDesc.FillMode = D3D11_FILL_SOLID;
 	rasterizerDesc.CullMode = D3D11_CULL_NONE; // 라인은 양면을 볼 수 있도록 컬링 없음

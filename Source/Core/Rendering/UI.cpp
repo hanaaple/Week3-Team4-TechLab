@@ -9,6 +9,7 @@
 #include "ImGui/imgui_impl_win32.h"
 #include "Debug/DebugConsole.h"
 #include "Debug/EngineShowFlags.h"
+#include "Core/Rendering/FViewMode.h"
 #include "ImGui/imgui_internal.h"
 #include "Object/Actor/Actor.h"
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
@@ -80,6 +81,7 @@ void UI::Update()
     RenderControlPanel();
     RenderPropertyWindow();
 	RenderShowFlagsPanel();
+	RenderViewModePanel();
 
     Debug::ShowConsole(bWasWindowSizeUpdated, PreRatio, CurRatio);
 
@@ -487,6 +489,21 @@ void UI::RenderShowFlagsPanel()
 		if (ImGui::Checkbox("Billboard Text", &bBillboardText))
 		{
 			FEngineShowFlags::Get().SetSingleFlag(EEngineShowFlags::SF_BillboardText, bBillboardText);
+		}
+	}
+	ImGui::End();
+}
+
+void UI::RenderViewModePanel()
+{
+	if (ImGui::Begin("View Mode"))
+	{
+		static const char* viewModeNames[] = { "Solid", "Wireframe" };
+		int currentViewMode = static_cast<int>(UEngine::Get().GetRenderer()->GetViewMode());
+
+		if (ImGui::Combo("View Mode", &currentViewMode, viewModeNames, IM_ARRAYSIZE(viewModeNames)))
+		{
+			UEngine::Get().GetRenderer()->SetViewMode(static_cast<EViewModeIndex>(currentViewMode));
 		}
 	}
 	ImGui::End();
