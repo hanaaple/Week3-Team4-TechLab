@@ -17,8 +17,7 @@ namespace ECameraProjectionMode
 
 class ACamera : public AActor
 {
-
-    using Super = AActor;
+	DECLARE_CLASS(ACamera, AActor)
     
 public:
     ACamera();
@@ -28,6 +27,12 @@ private:
     float Far;
     // 화면각
     float FieldOfView;
+
+	
+	FMatrix ViewMatrix;
+	FMatrix ProjectionMatrix;
+	FMatrix ViewProjectionMatrix;
+
 
 public:
     const float MaxYDegree = 89.8f;
@@ -39,7 +44,7 @@ public:
     ECameraProjectionMode::Type ProjectionMode;
     // float AspectRatio;	// 카메라 비율 (이번 프로젝트에서는 사용 안할듯) 
 
-	void BeginPlay() override;
+	virtual void BeginPlay() override;
 
     void SetFieldOfVew(float Fov);
     void SetFar(float Far);
@@ -48,6 +53,16 @@ public:
     float GetFieldOfView() const;
     float GetNear() const;
     float GetFar() const;
+
+
+	
+	const FMatrix& GetProjectionMatrix() const { return ProjectionMatrix; }
+	const FMatrix& GetViewProjectionMatrix() const { return ViewProjectionMatrix; }
+	const FMatrix& GetViewMatrix() const { return ViewMatrix; }
+	
+	
+	void InitMatrix();
+
         
     FVector GetForward() const
     {
@@ -64,13 +79,11 @@ public:
         return GetActorTransform().GetUp();
     }
 
-    FMatrix GetViewMatrix() const
-    {
-		return FMatrix::LookAtLH(GetActorTransform().GetPosition(), GetActorTransform().GetPosition() + GetForward(), GetUp());
-    }
-
 	FMatrix GetProjectionMatrix(float FrameBufferWidth, float FrameBufferHeight) const;
 
+	/** Projection 변환 Matrix를 업데이트 합니다. */
+	void UpdateCameraMatrix();
+	
 	void MoveForward();
 	void MoveBackward();
 	void MoveLeft();

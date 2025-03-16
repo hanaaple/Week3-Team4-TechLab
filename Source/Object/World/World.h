@@ -17,6 +17,8 @@ class UPrimitiveComponent;
 
 class UWorld :public UObject
 {
+	DECLARE_CLASS(UWorld, UObject)
+
 public:
 	UWorld() = default;
 	virtual ~UWorld() = default;
@@ -54,6 +56,7 @@ public:
 
 	void RayCasting(const FVector& MouseNDCPos);
 
+	TArray<AActor*>& GetActors() { return Actors; }
 private:
 	UWorldInfo GetWorldInfo() const;
 	class ACamera* Camera = nullptr;

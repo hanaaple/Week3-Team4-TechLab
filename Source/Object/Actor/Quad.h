@@ -1,8 +1,10 @@
 ﻿#pragma once
 #include "Actor.h"
+
 class AQuad : public AActor
 {
-	using Super = AActor;
+	DECLARE_CLASS(AQuad, AActor)
+
 public:
 	AQuad();
 	virtual ~AQuad() = default;

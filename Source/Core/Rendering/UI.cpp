@@ -74,7 +74,8 @@ void UI::Update()
         CurRatio = GetRatio();
         UE_LOG("Current Ratio: %f, %f", CurRatio.x, CurRatio.y);
     }
-    
+
+	RenderSceneManager();
     RenderControlPanel();
     RenderPropertyWindow();
 
@@ -216,6 +217,8 @@ void UI::RenderPrimitiveSelection()
     {
         World->LoadWorld(SceneNameInput);
     }
+
+	delete[] SceneNameInput;
     ImGui::Separator();
 }
 
@@ -374,5 +377,97 @@ void UI::RenderPropertyWindow()
 		}*/
     }
     ImGui::End();
+}
+
+void UI::RenderSceneManager()
+{
+	ImGui::Begin("SceneManager");
+	TArray<AActor*>& Actors = UEngine::Get().GetWorld()->GetActors();
+
+	if (Actors.Num() == 0)
+		return;
+
+	if (PrevSize != Actors.Num())
+	{
+		if (CurActor != nullptr)
+		{
+			CurActor = nullptr;
+		}
+
+		// 사용 전에 항상 비우기
+		UUIDNames.Empty();
+		cUUIDNames.Empty();
+		UUIDs.Empty();
+		UUIDNames.Reserve(Actors.Num());
+		cUUIDNames.Reserve(Actors.Num());
+		UUIDs.Reserve(Actors.Num());
+
+
+		int Cnt = 0;
+		for (int i = 0; i < Actors.Num(); i++) {
+
+			FString UUIDName = Actors[i]->GetTypeName();
+			UUIDName += std::to_string(Actors[i]->GetUUID());
+			UUIDNames.Add(UUIDName);
+
+			UUIDs.Add(Actors[i]->GetUUID());
+		}
+
+		// 모든 문자열이 추가된 후에 포인터 설정
+		for (const auto& str : UUIDNames) {
+			cUUIDNames.Add(*str);
+		}
+	}
+
+		PrevSize = Actors.Num();
+
+		static int SelectUUIDIndex = 0;
+
+		if (ImGui::ListBox("ActorList", &SelectUUIDIndex, &cUUIDNames[0], static_cast<int>(cUUIDNames.Num())))
+		{
+			uint32 UUID = UUIDs[SelectUUIDIndex];
+
+			for (int i = 0; i < Actors.Num(); i++)
+			{
+				AActor* Actor = Actors[i];
+				if (Actor->GetUUID() == UUID)
+				{
+					//if (CurActor != nullptr)
+						//CurActor->IsHighlightValue = false;
+					CurActor = Actor;
+					FEditorManager::Get().SelectActor(CurActor);
+				}
+			}
+		}
+
+	
+
+	
+
+	// if (CurActor != nullptr)
+	// {
+	// 	// 선택된 오브젝트의 정보를 출력
+	// 	FVector Location = CurActor->RelativeLocation();
+	// 	FVector Rotation = CurActor->RelativeRotation();
+	// 	FVector Scale = CurActor->RelativeScale();
+	// 	float LocationArray[3] = { Location.X, Location.Y, Location.Z };
+	// 	float RotationArray[3] = { Rotation.X, Rotation.Y, Rotation.Z };
+	// 	float ScaleArray[3] = { Scale.X, Scale.Y, Scale.Z };
+	// 	if (ImGui::DragFloat3("Location", LocationArray))
+	// 	{
+	// 		CurObject->SetRelativeLocation(FVector(LocationArray[0], LocationArray[1], LocationArray[2]));
+	// 	}
+	// 	if (ImGui::DragFloat3("Rotation", RotationArray, 0.05f))
+	// 	{
+	// 		CurObject->SetRelativeRotation(FVector(RotationArray[0], RotationArray[1], RotationArray[2]));
+	// 	}
+	// 	if (ImGui::DragFloat3("Scale", ScaleArray,0.02))
+	// 	{
+	// 		CurObject->SetRelativeScale(FVector(ScaleArray[0], ScaleArray[1], ScaleArray[2]));
+	// 	}
+	// 	CurObject->IsHighlightValue = true;
+	// }
+	
+	ImGui::End();
 }
 

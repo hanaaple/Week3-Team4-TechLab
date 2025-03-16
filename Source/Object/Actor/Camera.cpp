@@ -69,6 +69,40 @@ float ACamera::GetFar() const
     return Far;
 }
 
+void ACamera::InitMatrix()
+{
+	ViewMatrix = FMatrix::Identity();
+	ProjectionMatrix = FMatrix::Identity();
+	ViewProjectionMatrix = FMatrix::Identity();
+}
+
+void ACamera::UpdateCameraMatrix()
+{
+	//뷰 매트릭스 업데이트
+	ViewMatrix = GetActorTransform().GetViewMatrix();
+	
+	// 프로젝션 매트릭스 업데이트
+	float AspectRatio = UEngine::Get().GetScreenRatio();
+
+	float FOV = FMath::DegreesToRadians(GetFieldOfView());
+	float Near =GetNear();
+	float Far = GetFar();
+
+	if (ProjectionMode == ECameraProjectionMode::Perspective)
+	{
+		ProjectionMatrix = FMatrix::PerspectiveFovLH(FOV, AspectRatio, Near, Far);
+	}
+	else if (ProjectionMode == ECameraProjectionMode::Perspective)
+	{
+		ProjectionMatrix = FMatrix::PerspectiveFovLH(FOV, AspectRatio, Near, Far);
+
+		// TODO: 추가 필요.
+		// ProjectionMatrix = FMatrix::OrthoForLH(FOV, AspectRatio, Near, Far);
+	}
+
+	ViewProjectionMatrix = ViewMatrix * ProjectionMatrix ;
+}
+
 FMatrix ACamera::GetProjectionMatrix(float FrameBufferWidth, float FrameBufferHeight) const
 {
 	return FMatrix::PerspectiveFovLH(FieldOfView, FrameBufferWidth/FrameBufferHeight, Near, Far);

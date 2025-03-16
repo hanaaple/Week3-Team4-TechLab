@@ -1,3 +1,6 @@
+Texture2D fontAtlas : register(t0);
+SamplerState samLinear : register(s0);
+
 struct VS_OUTPUT
 {
 	float4 Pos : SV_POSITION;

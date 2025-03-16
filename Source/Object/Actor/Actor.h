@@ -4,6 +4,7 @@
 #include "Object/ActorComponent/ActorComponent.h"
 #include "Core/Math/Transform.h"
 #include "Core/Container/Set.h"
+#include "Core/UObject/ObjectMacros.h"
 #include "Object/ObjectFactory.h"
 #include "Object/USceneComponent.h"
 
@@ -11,6 +12,8 @@ class UWorld;
 
 class AActor : public UObject
 {
+	DECLARE_CLASS(AActor, UObject)
+
 	friend class FEditorManager;
 public:
 	AActor();

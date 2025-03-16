@@ -6,6 +6,9 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
+#undef max
+#undef min
+
 #ifdef TEXT             // Windows.h의 TEXT를 삭제
     #undef TEXT
 #endif

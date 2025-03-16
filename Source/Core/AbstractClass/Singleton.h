@@ -1,4 +1,7 @@
 ﻿#pragma once
+#include <memory>
+#include <mutex>
+
 
 /**
  * Singleton 객체 템플릿
@@ -7,13 +10,13 @@ template <typename Derived>
 class TSingleton
 {
 private:
-    static Derived* Instance;
+    static std::unique_ptr<Derived> Instance;
     TSingleton() = default;
+	~TSingleton() = default;
 
     friend Derived;
 
 public:
-    ~TSingleton();
 
     // 이동 & 복사 생성자 제거
     TSingleton(const TSingleton&) = delete;
@@ -24,23 +27,16 @@ public:
     static Derived& Get();
 };
 
-
-template <typename Derived>
-TSingleton<Derived>::~TSingleton()
-{
-    delete Instance;
-    Instance = nullptr;
-}
-
 template <typename Derived>
 Derived& TSingleton<Derived>::Get()
 {
-    if (Instance == nullptr)
-    {
-        Instance = new Derived();
-    }
+	static std::once_flag flag;
+	std::call_once(flag, []()
+	{
+		Instance.reset(new Derived{});
+	});
     return *Instance;
 }
 
 template <typename Derived>
-Derived* TSingleton<Derived>::Instance = nullptr;
+std::unique_ptr<Derived> TSingleton<Derived>::Instance = nullptr;

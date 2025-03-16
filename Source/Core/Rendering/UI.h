@@ -1,4 +1,7 @@
 ﻿#pragma once
+#include "Core/Container/Array.h"
+#include "Core/Container/Map.h"
+#include "Core/Container/String.h"
 #include "Core/HAL/PlatformType.h"
 #include "ImGui/imgui.h"
 
@@ -24,6 +27,7 @@ public:// UIWindows
     void RenderPrimitiveSelection();
     void RenderCameraSettings();
     void RenderPropertyWindow();
+    void RenderSceneManager();
 
 private:
 	// Mouse 전용
@@ -74,4 +78,10 @@ private:
 
 	ImVec2 PreRatio;
 	ImVec2 CurRatio;
+
+	TArray<FString> UUIDNames;
+	TArray<const char*> cUUIDNames;
+	TArray<uint32> UUIDs;
+	uint32 PrevSize = 0;
+	class AActor* CurActor;
 };
