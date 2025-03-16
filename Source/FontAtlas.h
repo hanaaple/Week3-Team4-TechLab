@@ -23,6 +23,7 @@ public:
 		glyphs[c] = glyph;
 	}
 
+	float GlyphAspectRatio = 1.0f;
 private:
 	TMap<wchar_t, GlyphInfo> glyphs;
 	GlyphInfo defaultGlyph = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
