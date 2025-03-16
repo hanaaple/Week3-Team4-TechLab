@@ -28,6 +28,7 @@ public:
 
     T& operator[](SizeType Index);
     const T& operator[](SizeType Index) const;
+	void operator+(const TArray& OtherArray);
 
 public:
     TArray();
@@ -95,6 +96,12 @@ template <typename T, typename Allocator>
 const T& TArray<T, Allocator>::operator[](SizeType Index) const
 {
     return PrivateVector[Index];
+}
+
+template <typename T, typename Allocator>
+void TArray<T, Allocator>::operator+(const TArray& OtherArray)
+{
+	PrivateVector.insert(end(), OtherArray.begin(), OtherArray.end());
 }
 
 template <typename T, typename Allocator>
