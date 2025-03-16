@@ -28,6 +28,10 @@ struct alignas(16) FQuat : public FVector4{
 
 	FQuat GetInverse() const { return FQuat (-X, -Y, -Z, W); }
 	FVector RotateVector(const FVector& V) const;
+
+	static FVector4 VectorQuaternionRotateVector(const FQuat& Quat, FVector4 VectorW0);
+	static FVector4 VectorQuaternionInverseRotatedVector(const FQuat& Q, const FVector4& W0);
+
     FVector GetEuler() const { return QuaternionToEuler(*this); }
 
 	bool Equals(const FQuat& Other, const float Tolerance = KINDA_SMALL_NUMBER) const;

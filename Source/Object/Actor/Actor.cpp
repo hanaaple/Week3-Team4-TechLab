@@ -165,6 +165,7 @@ bool AActor::SetActorRotation(const FQuat& InQuat)
 	{
 		return RootComponent->MoveComponent(FVector::ZeroVector, InQuat);
 	}
+	return false;
 }
 
 bool AActor::SetActorPositionAndRotation(const FVector& InPosition, const FVector& InRotation)
@@ -174,6 +175,7 @@ bool AActor::SetActorPositionAndRotation(const FVector& InPosition, const FVecto
 		const FVector Delta = InPosition - GetActorPosition();
 		return RootComponent->MoveComponent(Delta, FQuat(InRotation));
 	}
+	return false;
 }
 
 bool AActor::SetActorPositionAndRotation(const FVector& InPosition, const FQuat& InQuat)
@@ -183,6 +185,8 @@ bool AActor::SetActorPositionAndRotation(const FVector& InPosition, const FQuat&
 		const FVector Delta = InPosition - GetActorPosition();
 		return RootComponent->MoveComponent(Delta, InQuat);
 	}
+
+	return false;
 }
 
 bool AActor::SetActorScale(const FVector& InScale)

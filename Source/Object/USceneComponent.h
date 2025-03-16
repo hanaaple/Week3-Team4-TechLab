@@ -117,7 +117,7 @@ protected:
 
 	void UpdateComponentToWorldWithParent(USceneComponent* Parent, const FQuat& RelativeRotationQuat);
 
-	void PropagateTransform(bool bTransformChanged);
+	void PropagateTransformUpdate(bool bTransformChanged);
 
 	bool MoveComponentImpl(const FVector& Delta, const FQuat& NewRotation);
 
