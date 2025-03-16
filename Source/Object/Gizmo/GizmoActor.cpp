@@ -5,23 +5,17 @@
 
 AGizmoActor::AGizmoActor() : AActor()
 {
+	bCanEverTick = true;
+
 	RootComponent = AddComponent<USceneComponent>();
 
-	FTransform ZTransform;
-	ZTransform.SetScale(FVector(0.1f, 0.1f, 1.0f));
-	UCylinderComp* Z = AddComponent<UCylinderComp>(ZTransform);
+	UCylinderComp* Z = AddComponent<UCylinderComp>(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(0, 0, 0), FVector(0.1, 0.1, 2)));
 	Z->SetCustomColor(FVector4::BLUE);
 
-	FTransform YTransform;
-	YTransform.SetScale(FVector(0.1f, 0.1f, 1.0f));
-	YTransform.SetRotation(FVector(0.f, 0.f, 90.f));
-	UCylinderComp* Y = AddComponent<UCylinderComp>(YTransform);
+	UCylinderComp* Y = AddComponent<UCylinderComp>(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(90, 0, 0), FVector(0.1, 0.1, 2)));
 	Y->SetCustomColor(FVector4::GREEN);
 
-	FTransform XTransform;
-	XTransform.SetScale(FVector(0.1f, 0.1f, 1.0f));
-	YTransform.SetRotation(FVector(0.f, 90.f, 0.f));
-	UCylinderComp* X = AddComponent<UCylinderComp>(XTransform);
+	UCylinderComp* X = AddComponent<UCylinderComp>(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(0, 90, 0), FVector(0.1, 0.1, 2)));
 	X->SetCustomColor(FVector4::RED);
 
 	UEngine::Get().GetWorld()->AddZIgnoreComponent(X);
