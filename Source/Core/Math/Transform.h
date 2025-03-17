@@ -276,7 +276,7 @@ public:
 		FVector ScaleB = B.GetScale();
 
 		// 회전 합성: A의 회전 후 B의 회전을 적용
-		Result.Rotation = FQuat::MultiplyQuaternions(QuatB, QuatA);
+		Result.Rotation = FQuat::MultiplyQuaternions(QuatA, QuatB);
 
 		// Translation 합성:
 		// A.Translation에 B.Scale을 적용한 후, B의 회전으로 회전시키고, B.Translation을 더함.

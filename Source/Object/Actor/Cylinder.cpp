@@ -28,6 +28,7 @@ void ACylinder::Tick(float DeltaTime)
 	FTransform NewTransform = GetActorTransform();
 	FVector NewPosition = NewTransform.GetPosition();
 	FVector NewRotation = NewTransform.GetRotation().GetEuler();
+	FVector NewScale = NewTransform.GetScale();
 
 	if (APlayerInput::Get().GetKeyDown(EKeyCode::Up))
 	{
@@ -46,6 +47,20 @@ void ACylinder::Tick(float DeltaTime)
 		NewPosition += FVector(0, -1, 0);
 	}
 
+	if (APlayerInput::Get().GetKeyDown(EKeyCode::J))
+	{
+		NewScale += FVector(0.1, 0, 0);
+	}
+	if (APlayerInput::Get().GetKeyDown(EKeyCode::K))
+	{
+		NewScale += FVector(0, 0.1, 0);
+	}
+	if (APlayerInput::Get().GetKeyDown(EKeyCode::L))
+	{
+		NewScale += FVector(0, 0, 0.1);
+	}
+
+
 	if (APlayerInput::Get().GetKeyPress(EKeyCode::Z))
 	{
 		NewRotation += FVector(1, 0, 0);
@@ -61,6 +76,7 @@ void ACylinder::Tick(float DeltaTime)
 
 	NewTransform.SetPosition(NewPosition);
 	NewTransform.SetRotation(FQuat(NewRotation));
+	NewTransform.SetScale(NewScale);
 	SetActorTransform(NewTransform);
 
 }
