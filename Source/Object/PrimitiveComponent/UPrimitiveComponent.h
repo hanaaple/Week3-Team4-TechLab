@@ -38,7 +38,6 @@ public:
 	std::shared_ptr<class FInputLayout> InputLayout = nullptr;
 	D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
-	// 테스트 임시 메테리얼
 	class std::shared_ptr<class FPixelShader> PixelShader = nullptr;
 	class std::shared_ptr<class FVertexShader> VertexShader = nullptr;
 	class std::shared_ptr<class FBlendState> BlendState = nullptr;
@@ -48,8 +47,6 @@ public:
 	// 테스트 상수버퍼
 	std::shared_ptr<class FConstantBufferBinding> ConstantBufferBinding = nullptr;
 	std::shared_ptr<class FConstantBuffer> ConstantBuffer = nullptr;
-	
-
 
 	virtual EPrimitiveType GetType() { return EPrimitiveType::EPT_None; }
 
@@ -76,14 +73,19 @@ public:
 	void SetIsOrthoGraphic(bool IsOrtho) { bIsOrthoGraphic = IsOrtho; }
 	bool GetIsOrthoGraphic() { return bIsOrthoGraphic;}
 
+	void SetIsPicking(bool IsPicking) { bIsPicking = IsPicking; }
+	bool GetIsPicking() { return bIsPicking; }
 	FConstantsComponentData& GetConstantsComponentData() { return ConstantsComponentData; }
 	//void SetConstantsComponentData(FConstantsComponentData& ) { bIsBillboard = bBillboard; }
+
 	
 protected:
 	bool bCanBeRendered = false;
 	bool bIsBillboard = false;
 	bool bUseVertexColor = true;
 	bool bIsOrthoGraphic = false;
+	bool bIsPicking = false;
+
 	FVector4 CustomColor = FVector4(1.0f, 1.0f, 1.0f, 1.0f);
 
 

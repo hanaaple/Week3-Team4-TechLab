@@ -38,6 +38,8 @@ enum class EPrimitiveType : uint8
 	EPT_Sphere,
 	EPT_Cylinder,
 	EPT_Cone,
+	EPT_Plane,
+	EPT_Gizmo,
 	EPT_Max,
 };
 

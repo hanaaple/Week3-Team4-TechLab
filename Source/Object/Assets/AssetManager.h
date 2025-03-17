@@ -4,22 +4,23 @@
 #include "Asset.h"
 #include "Object/ObjectFactory.h"
 #include <iostream>
+#include "Core/Container/String.h"
 
 
 class UAssetManager : public TSingleton<UAssetManager>
 {
 public:
 	void RegisterAssetMetaDatas();
-	void RegisterAssetMetaData(const std::string& name, const std::string& path, uint64 size, const std::string& extension);
+	void RegisterAssetMetaData(const FString& name, const FString& path, uint64 size, const FString& extension);
 
 	template<typename T>
 		requires std::derived_from<T, UAsset>
-	T* FindAsset(std::string& name)
+	T* FindAsset(FString& name)
 	{
 		T* asset = Assets.Find(name);
 		if (asset == nullptr)
 		{
-			std::cout << "Can't found Asset :" << name << std::endl;
+			UE_LOG(TEXT("Can't found Asset: %s"), *name);
 			return nullptr;
 		}
 
@@ -35,7 +36,7 @@ public:
 		T* asset = FindAsset<T>(metaData.GetAssetName());
 		if (asset != nullptr)
 		{
-			std::cout << "Already Loaded " << metaData.GetAssetName() << std::endl;
+			UE_LOG(TEXT("Asset already loaded: %s"), *metaData.GetAssetName());
 			return asset;
 		}
 
@@ -50,14 +51,14 @@ public:
 		else
 		{
 			delete asset;
-			std::cout << "Load Failed: " << metaData.GetAssetName() << std::endl;
+			UE_LOG(TEXT("Asset load failed: %s"), *metaData.GetAssetName());
 			return nullptr;
 		}
 	}
 
 	template <typename T>
 		requires std::derived_from<T, UAsset>
-	void UnloadAsset(const std::string& name)
+	void UnloadAsset(const FString& name)
 	{
 		T* asset = FindAsset<T>(name);
 		if (asset != nullptr)
@@ -70,12 +71,12 @@ public:
 
 	template <typename T>
 		requires std::derived_from<T, UAsset>
-	void SaveAsset(const std::string& name, const std::string& path)
+	void SaveAsset(const FString& name, const FString& path)
 	{
 		T* asset = FindAsset<T>(name);
 		if (asset == nullptr)
 		{
-			std::cout << "Can't found Asset: " << name << std::endl;
+			UE_LOG(TEXT("Can't found Asset: %s"), *name);
 			return;
 		}
 
@@ -83,16 +84,16 @@ public:
 		{
 			if (asset->Save(path) == true)
 			{
-				std::cout << "Save Success: " << name << std::endl;
+				UE_LOG(TEXT("Save Success: %s"), *name);
 			}
 			else
 			{
-				std::cout << "Save Failed: " << name << std::endl;
+				UE_LOG(TEXT("Save Failed: %s"), *name);
 			}
 		}
 	}
 private:
-	TMap<std::string, FAssetMetaData> AssetMetaDatas;
-	TMap<std::string, UAsset*> Assets;
+	TMap<FString, FAssetMetaData> AssetMetaDatas;
+	TMap<FString, UAsset*> Assets;
 };
 

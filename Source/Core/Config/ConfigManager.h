@@ -1,26 +1,37 @@
 #pragma once
-#include <string>
+#include "Core/Container/String.h"
 #include "Core/Container/Map.h"
 #include "Core/AbstractClass/Singleton.h"
 
-using Section = TMap<std::string, std::string>;
-using ConfigData = TMap<std::string, Section>;
+using Section = TMap<FString, FString>;
+using ConfigData = TMap<FString, Section>;
 
 
 class UConfigManager : public TSingleton<UConfigManager>
 {
 public:
-	/** ini 파일을 읽어들입니다. */
-	bool LoadConfig(const std::string& InConfigName);
+  /** ini 파일을 읽어들입니다. */
+	bool LoadConfig(const FString& InConfigName);
 
 	/** ini 파일을 저장합니다. */
-	bool SaveConfig(const std::string& InConfigName);
+	bool SaveConfig(const FString& InConfigName);
 
 	/** Section과 Key를 이용하여 값을 가져옵니다. */
-	std::string GetValue(const std::string& InSection, const std::string& InKey);
+	FString GetValue(const FString& InSection, const FString& InKey);
 
 	/** Section과 Key를 이용하여 Value을 설정합니다. */
-	void SetValue(const std::string& InSection, const std::string& InKey, const std::string& InValue);
+	void SetValue(const FString& InSection, const FString& InKey, const FString& InValue);
+
+	uint32 GetSectionCount() const { return Configs.Num(); }
+
+	uint32 GetKeyCount(const FString& InSection) const
+	{
+		if (const auto Section = Configs.Find(InSection))
+		{
+			return Section->Num();
+		}
+		return 0;
+	}
 
 private:
 	/** 문자열 앞뒤의 공백 제거 함수 */

@@ -36,8 +36,8 @@ public:
      * @return 초기화 여부
      */
     void Initialize(
-        HINSTANCE hInstance, const WCHAR* InWindowTitle, const WCHAR* InWindowClassName, int InScreenWidth,
-        int InScreenHeight, EScreenMode InScreenMode = EScreenMode::Windowed
+        HINSTANCE hInstance, const WCHAR* InWindowTitle, const WCHAR* InWindowClassName, uint32 InScreenWidth,
+		uint32 InScreenHeight, EScreenMode InScreenMode = EScreenMode::Windowed
     );
     void Run();
 

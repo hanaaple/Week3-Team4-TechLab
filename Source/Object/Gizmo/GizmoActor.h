@@ -1,22 +1,6 @@
 #pragma once
 #include "object/actor/actor.h"
-
-enum class ESelectedAxis : uint8
-{
-	None,
-	X,
-	Y,
-	Z
-};
-
-enum class EGizmoType : uint8
-{
-	Translate,
-	Rotate,
-	Scale,
-	Max
-};
-
+#include "Object/PrimitiveComponent/GizmoComponent.h"
 
 class AGizmoActor : public AActor
 {
@@ -26,13 +10,15 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
-	void SetSelectedAxis(ESelectedAxis InAxis) { SelectedAxis = InAxis; }
-	ESelectedAxis GetSelectedAxis() const { return SelectedAxis; }
+	void SetSelectedAxis(EAxis InAxis) { SelectedAxis = InAxis; }
+	EAxis GetSelectedAxis() const { return SelectedAxis; }
 
 	EGizmoType GetGizmoType() const { return GizmoType; }
 
 private:
-	ESelectedAxis SelectedAxis = ESelectedAxis::None;
+	EAxis SelectedAxis = EAxis::None;
 	EGizmoType GizmoType = EGizmoType::Translate;
+
+	TMap<EAxis, UGizmoComponent*> GizmoComponents;
 };
 

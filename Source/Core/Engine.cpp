@@ -12,6 +12,7 @@
 #include "Static/FEditorManager.h"
 #include "Static/FLineBatchManager.h"
 #include "Core/Rendering/FDevice.h"
+#include "Object/Assets/AssetManager.h"
 
 
 class AArrow;
@@ -48,8 +49,8 @@ LRESULT UEngine::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 }
 
 void UEngine::Initialize(
-	HINSTANCE hInstance, const WCHAR* InWindowTitle, const WCHAR* InWindowClassName, int InScreenWidth,
-	int InScreenHeight,
+	HINSTANCE hInstance, const WCHAR* InWindowTitle, const WCHAR* InWindowClassName, uint32 InScreenWidth,
+	uint32 InScreenHeight,
 	EScreenMode InScreenMode
 )
 {
@@ -69,7 +70,9 @@ void UEngine::Initialize(
 
 	InitializedScreenWidth = ScreenWidth;
 	InitializedScreenHeight = ScreenHeight;
-   ui.Initialize(WindowHandle, FDevice::Get(), ScreenWidth, ScreenHeight);
+    ui.Initialize(WindowHandle, FDevice::Get(), ScreenWidth, ScreenHeight);
+
+	UAssetManager::Get().RegisterAssetMetaDatas(); // 나중에 멀티쓰레드로?
 	UE_LOG("Engine Initialized!");
 }
 
@@ -86,6 +89,7 @@ void UEngine::Run()
 	LARGE_INTEGER StartTime;
 	QueryPerformanceCounter(&StartTime);
 
+	UAssetManager::Get().LoadAssets(); // 나중에 멀티쓰레드로?
 
 	IsRunning = true;
 	while (IsRunning)

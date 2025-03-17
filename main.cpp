@@ -13,6 +13,7 @@
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
+#include <Core/Container/String.h>
 
 // 그 다음 질문에 있는 코드 블록 추가
 #ifdef _DEBUG
@@ -92,8 +93,19 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	UConfigManager::Get().LoadConfig("editor.ini");
 
+	FString AppName = UConfigManager::Get().GetValue("General", "AppName");
+	uint32 ScreenWidth = std::stoi((UConfigManager::Get().GetValue("Display", "Width")).GetData());
+	uint32 ScreenHeight = std::stoi((UConfigManager::Get().GetValue("Display", "Height")).GetData());
+
 	UEngine& Engine = UEngine::Get();
-	Engine.Initialize(hInstance, L"Jungle Engine", L"JungleWindow", 1600, 900);
+	if (UConfigManager::Get().GetValue("Display", "Fullscreen") == "true")
+	{
+		Engine.Initialize(hInstance, AppName.ToWideString().c_str(), L"JungleWindow", 1920, 1080, EScreenMode::Fullscreen);
+	}
+	else
+	{
+		Engine.Initialize(hInstance, AppName.ToWideString().c_str(), L"JungleWindow", 1920, 1080);
+	}
 
 	Engine.Run();
 

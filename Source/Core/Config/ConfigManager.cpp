@@ -1,4 +1,5 @@
 #include "ConfigManager.h"
+#include <string>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -8,12 +9,12 @@
 
 using namespace std;
 
-bool UConfigManager::LoadConfig(const std::string& InConfigName)
+bool UConfigManager::LoadConfig(const FString& InConfigName)
 {
 	if (IsDebuggerPresent())
 	{
 		filesystem::path curPath = filesystem::current_path();
-		filesystem::path configPath = curPath / "Config" / InConfigName;
+		filesystem::path configPath = curPath / "Config" / InConfigName.GetData();
 		if (filesystem::exists(configPath) == false)
 		{
 			std::cout << "Config file not found!" << std::endl;
@@ -68,12 +69,12 @@ bool UConfigManager::LoadConfig(const std::string& InConfigName)
 
 }
 
-bool UConfigManager::SaveConfig(const std::string& InConfigName)
+bool UConfigManager::SaveConfig(const FString& InConfigName)
 {
 	if (IsDebuggerPresent())
 	{
 		filesystem::path curPath = filesystem::current_path();
-		filesystem::path configPath = curPath / "Config" / InConfigName;
+		filesystem::path configPath = curPath / "Config" / InConfigName.GetData();
 		filesystem::path parentPath = configPath.parent_path();
 		if (parentPath.empty() == false && filesystem::exists(parentPath) == false)
 		{
@@ -93,11 +94,11 @@ bool UConfigManager::SaveConfig(const std::string& InConfigName)
 
 		for (const auto& [section, keyValues] : Configs)
 		{
-			if (section.empty() == false)
-				configFile << "[" << section << "]" << std::endl;
+			if (section.IsEmpty() == false)
+				configFile << "[" << section.GetData() << "]" << std::endl;
 			for (const auto& [key, value] : keyValues)
 			{
-				configFile << key << " = " << value << std::endl;
+				configFile << key.GetData() << " = " << value.GetData() << std::endl;
 			}
 			configFile << std::endl;
 		}
@@ -111,7 +112,7 @@ bool UConfigManager::SaveConfig(const std::string& InConfigName)
 	}
 }
 
-std::string UConfigManager::GetValue(const std::string& InSection, const std::string& InKey)
+FString UConfigManager::GetValue(const FString& InSection, const FString& InKey)
 {
 	auto data = Configs.Find(InSection);
 	if (data != nullptr)
@@ -126,12 +127,12 @@ std::string UConfigManager::GetValue(const std::string& InSection, const std::st
 	return "";
 }
 
-void UConfigManager::SetValue(const std::string& InSection, const std::string& InKey, const std::string& InValue)
+void UConfigManager::SetValue(const FString& InSection, const FString& InKey, const FString& InValue)
 {
 	Configs[InSection][InKey] = InValue;
 }
 
-std::string UConfigManager::trim(const std::string& InStr) const
+string UConfigManager::trim(const string& InStr) const
 {
 	auto start = InStr.begin();
 	// 앞쪽의 공백 제거
@@ -151,5 +152,5 @@ std::string UConfigManager::trim(const std::string& InStr) const
 	}
 
 	// [start, end] 구간의 문자열 반환 (end+1은 end의 다음 iterator)
-	return std::string(start, end + 1);
+	return string(start, end + 1);
 }
