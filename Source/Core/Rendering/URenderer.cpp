@@ -1,20 +1,20 @@
 #include "URenderer.h"
 #include <d3dcompiler.h>
-#include "Core/Math/Transform.h"
-#include "Object/Actor/Camera.h"
-#include "Object/PrimitiveComponent/UPrimitiveComponent.h"
-#include "Static/FEditorManager.h"
-#include "Static/FLineBatchManager.h"
-#include "Static/FUUIDBillBoard.h"
-#include "Resource/DirectResource/Vertexbuffer.h"
 #include "DirectXTK/WICTextureLoader.h"
 #include "FDevice.h"
 #include "Debug/DebugConsole.h"
+#include "Core/Math/Transform.h"
+#include "Object/World/World.h"
+#include "Object/Actor/Camera.h"
 #include "Object/Assets/SceneAsset.h"
+#include "Object/PrimitiveComponent/UPrimitiveComponent.h"
+#include "Static/FEditorManager.h"
+#include "Static/FUUIDBillBoard.h"
+#include "Static/FLineBatchManager.h"
+#include "Resource/DirectResource/Vertexbuffer.h"
 #include "Resource/DirectResource/PixelShader.h"
 #include "Resource/DirectResource/VertexShader.h"
 #include "Resource/DirectResource/InputLayout.h"
-#include "Object/World/World.h"
 
 void URenderer::Create(HWND hWindow)
 {
@@ -128,15 +128,9 @@ void URenderer::PrepareShader() const
 
 void URenderer::RenderPrimitive(class UPrimitiveComponent& PrimitiveComp, const FMatrix& ModelMatrix)
 {
-
 	const FMatrix& ViewProjectionMatrix = UEngine::Get().GetWorld()->GetCamera()->GetViewProjectionMatrix();
-	//const FMatrix& ProjectionMatrix = FEditorManager::Get().GetCamera()->GetProjectionMatrix();
-	
 
-	FMatrix MVP = FMatrix::Transpose(
-		ModelMatrix *
-		ViewProjectionMatrix
-);
+	FMatrix MVP = FMatrix::Transpose(ModelMatrix * ViewProjectionMatrix);
 
 	FConstants UpdateInfo{
 		MVP,
@@ -209,8 +203,8 @@ void URenderer::UpdateConstant(const FConstants& UpdateInfo) const
     if (!ConstantBuffer) return;
 
 	D3D11_MAPPED_SUBRESOURCE ConstantBufferMSR;
-	// 상수 버퍼를 CPU 메모리에 매핑
 
+	// 상수 버퍼를 CPU 메모리에 매핑
     // D3D11_MAP_WRITE_DISCARD는 이전 내용을 무시하고 새로운 데이터로 덮어쓰기 위해 사용
     FDevice::Get().GetDeviceContext()->Map(ConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ConstantBufferMSR);
     {
@@ -267,7 +261,6 @@ void URenderer::CreateDepthStencilState()
     DepthStencilDesc.DepthFunc = D3D11_COMPARISON_ALWAYS;                     
     FDevice::Get().GetDevice()->CreateDepthStencilState(&IgnoreDepthStencilDesc ,&IgnoreDepthStencilState);
 }
-
 
 void URenderer::ReleaseDepthStencilBuffer()
 {
@@ -484,14 +477,4 @@ FVector URenderer::GetFrameBufferWindowSize() const
 	FDevice::Get().GetSwapChain()->GetDesc(&SwapChainDesc);
 
 	return FVector(static_cast<float>(SwapChainDesc.BufferDesc.Width), static_cast<float>(SwapChainDesc.BufferDesc.Height), 0);
-}
-
-void URenderer::SetViewMode(EViewModeIndex ViewMode)
-{
-	FViewMode::Get().SetViewMode(ViewMode);
-}
-
-EViewModeIndex URenderer::GetViewMode() const
-{
-	return FViewMode::Get().GetViewMode();
 }

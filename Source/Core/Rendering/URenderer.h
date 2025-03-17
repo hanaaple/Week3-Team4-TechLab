@@ -88,11 +88,6 @@ public:
 	void OnUpdateWindowSize(uint32 Width, uint32 Height);
 
 	void OnResizeComplete();
-	
-	// View mode setting
-	void SetViewMode(EViewModeIndex ViewMode);
-
-	EViewModeIndex GetViewMode() const;
 protected:
     /** 뎁스 스텐실 상태를 생성합니다. */
 	void CreateDepthStencilState();

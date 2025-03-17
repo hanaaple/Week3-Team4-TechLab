@@ -499,11 +499,11 @@ void UI::RenderViewModePanel()
 	if (ImGui::Begin("View Mode"))
 	{
 		static const char* viewModeNames[] = { "Solid", "Wireframe" };
-		int currentViewMode = static_cast<int>(UEngine::Get().GetRenderer()->GetViewMode());
+		int currentViewMode = static_cast<int>(FViewMode::Get().GetViewMode());
 
 		if (ImGui::Combo("View Mode", &currentViewMode, viewModeNames, IM_ARRAYSIZE(viewModeNames)))
 		{
-			UEngine::Get().GetRenderer()->SetViewMode(static_cast<EViewModeIndex>(currentViewMode));
+			FViewMode::Get().SetViewMode((static_cast<EViewModeIndex>(currentViewMode)));
 		}
 	}
 	ImGui::End();
