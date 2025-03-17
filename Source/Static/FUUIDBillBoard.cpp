@@ -101,12 +101,12 @@ void FUUIDBillBoard::CreateKoreanQuad(const wchar_t character, float& cursorX, i
 	// 한글 자모 분리
 	HangulJamo jamo = DecomposeHangul(character);
 
-	// 초성 렌더링
+	// 초성 쿼드 구성
 	if (jamo.cho) {
 		CreateKoreanConsonantVowel(jamo.cho, cursorX, 0.0f, 0.0f);
 	}
 	
-	// 중성 렌더링
+	// 중성 쿼드 구성
 	if (jamo.jung) {
 		// 중성이 오른쪽에 오는 경우
 		if (IsRightJungseong(jamo.jung)) {
@@ -132,20 +132,22 @@ void FUUIDBillBoard::CreateKoreanQuad(const wchar_t character, float& cursorX, i
 		}
 	}
 
-	// 종성 렌더링
+	// 종성 쿼드 구성
 	if (jamo.jong) {
 		if (IsRightJungseong(jamo.jung)) {
 			CreateKoreanConsonantVowel(jamo.jong, cursorX, 0.3f, 1.0f);
 		}
-		
+		else if (IsBelowJungseong(jamo.jung)) {
+			CreateKoreanConsonantVowel(jamo.jong, cursorX, 0.0f, 1.4f);
+		}
 		else 
 		{
-			CreateKoreanConsonantVowel(jamo.jong, cursorX, 0.0f, 1.4f);
+			CreateKoreanConsonantVowel(jamo.jong, cursorX, 0.3f, 1.4f);
 		}
 	}
 
 	// 커서 이동 (한 글자 너비만큼)
-	cursorX += 2 * FFontAtlas::Get().GlyphAspectRatio;
+	cursorX += 2 * FFontAtlas::Get().GlyphAspectRatio * FFontAtlas::Get().Kerning;
 }
 
 void FUUIDBillBoard::CreateKoreanConsonantVowel(wchar_t jamo, float posX, float offsetX, float offsetY) {
@@ -178,7 +180,8 @@ void FUUIDBillBoard::UpdateString(const std::wstring& String)
 
 	uint32 StringLen = static_cast<uint32>(String.size());
 	float AspectRatio = FFontAtlas::Get().GlyphAspectRatio;
-	float cursorX = (StringLen - 1) * -AspectRatio;
+	float Kerning = FFontAtlas::Get().Kerning;
+	float cursorX = (StringLen - 1) * -AspectRatio * Kerning;
 
 	for (size_t i = 0; i < StringLen; ++i)
 	{
@@ -212,7 +215,7 @@ void FUUIDBillBoard::UpdateString(const std::wstring& String)
 			IndexBuffer.Add(baseIndex + 2);
 			IndexBuffer.Add(baseIndex + 3);
 
-			cursorX += 2 * AspectRatio;
+			cursorX += 2 * AspectRatio * Kerning;
 		}
 	}
 }
@@ -257,7 +260,7 @@ void FUUIDBillBoard::SetTarget(AActor* Target)
 	
 	std::wstring string = L"UUID:";
 	UpdateString(string.append(std::to_wstring(Target->GetUUID())));
-	//std::wstring string = L"덤써굥현홀어노로부터 님십언엔텽은";
+	//std::wstring string = L"가츄괘퓌덤굥맑욳낢귉 TEST ENGLISH!";
 	//UpdateString(string);
 }
 
