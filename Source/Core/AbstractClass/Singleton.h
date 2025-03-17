@@ -10,14 +10,15 @@ template <typename Derived>
 class TSingleton
 {
 private:
-    static std::unique_ptr<Derived> Instance;
+    static Derived* Instance;
     TSingleton() = default;
 	~TSingleton() = default;
 
     friend Derived;
 
-public:
+	static void Destroy();
 
+public:
     // 이동 & 복사 생성자 제거
     TSingleton(const TSingleton&) = delete;
     TSingleton& operator=(const TSingleton&) = delete;
@@ -30,13 +31,23 @@ public:
 template <typename Derived>
 Derived& TSingleton<Derived>::Get()
 {
-	static std::once_flag flag;
-	std::call_once(flag, []()
+	if (Instance == nullptr)
 	{
-		Instance.reset(new Derived{});
-	});
+		Instance = new Derived;
+		atexit(Derived::Destroy);
+	}
     return *Instance;
 }
 
 template <typename Derived>
-std::unique_ptr<Derived> TSingleton<Derived>::Instance = nullptr;
+void TSingleton<Derived>::Destroy()
+{
+	if (Instance)
+	{
+		delete Instance;
+		Instance = nullptr;
+	}
+}
+
+template <typename Derived>
+Derived* TSingleton<Derived>::Instance = nullptr;
