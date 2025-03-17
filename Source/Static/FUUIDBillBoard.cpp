@@ -176,7 +176,7 @@ void FUUIDBillBoard::UpdateString(const std::wstring& String)
 {
 	Flush();
 
-	uint32 StringLen = String.size();
+	uint32 StringLen = static_cast<uint32>(String.size());
 	float AspectRatio = FFontAtlas::Get().GlyphAspectRatio;
 	float cursorX = (StringLen - 1) * -AspectRatio;
 

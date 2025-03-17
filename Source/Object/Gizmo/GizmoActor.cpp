@@ -9,13 +9,13 @@ AGizmoActor::AGizmoActor() : AActor()
 
 	RootComponent = AddComponent<USceneComponent>();
 
-	UCylinderComp* Z = AddComponent<UCylinderComp>(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(0, 0, 0), FVector(0.1, 0.1, 2)));
+	UCylinderComp* Z = AddComponent<UCylinderComp>(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(0.1f, 0.1f, 2)));
 	Z->SetCustomColor(FVector4::BLUE);
 
-	UCylinderComp* Y = AddComponent<UCylinderComp>(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(90, 0, 0), FVector(0.1, 0.1, 2)));
+	UCylinderComp* Y = AddComponent<UCylinderComp>(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(90.0f, 0.0f, 0.0f), FVector(0.1f, 0.1f, 2)));
 	Y->SetCustomColor(FVector4::GREEN);
 
-	UCylinderComp* X = AddComponent<UCylinderComp>(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(0, 90, 0), FVector(0.1, 0.1, 2)));
+	UCylinderComp* X = AddComponent<UCylinderComp>(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 90.0f, 0.0f), FVector(0.1f, 0.1f, 2)));
 	X->SetCustomColor(FVector4::RED);
 
 	UEngine::Get().GetWorld()->AddZIgnoreComponent(X);

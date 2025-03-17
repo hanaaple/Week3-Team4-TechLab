@@ -14,7 +14,7 @@ class FLineBatchManager : public TSingleton<FLineBatchManager>
 {
 public:
 	// 라인 추가 함수
-	void AddLine(const class FVector& Start, const FVector& End, const  FVector4& Color = FVector4{1.0f,1.0f,1.0f,1.0f}, float Thickness = 1.0f);
+	void AddLine(const FVector& Start, const FVector& End, const  FVector4& Color = FVector4{1.0f,1.0f,1.0f,1.0f}, float Thickness = 1.0f);
 
 	// 배치 처리 함수
 	void Flush();

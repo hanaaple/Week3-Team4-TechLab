@@ -68,16 +68,16 @@ FQuat::FQuat(const FMatrix& M)
 
 FQuat FQuat::EulerToQuaternion(FVector Euler)
 {
-    float roll = FMath::DegreesToRadians(Euler.X);
-    float pitch = FMath::DegreesToRadians(Euler.Y);
-    float yaw = FMath::DegreesToRadians(Euler.Z);
+    const float roll = FMath::DegreesToRadians(Euler.X);
+    const float pitch = FMath::DegreesToRadians(Euler.Y);
+    const float yaw = FMath::DegreesToRadians(Euler.Z);
 
-    double cr = cos(roll * 0.5);
-    double sr = sin(roll * 0.5);
-    double cp = cos(pitch * 0.5);
-    double sp = sin(pitch * 0.5);
-    double cy = cos(yaw * 0.5);
-    double sy = sin(yaw * 0.5);
+    const float cr = FMath::Cos(roll * 0.5f);
+    const float sr = FMath::Sin(roll * 0.5f);
+    const float cp = FMath::Cos(pitch * 0.5f);
+    const float sp = FMath::Sin(pitch * 0.5f);
+    const float cy = FMath::Cos(yaw * 0.5f);
+    const float sy = FMath::Sin(yaw * 0.5f);
 
     FQuat q;
     q.W = cr * cp * cy + sr * sp * sy;
@@ -92,19 +92,19 @@ FVector FQuat::QuaternionToEuler(const FQuat& Quat) {
     FVector angles;
 
     // roll (x-axis rotation)
-    double sinr_cosp = 2 * (Quat.W * Quat.X + Quat.Y * Quat.Z);
-    double cosr_cosp = 1 - 2 * (Quat.X * Quat.X + Quat.Y * Quat.Y);
-    angles.X = std::atan2(sinr_cosp, cosr_cosp);
+    const float sinr_cosp = 2.0f * (Quat.W * Quat.X + Quat.Y * Quat.Z);
+    const float cosr_cosp = 1.0f - 2.0f * (Quat.X * Quat.X + Quat.Y * Quat.Y);
+    angles.X = FMath::Atan2(sinr_cosp, cosr_cosp);
 
     // pitch (y-axis rotation)
-    double sinp = std::sqrt(1 + 2 * (Quat.W * Quat.Y - Quat.X * Quat.Z));
-    double cosp = std::sqrt(1 - 2 * (Quat.W * Quat.Y - Quat.X * Quat.Z));
-    angles.Y = 2 * std::atan2(sinp, cosp) - PI / 2;
+    const float sinp = FMath::Sqrt(1.0f + 2.0f * (Quat.W * Quat.Y - Quat.X * Quat.Z));
+    const float cosp = FMath::Sqrt(1.0f - 2.0f * (Quat.W * Quat.Y - Quat.X * Quat.Z));
+    angles.Y = 2 * FMath::Atan2(sinp, cosp) - PI / 2;
 
     // yaw (z-axis rotation)
-    double siny_cosp = 2 * (Quat.W * Quat.Z + Quat.X * Quat.Y);
-    double cosy_cosp = 1 - 2 * (Quat.Y * Quat.Y + Quat.Z * Quat.Z);
-    angles.Z = std::atan2(siny_cosp, cosy_cosp);
+    const float siny_cosp = 2.0f * (Quat.W * Quat.Z + Quat.X * Quat.Y);
+    const float cosy_cosp = 1.0f - 2.0f * (Quat.Y * Quat.Y + Quat.Z * Quat.Z);
+    angles.Z = FMath::Atan2(siny_cosp, cosy_cosp);
 
     angles.X = FMath::RadiansToDegrees(angles.X);
     angles.Y = FMath::RadiansToDegrees(angles.Y);
