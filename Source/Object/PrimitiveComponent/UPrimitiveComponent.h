@@ -44,8 +44,6 @@ public:
 	class std::shared_ptr<class FBlendState> BlendState = nullptr;
 	class std::shared_ptr<class FDepthStencilState> DepthStencilStat = nullptr;
 	class std::shared_ptr<class FRasterizer> Rasterizer = nullptr;
-	std::shared_ptr<class FPixelShader> PixelShader = nullptr;
-	std::shared_ptr<class FVertexShader> VertexShader = nullptr;
 
 	// 테스트 상수버퍼
 	std::shared_ptr<class FConstantBufferBinding> ConstantBufferBinding = nullptr;
