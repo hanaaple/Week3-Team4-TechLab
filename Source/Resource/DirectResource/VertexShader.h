@@ -12,11 +12,14 @@
 
 
 class FVertexShader :
-	public FResource<FVertexShader> , FShader
+	public FResource<FVertexShader> , public FShader
 {
 	friend class FInputLayout;
 	
 public:
+	FVertexShader();
+	~FVertexShader();
+	
 	static std::shared_ptr<FVertexShader> Load(const LPCWSTR& _Path, const FString& _Name, const FString&  _EntryPoint, UINT _VersionHight = 5, UINT _VersionLow = 0)
 	{
 		std::shared_ptr<FVertexShader> Res = FVertexShader::CreateRes(_Name);

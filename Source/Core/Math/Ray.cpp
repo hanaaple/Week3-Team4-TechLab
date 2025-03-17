@@ -1,5 +1,7 @@
 #include "Ray.h"
+
 #include "Core/Math/Matrix.h"
+#include "DirectXTK/DirectXHelpers.h"
 #include "Static/FLineBatchManager.h"
 
 
@@ -7,16 +9,16 @@ FRay::FRay(const FMatrix& ViewMatrix, const FMatrix& ProjMatrix, float MouseNDCX
 {
 	FMatrix viewProj = ViewMatrix * ProjMatrix;
 	FMatrix invViewProj = viewProj.Inverse();
-
+	
 	FVector NDCStart = FVector(MouseNDCX, MouseNDCY, 0.0f);
 	FVector NDCEnd = FVector(MouseNDCX, MouseNDCY, 1.0f);
-
+	
 	FVector4 ViewToWorldStart = invViewProj.TransformVector4(FVector4(NDCStart, 1.0f));
 	ViewToWorldStart *= 1.f / ViewToWorldStart.W;
 	FVector4 ViewToWorldEnd = invViewProj.TransformVector4(FVector4(NDCEnd, 1.0f));
 	ViewToWorldEnd *= 1.f / ViewToWorldEnd.W;
-
-	Origin = FVector(ViewToWorldStart.X, ViewToWorldStart.Y, ViewToWorldStart.Z);
+	
+	Origin = FVector(ViewToWorldStart);
 	Direction = (ViewToWorldEnd -ViewToWorldStart).GetSafeNormal();
 }
 

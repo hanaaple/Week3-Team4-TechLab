@@ -1,16 +1,15 @@
 #pragma once
-#include "Core/Utils/JsonSavehelper.h"
-#include "Core/Engine.h"
 #include "Core/Container/Array.h"
 #include "Core/Container/Set.h"
-#include "Core/Container/String.h"
+#include "Core/Math/Vector.h"
 #include "Core/UObject/Object.h"
+#include "Core/UObject/ObjectMacros.h"
+#include "Core/Utils/JsonSavehelper.h"
 #include "Debug/DebugConsole.h"
 #include "Object/ObjectFactory.h"
 
-#include "Object/Actor/Arrow.h"
-#include "Object/Actor/Picker.h"
 
+class URenderer;
 class AActor;
 
 class UPrimitiveComponent;
@@ -40,7 +39,7 @@ public:
 	void RenderMainTexture(URenderer& Renderer);
 
 	void ClearWorld();
-	void LoadWorld(const char* SceneName);
+	void LoadWorld(const char* InSceneName);
 	void SaveWorld();
 
 	void AddZIgnoreComponent(UPrimitiveComponent* InComponent);

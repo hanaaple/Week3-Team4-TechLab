@@ -10,24 +10,16 @@ using ConfigData = TMap<FString, Section>;
 class UConfigManager : public TSingleton<UConfigManager>
 {
 public:
-	/// <summary>
-	/// ini 파일을 읽어들입니다.
-	/// </summary>
+  /** ini 파일을 읽어들입니다. */
 	bool LoadConfig(const FString& InConfigName);
 
-	/// <summary>
-	/// ini 파일을 저장합니다.
-	/// </summary>
+	/** ini 파일을 저장합니다. */
 	bool SaveConfig(const FString& InConfigName);
 
-	/// <summary>
-	/// Section과 Key를 이용하여 값을 가져옵니다.
-	/// </summary>
+	/** Section과 Key를 이용하여 값을 가져옵니다. */
 	FString GetValue(const FString& InSection, const FString& InKey);
 
-	/// <summary>
-	/// Section과 Key를 이용하여 Value을 설정합니다.
-	/// </summary>
+	/** Section과 Key를 이용하여 Value을 설정합니다. */
 	void SetValue(const FString& InSection, const FString& InKey, const FString& InValue);
 
 	uint32 GetSectionCount() const { return Configs.Num(); }
@@ -41,11 +33,8 @@ public:
 		return 0;
 	}
 
-
 private:
-	/// <summary>
-	/// 문자열 앞뒤의 공백 제거 함수
-	/// </summary>
+	/** 문자열 앞뒤의 공백 제거 함수 */
 	std::string trim(const std::string& InStr) const;
 
 private:

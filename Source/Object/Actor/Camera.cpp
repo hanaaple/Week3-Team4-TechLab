@@ -103,11 +103,6 @@ void ACamera::UpdateCameraMatrix()
 	ViewProjectionMatrix = ViewMatrix * ProjectionMatrix ;
 }
 
-FMatrix ACamera::GetProjectionMatrix(float FrameBufferWidth, float FrameBufferHeight) const
-{
-	return FMatrix::PerspectiveFovLH(FieldOfView, FrameBufferWidth/FrameBufferHeight, Near, Far);
-}
-
 void ACamera::MoveForward()
 {
 	FTransform tr = GetActorTransform();

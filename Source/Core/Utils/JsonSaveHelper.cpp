@@ -36,7 +36,7 @@ UWorldInfo* JsonSaveHelper::LoadScene(std::string SceneName)
     uint32 NextUUID = Json["NextUUID"].ToInt();
     NextUUID = FMath::Max(NextUUID, WorldInfo->ActorCount);
     int index = 0;
-    for (int i = 0; i < NextUUID ; i++){
+    for (uint32 i = 0; i < NextUUID ; i++){
         if (!Json["Actors"].hasKey(std::to_string(i)))
         {
             continue;

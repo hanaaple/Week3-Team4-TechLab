@@ -12,7 +12,7 @@ void FIndexBuffer::Setting() const
 
 	if (nullptr == Buffer)
 	{
-		UE_LOG("Error: FIndexBuffer Setting Failed");
+		MsgBoxAssert("Error: FIndexBuffer Setting Failed");
 	}
 
 
@@ -34,7 +34,7 @@ void FIndexBuffer::ResCreate(const void* _Data, size_t _IndexCount)
 
 	if (S_OK != FDevice::Get().GetDevice()->CreateBuffer(&BufferInfo, &Data, &Buffer))
 	{
-		UE_LOG("Error: FIndexBuffer Create Failed") ;
+		MsgBoxAssert("Error: FIndexBuffer Create Failed") ;
 		return;
 	}
 }

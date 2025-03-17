@@ -1,7 +1,4 @@
 ﻿#pragma once
-#include <memory>
-#include <mutex>
-
 
 /**
  * Singleton 객체 템플릿

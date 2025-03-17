@@ -17,6 +17,8 @@
 #include "Static/FUUIDBillBoard.h"
 #include <Core/Math/Ray.h>
 
+#include "Object/Actor/Arrow.h"
+#include "Object/Actor/Picker.h"
 
 
 void UWorld::BeginPlay()
@@ -26,7 +28,10 @@ void UWorld::BeginPlay()
 		Actor->BeginPlay();
 	}
 
-	APlayerInput::Get().RegisterMouseDownCallback(EKeyCode::LButton, std::bind(&UWorld::RayCasting, this, std::placeholders::_1), GetUUID());
+	APlayerInput::Get().RegisterMouseDownCallback(EKeyCode::LButton, [this](const FVector& MouseNDCPos)
+	{
+		RayCasting(MouseNDCPos);
+	}, GetUUID());
 }
 
 void UWorld::Tick(float DeltaTime)
@@ -82,16 +87,19 @@ void UWorld::Render()
 	ACamera* cam = FEditorManager::Get().GetCamera();
 	cam->UpdateCameraMatrix();
 	
+	
+	
+	RenderMainTexture(*Renderer);
+
+	FLineBatchManager::Get().Render();
+	FUUIDBillBoard::Get().Render();
+
 	if (APlayerInput::Get().GetKeyDown(EKeyCode::LButton))
 	{
 		RenderPickingTexture(*Renderer);
 	}
-	
-	RenderMainTexture(*Renderer);
 
 
-	FLineBatchManager::Get().Render();
-	FUUIDBillBoard::Get().Render();
 	// DisplayPickingTexture(*Renderer);
 
 }
@@ -198,16 +206,16 @@ void UWorld::SaveWorld()
 void UWorld::AddZIgnoreComponent(UPrimitiveComponent* InComponent)
 {
 	ZIgnoreRenderComponents.Add(InComponent);
-	InComponent->SetIsOrthoGraphic(true);
+	//InComponent->SetIsOrthoGraphic(true);
 }
 
-void UWorld::LoadWorld(const char* SceneName)
+void UWorld::LoadWorld(const char* InSceneName)
 {
-	if (SceneName == nullptr || strcmp(SceneName, "") == 0){
+	if (InSceneName == nullptr || strcmp(InSceneName, "") == 0){
 		return;
 	}
 	
-	UWorldInfo* WorldInfo = JsonSaveHelper::LoadScene(SceneName);
+	UWorldInfo* WorldInfo = JsonSaveHelper::LoadScene(InSceneName);
 	if (WorldInfo == nullptr) return;
 
 	ClearWorld();
@@ -256,10 +264,7 @@ void UWorld::LoadWorld(const char* SceneName)
 
 void UWorld::RayCasting(const FVector& MouseNDCPos)
 {
-	FVector winSize = UEngine::Get().GetRenderer()->GetFrameBufferWindowSize();
-	URenderer* Renderer = UEngine::Get().GetRenderer();
-	
-	FMatrix ProjMatrix = Camera->GetProjectionMatrix(winSize.X, winSize.Y); 
+	FMatrix ProjMatrix = Camera->GetProjectionMatrix(); 
 	FRay worldRay = FRay(Camera->GetViewMatrix(), ProjMatrix, MouseNDCPos.X, MouseNDCPos.Y);
 
 	FLineBatchManager::Get().AddLine(worldRay.GetOrigin(), worldRay.GetDirection() * Camera->GetFar(), FVector4::CYAN);

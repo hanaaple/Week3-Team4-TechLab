@@ -4,7 +4,7 @@
 #include "Core/Container/String.h"
 #include "Core/Container/Map.h"
 template<typename ResourcesType>
-class FResource
+class FResource 
 {
 public:
 	FResource() {}
@@ -38,12 +38,23 @@ public:
 		}
 	}
 
+	void SetName(FString _Name)
+	{
+		Name = _Name;
+	}
+
+	FString GetName()
+	{
+		return Name;
+	}
+
 protected:
 	static std::shared_ptr<ResourcesType>  CreateRes(const FString&  _Name)
 	{
 		std::shared_ptr<ResourcesType> NewRes = std::make_shared<ResourcesType>();
 
 		std::lock_guard<std::mutex> Lock(NameMutex);
+		NewRes->SetName(_Name);
 		NameRes.Add(_Name, NewRes);
 		return NewRes;
 	}
@@ -51,6 +62,9 @@ protected:
 private:
 	static std::mutex NameMutex;
 	static TMap<FString,std::shared_ptr<ResourcesType>> NameRes;
+
+	
+	FString Name;
 
 	
 };

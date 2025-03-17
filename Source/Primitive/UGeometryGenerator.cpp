@@ -1,4 +1,4 @@
-﻿#include "UGeometryGenerator.h"
+#include "UGeometryGenerator.h"
 #include "Core/Math/Vector.h"
 #include <cmath>
 
@@ -61,6 +61,7 @@ void UGeometryGenerator::CreateSphere(int32 radius, uint32 sliceCount, uint32 st
         }
     }
 
+	uint32 bottomIndex = vertices->Num();
     vertices->Add(FVertexSimple(0.0f, 0.0f, -radius, 1.0f, 1.0f, 1.0f, 1.0f));
   
     for (uint32 slice = 0; slice < sliceCount; ++slice)
@@ -70,7 +71,7 @@ void UGeometryGenerator::CreateSphere(int32 radius, uint32 sliceCount, uint32 st
         indices->Add(slice + 1);
     }
 
-    for (uint32 stack = 0; stack < stackCount - 1; ++stack)
+    for (uint32 stack = 0; stack < stackCount - 2; ++stack)
     {
         uint32 baseIndex = 1 + stack * (sliceCount + 1);
         for (uint32 slice = 0; slice < sliceCount; ++slice)
@@ -85,7 +86,6 @@ void UGeometryGenerator::CreateSphere(int32 radius, uint32 sliceCount, uint32 st
         }
     }
 
-    uint32 bottomIndex = vertices->Num() - 1;
     uint32 lastStackBaseIndex = bottomIndex - (sliceCount + 1);
     for (uint32 slice = 0; slice < sliceCount; ++slice)
     {

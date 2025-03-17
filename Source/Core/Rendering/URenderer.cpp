@@ -1,25 +1,31 @@
 #include "URenderer.h"
 #include <d3dcompiler.h>
-#include "Core/Math/Transform.h"
-#include "Object/Actor/Camera.h"
-#include "Object/PrimitiveComponent/UPrimitiveComponent.h"
-#include "Static/FEditorManager.h"
-#include "Static/FLineBatchManager.h"
-#include "Static/FUUIDBillBoard.h"
-#include "Resource/DirectResource/Vertexbuffer.h"
 #include "DirectXTK/WICTextureLoader.h"
 #include "FDevice.h"
 #include "Debug/DebugConsole.h"
+#include "Core/Math/Transform.h"
+#include "Object/World/World.h"
+#include "Object/Actor/Camera.h"
 #include "Object/Assets/SceneAsset.h"
+#include "Object/PrimitiveComponent/UPrimitiveComponent.h"
+#include "Static/FEditorManager.h"
+#include "Static/FUUIDBillBoard.h"
+#include "Static/FLineBatchManager.h"
+#include "Resource/DirectResource/Vertexbuffer.h"
 #include "Resource/DirectResource/PixelShader.h"
 #include "Resource/DirectResource/VertexShader.h"
 #include "Resource/DirectResource/InputLayout.h"
+#include "Resource/DirectResource/DepthStencilState.h"
+#include "Resource/DirectResource/BlendState.h"
+#include "Resource/DirectResource/Rasterizer.h"
 #include "Object/World/World.h"
+#include "Resource/DirectResource/ConstantBuffer.h"
+#include "Resource/DirectResource/ShaderResourceBinding.h"
 
 void URenderer::Create(HWND hWindow)
 {
-    CreateDepthStencilState();
-	CreateBlendState();
+    //CreateDeviceAndSwapChain(hWindow);
+    //CreateFrameBuffer();
     CreatePickingTexture(hWindow);
 
 	FViewMode::Get().Initialize(FDevice::Get().GetDevice());
@@ -60,9 +66,9 @@ void URenderer::CreateConstantBuffer()
     D3D11_BUFFER_DESC ConstantBufferDesc = {};
     ConstantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;                        // 매 프레임 CPU에서 업데이트 하기 위해
     ConstantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;             // 상수 버퍼로 설정
-    ConstantBufferDesc.ByteWidth = sizeof(FConstants) + 0xf & 0xfffffff0;  // 16byte의 배수로 올림
+    ConstantBufferDesc.ByteWidth = sizeof(FConstantsComponentData) + 0xf & 0xfffffff0;  // 16byte의 배수로 올림
     ConstantBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;            // CPU에서 쓰기 접근이 가능하게 설정
-
+    
     FDevice::Get().GetDevice()->CreateBuffer(&ConstantBufferDesc, nullptr, &ConstantBuffer);
 
     D3D11_BUFFER_DESC ConstantBufferDescPicking = {};
@@ -128,23 +134,23 @@ void URenderer::PrepareShader() const
 
 void URenderer::RenderPrimitive(class UPrimitiveComponent& PrimitiveComp, const FMatrix& ModelMatrix)
 {
-
 	const FMatrix& ViewProjectionMatrix = UEngine::Get().GetWorld()->GetCamera()->GetViewProjectionMatrix();
-	//const FMatrix& ProjectionMatrix = FEditorManager::Get().GetCamera()->GetProjectionMatrix();
-	
 
 	FMatrix MVP = FMatrix::Transpose(
 		ModelMatrix *
 		ViewProjectionMatrix
 );
 
-	FConstants UpdateInfo{
-		MVP,
-        PrimitiveComp.GetCustomColor(), 
-        PrimitiveComp.IsUseVertexColor()
-    };
+	FConstantsComponentData& Data = PrimitiveComp.GetConstantsComponentData();
 
-    UpdateConstant(UpdateInfo);
+	Data  = {
+		MVP,
+		PrimitiveComp.GetCustomColor(),
+		PrimitiveComp.IsUseVertexColor()
+	};
+
+
+    //UpdateConstant(Data);
     RenderPrimitiveInternal(PrimitiveComp);
 }
 
@@ -175,6 +181,10 @@ void URenderer::RenderPrimitiveInternal(class UPrimitiveComponent& PrimitiveComp
 	PrimitiveComp.PixelShader->Setting();
 	PrimitiveComp.IndexBuffer->Setting();
 	PrimitiveComp.InputLayout->Setting();
+	PrimitiveComp.DepthStencilStat->Setting();
+	PrimitiveComp.Rasterizer->Setting();
+	PrimitiveComp.BlendState->Setting();
+	PrimitiveComp.ConstantBufferBinding->Setting();
 
 	FDevice::Get().GetDeviceContext()->IASetPrimitiveTopology(PrimitiveComp.Topology);
     FDevice::Get().GetDeviceContext()->DrawIndexed(PrimitiveComp.IndexBuffer->GetIndexCount(), 0, 0);
@@ -204,18 +214,18 @@ void URenderer::LoadTexture(const wchar_t* texturePath)
 	FDevice::Get().GetDeviceContext()->PSSetSamplers(0, 1, &FontSamplerState);
 }
 
-void URenderer::UpdateConstant(const FConstants& UpdateInfo) const
+void URenderer::UpdateConstant(const FConstantsComponentData& UpdateInfo) const
 {
     if (!ConstantBuffer) return;
 
 	D3D11_MAPPED_SUBRESOURCE ConstantBufferMSR;
-	// 상수 버퍼를 CPU 메모리에 매핑
 
+	// 상수 버퍼를 CPU 메모리에 매핑
     // D3D11_MAP_WRITE_DISCARD는 이전 내용을 무시하고 새로운 데이터로 덮어쓰기 위해 사용
     FDevice::Get().GetDeviceContext()->Map(ConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ConstantBufferMSR);
     {
         // 매핑된 메모리를 FConstants 구조체로 캐스팅
-        FConstants* Constants = static_cast<FConstants*>(ConstantBufferMSR.pData);
+        FConstantsComponentData* Constants = static_cast<FConstantsComponentData*>(ConstantBufferMSR.pData);
         Constants->MVP = UpdateInfo.MVP;
 		Constants->Color = UpdateInfo.Color;
 		Constants->bUseVertexColor = UpdateInfo.bUseVertexColor ? 1 : 0;
@@ -225,63 +235,33 @@ void URenderer::UpdateConstant(const FConstants& UpdateInfo) const
 
 void URenderer::CreateBlendState() 
 {
-	// Blend
-	D3D11_BLEND_DESC blendDesc = {};
-	blendDesc.AlphaToCoverageEnable = FALSE;
-	blendDesc.IndependentBlendEnable = FALSE;
-	blendDesc.RenderTarget[0].BlendEnable = TRUE;
-	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
-	FDevice::Get().GetDevice()->CreateBlendState(&blendDesc, &BlendState);
 }
 
 void URenderer::CreateDepthStencilState()
 {
-    D3D11_DEPTH_STENCIL_DESC DepthStencilDesc = {};
-    DepthStencilDesc.DepthEnable = TRUE;
-    DepthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-    DepthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;                     // 더 작은 깊이값이 왔을 때 픽셀을 갱신함
-    // DepthStencilDesc.StencilEnable = FALSE;                                 // 스텐실 테스트는 하지 않는다.
-    // DepthStencilDesc.StencilReadMask = 0xFF;
-    // DepthStencilDesc.StencilWriteMask = 0xFF;
-    // DepthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-    // DepthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
-    // DepthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-    // DepthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-    // DepthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-    // DepthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
-    // DepthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-    // DepthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
-    FDevice::Get().GetDevice()->CreateDepthStencilState(&DepthStencilDesc, &DepthStencilState);
     
     D3D11_DEPTH_STENCIL_DESC IgnoreDepthStencilDesc = {};
-    DepthStencilDesc.DepthEnable = TRUE;
-    DepthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-    DepthStencilDesc.DepthFunc = D3D11_COMPARISON_ALWAYS;                     
+    IgnoreDepthStencilDesc.DepthEnable = TRUE;
+    IgnoreDepthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+    IgnoreDepthStencilDesc.DepthFunc = D3D11_COMPARISON_ALWAYS;                     
     FDevice::Get().GetDevice()->CreateDepthStencilState(&IgnoreDepthStencilDesc ,&IgnoreDepthStencilState);
 }
 
 
 void URenderer::ReleaseDepthStencilBuffer()
 {
-    if (DepthStencilState)
-    {
-        DepthStencilState->Release();
-        DepthStencilState = nullptr;
-    }
     if (IgnoreDepthStencilState)
     {
         IgnoreDepthStencilState->Release();
         IgnoreDepthStencilState = nullptr;
     }
 }
+
+
+
+
 
 void URenderer::ReleasePickingFrameBuffer()
 {
@@ -334,7 +314,7 @@ void URenderer::PreparePicking()
     // 렌더 타겟 바인딩
     FDevice::Get().GetDeviceContext()->OMSetRenderTargets(1, &PickingFrameBufferRTV, FDevice::Get().GetDepthStencilView());
     FDevice::Get().GetDeviceContext()->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
-    FDevice::Get().GetDeviceContext()->OMSetDepthStencilState(DepthStencilState, 0);                // DepthStencil 상태 설정. StencilRef: 스텐실 테스트 결과의 레퍼런스
+    //FDevice::Get().GetDeviceContext()->OMSetDepthStencilState(DepthStencilState, 0);                // DepthStencil 상태 설정. StencilRef: 스텐실 테스트 결과의 레퍼런스
 
     FDevice::Get().GetDeviceContext()->ClearRenderTargetView(PickingFrameBufferRTV, PickingClearColor);
 }
@@ -385,7 +365,7 @@ void URenderer::UpdateConstantDepth(int Depth) const
 
 void URenderer::PrepareMain()
 {
-	FDevice::Get().GetDeviceContext()->OMSetDepthStencilState(DepthStencilState, 0);                // DepthStencil 상태 설정. StencilRef: 스텐실 테스트 결과의 레퍼런스
+	//FDevice::Get().GetDeviceContext()->OMSetDepthStencilState(DepthStencilState, 0);                // DepthStencil 상태 설정. StencilRef: 스텐실 테스트 결과의 레퍼런스
     //FDevice::Get().GetDeviceContext()->OMSetRenderTargets(1, &FrameBufferRTV, DepthStencilView);
     FDevice::Get().GetDeviceContext()->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
 }
@@ -484,14 +464,4 @@ FVector URenderer::GetFrameBufferWindowSize() const
 	FDevice::Get().GetSwapChain()->GetDesc(&SwapChainDesc);
 
 	return FVector(static_cast<float>(SwapChainDesc.BufferDesc.Width), static_cast<float>(SwapChainDesc.BufferDesc.Height), 0);
-}
-
-void URenderer::SetViewMode(EViewModeIndex ViewMode)
-{
-	FViewMode::Get().SetViewMode(ViewMode);
-}
-
-EViewModeIndex URenderer::GetViewMode() const
-{
-	return FViewMode::Get().GetViewMode();
 }
