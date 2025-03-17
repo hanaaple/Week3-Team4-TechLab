@@ -79,8 +79,6 @@ public:
         return GetActorTransform().GetUp();
     }
 
-	FMatrix GetProjectionMatrix(float FrameBufferWidth, float FrameBufferHeight) const;
-
 	/** Projection 변환 Matrix를 업데이트 합니다. */
 	void UpdateCameraMatrix();
 	
