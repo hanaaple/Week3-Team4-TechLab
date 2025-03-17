@@ -11,7 +11,7 @@
 
 
 class FPixelShader :
-	public FResource<FPixelShader> , FShader
+	public FResource<FPixelShader> , public FShader
 {
 public:
 	FPixelShader();

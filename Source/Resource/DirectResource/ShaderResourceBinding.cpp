@@ -3,7 +3,16 @@
 
 void FConstantBufferBinding::Setting()
 {
+
+	if (nullptr == CPUDataPtr)
+	{
+		MsgBoxAssert("상수버퍼를 세팅해주지 않았습니다.")
+	}
+
 	ShaderType Type = ParentShader->GetShaderType();
+
+	Res->ChangeData(CPUDataPtr, DataSize);
+	
 
 	switch (Type)
 	{
@@ -17,7 +26,7 @@ void FConstantBufferBinding::Setting()
 	// 	Res->CSSetting(BindPoint);
 	// 	break;
 	default:
-		MsgBoxAssert("처리할수 없는 쉐이더 세팅 유형입니다.");
+		MsgBoxAssert("처리할수 없는 쉐이더 세팅 유형입니다.")
 		break;
 	}
 }

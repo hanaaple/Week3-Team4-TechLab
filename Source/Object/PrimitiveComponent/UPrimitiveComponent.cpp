@@ -8,7 +8,9 @@
 #include "Resource/DirectResource/VertexShader.h"
 #include "Resource/DirectResource/PixelShader.h"
 #include "Resource/DirectResource/InputLayout.h"
+#include "Resource/DirectResource/ConstantBuffer.h"
 #include "Debug/EngineShowFlags.h"
+#include "Resource/DirectResource/ShaderResourceBinding.h"
 
 //#include ""
 
@@ -20,6 +22,17 @@ UPrimitiveComponent::UPrimitiveComponent()
 
 	// TODO: 이거는 나중에 매쉬같은데서  만들어야함
 	InputLayout = FInputLayout::Find("Simple_VS");
+	ConstantBuffer = FConstantBuffer::Find("DefaultConstantBuffer");
+
+	ConstantBufferBinding = std::make_shared<FConstantBufferBinding>();
+
+	//std::shared_ptr<FVertexShader> vertexShaderPtr;/* 초기화 */
+	//FShader* shaderPtr = static_cast<FShader*>(vertexShaderPtr.get()); // 내부 포인터 추출
+	ConstantBufferBinding->Res = ConstantBuffer;
+	ConstantBufferBinding->CPUDataPtr = &ConstantsComponentData;
+	ConstantBufferBinding->DataSize = sizeof(ConstantsComponentData);
+	ConstantBufferBinding->ParentShader = VertexShader.get();
+	ConstantBufferBinding->BindPoint = 0;
 	
 }
 

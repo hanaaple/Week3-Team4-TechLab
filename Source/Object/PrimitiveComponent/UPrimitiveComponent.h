@@ -41,6 +41,10 @@ public:
 	// 테스트 임시 메테리얼
 	std::shared_ptr<class FPixelShader> PixelShader = nullptr;
 	std::shared_ptr<class FVertexShader> VertexShader = nullptr;
+
+	// 테스트 상수버퍼
+	std::shared_ptr<class FConstantBufferBinding> ConstantBufferBinding = nullptr;
+	std::shared_ptr<class FConstantBuffer> ConstantBuffer = nullptr;
 	
 
 

@@ -12,7 +12,7 @@
 
 
 class FVertexShader :
-	public FResource<FVertexShader> , FShader
+	public FResource<FVertexShader> , public FShader
 {
 	friend class FInputLayout;
 	

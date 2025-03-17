@@ -4,7 +4,7 @@
 #include "Core/Container/String.h"
 #include "Core/Container/Map.h"
 template<typename ResourcesType>
-class FResource
+class FResource 
 {
 public:
 	FResource() {}

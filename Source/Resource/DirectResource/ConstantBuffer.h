@@ -18,14 +18,14 @@ public:
 	FConstantBuffer();
 	~FConstantBuffer();
 
-
-	template<typename DataType>
-static std::shared_ptr<FConstantBuffer> Create(const FString&  _Name, const DataType& _Data)
-	{
-		return Create(_Name, sizeof(DataType));
-	}
+//
+//	template<typename DataType>
+//static std::shared_ptr<FConstantBuffer> Create(const FString&  _Name, const DataType& _Data)
+//	{
+//		return Create(_Name, sizeof(DataType));
+//	}
 	
-	std::shared_ptr<FConstantBuffer> Create(const FString&  _Name, uint32 _ByteSize)
+	static	std::shared_ptr<FConstantBuffer> Create(const FString&  _Name, uint32 _ByteSize)
 	{
 		std::shared_ptr<FConstantBuffer> Res = FConstantBuffer::CreateRes(_Name);
 		Res->ResCreate(_ByteSize);

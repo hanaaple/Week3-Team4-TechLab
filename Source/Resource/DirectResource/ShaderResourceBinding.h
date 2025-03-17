@@ -12,8 +12,8 @@ public:
 	int BindPoint = -1; // <= b0 t0 s0 ... s1 s2 s3, b1 b2 b3 몇번 상수버퍼냐
 
 public:
-	virtual void Setting();
-	virtual void Reset();
+	virtual void Setting() {}
+	virtual void Reset() {}
 	
 };
 
@@ -21,7 +21,9 @@ public:
 class FConstantBufferBinding  : public FShaderResourceBinding
 {
 public:
-	std::shared_ptr<class FConstantBuffer> Res;
+
+
+	std::shared_ptr<FConstantBuffer> Res;
 
 	const void* CPUDataPtr = nullptr;
 	int DataSize = -1;
