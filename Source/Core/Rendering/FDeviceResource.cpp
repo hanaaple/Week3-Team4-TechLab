@@ -7,6 +7,9 @@
 #include "Resource/DirectResource/BlendState.h"
 #include "Resource/DirectResource/Rasterizer.h"
 #include "Resource/DirectResource/DepthStencilState.h"
+#include "Resource/DirectResource/ConstantBuffer.h"
+#include "Object/PrimitiveComponent/UPrimitiveComponent.h"
+	
 
 void FDevice::InitResource()
 {
@@ -20,6 +23,9 @@ void FDevice::InitResource()
 		std::shared_ptr<FVertexShader> VS = FVertexShader::Load(L"Shaders/Font_VS.hlsl","Font_VS","Font_VS");
 		//FInputLayout::Create("Font_VS" , VS);
 	}
+
+	FConstantBuffer::Create("DefaultConstantBuffer", sizeof(FConstantsComponentData));
+
 	
 	//FPixelShader::Load(L"Shaders/Font_PS.hlsl","Font_PS","Font_PS");
 

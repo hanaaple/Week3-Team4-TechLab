@@ -22,14 +22,14 @@ public:
 	friend class FLineBatchManager;
 	
 private:
-    struct alignas(16) FConstants
-    {
-        FMatrix MVP;
-        FVector4 Color;
-		// true인 경우 Vertex Color를 사용하고, false인 경우 Color를 사용합니다.
-        uint32 bUseVertexColor;
-        FVector Padding;
-    };
+  //   struct alignas(16) FConstantsComponentDatas
+  //   {
+  //       FMatrix MVP;
+  //       FVector4 Color;
+		// // true인 경우 Vertex Color를 사용하고, false인 경우 Color를 사용합니다.
+  //       uint32 bUseVertexColor;
+  //       FVector Padding;
+  //   };
 	
 	struct alignas(16) FPickingConstants
 	{
@@ -83,7 +83,7 @@ public:
      */
 
     /** Constant Data를 업데이트 합니다. */
-    void UpdateConstant(const FConstants& UpdateInfo) const;
+    void UpdateConstant(const class FConstantsComponentData& UpdateInfo) const;
     
 	void OnUpdateWindowSize(uint32 Width, uint32 Height);
 

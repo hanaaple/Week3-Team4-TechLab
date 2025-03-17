@@ -6,6 +6,16 @@
 #include "Resource/DirectResource/Vertexbuffer.h"
 #include "Resource/DirectResource/IndexBuffer.h"
 
+//상수버퍼로 객체의 정보를 넣을 구조체
+struct alignas(16) FConstantsComponentData
+{
+	FMatrix MVP;
+	FVector4 Color;
+	// true인 경우 Vertex Color를 사용하고, false인 경우 Color를 사용합니다.
+	uint32 bUseVertexColor;
+	FVector Padding;
+};
+
 class UPrimitiveComponent : public USceneComponent
 {
 	DECLARE_CLASS(UPrimitiveComponent, USceneComponent)
@@ -34,6 +44,12 @@ public:
 	class std::shared_ptr<class FBlendState> BlendState = nullptr;
 	class std::shared_ptr<class FDepthStencilState> DepthStencilStat = nullptr;
 	class std::shared_ptr<class FRasterizer> Rasterizer = nullptr;
+	std::shared_ptr<class FPixelShader> PixelShader = nullptr;
+	std::shared_ptr<class FVertexShader> VertexShader = nullptr;
+
+	// 테스트 상수버퍼
+	std::shared_ptr<class FConstantBufferBinding> ConstantBufferBinding = nullptr;
+	std::shared_ptr<class FConstantBuffer> ConstantBuffer = nullptr;
 	
 
 
@@ -61,6 +77,9 @@ public:
 
 	void SetIsOrthoGraphic(bool IsOrtho) { bIsOrthoGraphic = IsOrtho; }
 	bool GetIsOrthoGraphic() { return bIsOrthoGraphic;}
+
+	FConstantsComponentData& GetConstantsComponentData() { return ConstantsComponentData; }
+	//void SetConstantsComponentData(FConstantsComponentData& ) { bIsBillboard = bBillboard; }
 	
 protected:
 	bool bCanBeRendered = false;
@@ -68,6 +87,10 @@ protected:
 	bool bUseVertexColor = true;
 	bool bIsOrthoGraphic = false;
 	FVector4 CustomColor = FVector4(1.0f, 1.0f, 1.0f, 1.0f);
+
+
+private:
+	FConstantsComponentData ConstantsComponentData;
 };
 
 class UCubeComp : public UPrimitiveComponent

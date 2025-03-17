@@ -1,6 +1,13 @@
 ﻿#pragma once
 #include <vector>
 #include "ImGui/imgui.h"
+#include <assert.h>
+
+
+#define MsgBoxAssert(Text) \
+std::string Value = Text; \
+MessageBoxA(nullptr, Value.c_str(), "Error", MB_OK); assert(false);
+
 
 #define UE_LOG(format, ...) Debug::Log(format, ##__VA_ARGS__)
 

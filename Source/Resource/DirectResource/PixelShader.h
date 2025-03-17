@@ -11,9 +11,13 @@
 
 
 class FPixelShader :
-	public FResource<FPixelShader> , FShader
+	public FResource<FPixelShader> , public FShader
 {
 public:
+	FPixelShader();
+	~FPixelShader();
+
+	
 	static std::shared_ptr<FPixelShader> Load(const LPCWSTR& _Path, const FString& _Name, const FString&  _EntryPoint, UINT _VersionHight = 5, UINT _VersionLow = 0)
 	{
 		std::shared_ptr<FPixelShader> Res = FPixelShader::CreateRes(_Name);

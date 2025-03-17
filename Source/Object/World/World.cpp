@@ -87,16 +87,19 @@ void UWorld::Render()
 	ACamera* cam = FEditorManager::Get().GetCamera();
 	cam->UpdateCameraMatrix();
 	
+	
+	
+	RenderMainTexture(*Renderer);
+
+	FLineBatchManager::Get().Render();
+	FUUIDBillBoard::Get().Render();
+
 	if (APlayerInput::Get().GetKeyDown(EKeyCode::LButton))
 	{
 		RenderPickingTexture(*Renderer);
 	}
-	
-	RenderMainTexture(*Renderer);
 
 
-	FLineBatchManager::Get().Render();
-	FUUIDBillBoard::Get().Render();
 	// DisplayPickingTexture(*Renderer);
 
 }
