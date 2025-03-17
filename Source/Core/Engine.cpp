@@ -121,11 +121,9 @@ void UEngine::Run()
 		}
 
 
-		// Renderer Update
+		// Renderer Update -> World Render에서
 
-    	FDevice::Get().Prepare();
-        Renderer->Prepare();
-        Renderer->PrepareShader();
+
 
 		// World Update
 		if (World)
