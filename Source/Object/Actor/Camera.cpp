@@ -15,7 +15,7 @@ ACamera::ACamera()
     FieldOfView = 45.f;
     ProjectionMode = ECameraProjectionMode::Perspective;
 	CameraSpeed = 1.0f;
-	Sensitivity = std::stof(UConfigManager::Get().GetValue("Camera", "Sensitivity"));
+	Sensitivity = std::stof(UConfigManager::Get().GetValue("Camera", "Sensitivity").GetData());
 
     RootComponent = AddComponent<USceneComponent>();
     

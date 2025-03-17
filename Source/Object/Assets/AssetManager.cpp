@@ -10,7 +10,7 @@ void UAssetManager::RegisterAssetMetaDatas()
 	if (IsDebuggerPresent())
 	{
 		filesystem::path curPath = filesystem::current_path();
-		filesystem::path assetDir = curPath / "Contents";
+		filesystem::path assetDir = curPath / TEXT("Contents");
 		try
 		{
 			for (const auto& entry : filesystem::recursive_directory_iterator(assetDir))
@@ -20,9 +20,9 @@ void UAssetManager::RegisterAssetMetaDatas()
 					filesystem::path filePath = entry.path();
 
 					// 파일의 확장자, 전체 경로, 파일 크기를 가져옵니다.
-					string fileName = filePath.stem().string();
-					string extension = filePath.extension().string();
-					string fullPath = filePath.string();
+					FString fileName = filePath.stem().string();
+					FString extension = filePath.extension().string();
+					FString fullPath = filePath.string();
 					uint64 fileSize = filesystem::file_size(filePath);
 
 					RegisterAssetMetaData(fileName, fullPath, fileSize, extension);
@@ -40,7 +40,7 @@ void UAssetManager::RegisterAssetMetaDatas()
 	}
 }
 
-void UAssetManager::RegisterAssetMetaData(const std::string& name, const std::string& path, uint64 size, const std::string& extension)
+void UAssetManager::RegisterAssetMetaData(const FString& name, const FString& path, uint64 size, const FString& extension)
 {
 	AssetMetaDatas[name] = FAssetMetaData(name, path, size, extension);
 }
@@ -62,7 +62,7 @@ void UAssetManager::LoadAssets()
 			}
 			else
 			{
-				cout << "Scene Asset Load Failed: " << asset.Value.GetAssetName() << endl;
+				cout << "Scene Asset Load Failed: " << asset.Value.GetAssetName().GetData() << endl;
 			}
 			break;
 		}

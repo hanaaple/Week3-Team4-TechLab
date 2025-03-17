@@ -5,7 +5,7 @@
 
 struct Primitive 
 {
-	Primitive(TArray<float> InLocation, TArray<float> InRotation, TArray<float> InScale, std::string InType)
+	Primitive(TArray<float> InLocation, TArray<float> InRotation, TArray<float> InScale, FString InType)
 		: Location(InLocation), Rotation(InRotation), Scale(InScale), Type(InType)
 	{
 	}
@@ -27,12 +27,12 @@ struct Primitive
 	TArray<float> Rotation;
 	TArray<float> Scale;
 	// 프리미티브 타입 (예: "Sphere", "Cube", "Triangle")
-	std::string Type;
+	FString Type;
 };
 
 struct FSceneData
 {
-	explicit FSceneData(uint64 InVersion, uint64 InNextUUID, TMap<std::string, Primitive> InPrimitives)
+	explicit FSceneData(uint64 InVersion, uint64 InNextUUID, TMap<FString, Primitive> InPrimitives)
 		: Version(InVersion), NextUUID(InNextUUID), Primitives(InPrimitives)
 	{
 	}
@@ -44,7 +44,7 @@ struct FSceneData
 
 	uint64 Version;
 	uint64 NextUUID;
-	TMap<std::string, Primitive> Primitives;
+	TMap<FString, Primitive> Primitives;
 };
 
 
@@ -57,7 +57,7 @@ public:
 	virtual ~USceneAsset() = default;
 	virtual bool RegisterAsset() override;
 	virtual bool Load() override;
-	virtual bool Save(std::string path = "") override;
+	virtual bool Save(FString path = "") override;
 	virtual bool Unload() override;
 
 private:

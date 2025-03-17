@@ -16,11 +16,11 @@ bool USceneAsset::Load()
 {
 	if (IsLoaded())
 	{
-		cout << "Asset already loaded: " << MetaData.GetAssetPath() << endl;
+		cout << "Asset already loaded: " << MetaData.GetAssetPath().GetData() << endl;
 		return true;
 	}
 
-	filesystem::path filePath = MetaData.GetAssetPath();
+	filesystem::path filePath = MetaData.GetAssetPath().GetData();
 	if (filesystem::exists(filePath) == false)
 	{
 		cout << "File not found: " << filePath << endl;
@@ -45,11 +45,11 @@ bool USceneAsset::Load()
 
 	json::JSON primitives = sceneData["Primitives"];
 
-	TMap<std::string, Primitive> loadedPrimitives;
+	TMap<FString, Primitive> loadedPrimitives;
 	auto primitivesObj = primitives.ObjectRange();
 	for (auto it = primitivesObj.begin(); it != primitivesObj.end(); ++it)
 	{
-		string key = it->first;
+		FString key = it->first;
 		json::JSON primitive = it->second;
 
 		Primitive loadedPrimitive;
@@ -85,7 +85,7 @@ bool USceneAsset::Load()
 	return true;
 }
 
-bool USceneAsset::Save(std::string path)
+bool USceneAsset::Save(FString path)
 {
 	json::JSON sceneData = json::JSON::Make(json::JSON::Class::Object);
 
@@ -118,9 +118,9 @@ bool USceneAsset::Save(std::string path)
 		}
 		primitiveData["Scale"] = scale;
 
-		primitives.append(primitive.Key, primitiveData);
+		primitives.append(primitive.Key.GetData(), primitiveData);
 
-		primitiveData["Type"] = primitive.Value.Type;
+		primitiveData["Type"] = primitive.Value.Type.GetData();
 	}
 
 	sceneData["Primitives"] = primitives;
@@ -128,15 +128,15 @@ bool USceneAsset::Save(std::string path)
 
 	string jsonStr = sceneData.dump(2);
 
-	if (path.empty())
+	if (path.IsEmpty())
 	{
 		path = MetaData.GetAssetPath();
 	}
 
-	ofstream file(path);
+	ofstream file(path.GetData());
 	if (!file.is_open())
 	{
-		cout << "File open failed: " << path << endl;
+		cout << "File open failed: " << path.GetData() << endl;
 		return false;
 	}
 

@@ -31,8 +31,6 @@ public:
 	// 테스트 임시 메테리얼
 	std::shared_ptr<class FPixelShader> PixelShader = nullptr;
 	std::shared_ptr<class FVertexShader> VertexShader = nullptr;
-	
-
 
 	virtual EPrimitiveType GetType() { return EPrimitiveType::EPT_None; }
 
@@ -58,12 +56,17 @@ public:
 
 	void SetIsOrthoGraphic(bool IsOrtho) { bIsOrthoGraphic = IsOrtho; }
 	bool GetIsOrthoGraphic() { return bIsOrthoGraphic;}
+
+	void SetIsPicking(bool IsPicking) { bIsPicking = IsPicking; }
+	bool GetIsPicking() { return bIsPicking; }
 	
 protected:
 	bool bCanBeRendered = false;
 	bool bIsBillboard = false;
 	bool bUseVertexColor = true;
 	bool bIsOrthoGraphic = false;
+	bool bIsPicking = false;
+
 	FVector4 CustomColor = FVector4(1.0f, 1.0f, 1.0f, 1.0f);
 };
 

@@ -12,7 +12,7 @@
 
 //#include ""
 
-UPrimitiveComponent::UPrimitiveComponent()
+UPrimitiveComponent::UPrimitiveComponent() : Super()
 {
 	bCanBeRendered = true;
 	VertexShader = FVertexShader::Find("Simple_VS");
@@ -142,7 +142,7 @@ void UPrimitiveComponent::RegisterComponentWithWorld(UWorld* World)
 	World->AddRenderComponent(this);
 }
 
-UCubeComp::UCubeComp()
+UCubeComp::UCubeComp() : Super()
 {
 	VertexBuffer = FVertexBuffer::Find("Cube");
 	IndexBuffer = FIndexBuffer::Find("Cube");
@@ -162,7 +162,7 @@ UCubeComp::UCubeComp()
 	bCanBeRendered = true;
 }
 
-USphereComp::USphereComp()
+USphereComp::USphereComp() : Super()
 {
 	//없으면 만든다.
 	VertexBuffer= FVertexBuffer::Find("Sphere");
@@ -184,7 +184,7 @@ USphereComp::USphereComp()
 	bCanBeRendered = true;
 }
 
-UTriangleComp::UTriangleComp()
+UTriangleComp::UTriangleComp() : Super()
 {
 	//없으면 만든다.
 	VertexBuffer= FVertexBuffer::Find("Triangle");
@@ -223,7 +223,7 @@ UTriangleComp::UTriangleComp()
 	}
 }
 
-ULineComp::ULineComp()
+ULineComp::ULineComp() : Super()
 {//없으면 만든다.
 	VertexBuffer= FVertexBuffer::Find("Line");
 	IndexBuffer = FIndexBuffer::Find("Line");
@@ -261,7 +261,7 @@ ULineComp::ULineComp()
 	}
 }
 
-UCylinderComp::UCylinderComp()
+UCylinderComp::UCylinderComp() : Super()
 {
 	//없으면 만든다.
 	VertexBuffer= FVertexBuffer::Find("Cylinder");
@@ -283,7 +283,7 @@ UCylinderComp::UCylinderComp()
 	}
 }
 
-UConeComp::UConeComp()
+UConeComp::UConeComp() : Super()
 {
 	//없으면 만든다.
 	VertexBuffer= FVertexBuffer::Find("Cone");
