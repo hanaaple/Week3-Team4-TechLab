@@ -15,8 +15,6 @@
 #include "Resource/DirectResource/Rasterizer.h"
 #include "Resource/DirectResource/ShaderResourceBinding.h"
 
-//#include ""
-
 UPrimitiveComponent::UPrimitiveComponent()
 {
 	bCanBeRendered = true;
@@ -88,18 +86,8 @@ void UPrimitiveComponent::Render()
 			bUseVertexColor = true;
 		}
 	}
-	
-
-	//FMatrix MVP = FMatrix::Transpose(
-	//	scaleMatrix *
-	//	result *
-	//	positionMatrix *
-	//	ViewMatrix *
-	//	ProjectionMatrix
-	//);
 
 	FMatrix ModelMatrix;
-	
 	CalculateModelMatrix(ModelMatrix);
 
 	Renderer->RenderPrimitive(*this, ModelMatrix);
@@ -107,7 +95,6 @@ void UPrimitiveComponent::Render()
 
 void UPrimitiveComponent::CalculateModelMatrix(FMatrix& OutMatrix)
 {
-
 	//빌보드 행렬계산
 	if (bIsBillboard == true)
 	{
@@ -121,19 +108,15 @@ void UPrimitiveComponent::CalculateModelMatrix(FMatrix& OutMatrix)
 
 		FVector lookDir = (cameraPosition - objectPosition).GetSafeNormal();
 
-		// 언리얼 좌표계에 맞춘 구형 빌보드
-		// Z축이 상방 벡터
-
+		// 언리얼 좌표계에 맞춘 구형 빌보드, Z축이 상방 벡터
 		// Y축(우측)은 상방 벡터와 시선 방향의 외적
 		FVector right = FVector(0, 0, 1).Cross(lookDir).GetSafeNormal();
 
 		FVector up = lookDir.Cross(right).GetSafeNormal();
-	
 
 		// X축(전방)은 우측 벡터와 상방 벡터의 외적
 		// 언리얼에서는 X가 전방이므로 이렇게 계산
 		//FVector forward = right.Cross(up).GetSafeNormal();
-
 
 		FMatrix rotationMatrix;
 
@@ -144,14 +127,11 @@ void UPrimitiveComponent::CalculateModelMatrix(FMatrix& OutMatrix)
 		rotationMatrix.W = FVector4(0, 0, 0, 1);
 
 		FMatrix positionMatrix = FMatrix::GetTranslateMatrix(objectPosition);
-
 		FMatrix scaleMatrix = FMatrix::GetScaleMatrix(objectScale);
-
 
 		OutMatrix = scaleMatrix * rotationMatrix * positionMatrix;
 
 		return;
-	
 	}
 	OutMatrix = GetWorldTransform().GetMatrix();
 	return;
@@ -166,8 +146,6 @@ UCubeComp::UCubeComp()
 {
 	VertexBuffer = FVertexBuffer::Find("Cube");
 	IndexBuffer = FIndexBuffer::Find("Cube");
-	
-	//없으면 만든다.
 	if (VertexBuffer == nullptr)
 	{
 		TArray<FVertexSimple> vertices;
@@ -184,7 +162,6 @@ UCubeComp::UCubeComp()
 
 USphereComp::USphereComp()
 {
-	//없으면 만든다.
 	VertexBuffer= FVertexBuffer::Find("Sphere");
 	IndexBuffer = FIndexBuffer::Find("Sphere");
 	if (VertexBuffer == nullptr)
@@ -206,7 +183,6 @@ USphereComp::USphereComp()
 
 UTriangleComp::UTriangleComp()
 {
-	//없으면 만든다.
 	VertexBuffer= FVertexBuffer::Find("Triangle");
 	IndexBuffer = FIndexBuffer::Find("Triangle");
 	if (VertexBuffer == nullptr)
@@ -217,7 +193,6 @@ UTriangleComp::UTriangleComp()
 			{  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f },
 			{  0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f } 
 		};
-		//TArray<FVertexSimple> vertices(tempArray, 3);
 		TArray<FVertexSimple> vertices;
 
 		vertices.Add(tempArray[0]);
@@ -228,15 +203,11 @@ UTriangleComp::UTriangleComp()
 		{
 			0, 1, 2
 		};
-
-
 		
 		TArray<uint32> indices;
 		indices.Add(TriangleIndices[0]);
 		indices.Add(TriangleIndices[1]);
 		indices.Add(TriangleIndices[2]);
-		
-		//indices.Append(TriangleIndices, 3);
 		
 		VertexBuffer = FVertexBuffer::Create(FString("Triangle"), vertices);
 		IndexBuffer = FIndexBuffer::Create(FString("Triangle"), indices);
@@ -245,7 +216,6 @@ UTriangleComp::UTriangleComp()
 
 UQuadComp::UQuadComp()
 {
-	//없으면 만든다.
 	VertexBuffer = FVertexBuffer::Find("Quad");
 	IndexBuffer = FIndexBuffer::Find("Quad");
 	if (VertexBuffer == nullptr)
@@ -271,8 +241,6 @@ UQuadComp::UQuadComp()
 			0, 2, 3
 		};
 
-
-
 		TArray<uint32> indices;
 		indices.Add(QuadIndices[0]);
 		indices.Add(QuadIndices[1]);
@@ -287,21 +255,18 @@ UQuadComp::UQuadComp()
 }
 
 ULineComp::ULineComp()
-{//없으면 만든다.
+{
 	VertexBuffer= FVertexBuffer::Find("Line");
 	IndexBuffer = FIndexBuffer::Find("Line");
 
 	Topology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
 	if (VertexBuffer == nullptr)
 	{
-		
-		
 		FVertexSimple tempArray[2] =
 		{
 			{ -1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f },
 			{ 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f }
 		};
-		//TArray<FVertexSimple> vertices(tempArray, 3);
 		TArray<FVertexSimple> vertices;
 
 		vertices.Add(tempArray[0]);
@@ -312,12 +277,9 @@ ULineComp::ULineComp()
 			0, 1
 		};
 		
-		
 		TArray<uint32> indices;
 		indices.Add(tempIndices[0]);
 		indices.Add(tempIndices[1]);
-		
-		//indices.Append(TriangleIndices, 3);
 		
 		VertexBuffer = FVertexBuffer::Create(FString("Line"), vertices);
 		IndexBuffer = FIndexBuffer::Create(FString("Line"), indices);
@@ -326,7 +288,6 @@ ULineComp::ULineComp()
 
 UCylinderComp::UCylinderComp()
 {
-	//없으면 만든다.
 	VertexBuffer= FVertexBuffer::Find("Cylinder");
 	IndexBuffer = FIndexBuffer::Find("Cylinder");
 	if (VertexBuffer == nullptr)
@@ -348,7 +309,6 @@ UCylinderComp::UCylinderComp()
 
 UConeComp::UConeComp()
 {
-	//없으면 만든다.
 	VertexBuffer= FVertexBuffer::Find("Cone");
 	IndexBuffer = FIndexBuffer::Find("Cone");
 	if (VertexBuffer == nullptr)
