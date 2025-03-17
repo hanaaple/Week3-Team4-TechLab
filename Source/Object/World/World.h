@@ -29,6 +29,8 @@ public:
 	void Tick(float DeltaTime);
 	void LateTick(float DeltaTime);
 
+	void OnDestroy();
+
 	template <typename T>
 		requires std::derived_from<T, AActor>
 	T* SpawnActor();
@@ -57,10 +59,20 @@ public:
 
 	void RayCasting(const FVector& MouseNDCPos);
 
+	void PickByPixel(const FVector& MousePos);
+
 	TArray<AActor*>& GetActors() { return Actors; }
+
+	float& GetGridSizePtr() { return GridSize; }
+
+	void OnChangedGridSize();
+
+	float GetGridSize() const { return GridSize; }
 private:
 	UWorldInfo GetWorldInfo() const;
 	class ACamera* Camera = nullptr;
+
+	float GridSize = 100.0f;
 
 public:
 	FString SceneName;
@@ -108,7 +120,7 @@ public:
 
 template <typename T>
 	requires std::derived_from<T, AActor>
-T* UWorld::SpawnActor(FVector const* Position, FVector const* Rotation)
+T* UWorld::SpawnActor()
 {
 	T* Actor = FObjectFactory::ConstructObject<T>();
 	
