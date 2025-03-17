@@ -153,10 +153,7 @@ class UQuadComp : public UPrimitiveComponent
 	DECLARE_CLASS(UQuadComp, UPrimitiveComponent)
 
 public:
-	UQuadComp()
-	{
-		bCanBeRendered = true;
-	}
+	UQuadComp();
 
 	virtual EPrimitiveType GetType() override
 	{

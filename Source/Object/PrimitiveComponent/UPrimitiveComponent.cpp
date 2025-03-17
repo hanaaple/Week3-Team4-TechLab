@@ -193,9 +193,9 @@ UTriangleComp::UTriangleComp()
 	{
 		FVertexSimple tempArray[] =
 		{
-			{  0.0f, 0.0f, 1.0f,  1.0f, 0.0f, 0.0f, 1.0f },
-			{  0.0f, 1.0f, 0.0f,  0.0f, 1.0f, 0.0f, 1.0f },
-			{  0.0f, -1.0f, 0.0f,  0.0f, 0.0f, 1.0f, 1.0f } 
+			{  0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f },
+			{  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f },
+			{  0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f } 
 		};
 		//TArray<FVertexSimple> vertices(tempArray, 3);
 		TArray<FVertexSimple> vertices;
@@ -220,6 +220,49 @@ UTriangleComp::UTriangleComp()
 		
 		VertexBuffer = FVertexBuffer::Create(FString("Triangle"), vertices);
 		IndexBuffer = FIndexBuffer::Create(FString("Triangle"), indices);
+	}
+}
+
+UQuadComp::UQuadComp()
+{
+	//없으면 만든다.
+	VertexBuffer = FVertexBuffer::Find("Quad");
+	IndexBuffer = FIndexBuffer::Find("Quad");
+	if (VertexBuffer == nullptr)
+	{
+		FVertexSimple tempArray[] =
+		{
+			{  0.0f, -1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f },
+			{  0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f },
+			{  0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f },
+			{  0.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f }
+		};
+
+		TArray<FVertexSimple> vertices;
+
+		vertices.Add(tempArray[0]);
+		vertices.Add(tempArray[1]);
+		vertices.Add(tempArray[2]);
+		vertices.Add(tempArray[3]);
+
+		uint32 QuadIndices[6] =
+		{
+			0, 1, 2,
+			0, 2, 3
+		};
+
+
+
+		TArray<uint32> indices;
+		indices.Add(QuadIndices[0]);
+		indices.Add(QuadIndices[1]);
+		indices.Add(QuadIndices[2]);
+		indices.Add(QuadIndices[3]);
+		indices.Add(QuadIndices[4]);
+		indices.Add(QuadIndices[5]);
+
+		VertexBuffer = FVertexBuffer::Create(FString("Quad"), vertices);
+		IndexBuffer = FIndexBuffer::Create(FString("Quad"), indices);
 	}
 }
 
