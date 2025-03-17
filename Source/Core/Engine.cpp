@@ -63,10 +63,9 @@ void UEngine::Initialize(
 
     InitWindow(InScreenWidth, InScreenHeight);
 
+	InitWorld();
 	FDevice::Get().Init(WindowHandle);
     InitRenderer();
-
-	InitWorld();
 
 	InitializedScreenWidth = ScreenWidth;
 	InitializedScreenHeight = ScreenHeight;
@@ -164,6 +163,7 @@ void UEngine::Run()
 
 void UEngine::Shutdown()
 {
+	World->OnDestroy();
 	Renderer->Release();
 	FDevice::Get().Release();
     ShutdownWindow();
@@ -220,6 +220,7 @@ void UEngine::InitRenderer()
 void UEngine::InitWorld()
 {
     World = FObjectFactory::ConstructObject<UWorld>();
+	World->InitWorld();
 
 	World->SetCamera(World->SpawnActor<ACamera>());
 
@@ -231,7 +232,7 @@ void UEngine::InitWorld()
 	//FLineBatchManager::Get().AddLine(FVector{ 6.0f,6.0f,7.0f }, { -6.f,-6.f,-7.0f });
 	//FLineBatchManager::Get().AddLine(FVector{ 6.0f,6.0f,8.0f }, { -6.f,-6.f,-8.0f });
 
-	FLineBatchManager::Get().DrawWorldGrid(100.f,1.f);
+	FLineBatchManager::Get().DrawWorldGrid(World->GetGridSize(), World->GetGridSize() / 100.f);
 
     //// Test
     //AArrow* Arrow = World->SpawnActor<AArrow>();

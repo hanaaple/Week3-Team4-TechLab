@@ -19,7 +19,14 @@
 
 #include "Object/Actor/Arrow.h"
 #include "Object/Actor/Picker.h"
+#include "Core/Config/ConfigManager.h"
 
+
+void UWorld::InitWorld()
+{
+	//TODO : 
+	GridSize = FString::ToFloat(UConfigManager::Get().GetValue(TEXT("World"), TEXT("GridSize")));
+}
 
 void UWorld::BeginPlay()
 {
@@ -71,6 +78,11 @@ void UWorld::LateTick(float DeltaTime)
 	PendingDestroyActors.Empty();
 }
 
+void UWorld::OnDestroy()
+{
+	UConfigManager::Get().SaveConfig("editor.ini");
+}
+
 void UWorld::Render()
 {
 	URenderer* Renderer = UEngine::Get().GetRenderer();
@@ -100,7 +112,7 @@ void UWorld::Render()
 	}
 
 
-	// DisplayPickingTexture(*Renderer);
+	//DisplayPickingTexture(*Renderer);
 
 }
 
@@ -180,6 +192,11 @@ bool UWorld::DestroyActor(AActor* InActor)
 {
 	// 나중에 Destroy가 실패할 일이 있다면 return false; 하기
 	assert(InActor);
+
+	if (InActor->GetWorld() == nullptr)
+	{
+		return false;
+	}
 
 	if (PendingDestroyActors.Find(InActor) != -1)
 	{
@@ -343,6 +360,17 @@ void UWorld::RayCasting(const FVector& MouseNDCPos)
 	{
 		FEditorManager::Get().SelectActor(SelectedActor);
 	}
+}
+
+void UWorld::PickByPixel(const FVector& MousePos)
+{
+
+}
+
+void UWorld::OnChangedGridSize()
+{
+	UConfigManager::Get().SetValue(TEXT("World"), TEXT("GridSize"), FString::SanitizeFloat(GridSize));
+	FLineBatchManager::Get().DrawWorldGrid(GridSize, GridSize/100.f);
 }
 
 UWorldInfo UWorld::GetWorldInfo() const

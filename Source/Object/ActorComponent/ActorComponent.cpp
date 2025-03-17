@@ -27,3 +27,12 @@ FVector UActorComponent::GetActorPosition() const
 
 	return FVector();
 }
+
+void UActorComponent::Destroyed()
+{
+	if (Owner)
+	{
+		Owner->RemoveComponent(this);
+		Owner = nullptr;
+	}
+}
