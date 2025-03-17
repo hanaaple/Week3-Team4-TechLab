@@ -157,14 +157,13 @@ void UEngine::Run()
             ElapsedTime = static_cast<double>(CurrentTime.QuadPart - StartTime.QuadPart) * 1000.0 / static_cast<double>(Frequency.QuadPart);
         } while (ElapsedTime < TargetDeltaTime);
     }
-
-	Renderer->Release();
-	FDevice::Get().Release();
 }
 
 
 void UEngine::Shutdown()
 {
+	Renderer->Release();
+	FDevice::Get().Release();
     ShutdownWindow();
 }
 
@@ -235,9 +234,6 @@ void UEngine::InitWorld()
     //// Test
     //AArrow* Arrow = World->SpawnActor<AArrow>();
     //World->SpawnActor<ASphere>();
-    
-    World->SpawnActor<AAxis>();
-    World->SpawnActor<APicker>();
 
 	World->BeginPlay();
 }

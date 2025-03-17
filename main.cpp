@@ -74,7 +74,13 @@ LONG WINAPI ExceptionCallBack(EXCEPTION_POINTERS* exceptionInfo)
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nShowCmd)
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(274); // 예: _CrtSetBreakAlloc(74);
+	// _CrtSetBreakAlloc(2186); // 예: _CrtSetBreakAlloc(74);
+	(void)atexit([]
+	{
+		_CrtDumpMemoryLeaks();
+	});
+
+
 	// 사용 안하는 파라미터들
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
@@ -95,7 +101,5 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	UConfigManager::Get().SaveConfig("editor.ini");
 
-	_CrtDumpMemoryLeaks();
-	
     return 0;
 }
