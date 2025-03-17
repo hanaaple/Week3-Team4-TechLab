@@ -5,6 +5,8 @@
 #include "Primitive/PrimitiveVertices.h"
 #include "Resource/DirectResource/Vertexbuffer.h"
 #include "Resource/DirectResource/IndexBuffer.h"
+#include "Resource/RenderResourceCollection.h"
+
 
 //상수버퍼로 객체의 정보를 넣을 구조체
 struct alignas(16) FConstantsComponentData
@@ -32,22 +34,7 @@ public:
 	virtual void Render();
 	virtual void CalculateModelMatrix(FMatrix& OutMatrix);
 
-	//테스트 임시 메쉬
-	std::shared_ptr<class FVertexBuffer> VertexBuffer = nullptr;
-	std::shared_ptr<class FIndexBuffer> IndexBuffer = nullptr;
-	std::shared_ptr<class FInputLayout> InputLayout = nullptr;
-	D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
-	// 테스트 임시 메테리얼
-	class std::shared_ptr<class FPixelShader> PixelShader = nullptr;
-	class std::shared_ptr<class FVertexShader> VertexShader = nullptr;
-	class std::shared_ptr<class FBlendState> BlendState = nullptr;
-	class std::shared_ptr<class FDepthStencilState> DepthStencilStat = nullptr;
-	class std::shared_ptr<class FRasterizer> Rasterizer = nullptr;
-
-	// 테스트 상수버퍼
-	std::shared_ptr<class FConstantBufferBinding> ConstantBufferBinding = nullptr;
-	std::shared_ptr<class FConstantBuffer> ConstantBuffer = nullptr;
 	
 
 
@@ -78,6 +65,11 @@ public:
 
 	FConstantsComponentData& GetConstantsComponentData() { return ConstantsComponentData; }
 	//void SetConstantsComponentData(FConstantsComponentData& ) { bIsBillboard = bBillboard; }
+
+	void SetMesh(const FString& _Name) { RenderResourceCollection.SetMesh(_Name); }
+	void SetMaterial(const FString& _Name) { RenderResourceCollection.SetMaterial(_Name); }
+	
+	FRenderResourceCollection& GetRenderResourceCollection() { return RenderResourceCollection; }
 	
 protected:
 	bool bCanBeRendered = false;
@@ -87,7 +79,10 @@ protected:
 	FVector4 CustomColor = FVector4(1.0f, 1.0f, 1.0f, 1.0f);
 
 
+
+	
 private:
+	FRenderResourceCollection RenderResourceCollection;
 	FConstantsComponentData ConstantsComponentData;
 };
 

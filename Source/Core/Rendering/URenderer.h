@@ -68,7 +68,7 @@ public:
      * @param pBuffer 렌더링에 사용할 버텍스 버퍼에 대한 포인터
      * @param numVertices 버텍스 버퍼에 저장된 버텍스의 총 개수
      */
-    void RenderPrimitiveInternal(class UPrimitiveComponent& PrimitiveComp) const;
+    //void RenderPrimitiveInternal(class UPrimitiveComponent& PrimitiveComp) const;
 
 	void LoadTexture(const wchar_t* texturePath);
 	ID3D11ShaderResourceView* FontTextureSRV = nullptr;
@@ -82,8 +82,6 @@ public:
      * @note 이 함수는 D3D11_USAGE_IMMUTABLE 사용법으로 버퍼를 생성합니다.
      */
 
-    /** Constant Data를 업데이트 합니다. */
-    void UpdateConstant(const class FConstantsComponentData& UpdateInfo) const;
     
 	void OnUpdateWindowSize(uint32 Width, uint32 Height);
 
@@ -101,8 +99,8 @@ protected:
 
 
 
-    ID3D11Buffer* ConstantBuffer = nullptr;                 // 쉐이더에 데이터를 전달하기 위한 상수 버퍼
-	ID3D11DepthStencilState* DepthStencilState = nullptr;   // DepthStencil 상태(깊이 테스트, 스텐실 테스트 등 정의)
+    //ID3D11Buffer* ConstantBuffer = nullptr;                 // 쉐이더에 데이터를 전달하기 위한 상수 버퍼
+	//ID3D11DepthStencilState* DepthStencilState = nullptr;   // DepthStencil 상태(깊이 테스트, 스텐실 테스트 등 정의)
 
 	
     // Shader를 렌더링할 때 사용되는 변수들
