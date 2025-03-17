@@ -203,7 +203,7 @@ void UWorld::SaveWorld()
 void UWorld::AddZIgnoreComponent(UPrimitiveComponent* InComponent)
 {
 	ZIgnoreRenderComponents.Add(InComponent);
-	InComponent->SetIsOrthoGraphic(true);
+	//InComponent->SetIsOrthoGraphic(true);
 }
 
 void UWorld::LoadWorld(const char* InSceneName)

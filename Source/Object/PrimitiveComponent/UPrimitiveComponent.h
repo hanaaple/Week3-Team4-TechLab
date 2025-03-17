@@ -29,8 +29,11 @@ public:
 	D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 	// 테스트 임시 메테리얼
-	std::shared_ptr<class FPixelShader> PixelShader = nullptr;
-	std::shared_ptr<class FVertexShader> VertexShader = nullptr;
+	class std::shared_ptr<class FPixelShader> PixelShader = nullptr;
+	class std::shared_ptr<class FVertexShader> VertexShader = nullptr;
+	class std::shared_ptr<class FBlendState> BlendState = nullptr;
+	class std::shared_ptr<class FDepthStencilState> DepthStencilStat = nullptr;
+	class std::shared_ptr<class FRasterizer> Rasterizer = nullptr;
 	
 
 

@@ -18,14 +18,14 @@ AGizmoHandle::AGizmoHandle()
 
 	UCylinderComp* ZArrow = AddComponent<UCylinderComp>();
 	ZArrow->SetupAttachment(RootComponent);
-	ZArrow->SetRelativeTransform(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1, 1, 1)));
+	ZArrow->SetRelativeTransform(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(0.1, 0.1, 1)));
 	ZArrow->SetCustomColor(FVector4(0.0f, 0.0f, 1.0f, 1.0f));
 	//CylinderComponents.Add(ZArrow);
 
 	// x
 	UCylinderComp* XArrow = AddComponent<UCylinderComp>();
 	XArrow->SetupAttachment(RootComponent);
-	XArrow->SetRelativeTransform(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 45, 0.0f), FVector(1, 1, 10)));
+	XArrow->SetRelativeTransform(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 90, 0.0f), FVector(1, 0.1, 0.1)));
 	XArrow->SetCustomColor(FVector4(1.0f, 0.0f, 0.0f, 1.0f));
 	//CylinderComponents.Add(XArrow);
 
@@ -33,14 +33,16 @@ AGizmoHandle::AGizmoHandle()
 	// y
 	UCylinderComp* YArrow = AddComponent<UCylinderComp>();
 	YArrow->SetupAttachment(RootComponent);
-	YArrow->SetRelativeTransform(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(89, 0.0f, 0.0f), FVector(1, 1, 1)));
+	YArrow->SetRelativeTransform(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(90, 0.0f, 0.0f), FVector(0.1, 1, 0.1)));
 	YArrow->SetCustomColor(FVector4(0.0f, 1.0f, 0.0f, 1.0f));
 	//CylinderComponents.Add(YArrow);
 
 
 	//RootComponent->SetRelativeTransform(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 45.0f, 0.0f), FVector(1, 1, 1)));
 	
-	UEngine::Get().GetWorld()->AddZIgnoreComponent(ZArrow);
+	//UEngine::Get().GetWorld()->AddRenderComponent(ZArrow);
+	//UEngine::Get().GetWorld()->AddRenderComponent(XArrow);
+	//UEngine::Get().GetWorld()->AddRenderComponent(YArrow);
 	UEngine::Get().GetWorld()->AddZIgnoreComponent(XArrow);
 	UEngine::Get().GetWorld()->AddZIgnoreComponent(YArrow);
 
@@ -153,6 +155,54 @@ const char* AGizmoHandle::GetTypeName()
 
 void AGizmoHandle::DoTransform(FTransform& AT, FVector Result, AActor* Actor )
 {
+// 	const FVector& AP = AT.GetPosition();
+//
+// 	if (SelectedAxis == ESelectedAxis::X)
+// 	{
+// 		switch (GizmoType)
+// 		{
+// 		case EGizmoType::Translate:
+// 			AT.SetPosition({ Result.X, AP.Y, AP.Z });
+// 			break;
+// 		case EGizmoType::Rotate:
+// 			AT.RotatePitch(Result.X);
+// 			break;
+// 		case EGizmoType::Scale:
+// 			AT.AddScale({ Result.X * .1f, 0, AP.Z * .1f });
+// 			break;
+// 		}
+// 	}
+// 	else if (SelectedAxis == ESelectedAxis::Y)
+// 	{
+// 		switch (GizmoType)
+// 		{
+// 		case EGizmoType::Translate:
+// 			AT.SetPosition({ AP.X, Result.Y, AP.Z });
+// 			break;
+// 		case EGizmoType::Rotate:
+// 			AT.RotateRoll(Result.Y);
+// 			break;
+// 		case EGizmoType::Scale:
+// 			AT.AddScale({ 0, Result.Y * .1f, 0 });
+// 			break;
+// 		}
+// 	}
+// 	else if (SelectedAxis == ESelectedAxis::Z)
+// 	{
+// 		switch (GizmoType)
+// 		{
+// 		case EGizmoType::Translate:
+// 			AT.SetPosition({ AP.X, AP.Y, Result.Z });
+// 			break;
+// 		case EGizmoType::Rotate:
+// 			AT.RotatePitch(-Result.Z);
+// 			break;
+// 		case EGizmoType::Scale:
+// 			AT.AddScale({0, 0, Result.Z * .1f });
+// 			break;
+// 		}
+// 	}
+// 	Actor->SetActorTransform(AT);
 	const FVector& AP = AT.GetPosition();
 
 	/*if (SelectedAxis == ESelectedAxis::X)
