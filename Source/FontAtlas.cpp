@@ -15,7 +15,8 @@ FFontAtlas::FFontAtlas()
 	int cellsPerRow = 36;
 	int cellsPerColumn = 16;
 
-	std::ifstream file("font_atlas.txt");
+	//std::ifstream file("font_atlas.txt");
+	std::ifstream file("Pretendard_Kor.txt");
 	if (!file.is_open())
 	{
 		// 파일을 열 수 없는 경우 오류 처리

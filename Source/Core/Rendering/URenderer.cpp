@@ -26,7 +26,8 @@ void URenderer::Create(HWND hWindow)
 	FLineBatchManager::Get().Create();
 	FUUIDBillBoard::Get().Create();
 
-	LoadTexture(L"font_atlas.png");
+	//LoadTexture(L"font_atlas.png");
+	LoadTexture(L"Pretendard_Kor.png");
 }
 
 void URenderer::Release()
