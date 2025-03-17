@@ -21,6 +21,11 @@
 #include "Object/Actor/Picker.h"
 
 
+void UWorld::InitWorld()
+{
+	//TODO : 
+}
+
 void UWorld::BeginPlay()
 {
 	for (const auto& Actor : Actors)
@@ -180,6 +185,11 @@ bool UWorld::DestroyActor(AActor* InActor)
 {
 	// 나중에 Destroy가 실패할 일이 있다면 return false; 하기
 	assert(InActor);
+
+	if (InActor->GetWorld() == nullptr)
+	{
+		return false;
+	}
 
 	if (PendingDestroyActors.Find(InActor) != -1)
 	{
