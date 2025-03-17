@@ -20,6 +20,8 @@ public:
 	void Render();
 	void SetTarget(AActor* Target);
 	void UpdateString(const std::wstring& String);
+	void CreateKoreanQuad(const wchar_t character, float& cursorX, int StringLength);
+	void CreateKoreanConsonantVowel(wchar_t jamo, float posX, float offsetX, float offsetY);
 private:
 	void CalculateModelMatrix(FMatrix& OutMatrix);
 	void Flush();
@@ -29,9 +31,9 @@ private:
 	TArray<FVertexTexture> VertexBuffer;
 	TArray<uint32> IndexBuffer;
 
-	// 최대 용량 32자
-	UINT MaxVerticesPerBatch = 128;
-	UINT MaxIndicesPerBatch = 192;
+	// 최대 용량
+	UINT MaxVerticesPerBatch = 256;
+	UINT MaxIndicesPerBatch = 384;
 
 	bool bShowDebugLines = true;
 	bool bShowWorldGrid = true;
