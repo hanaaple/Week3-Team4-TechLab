@@ -417,7 +417,6 @@
   <ItemGroup>
     <None Include=".editorconfig" />
     <None Include=".gitignore" />
-    <None Include="cpp.hint" />
     <None Include="imgui.ini" />
     <None Include="README.md" />
   </ItemGroup>
