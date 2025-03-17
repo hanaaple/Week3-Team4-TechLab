@@ -15,9 +15,9 @@ void FDevice::Init(HWND _hwnd)
 
 void FDevice::Release()
 {
-	ReleaseDeviceAndSwapChain();
 	ReleaseDepthStencilBuffer();
 	ReleaseFrameBuffer();
+	ReleaseDeviceAndSwapChain();
 	// 렌더 타겟을 초기화
 	//FDevice::Get().GetDeviceContext()->OMSetRenderTargets(0, nullptr, DepthStencilView);
 }
@@ -51,6 +51,9 @@ void FDevice::CreateDeviceAndSwapChain(HWND hWindow)
     SwapChainDesc.OutputWindow = hWindow;                          // 렌더링할 창 핸들
     SwapChainDesc.Windowed = TRUE;                                 // 창 모드
     SwapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;      // 스왑 방식
+
+	//// 디바이스 생성 시 디버그 플래그 설정
+	//UINT flags = D3D11_CREATE_DEVICE_DEBUG;
     
     // Direct3D Device와 SwapChain을 생성
     D3D11CreateDeviceAndSwapChain(
@@ -94,16 +97,25 @@ void FDevice::ReleaseDeviceAndSwapChain()
 		SwapChain = nullptr;
 	}
 
-	if (Device)
-	{
-		Device->Release();
-		Device = nullptr;
+	ID3D11Debug* debugInterface = nullptr;
+	Device->QueryInterface(__uuidof(ID3D11Debug), (void**)&debugInterface);
+	if (debugInterface) {
+		debugInterface->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
+		debugInterface->Release();
 	}
+
 
 	if (DeviceContext)
 	{
 		DeviceContext->Release();
 		DeviceContext = nullptr;
+	}
+
+
+	if (Device)
+	{
+		Device->Release();
+		Device = nullptr;
 	}
 }
 

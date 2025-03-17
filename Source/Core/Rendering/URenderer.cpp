@@ -60,7 +60,7 @@ void URenderer::CreateConstantBuffer()
     D3D11_BUFFER_DESC ConstantBufferDesc = {};
     ConstantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;                        // 매 프레임 CPU에서 업데이트 하기 위해
     ConstantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;             // 상수 버퍼로 설정
-    ConstantBufferDesc.ByteWidth = sizeof(FConstants) + 0xf & 0xfffffff0;  // 16byte의 배수로 올림
+    ConstantBufferDesc.ByteWidth = sizeof(FConstantsComponentDatas) + 0xf & 0xfffffff0;  // 16byte의 배수로 올림
     ConstantBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;            // CPU에서 쓰기 접근이 가능하게 설정
 
     FDevice::Get().GetDevice()->CreateBuffer(&ConstantBufferDesc, nullptr, &ConstantBuffer);
@@ -138,7 +138,7 @@ void URenderer::RenderPrimitive(class UPrimitiveComponent& PrimitiveComp, const 
 		ViewProjectionMatrix
 );
 
-	FConstants UpdateInfo{
+	FConstantsComponentDatas UpdateInfo{
 		MVP,
         PrimitiveComp.GetCustomColor(), 
         PrimitiveComp.IsUseVertexColor()
@@ -204,7 +204,7 @@ void URenderer::LoadTexture(const wchar_t* texturePath)
 	FDevice::Get().GetDeviceContext()->PSSetSamplers(0, 1, &FontSamplerState);
 }
 
-void URenderer::UpdateConstant(const FConstants& UpdateInfo) const
+void URenderer::UpdateConstant(const FConstantsComponentDatas& UpdateInfo) const
 {
     if (!ConstantBuffer) return;
 
@@ -215,7 +215,7 @@ void URenderer::UpdateConstant(const FConstants& UpdateInfo) const
     FDevice::Get().GetDeviceContext()->Map(ConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ConstantBufferMSR);
     {
         // 매핑된 메모리를 FConstants 구조체로 캐스팅
-        FConstants* Constants = static_cast<FConstants*>(ConstantBufferMSR.pData);
+        FConstantsComponentDatas* Constants = static_cast<FConstantsComponentDatas*>(ConstantBufferMSR.pData);
         Constants->MVP = UpdateInfo.MVP;
 		Constants->Color = UpdateInfo.Color;
 		Constants->bUseVertexColor = UpdateInfo.bUseVertexColor ? 1 : 0;

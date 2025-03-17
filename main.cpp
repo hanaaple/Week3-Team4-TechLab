@@ -73,12 +73,12 @@ LONG WINAPI ExceptionCallBack(EXCEPTION_POINTERS* exceptionInfo)
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nShowCmd)
 {
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	// _CrtSetBreakAlloc(2186); // 예: _CrtSetBreakAlloc(74);
-	(void)atexit([]
-	{
-		_CrtDumpMemoryLeaks();
-	});
+	// (void)atexit([]
+	// {
+	// 	_CrtDumpMemoryLeaks();
+	// });
 
 
 	// 사용 안하는 파라미터들
@@ -100,6 +100,21 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	Engine.Shutdown();
 
 	UConfigManager::Get().SaveConfig("editor.ini");
+
+	
+	//{
+	//	HMODULE dxgidebugdll = GetModuleHandleW(L"dxgidebug.dll");
+	//	decltype(&DXGIGetDebugInterface) GetDebugInterface = reinterpret_cast<decltype(&DXGIGetDebugInterface)>(GetProcAddress(dxgidebugdll, "DXGIGetDebugInterface"));
+	//	IDXGIDebug* debug;
+	//	GetDebugInterface(IID_PPV_ARGS(&debug));
+
+	//	OutputDebugStringW(L"▽▽▽▽▽▽▽▽▽▽ Direct3D Object ref count 메모리 누수 체크 ▽▽▽▽▽▽▽▽▽▽▽\r\n");
+	//	debug->ReportLiveObjects(DXGI_DEBUG_D3D11, DXGI_DEBUG_RLO_DETAIL);
+	//	debug->Release();
+	//}
+
+// 디버그 빌드에서 메모리 릭 상세 정보 확인
+
 
     return 0;
 }

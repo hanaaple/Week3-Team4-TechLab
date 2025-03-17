@@ -181,6 +181,8 @@
     <ClCompile Include="Source\Debug\EngineShowFlags.cpp" />
     <ClCompile Include="Source\Core\Math\BoxSphereBounds.cpp" />
     <ClCompile Include="Source\Object\Gizmo\GizmoActor.cpp" />
+    <ClCompile Include="Source\Resource\DirectResource\ConstantBuffer.cpp" />
+    <ClCompile Include="Source\Resource\DirectResource\ShaderResourceBinding.cpp" />
     <ClCompile Include="Source\Static\FUUIDBillBoard.cpp" />
     <ClCompile Include="Source\Core\Math\Rotator.cpp" />
     <ClCompile Include="Source\Core\Config\ConfigManager.cpp" />
@@ -294,6 +296,8 @@
     <ClInclude Include="Source\Debug\EngineShowFlags.h" />
     <ClInclude Include="Source\Core\Math\BoxSphereBounds.h" />
     <ClInclude Include="Source\Object\Gizmo\GizmoActor.h" />
+    <ClInclude Include="Source\Resource\DirectResource\ConstantBuffer.h" />
+    <ClInclude Include="Source\Resource\DirectResource\ShaderResourceBinding.h" />
     <ClInclude Include="Source\Static\FUUIDBillBoard.h" />
     <ClInclude Include="Source\Core\Math\Rotator.h" />
     <ClInclude Include="Source\Core\Config\ConfigManager.h" />

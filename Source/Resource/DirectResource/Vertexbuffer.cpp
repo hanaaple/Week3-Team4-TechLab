@@ -35,7 +35,7 @@ void FVertexBuffer::ResCreate(const void* _Data, size_t _VertexSize, size_t _Ver
 
 	if (S_OK != FDevice::Get().GetDevice()->CreateBuffer(&BufferInfo, &Data, &Buffer))
 	{
-		UE_LOG("Error: Vertexbuffer Create Failed") ;
+		MsgBoxAssert("Error: Vertexbuffer Create Failed") ;
 		return;
 	}
 }

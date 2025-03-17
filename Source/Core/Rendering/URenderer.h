@@ -22,7 +22,7 @@ public:
 	friend class FLineBatchManager;
 	
 private:
-    struct alignas(16) FConstants
+    struct alignas(16) FConstantsComponentDatas
     {
         FMatrix MVP;
         FVector4 Color;
@@ -83,7 +83,7 @@ public:
      */
 
     /** Constant Data를 업데이트 합니다. */
-    void UpdateConstant(const FConstants& UpdateInfo) const;
+    void UpdateConstant(const FConstantsComponentDatas& UpdateInfo) const;
     
 	void OnUpdateWindowSize(uint32 Width, uint32 Height);
 

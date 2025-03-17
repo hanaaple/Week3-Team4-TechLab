@@ -32,7 +32,7 @@ void FInputLayout::ResCreate(std::shared_ptr<class FVertexShader> _Shader)
 
 	if (nullptr == LayOut)
 	{
-		UE_LOG("Error: FInputLayout Create Failed") ;
+		MsgBoxAssert("Error: FInputLayout Create Failed") ;
 	}
 }
 
@@ -40,7 +40,7 @@ void FInputLayout::Setting()
 {
 	if (nullptr == LayOut)
 	{
-		UE_LOG("Error: FInputLayout Create Failed") ;
+		MsgBoxAssert("Error: FInputLayout Create Failed") ;
 	}
 
 	// 버텍스버퍼를 여러개 넣어줄수 있다.
