@@ -28,6 +28,7 @@ void ACylinder::Tick(float DeltaTime)
 	FTransform NewTransform = GetActorTransform();
 	FVector NewPosition = NewTransform.GetPosition();
 	FVector NewRotation = NewTransform.GetRotation().GetEuler();
+	FVector NewScale = NewTransform.GetScale();
 
 	if (APlayerInput::Get().GetKeyDown(EKeyCode::Up))
 	{
@@ -40,29 +41,42 @@ void ACylinder::Tick(float DeltaTime)
 	if (APlayerInput::Get().GetKeyDown(EKeyCode::Left))
 	{
 		NewPosition += FVector(0, 1, 0);
-	}
+	}    
 	if (APlayerInput::Get().GetKeyDown(EKeyCode::Right))
 	{
 		NewPosition += FVector(0, -1, 0);
 	}
 
+	if (APlayerInput::Get().GetKeyDown(EKeyCode::J))
+	{
+		NewScale += FVector(0.1, 0, 0);
+	}
+	if (APlayerInput::Get().GetKeyDown(EKeyCode::K))
+	{
+		NewScale += FVector(0, 0.1, 0);
+	}
+	if (APlayerInput::Get().GetKeyDown(EKeyCode::L))
+	{
+		NewScale += FVector(0, 0, 0.1);
+	}
+
+
 	if (APlayerInput::Get().GetKeyPress(EKeyCode::Z))
 	{
-		NewRotation += FVector(1, 0, 0);
+		NewTransform.Rotate(FVector(1, 0, 0));
 	}
 	if (APlayerInput::Get().GetKeyPress(EKeyCode::X))
 	{
-		NewRotation += FVector(0, 1, 0);
+		NewTransform.Rotate(FVector(0, 1, 0));
 	}
 	if (APlayerInput::Get().GetKeyPress(EKeyCode::C))
 	{
-		NewRotation += FVector(0, 0, 1);
+		NewTransform.Rotate(FVector(0, 0, 1));
 	}
 
 	NewTransform.SetPosition(NewPosition);
-	NewTransform.SetRotation(FQuat(NewRotation));
+	NewTransform.SetScale(NewScale);
 	SetActorTransform(NewTransform);
-
 }
 
 const char* ACylinder::GetTypeName()
