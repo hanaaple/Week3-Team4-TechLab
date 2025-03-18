@@ -77,8 +77,8 @@ bool FRayCast::InserSectRaySphere(const FRay& Ray, const FVector& SphereCenter, 
 		return false;
 	}
 
-	float t0 = (-b - sqrtf(d)) / 2;
-	float t1 = (-b + sqrtf(d)) / 2;
+	float t0 = -(-b - sqrtf(d)) / 2;
+	float t1 = -(-b + sqrtf(d)) / 2;
 
 	// 두 해 중에서 작은 값이 교차점
 	if (t0 >= 0)
