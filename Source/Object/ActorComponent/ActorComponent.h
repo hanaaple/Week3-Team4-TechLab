@@ -1,10 +1,9 @@
 #pragma once
 #include "Core/EngineTypes.h"
-#include "Core/Math/Vector.h"
 #include "Core/UObject/Object.h"
 #include "Core/UObject/ObjectMacros.h"
+#include "Core/Math/Vector.h"
 
-struct FVector;
 
 class UActorComponent : public UObject
 {

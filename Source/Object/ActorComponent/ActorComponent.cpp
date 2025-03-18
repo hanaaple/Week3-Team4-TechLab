@@ -1,6 +1,7 @@
 #include "ActorComponent.h"
 #include "Object/Actor/Actor.h"
 
+
 void UActorComponent::BeginPlay()
 {
 }

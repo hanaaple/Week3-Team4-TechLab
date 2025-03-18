@@ -1,8 +1,12 @@
 ﻿#pragma once
+#include <concepts>
+#include <memory>
+
 #include "Core/Engine.h"
 #include "Core/EngineStatics.h"
 #include "Core/Container/String.h"
 #include "Core/HAL/PlatformMemory.h"
+#include "Core/Rendering/URenderer.h"
 #include "Debug/DebugConsole.h"
 
 

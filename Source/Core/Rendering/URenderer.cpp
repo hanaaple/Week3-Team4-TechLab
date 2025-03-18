@@ -2,6 +2,7 @@
 #include <d3dcompiler.h>
 #include "DirectXTK/WICTextureLoader.h"
 #include "FDevice.h"
+#include "FViewMode.h"
 #include "Debug/DebugConsole.h"
 #include "Core/Math/Transform.h"
 #include "Object/World/World.h"
@@ -18,8 +19,6 @@
 #include "Resource/DirectResource/DepthStencilState.h"
 #include "Resource/DirectResource/BlendState.h"
 #include "Resource/DirectResource/Rasterizer.h"
-#include "Object/World/World.h"
-#include "Resource/DirectResource/ConstantBuffer.h"
 #include "Resource/DirectResource/ShaderResourceBinding.h"
 
 void URenderer::Create(HWND hWindow)

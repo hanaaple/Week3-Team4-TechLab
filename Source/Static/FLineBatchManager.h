@@ -1,8 +1,12 @@
 #pragma once
 
-#include "Object/Actor/Actor.h"
+#define _TCHAR_DEFINED
+#include <d3d11.h>
+
+#include "Core/AbstractClass/Singleton.h"
 #include "Primitive/PrimitiveVertices.h"
 #include "Core/Container/Array.h"
+#include "Core/Math/Matrix.h"
 
 struct FLineConstantInfo
 {

@@ -1,8 +1,7 @@
 #include "Actor.h"
-#include "Object/USceneComponent.h"
-#include "Debug/DebugConsole.h"
-#include "Object/World/World.h"
+
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
+#include "Object/World/World.h"
 #include "Static/FEditorManager.h"
 
 AActor::AActor() : Depth{ 0 }

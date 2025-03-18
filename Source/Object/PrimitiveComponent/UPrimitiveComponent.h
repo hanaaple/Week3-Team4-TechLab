@@ -1,10 +1,25 @@
 #pragma once
 
+#define _TCHAR_DEFINED
+#include <d3dcommon.h>
+
 #include "Core/Engine.h"
+#include "Core/Math/Matrix.h"
 #include "Object/USceneComponent.h"
 #include "Primitive/PrimitiveVertices.h"
-#include "Resource/DirectResource/Vertexbuffer.h"
 #include "Resource/DirectResource/IndexBuffer.h"
+#include "Resource/DirectResource/Vertexbuffer.h"
+
+
+class FVertexShader;
+class FRasterizer;
+class FDepthStencilState;
+class FBlendState;
+class FPixelShader;
+class FConstantBufferBinding;
+class FConstantBuffer;
+class FInputLayout;
+
 
 //상수버퍼로 객체의 정보를 넣을 구조체
 struct alignas(16) FConstantsComponentData
@@ -33,20 +48,20 @@ public:
 	virtual void CalculateModelMatrix(FMatrix& OutMatrix);
 
 	//테스트 임시 메쉬
-	std::shared_ptr<class FVertexBuffer> VertexBuffer = nullptr;
-	std::shared_ptr<class FIndexBuffer> IndexBuffer = nullptr;
-	std::shared_ptr<class FInputLayout> InputLayout = nullptr;
+	std::shared_ptr<FVertexBuffer> VertexBuffer = nullptr;
+	std::shared_ptr<FIndexBuffer> IndexBuffer = nullptr;
+	std::shared_ptr<FInputLayout> InputLayout = nullptr;
 	D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
-	class std::shared_ptr<class FPixelShader> PixelShader = nullptr;
-	class std::shared_ptr<class FVertexShader> VertexShader = nullptr;
-	class std::shared_ptr<class FBlendState> BlendState = nullptr;
-	class std::shared_ptr<class FDepthStencilState> DepthStencilStat = nullptr;
-	class std::shared_ptr<class FRasterizer> Rasterizer = nullptr;
+	std::shared_ptr<FPixelShader> PixelShader = nullptr;
+	std::shared_ptr<FVertexShader> VertexShader = nullptr;
+	std::shared_ptr<FBlendState> BlendState = nullptr;
+	std::shared_ptr<FDepthStencilState> DepthStencilStat = nullptr;
+	std::shared_ptr<FRasterizer> Rasterizer = nullptr;
 
 	// 테스트 상수버퍼
-	std::shared_ptr<class FConstantBufferBinding> ConstantBufferBinding = nullptr;
-	std::shared_ptr<class FConstantBuffer> ConstantBuffer = nullptr;
+	std::shared_ptr<FConstantBufferBinding> ConstantBufferBinding = nullptr;
+	std::shared_ptr<FConstantBuffer> ConstantBuffer = nullptr;
 
 	virtual EPrimitiveType GetType() { return EPrimitiveType::EPT_None; }
 
@@ -71,10 +86,10 @@ public:
 	void SetCanBeRendered(bool bRender) { bCanBeRendered = bRender; }
 
 	void SetIsOrthoGraphic(bool IsOrtho) { bIsOrthoGraphic = IsOrtho; }
-	bool GetIsOrthoGraphic() { return bIsOrthoGraphic;}
+	bool GetIsOrthoGraphic() const { return bIsOrthoGraphic;}
 
 	void SetIsPicking(bool IsPicking) { bIsPicking = IsPicking; }
-	bool GetIsPicking() { return bIsPicking; }
+	bool GetIsPicking() const { return bIsPicking; }
 	FConstantsComponentData& GetConstantsComponentData() { return ConstantsComponentData; }
 	//void SetConstantsComponentData(FConstantsComponentData& ) { bIsBillboard = bBillboard; }
 

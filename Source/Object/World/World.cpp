@@ -17,6 +17,7 @@
 #include "Static/FUUIDBillBoard.h"
 #include <Core/Math/Ray.h>
 
+#include "Core/Rendering/URenderer.h"
 #include "Object/Actor/Arrow.h"
 #include "Object/Actor/Picker.h"
 
@@ -299,7 +300,7 @@ void UWorld::RayCasting(const FVector& MouseNDCPos)
 		}
 		case EPrimitiveType::EPT_Sphere:
 		{
-			bHit = FRayCast::InserSectRaySphere(localRay, PrimitiveComponent->GetActorPosition(), 0.5f, outT);
+			bHit = FRayCast::InsertSectRaySphere(localRay, PrimitiveComponent->GetActorPosition(), 0.5f, outT);
 			if (bHit)
 			{
 				UE_LOG("Sphere Hit");

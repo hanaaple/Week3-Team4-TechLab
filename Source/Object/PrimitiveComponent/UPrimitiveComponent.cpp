@@ -1,19 +1,38 @@
 #include "UPrimitiveComponent.h"
-#include "Object/World/World.h"
-#include "Object/Actor/Actor.h"
-#include "Core/Engine.h"
-#include "Object/Actor/Camera.h"
-#include "Primitive/UGeometryGenerator.h"
-#include "Resource/DirectResource/Vertexbuffer.h"
-#include "Resource/DirectResource/VertexShader.h"
-#include "Resource/DirectResource/PixelShader.h"
-#include "Resource/DirectResource/InputLayout.h"
-#include "Resource/DirectResource/ConstantBuffer.h"
+
+#include "Core/Rendering/URenderer.h"
 #include "Debug/EngineShowFlags.h"
+#include "Object/Actor/Actor.h"
+#include "Object/Actor/Camera.h"
+#include "Object/World/World.h"
+#include "Primitive/UGeometryGenerator.h"
 #include "Resource/DirectResource/BlendState.h"
+#include "Resource/DirectResource/ConstantBuffer.h"
 #include "Resource/DirectResource/DepthStencilState.h"
+#include "Resource/DirectResource/IndexBuffer.h"
+#include "Resource/DirectResource/InputLayout.h"
+#include "Resource/DirectResource/PixelShader.h"
 #include "Resource/DirectResource/Rasterizer.h"
 #include "Resource/DirectResource/ShaderResourceBinding.h"
+#include "Resource/DirectResource/Vertexbuffer.h"
+#include "Resource/DirectResource/VertexShader.h"
+// #include "Object/World/World.h"
+// #include "Object/Actor/Actor.h"
+// #include "Core/Engine.h"
+// #include "Core/Rendering/URenderer.h"
+// #include "Object/Actor/Camera.h"
+// #include "Primitive/UGeometryGenerator.h"
+// #include "Resource/DirectResource/Vertexbuffer.h"
+// #include "Resource/DirectResource/VertexShader.h"
+// #include "Resource/DirectResource/PixelShader.h"
+// #include "Resource/DirectResource/InputLayout.h"
+// #include "Resource/DirectResource/ConstantBuffer.h"
+// #include "Debug/EngineShowFlags.h"
+// #include "Resource/DirectResource/BlendState.h"
+// #include "Resource/DirectResource/DepthStencilState.h"
+// #include "Resource/DirectResource/IndexBuffer.h"
+// #include "Resource/DirectResource/Rasterizer.h"
+// #include "Resource/DirectResource/ShaderResourceBinding.h"
 
 UPrimitiveComponent::UPrimitiveComponent() : Super()
 {
@@ -43,8 +62,8 @@ UPrimitiveComponent::UPrimitiveComponent() : Super()
 
 UPrimitiveComponent::~UPrimitiveComponent()
 {
-	class std::shared_ptr<class FVertexBuffer> VertexBuffer = nullptr;
-	class std::shared_ptr<class FIndexBuffer> IndexBuffer = nullptr;
+	VertexBuffer.reset();
+	IndexBuffer.reset();
 }
 
 void UPrimitiveComponent::BeginPlay()
@@ -152,7 +171,7 @@ UCubeComp::UCubeComp() : Super()
 		TArray<uint32> indices;
 		float size = 1.f;
 
-		UGeometryGenerator::CreateCube(size, &vertices, &indices);
+		UGeometryGenerator::CreateCube(size, vertices, indices);
 		
 		VertexBuffer = FVertexBuffer::Create(FString("Cube"), vertices);
 		IndexBuffer = FIndexBuffer::Create(FString("Cube"), indices);
@@ -173,7 +192,7 @@ USphereComp::USphereComp() : Super()
 		int32 radius = 1.f;
 		float height = 1.f;
 
-		UGeometryGenerator::CreateSphere(radius, slices, stacks, &vertices, &indices);
+		UGeometryGenerator::CreateSphere(radius, slices, stacks, vertices, indices);
 		
 		VertexBuffer = FVertexBuffer::Create(FString("Sphere"), vertices);
 		IndexBuffer = FIndexBuffer::Create(FString("Sphere"), indices);
@@ -301,7 +320,7 @@ UCylinderComp::UCylinderComp() : Super()
 		float tRdius = .2f;
 		float height = 1.f;
 
-		UGeometryGenerator::CreateCylinder(bRadius, tRdius, height, slices, stacks, &vertices , &indices);
+		UGeometryGenerator::CreateCylinder(bRadius, tRdius, height, slices, stacks, vertices , indices);
 		
 		VertexBuffer = FVertexBuffer::Create(FString("Cylinder"), vertices);
 		IndexBuffer = FIndexBuffer::Create(FString("Cylinder"), indices);
@@ -321,7 +340,7 @@ UConeComp::UConeComp() : Super()
 		float radius = 1.f;
 		float height = 1.f;
 
-		UGeometryGenerator::CreateCone(radius, height, slices, stacks, &vertices, &indices);
+		UGeometryGenerator::CreateCone(radius, height, slices, stacks, vertices, indices);
 		VertexBuffer = FVertexBuffer::Create(FString("Cone"), vertices);
 		IndexBuffer = FIndexBuffer::Create(FString("Cone"), indices);
 	}

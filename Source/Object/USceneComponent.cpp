@@ -30,7 +30,7 @@ const FTransform USceneComponent::GetWorldTransform()
 	return WorldTransform;
 }
 
-const FMatrix USceneComponent::GetWorldMatrix() const
+FMatrix USceneComponent::GetWorldMatrix() const
 {
 	if (Parent != nullptr)
 	{
@@ -46,12 +46,12 @@ const FMatrix USceneComponent::GetWorldMatrix() const
 	}
 }
 
-const FTransform USceneComponent::GetWorldTransform() const
+FTransform USceneComponent::GetWorldTransform() const
 {
 	if (Parent != nullptr)
 	{
 		FTransform parnetTrans = Parent->GetComponentTransform();
-
+		return parnetTrans;
 	}
 	else
 	{

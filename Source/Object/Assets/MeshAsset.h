@@ -6,9 +6,6 @@
 class UMeshAsset : public UAsset
 {
 	DECLARE_CLASS(UMeshAsset, UAsset)
-public:
-	UMeshAsset();
-	virtual ~UMeshAsset() = default;
 
 public:
 	virtual bool RegisterAsset() override;

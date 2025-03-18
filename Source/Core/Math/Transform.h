@@ -1,7 +1,6 @@
 #pragma once
 #include "Vector.h"
 #include "Matrix.h"
-#include "Core/Engine.h"
 #include "Core/Math/Quat.h"
 
 #define TORAD 0.0174532925199432957f
@@ -12,8 +11,7 @@ protected:
 	FVector Position;
 	FQuat Rotation;
 	FVector Scale;
-	int Depth;
-	
+
 public:
 	FTransform()
 		: Position(FVector(0, 0, 0))
@@ -49,30 +47,30 @@ public:
 	}
 
 	// 객체의 위치를 설정하는 함수 (벡터를 인자로 받음)
-	inline virtual void SetPosition(const FVector& InPosition)
+	inline void SetPosition(const FVector& InPosition)
 	{
 		Position = InPosition;
 	}
 
 	// 객체의 위치를 설정하는 함수 (x, y, z 값을 각각 인자로 받음)
-	inline virtual void SetPosition(float x, float y, float z)
+	inline void SetPosition(float x, float y, float z)
 	{
 		Position = { x, y, z };
 	}
 
 	// 객체의 회전을 설정하는 함수 (Euler 각도 벡터를 인자로 받아 쿼터니언으로 변환)
-	inline virtual void SetRotation(const FVector& InRotation)
+	inline void SetRotation(const FVector& InRotation)
 	{
 		Rotation = FQuat::EulerToQuaternion(InRotation);
 	}
 
-	inline virtual void SetRotation(const FQuat& InQuat)
+	inline void SetRotation(const FQuat& InQuat)
 	{
 		Rotation = InQuat;
 	}
 
 	// 객체의 회전을 설정하는 함수 (x, y, z Euler 각도를 각각 인자로 받음)
-	inline virtual void SetRotation(float x, float y, float z)
+	inline void SetRotation(float x, float y, float z)
 	{
 		SetRotation(FVector(x, y, z));
 	}
@@ -364,8 +362,6 @@ public:
 
 		FVector translatedVec = InputVec - Position;
 
-		FVector temp = { Vector.X - Position.X, Vector.Y - Position.Y, Vector.Z - Position.Z };
-
         FVector4 VR = FQuat::VectorQuaternionInverseRotatedVector(Rotation, FVector4(translatedVec, 0.0f));
 
 		FVector VResult = FVector(VR.X / Scale.X, VR.Y / Scale.Y, VR.Z / Scale.Z);
@@ -451,19 +447,19 @@ public:
 	}
 
 	/**
- * @brief 반대(Reverse) 상대 변환을 계산합니다.
- *
- * 두 변환 A (this)와 B (Other)가 있을 때, 아래와 같이 반대 상대 변환을 정의합니다.
- *
- *   상대 스케일 = S(B) / S(A)
- *   상대 회전 = Q(B) * Q(A)⁻¹
- *   상대 Translation = T(B) - [ 상대 스케일 * (RelativeRotation.RotateVector(T(A)) ) ]
- *
- * 이 함수는 A의 역변환을 적용한 후 B가 나오도록 하는 변환을 계산합니다.
- *
- * @param Other 대상 변환(B). 이 변환에 대해 반대 상대 변환을 구합니다.
- * @return FTransform 계산된 반대 상대 변환.
- */
+	* @brief 반대(Reverse) 상대 변환을 계산합니다.
+	*
+	* 두 변환 A (this)와 B (Other)가 있을 때, 아래와 같이 반대 상대 변환을 정의합니다.
+	*
+	*   상대 스케일 = S(B) / S(A)
+	*   상대 회전 = Q(B) * Q(A)⁻¹
+	*   상대 Translation = T(B) - [ 상대 스케일 * (RelativeRotation.RotateVector(T(A)) ) ]
+	*
+	* 이 함수는 A의 역변환을 적용한 후 B가 나오도록 하는 변환을 계산합니다.
+	*
+	* @param Other 대상 변환(B). 이 변환에 대해 반대 상대 변환을 구합니다.
+	* @return FTransform 계산된 반대 상대 변환.
+	*/
 	FTransform GetRelativeTransformReverse(const FTransform& Other) const
 	{
 		FTransform Result;
@@ -548,6 +544,7 @@ public:
 		// 3. Rotation:
 		// 상대 회전 = Inverse(Parent.Rotation) * this->Rotation
 		Result.Rotation = FQuat::MultiplyQuaternions(InverseParentRot, myTransform.Rotation);
+		return Result;
 	}
 
 	/**
@@ -564,7 +561,7 @@ public:
 	* @param Relative Relative 변환(B).
 	* @return FTransform 계산된 상대 변환.
 	*/
-	FTransform GetRelativeTransformUsingMatrixWithScale(const FTransform* Base, const FTransform* Relative)
+	FTransform GetRelativeTransformUsingMatrixWithScale(const FTransform* Base, const FTransform* Relative) const
 	{
 		// 목표: 올바른 회전(Orientation)을 얻기 위해 행렬을 사용합니다.
 		// 단, Translation은 여전히 스케일을 고려해야 합니다.
@@ -593,10 +590,10 @@ public:
 	// InMatrix : 변환 행렬 (스케일이 포함된 회전+이동 행렬)
 	// DesiredScale : 원하는 스케일 (컴포넌트별 값)
 	// OutTransform : 복원된 변환(Translation, Rotation, Scale)을 저장할 대상
-	FTransform ConstructTransformFromMatrixWithDesiredScale(const FMatrix& InMatrix, const FVector& DesiredScale)
+	FTransform ConstructTransformFromMatrixWithDesiredScale(const FMatrix& InMatrix, const FVector& DesiredScale) const
 	{
 		// 1. Translation 추출  
-	//    Translation은 4번째 행의 앞 세 개 요소에 저장되어 있다고 가정합니다.
+		//    Translation은 4번째 행의 앞 세 개 요소에 저장되어 있다고 가정합니다.
 		FVector Translation(
 			InMatrix.M[3][0],
 			InMatrix.M[3][1],
@@ -629,12 +626,14 @@ public:
 		RotationMatrix.M[3][3] = 1.0f;
 
 		// 3. 회전 행렬로부터 쿼터니언 복원  
-		FQuat Rotation = FQuat::MakeFromRotationMatrix(RotationMatrix);
+		FQuat TempRotation = FQuat::MakeFromRotationMatrix(RotationMatrix);
 
 		// 4. 결과 할당  
 		FTransform OutTransform;
 		OutTransform.Position = Translation;
-		OutTransform.Rotation = Rotation;
+		OutTransform.Rotation = TempRotation;
 		OutTransform.Scale = DesiredScale;
+
+		return OutTransform;
 	}
 };

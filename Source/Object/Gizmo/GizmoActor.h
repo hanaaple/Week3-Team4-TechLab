@@ -1,12 +1,14 @@
 #pragma once
-#include "object/actor/actor.h"
+#include "Object/Actor/Actor.h"
 #include "Object/PrimitiveComponent/GizmoComponent.h"
+
 
 class AGizmoActor : public AActor
 {
+	DECLARE_CLASS(AGizmoActor, AActor)
+
 public:
 	AGizmoActor();
-	virtual ~AGizmoActor() = default;
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 

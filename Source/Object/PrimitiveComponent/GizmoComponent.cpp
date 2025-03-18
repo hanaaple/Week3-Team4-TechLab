@@ -1,7 +1,8 @@
 #include "GizmoComponent.h"
-#include <Object/Gizmo/GizmoActor.h>
+#include "Object/Gizmo/GizmoActor.h"
 
-UGizmoComponent::UGizmoComponent() : Super()
+
+UGizmoComponent::UGizmoComponent()
 {
 	// 메쉬 로드
 	//VertexBuffer = FVertexBuffer::Find("Cube");

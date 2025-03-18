@@ -1,12 +1,12 @@
 #pragma once
 #include "Core/EngineTypes.h"
-#include "Core/UObject/Object.h"
-#include "Object/ActorComponent/ActorComponent.h"
-#include "Core/Math/Transform.h"
 #include "Core/Container/Set.h"
+#include "Core/Math/Transform.h"
+#include "Core/UObject/Object.h"
 #include "Core/UObject/ObjectMacros.h"
 #include "Object/ObjectFactory.h"
 #include "Object/USceneComponent.h"
+
 
 class UWorld;
 

@@ -1,6 +1,8 @@
 #pragma once
-#include "Object/Actor/Actor.h"
+#include "Core/AbstractClass/Singleton.h"
 
+class ACamera;
+class AActor;
 class AGizmoActor;
 
 class FEditorManager : public TSingleton<FEditorManager>

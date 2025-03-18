@@ -3,33 +3,30 @@
 
 #include "Core/Container/String.h"
 #include "Core/Container/Map.h"
-template<typename ResourcesType>
-class FResource 
+
+template <typename ResourcesType>
+class FResource
 {
 public:
-	FResource() {}
-
-	virtual ~FResource()
-	{
-	}
+	FResource() = default;
+	virtual ~FResource() = default;
 
 
 	// delete Function
-	FResource(const FResource& _Other) = delete;
-	FResource(FResource&& _Other) noexcept = delete;
-	FResource& operator=(const FResource& _Other) = delete;
-	FResource& operator=(FResource&& _Other) noexcept = delete;
+	FResource(const FResource& Other) = delete;
+	FResource(FResource&& Other) noexcept = delete;
+	FResource& operator=(const FResource& Other) = delete;
+	FResource& operator=(FResource&& Other) noexcept = delete;
 
-	static std::shared_ptr<ResourcesType> Find(FString _Name)
+	static std::shared_ptr<ResourcesType> Find(const FString& InName)
 	{
-	
-		std::lock_guard<std::mutex> Lock(NameMutex);
-		auto pResult = NameRes.Find(_Name);
-		
-		return (pResult != nullptr) ? *pResult : std::shared_ptr<ResourcesType>();
+		std::lock_guard Lock(NameMutex);
+		auto pResult = NameRes.Find(InName);
+
+		return (pResult != nullptr) ? *pResult : nullptr;
 	}
 
-	
+
 	static void AllResourcesRelease()
 	{
 		{
@@ -38,9 +35,9 @@ public:
 		}
 	}
 
-	void SetName(FString _Name)
+	void SetName(const FString& InName)
 	{
-		Name = _Name;
+		Name = InName;
 	}
 
 	FString GetName()
@@ -49,33 +46,26 @@ public:
 	}
 
 protected:
-	static std::shared_ptr<ResourcesType>  CreateRes(const FString&  _Name)
+	static std::shared_ptr<ResourcesType> CreateRes(const FString& InName)
 	{
 		std::shared_ptr<ResourcesType> NewRes = std::make_shared<ResourcesType>();
 
-		std::lock_guard<std::mutex> Lock(NameMutex);
-		NewRes->SetName(_Name);
-		NameRes.Add(_Name, NewRes);
+		std::lock_guard Lock(NameMutex);
+		NewRes->SetName(InName);
+		NameRes.Add(InName, NewRes);
 		return NewRes;
 	}
 
 private:
 	static std::mutex NameMutex;
-	static TMap<FString,std::shared_ptr<ResourcesType>> NameRes;
+	static TMap<FString, std::shared_ptr<ResourcesType>> NameRes;
 
-	
 	FString Name;
-
-	
 };
 
 
+template <typename ResourcesType>
+TMap<FString, std::shared_ptr<ResourcesType>> FResource<ResourcesType>::NameRes;
 
-
-template<typename ResourcesType>
-TMap<FString,std::shared_ptr<ResourcesType>> FResource<ResourcesType>::NameRes;
-
-template<typename ResourcesType>
+template <typename ResourcesType>
 std::mutex FResource<ResourcesType>::NameMutex;
-
-

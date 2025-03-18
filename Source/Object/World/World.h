@@ -20,7 +20,6 @@ class UWorld :public UObject
 
 public:
 	UWorld() = default;
-	virtual ~UWorld() = default;
 
 public:
 	void BeginPlay();

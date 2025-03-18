@@ -1,4 +1,7 @@
 #include "Matrix.h"
+
+#include <iostream>
+
 #include "Vector.h"
 #include "Quat.h"
 #include "Transform.h"
@@ -25,15 +28,13 @@ FMatrix::FMatrix(const FVector4& InX, const FVector4& InY, const FVector4& InZ, 
 
 FMatrix::FMatrix(const FRotator& Rotation)
 {
-	*this = FMatrix::RotateToMatrix(Rotation.Roll, Rotation.Pitch, Rotation.Yaw);
+	*this = RotateToMatrix(Rotation.Roll, Rotation.Pitch, Rotation.Yaw);
 }
 
 FMatrix FMatrix::Identity()
 {
 	return FMatrix();
 }
-
-static constexpr float PIDIV4 = PI / 4.0f;
 
 FMatrix FMatrix::operator+(const FMatrix& Other) const
 {
@@ -297,6 +298,7 @@ FMatrix FMatrix::GetRotateMatrix(const FQuat& Q)
 
 	return Result;
 }
+
 FMatrix FMatrix::GetQuatToRotationMatrixScaleMatrix(const FQuat& q, const FVector& scale)
 {
 	// 쿼터니언 요소 추출
@@ -332,13 +334,7 @@ FMatrix FMatrix::GetQuatToRotationMatrixScaleMatrix(const FQuat& q, const FVecto
 
 	return Result;
 }
-/// <summary>
-/// 뷰 변환 행렬을 생성합니다.
-/// </summary>
-/// <param name="EyePosition">카메라의 포지션입니다.</param>
-/// <param name="FocusPoint">카메라가 바라보는 곳의 포지션입니다.</param>
-/// <param name="UpDirection">카메라의 위쪽 방향입니다.</param>
-/// <returns>뷰 변환 행렬을 반환합니다.</returns>
+
 FMatrix FMatrix::LookAtLH(const FVector& EyePosition, const FVector& FocusPoint, const FVector& WorldUp)
 {
 	FVector Forward = (FocusPoint - EyePosition).GetSafeNormal();
@@ -354,6 +350,7 @@ FMatrix FMatrix::LookAtLH(const FVector& EyePosition, const FVector& FocusPoint,
 
 	return Result;
 }
+
 FMatrix FMatrix::PerspectiveFovLH(float FieldOfView, float AspectRatio, float NearPlane, float FarPlane)
 {
 	FMatrix Result;
@@ -570,7 +567,7 @@ void FMatrix::RemoveScaling(float Tolerance)
 	}
 }
 
-FTransform FMatrix::ConstructTransformFromMatrixWithDesiredScale(FMatrix& AMatrix, FMatrix& BMatrix, FVector DesiredScale)
+FTransform FMatrix::ConstructTransformFromMatrixWithDesiredScale(const FMatrix& AMatrix, const FMatrix& BMatrix, FVector DesiredScale) const
 {
 	FMatrix M = AMatrix * BMatrix;	
 	M.RemoveScaling();

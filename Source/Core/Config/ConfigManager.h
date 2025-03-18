@@ -1,16 +1,16 @@
 #pragma once
-#include "Core/Container/String.h"
 #include "Core/Container/Map.h"
+#include "Core/Container/String.h"
 #include "Core/AbstractClass/Singleton.h"
-
-using Section = TMap<FString, FString>;
-using ConfigData = TMap<FString, Section>;
 
 
 class UConfigManager : public TSingleton<UConfigManager>
 {
 public:
-  /** ini 파일을 읽어들입니다. */
+	using Section = TMap<FString, FString>;
+	using ConfigData = TMap<FString, Section>;
+
+	/** ini 파일을 읽어들입니다. */
 	bool LoadConfig(const FString& InConfigName);
 
 	/** ini 파일을 저장합니다. */

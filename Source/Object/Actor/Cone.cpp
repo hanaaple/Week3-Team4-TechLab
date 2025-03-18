@@ -1,6 +1,6 @@
 ﻿#include "Cone.h"
+#include "Object/PrimitiveComponent/UPrimitiveComponent.h"
 
-#include <Object/PrimitiveComponent/UPrimitiveComponent.h>
 
 ACone::ACone()
 {

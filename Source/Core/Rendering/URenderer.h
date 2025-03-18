@@ -3,13 +3,9 @@
 #define _TCHAR_DEFINED  // TCHAR 재정의 에러 때문
 #include <d3d11.h>
 
-#include "UI.h"
-#include "Core/Math/Vector.h"
-// #include "Object/Actor/Camera.h"
-#include "Core/Math/Matrix.h"
 #include "Core/Engine.h"
-#include "Core/Rendering/FViewMode.h"
-#include "Primitive/PrimitiveVertices.h"
+#include "Core/Math/Vector.h"
+#include "Core/Math/Matrix.h"
 
 struct FVertexSimple;
 struct FVector4;
@@ -63,24 +59,12 @@ public:
 
 	void RenderPrimitive(class UPrimitiveComponent& PrimitiveComp , const FMatrix& ModelMatrix);
 
-    /**
-     * Buffer에 있는 Vertex를 그립니다.
-     * @param pBuffer 렌더링에 사용할 버텍스 버퍼에 대한 포인터
-     * @param numVertices 버텍스 버퍼에 저장된 버텍스의 총 개수
-     */
-    void RenderPrimitiveInternal(class UPrimitiveComponent& PrimitiveComp) const;
+    /** PrimitiveComponent를 초기화 합니다. */
+    void RenderPrimitiveInternal(UPrimitiveComponent& PrimitiveComp) const;
 
 	void LoadTexture(const wchar_t* texturePath);
 	ID3D11ShaderResourceView* FontTextureSRV = nullptr;
 	ID3D11SamplerState* FontSamplerState = nullptr;
-    /**
-     * 정점 데이터로 Vertex Buffer를 생성합니다.
-     * @param Vertices 버퍼로 변환할 정점 데이터 배열의 포인터
-     * @param ByteWidth 버퍼의 총 크기 (바이트 단위)
-     * @return 생성된 버텍스 버퍼에 대한 ID3D11Buffer 포인터, 실패 시 nullptr
-     *
-     * @note 이 함수는 D3D11_USAGE_IMMUTABLE 사용법으로 버퍼를 생성합니다.
-     */
 
     /** Constant Data를 업데이트 합니다. */
     void UpdateConstant(const class FConstantsComponentData& UpdateInfo) const;
@@ -122,8 +106,7 @@ protected:
 
 	//D3D_PRIMITIVE_TOPOLOGY CurrentTopology = D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
 
-	
-#pragma region picking
+
 protected:
 	// 피킹용 버퍼들
 	ID3D11Texture2D* PickingFrameBuffer = nullptr;                 // 화면 출력용 텍스처
@@ -150,9 +133,7 @@ public:
 	FVector4 GetPixel(FVector MPos);
 
 	void RenderPickingTexture();
-#pragma endregion picking
 
-#pragma region Ray
 public:
 	FVector GetFrameBufferWindowSize() const;
 };

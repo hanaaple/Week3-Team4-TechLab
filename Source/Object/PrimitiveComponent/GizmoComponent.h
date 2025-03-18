@@ -1,6 +1,7 @@
 #pragma once
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
 
+
 enum class EAxis : uint8
 {
 	None,
@@ -23,7 +24,6 @@ class UGizmoComponent : public UPrimitiveComponent
 
 public:
 	UGizmoComponent();
-	virtual ~UGizmoComponent() = default;
 
 	void BeginPlay() override;
 	void Tick(float DeltaTime) override;

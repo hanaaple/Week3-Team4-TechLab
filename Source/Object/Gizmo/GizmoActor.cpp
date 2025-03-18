@@ -3,7 +3,7 @@
 #include "Core/Engine.h"
 #include "Object/World/World.h"
 
-AGizmoActor::AGizmoActor() : AActor()
+AGizmoActor::AGizmoActor()
 {
 	bCanEverTick = true;
 

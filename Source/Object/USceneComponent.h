@@ -82,10 +82,10 @@ public:
 	/* 월드 트랜스폼을 반환, 이걸로 렌더링한다*/
 	const FTransform GetWorldTransform();
 
-	const FMatrix GetWorldMatrix() const;
+	FMatrix GetWorldMatrix() const;
 	const FMatrix GetLocalMatrix() const { return RelativeTransform.GetMatrix(); }
 
-	const FTransform GetWorldTransform() const;
+	FTransform GetWorldTransform() const;
 
 	USceneComponent* GetParent() const;
 

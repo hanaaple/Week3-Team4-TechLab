@@ -1,11 +1,6 @@
-#include "Core/HAL/PlatformType.h"
-#include "Core/Rendering/URenderer.h"
 #include "Picker.h"
-
 #include "Core/Input/PlayerInput.h"
-#include "Object/Gizmo/GizmoHandle.h"
-#include "Object/PrimitiveComponent/UPrimitiveComponent.h"
-#include "Static/FEditorManager.h"
+
 
 APicker::APicker()
 {    

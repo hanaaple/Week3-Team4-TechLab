@@ -1,5 +1,5 @@
 #include "Quad.h"
-#include <Object/PrimitiveComponent/UPrimitiveComponent.h>
+#include "Object/PrimitiveComponent/UPrimitiveComponent.h"
 
 AQuad::AQuad()
 {

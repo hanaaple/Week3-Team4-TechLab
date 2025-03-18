@@ -1,18 +1,15 @@
 #include "Engine.h"
 
-#include <iostream>
-#include "Object/ObjectFactory.h"
-#include "Object/World/World.h"
-#include "Debug/DebugConsole.h"
-#include "Object/Gizmo/Axis.h"
-#include "Core/Input/PlayerInput.h"
-#include "Core/Input/PlayerController.h"
+#include "Input/PlayerController.h"
+#include "Input/PlayerInput.h"
+#include "Math/Vector.h"
 #include "Object/Actor/Camera.h"
-#include "Object/Actor/Sphere.h"
+#include "Object/Assets/AssetManager.h"
+#include "Object/World/World.h"
+#include "Rendering/FDevice.h"
+#include "Rendering/URenderer.h"
 #include "Static/FEditorManager.h"
 #include "Static/FLineBatchManager.h"
-#include "Core/Rendering/FDevice.h"
-#include "Object/Assets/AssetManager.h"
 
 
 class AArrow;

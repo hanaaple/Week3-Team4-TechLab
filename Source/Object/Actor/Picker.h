@@ -1,6 +1,6 @@
 #pragma once
-
 #include "Actor.h"
+
 
 class APicker : public AActor
 {
@@ -8,7 +8,6 @@ class APicker : public AActor
 
 public:
     APicker();
-    ~APicker() = default;
     
     static FVector4 EncodeUUID(unsigned int UUID);
     static int DecodeUUID(FVector4 color);

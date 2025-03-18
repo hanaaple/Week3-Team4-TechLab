@@ -1,13 +1,10 @@
 #pragma once
-
 #include <memory>
 
 #include "HAL/PlatformType.h"
-#include "Rendering/URenderer.h"
 #include "Rendering/UI.h"
 #include "AbstractClass/Singleton.h"
 #include "Container/Map.h"
-#include "Core/Container/Array.h"
 
 class UObject;
 class UWorld;

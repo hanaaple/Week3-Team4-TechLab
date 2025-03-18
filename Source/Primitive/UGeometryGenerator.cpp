@@ -1,277 +1,277 @@
 #include "UGeometryGenerator.h"
-#include "Core/Math/Vector.h"
 #include <cmath>
 
-void UGeometryGenerator::CreateCube(float size, TArray<FVertexSimple>* vertices, TArray<uint32>* indices)
+void UGeometryGenerator::CreateCube(float size, TArray<FVertexSimple>& OutVertices, TArray<uint32>& OutIndices)
 {
     // 정육면체의 반 크기
     float halfSize = size / 2.0f;
 
     // 정육면체의 8개 정점 정의
-    vertices->Add(FVertexSimple(-halfSize, -halfSize, -halfSize, 0.0f, 0.0f, 0.0f, 1.0f)); // 0
-    vertices->Add(FVertexSimple(-halfSize, -halfSize, halfSize, 0.0f, 1.0f, 0.0f, 1.0f)); // 1
-    vertices->Add(FVertexSimple(-halfSize, halfSize, -halfSize, 1.0f, 0.0f, 0.0f, 1.0f)); // 2
-    vertices->Add(FVertexSimple(-halfSize, halfSize, halfSize, 1.0f, 1.0f, 0.0f, 1.0f)); // 3
-    vertices->Add(FVertexSimple(halfSize, -halfSize, -halfSize, 0.0f, 0.0f, 1.0f, 1.0f)); // 4
-    vertices->Add(FVertexSimple(halfSize, -halfSize, halfSize, 0.0f, 1.0f, 1.0f, 1.0f)); // 5
-    vertices->Add(FVertexSimple(halfSize, halfSize, -halfSize, 1.0f, 0.0f, 1.0f, 1.0f)); // 6
-    vertices->Add(FVertexSimple(halfSize, halfSize, halfSize, 1.0f, 1.0f, 1.0f, 1.0f)); // 7
+    OutVertices.Emplace(-halfSize, -halfSize, -halfSize, 0.0f, 0.0f, 0.0f, 1.0f); // 0
+    OutVertices.Emplace(-halfSize, -halfSize, halfSize, 0.0f, 1.0f, 0.0f, 1.0f); // 1
+    OutVertices.Emplace(-halfSize, halfSize, -halfSize, 1.0f, 0.0f, 0.0f, 1.0f); // 2
+    OutVertices.Emplace(-halfSize, halfSize, halfSize, 1.0f, 1.0f, 0.0f, 1.0f); // 3
+    OutVertices.Emplace(halfSize, -halfSize, -halfSize, 0.0f, 0.0f, 1.0f, 1.0f); // 4
+    OutVertices.Emplace(halfSize, -halfSize, halfSize, 0.0f, 1.0f, 1.0f, 1.0f); // 5
+    OutVertices.Emplace(halfSize, halfSize, -halfSize, 1.0f, 0.0f, 1.0f, 1.0f); // 6
+    OutVertices.Emplace(halfSize, halfSize, halfSize, 1.0f, 1.0f, 1.0f, 1.0f); // 7
 
     // 각 면의 인덱스 정의 (각 면은 2개의 삼각형으로 구성됨)
     // 앞면
-    indices->Add(0); indices->Add(1); indices->Add(2);
-    indices->Add(2); indices->Add(1); indices->Add(3);
+    OutIndices.Add(0); OutIndices.Add(1); OutIndices.Add(2);
+    OutIndices.Add(2); OutIndices.Add(1); OutIndices.Add(3);
 
     // 뒷면
-    indices->Add(4); indices->Add(6); indices->Add(5);
-    indices->Add(5); indices->Add(6); indices->Add(7);
+    OutIndices.Add(4); OutIndices.Add(6); OutIndices.Add(5);
+    OutIndices.Add(5); OutIndices.Add(6); OutIndices.Add(7);
 
     // 왼쪽면
-    indices->Add(0); indices->Add(2); indices->Add(4);
-    indices->Add(4); indices->Add(2); indices->Add(6);
+    OutIndices.Add(0); OutIndices.Add(2); OutIndices.Add(4);
+    OutIndices.Add(4); OutIndices.Add(2); OutIndices.Add(6);
 
     // 오른쪽면
-    indices->Add(1); indices->Add(5); indices->Add(3);
-    indices->Add(3); indices->Add(5); indices->Add(7);
+    OutIndices.Add(1); OutIndices.Add(5); OutIndices.Add(3);
+    OutIndices.Add(3); OutIndices.Add(5); OutIndices.Add(7);
 
     // 윗면
-    indices->Add(2); indices->Add(3); indices->Add(6);
-    indices->Add(6); indices->Add(3); indices->Add(7);
+    OutIndices.Add(2); OutIndices.Add(3); OutIndices.Add(6);
+    OutIndices.Add(6); OutIndices.Add(3); OutIndices.Add(7);
 
     // 아랫면
-    indices->Add(0); indices->Add(4); indices->Add(1);
-    indices->Add(1); indices->Add(4); indices->Add(5);
+    OutIndices.Add(0); OutIndices.Add(4); OutIndices.Add(1);
+    OutIndices.Add(1); OutIndices.Add(4); OutIndices.Add(5);
 }
 
-void UGeometryGenerator::CreateSphere(int32 radius, uint32 sliceCount, uint32 stackCount, TArray<FVertexSimple>* vertices, TArray<uint32>* indices)
+void UGeometryGenerator::CreateSphere(int32 Radius, uint32 SliceCount, uint32 StackCount, TArray<FVertexSimple>& OutVertices, TArray<uint32>& OutIndices)
 {
-    vertices->Add(FVertexSimple(0.0f, 0.0f, radius, 1.0f, 1.0f, 1.0f, 1.0f));
+    OutVertices.Emplace(0.0f, 0.0f, Radius, 1.0f, 1.0f, 1.0f, 1.0f);
 
-    for (uint32 stack = 1; stack <= stackCount - 1; ++stack)
+    for (uint32 stack = 1; stack <= StackCount - 1; ++stack)
     {
-        float phi = PI * stack / stackCount;
-        for (uint32 slice = 0; slice <= sliceCount; ++slice)
+        float phi = PI * stack / StackCount;
+        for (uint32 slice = 0; slice <= SliceCount; ++slice)
         {
-            float theta = 2 * PI * slice / sliceCount;
+            float theta = 2 * PI * slice / SliceCount;
 
-            vertices->Add(FVertexSimple(
-                radius * sinf(phi) * sinf(theta), radius * sinf(phi) * cosf(theta), radius * cosf(phi),
-                static_cast<float>(stack) / stackCount, static_cast<float>(stack) / stackCount, 1.0f - static_cast<float>(stack) / stackCount, 1.0f)
+            OutVertices.Emplace(
+                Radius * sinf(phi) * sinf(theta), Radius * sinf(phi) * cosf(theta), Radius * cosf(phi),
+                static_cast<float>(stack) / StackCount, static_cast<float>(stack) / StackCount, 1.0f - static_cast<float>(stack) / StackCount, 1.0f
             );
         }
     }
 
-	uint32 bottomIndex = vertices->Num();
-    vertices->Add(FVertexSimple(0.0f, 0.0f, -radius, 1.0f, 1.0f, 1.0f, 1.0f));
+	uint32 bottomIndex = OutVertices.Num();
+    OutVertices.Emplace(0.0f, 0.0f, -Radius, 1.0f, 1.0f, 1.0f, 1.0f);
   
-    for (uint32 slice = 0; slice < sliceCount; ++slice)
+    for (uint32 slice = 0; slice < SliceCount; ++slice)
     {
-        indices->Add(0);
-        indices->Add((slice + 1) % sliceCount + 1);
-        indices->Add(slice + 1);
+        OutIndices.Add(0);
+        OutIndices.Add((slice + 1) % SliceCount + 1);
+        OutIndices.Add(slice + 1);
     }
 
-    for (uint32 stack = 0; stack < stackCount - 2; ++stack)
+    for (uint32 stack = 0; stack < StackCount - 2; ++stack)
     {
-        uint32 baseIndex = 1 + stack * (sliceCount + 1);
-        for (uint32 slice = 0; slice < sliceCount; ++slice)
+        uint32 baseIndex = 1 + stack * (SliceCount + 1);
+        for (uint32 slice = 0; slice < SliceCount; ++slice)
         {
-            indices->Add(baseIndex + slice);
-            indices->Add(baseIndex + slice + 1);
-            indices->Add(baseIndex + slice + (sliceCount + 1));
+            OutIndices.Add(baseIndex + slice);
+            OutIndices.Add(baseIndex + slice + 1);
+            OutIndices.Add(baseIndex + slice + (SliceCount + 1));
 
-            indices->Add(baseIndex + slice + 1);
-            indices->Add(baseIndex + slice + (sliceCount + 1) + 1);
-            indices->Add(baseIndex + slice + (sliceCount + 1));
+            OutIndices.Add(baseIndex + slice + 1);
+            OutIndices.Add(baseIndex + slice + (SliceCount + 1) + 1);
+            OutIndices.Add(baseIndex + slice + (SliceCount + 1));
         }
     }
 
-    uint32 lastStackBaseIndex = bottomIndex - (sliceCount + 1);
-    for (uint32 slice = 0; slice < sliceCount; ++slice)
+    uint32 lastStackBaseIndex = bottomIndex - (SliceCount + 1);
+    for (uint32 slice = 0; slice < SliceCount; ++slice)
     {
-        indices->Add(bottomIndex);
-        indices->Add(lastStackBaseIndex + slice);
-        indices->Add(lastStackBaseIndex + slice + 1);
+        OutIndices.Add(bottomIndex);
+        OutIndices.Add(lastStackBaseIndex + slice);
+        OutIndices.Add(lastStackBaseIndex + slice + 1);
     }
 }
 
-void UGeometryGenerator::CreateCylinder(float bRadius, float tRadius, float height, uint32 sliceCount, uint32 stackCount, TArray<FVertexSimple>* vertices, TArray<uint32>* indices)
+void UGeometryGenerator::CreateCylinder(float BottomRadius, float TopRadius, float Height, uint32 SliceCount, uint32 StackCount, TArray<FVertexSimple>&
+                                        OutVertices, TArray<uint32>& OutIndices
+)
 {
 
-    float stackHeight = height / stackCount;
-    float radiusStep = (tRadius - bRadius) / stackCount;
+    float stackHeight = Height / StackCount;
+    float radiusStep = (TopRadius - BottomRadius) / StackCount;
 
     // Vertex data
-    for (uint32 stack = 0; stack <= stackCount; ++stack)
+    for (uint32 stack = 0; stack <= StackCount; ++stack)
     {
-        float y = -0.5f * height + stack * stackHeight;
-        float r = bRadius + stack * radiusStep;
+        float y = -0.5f * Height + stack * stackHeight;
+        float r = BottomRadius + stack * radiusStep;
 
-        for (uint32 slice = 0; slice <= sliceCount; ++slice)
+        for (uint32 slice = 0; slice <= SliceCount; ++slice)
         {
-            float theta = 2.0f * PI * slice / sliceCount;
+            float theta = 2.0f * PI * slice / SliceCount;
 
-            vertices->Add(
-                FVertexSimple(
-                    r * sinf(theta),
-                    r * cosf(theta),
-                    y,
-                    static_cast<float>(stack) / stackCount,
-                    static_cast<float>(slice) / sliceCount,
-                    1.0f - static_cast<float>(stack) / stackCount,
-                    1.0f
-                )
+            OutVertices.Emplace(
+                r * sinf(theta),
+                r * cosf(theta),
+                y,
+                static_cast<float>(stack) / StackCount,
+                static_cast<float>(slice) / SliceCount,
+                1.0f - static_cast<float>(stack) / StackCount,
+                1.0f
             );
         }
     }
 
     // Index data
-    for (uint32 stack = 0; stack < stackCount; ++stack)
+    for (uint32 stack = 0; stack < StackCount; ++stack)
     {
-        for (uint32 slice = 0; slice < sliceCount; ++slice)
+        for (uint32 slice = 0; slice < SliceCount; ++slice)
         {
-            uint32 baseIndex = stack * (sliceCount + 1) + slice;
-            indices->Add(baseIndex);
-            indices->Add(baseIndex + (sliceCount + 1));
-            indices->Add(baseIndex + 1);
+            uint32 baseIndex = stack * (SliceCount + 1) + slice;
+            OutIndices.Add(baseIndex);
+            OutIndices.Add(baseIndex + (SliceCount + 1));
+            OutIndices.Add(baseIndex + 1);
                    
-            indices->Add(baseIndex + 1);
-            indices->Add(baseIndex + (sliceCount + 1));
-            indices->Add(baseIndex + (sliceCount + 1) + 1);
+            OutIndices.Add(baseIndex + 1);
+            OutIndices.Add(baseIndex + (SliceCount + 1));
+            OutIndices.Add(baseIndex + (SliceCount + 1) + 1);
         }
     }
 
     // Top side
-    uint32 topCenterIndex = vertices->Num();
-    vertices->Add(FVertexSimple(
-        0.0f, 0.0f, height / 2.0f,
+    uint32 topCenterIndex = OutVertices.Num();
+    OutVertices.Emplace(
+        0.0f, 0.0f, Height / 2.0f,
         1.0f, 1.0f, 1.0f, 1.0f
-    ));
+    );
 
-    for (uint32 slice = 0; slice <= sliceCount; ++slice)
+    for (uint32 slice = 0; slice <= SliceCount; ++slice)
     {
-        float theta = 2.0f * PI * slice / sliceCount;
+        float theta = 2.0f * PI * slice / SliceCount;
 
-        vertices->Add(FVertexSimple(
-            tRadius * sinf(theta),
-            tRadius * cosf(theta),
-            height / 2.0f,
-            static_cast<float>(slice) / sliceCount,
-            1.0f - static_cast<float>(slice) / sliceCount,
+        OutVertices.Emplace(
+            TopRadius * sinf(theta),
+            TopRadius * cosf(theta),
+            Height / 2.0f,
+            static_cast<float>(slice) / SliceCount,
+            1.0f - static_cast<float>(slice) / SliceCount,
             0.0f,
             1.0f
-        ));
+        );
     }
 
-    for (uint32 slice = 0; slice < sliceCount; ++slice)
+    for (uint32 slice = 0; slice < SliceCount; ++slice)
     {
-        indices->Add(topCenterIndex);
-        indices->Add(topCenterIndex + (slice + 1) % sliceCount + 1);
-        indices->Add(topCenterIndex + slice + 1);
+        OutIndices.Add(topCenterIndex);
+        OutIndices.Add(topCenterIndex + (slice + 1) % SliceCount + 1);
+        OutIndices.Add(topCenterIndex + slice + 1);
     }
 
     // Bottom side
-    uint32 bottomCenterIndex = vertices->Num();
-    vertices->Add(FVertexSimple(
-        0.0f, 0.0f, -height / 2.0f,
+    uint32 bottomCenterIndex = OutVertices.Num();
+    OutVertices.Emplace(
+        0.0f, 0.0f, -Height / 2.0f,
         1.0f, 1.0f, 1.0f, 1.0f
-    ));
+    );
 
-    for (uint32 slice = 0; slice <= sliceCount; ++slice)
+    for (uint32 slice = 0; slice <= SliceCount; ++slice)
     {
-        float theta = 2.0f * PI * slice / sliceCount;
+        float theta = 2.0f * PI * slice / SliceCount;
 
-        vertices->Add(FVertexSimple(
-            bRadius * sinf(theta),
-            bRadius * cosf(theta),
-            -height / 2.0f,
-            static_cast<float>(slice) / sliceCount,
+        OutVertices.Emplace(
+            BottomRadius * sinf(theta),
+            BottomRadius * cosf(theta),
+            -Height / 2.0f,
+            static_cast<float>(slice) / SliceCount,
             0.0f,
-            1.0f - static_cast<float>(slice) / sliceCount,
+            1.0f - static_cast<float>(slice) / SliceCount,
             1.0f
-        ));
+        );
     }
 
-    for (uint32 slice = 0; slice < sliceCount; ++slice)
+    for (uint32 slice = 0; slice < SliceCount; ++slice)
     {
-        indices->Add(bottomCenterIndex);
-        indices->Add(bottomCenterIndex + slice + 1);
-        indices->Add(bottomCenterIndex + (slice + 1) % sliceCount + 1);
+        OutIndices.Add(bottomCenterIndex);
+        OutIndices.Add(bottomCenterIndex + slice + 1);
+        OutIndices.Add(bottomCenterIndex + (slice + 1) % SliceCount + 1);
     }
 }
 
-void UGeometryGenerator::CreateCone(float bottomRadius, float height, uint32 sliceCount, uint32 stackCount, TArray<FVertexSimple>* vertices, TArray<uint32>* indices)
+void UGeometryGenerator::CreateCone(float BottomRadius, float Height, uint32 SliceCount, uint32 StackCount, TArray<FVertexSimple>& OutVertices, TArray<
+                                    uint32>& OutIndices)
 {
-    vertices->Add(FVertexSimple(0.0f, 0.0f, -height / 2.0f, 1.0f, 1.0f, 1.0f, 1.0f));
+    OutVertices.Emplace(0.0f, 0.0f, -Height / 2.0f, 1.0f, 1.0f, 1.0f, 1.0f);
 
-    for (uint32 slice = 0; slice <= sliceCount; ++slice)
+    for (uint32 slice = 0; slice <= SliceCount; ++slice)
     {
-        float theta = 2.0f * PI * slice / sliceCount;
+        float theta = 2.0f * PI * slice / SliceCount;
 
-        vertices->Add(FVertexSimple(
-            bottomRadius * sinf(theta),
-            bottomRadius * cosf(theta),
-            - height / 2.0f,
-            static_cast<float>(slice) / sliceCount,
+        OutVertices.Emplace(
+            BottomRadius * sinf(theta),
+            BottomRadius * cosf(theta),
+            - Height / 2.0f,
+            static_cast<float>(slice) / SliceCount,
             0.0f,
-            1.0f - static_cast<float>(slice) / sliceCount,
+            1.0f - static_cast<float>(slice) / SliceCount,
             1.0f
-        ));
+        );
     }
 
-    for (uint32 slice = 0; slice < sliceCount; ++slice)
+    for (uint32 slice = 0; slice < SliceCount; ++slice)
     {
-        indices->Add(0);
-        indices->Add(slice + 1);
-        indices->Add((slice + 1) % sliceCount + 1);
+        OutIndices.Add(0);
+        OutIndices.Add(slice + 1);
+        OutIndices.Add((slice + 1) % SliceCount + 1);
     }
 
-    uint32 topIndex = vertices->Num();
-    vertices->Add(FVertexSimple(
-        0.0f, 0.0f, height / 2.0f,
+    uint32 topIndex = OutVertices.Num();
+    OutVertices.Emplace(
+        0.0f, 0.0f, Height / 2.0f,
         1.0f, 1.0f, 1.0f, 1.0f
-    ));
+    );
 
-    for (uint32 stack = 0; stack <= stackCount; ++stack)
+    for (uint32 stack = 0; stack <= StackCount; ++stack)
     {
-        float y = -height / 2.0f + (height * stack / stackCount);
-        float r = bottomRadius * (1.0f - static_cast<float>(stack) / stackCount);
+        float y = -Height / 2.0f + (Height * stack / StackCount);
+        float r = BottomRadius * (1.0f - static_cast<float>(stack) / StackCount);
 
-        for (uint32 slice = 0; slice <= sliceCount; ++slice)
+        for (uint32 slice = 0; slice <= SliceCount; ++slice)
         {
-            float theta = 2.0f * PI * slice / sliceCount;
+            float theta = 2.0f * PI * slice / SliceCount;
 
-            vertices->Add(FVertexSimple(
+            OutVertices.Emplace(
                 r * sinf(theta),
                 r * cosf(theta),
                 y,
-                static_cast<float>(stack) / stackCount,
-                static_cast<float>(slice) / sliceCount,
-                1.0f - static_cast<float>(stack) / stackCount,
+                static_cast<float>(stack) / StackCount,
+                static_cast<float>(slice) / SliceCount,
+                1.0f - static_cast<float>(stack) / StackCount,
                 1.0f
-            ));
+            );
         }
     }
 
-    for (uint32 stack = 0; stack < stackCount; ++stack)
+    for (uint32 stack = 0; stack < StackCount; ++stack)
     {
-        for (uint32 slice = 0; slice < sliceCount; ++slice)
+        for (uint32 slice = 0; slice < SliceCount; ++slice)
         {
-            uint32 baseIndex = topIndex + 1 + stack * (sliceCount + 1) + slice;
+            uint32 baseIndex = topIndex + 1 + stack * (SliceCount + 1) + slice;
 
-            indices->Add(topIndex);
-            indices->Add(baseIndex + 1);
-            indices->Add(baseIndex);
+            OutIndices.Add(topIndex);
+            OutIndices.Add(baseIndex + 1);
+            OutIndices.Add(baseIndex);
 
-            if (stack < stackCount - 1)
+            if (stack < StackCount - 1)
             {
-                indices->Add(baseIndex);
-                indices->Add(baseIndex + 1);
-                indices->Add(baseIndex + (sliceCount + 1));
+                OutIndices.Add(baseIndex);
+                OutIndices.Add(baseIndex + 1);
+                OutIndices.Add(baseIndex + (SliceCount + 1));
 
-                indices->Add(baseIndex + 1);
-                indices->Add(baseIndex + (sliceCount + 1) + 1);
-                indices->Add(baseIndex + (sliceCount + 1));
+                OutIndices.Add(baseIndex + 1);
+                OutIndices.Add(baseIndex + (SliceCount + 1) + 1);
+                OutIndices.Add(baseIndex + (SliceCount + 1));
             }
         }
     }

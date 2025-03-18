@@ -1,11 +1,9 @@
 #pragma once
-#include "Core//UObject/Object.h"
 #include "Core/HAL/PlatformType.h"
-#include "Core/EngineTypes.h"
-#include <string>
-
+#include "Core/UObject/Object.h"
 #include "Core/UObject/ObjectMacros.h"
-enum class EAssetType
+
+enum class EAssetType : uint8
 {
 	Texture,
 	Material,
@@ -27,8 +25,10 @@ struct FAssetMetaData
 public:
 	FAssetMetaData() : AssetName(""), AssetPath(""), AssetSize(0), Type(EAssetType::None), BIsLoaded(false), BIsDirty(false) {}
 
-	FAssetMetaData(FString InAssetName, FString InAssetPath, uint64 assetSize, FString extension)
-		: AssetName(InAssetName), AssetPath(InAssetPath), AssetSize(assetSize), BIsLoaded(false), BIsDirty(false)
+	FAssetMetaData(FString InAssetName, FString InAssetPath, uint64 assetSize, const FString& extension)
+		: AssetName(std::move(InAssetName))
+		, AssetPath(std::move(InAssetPath))
+		, AssetSize(assetSize), BIsLoaded(false), BIsDirty(false)
 	{
 		if (extension.Equals(TEXT(".png")) || extension.Equals(TEXT(".jpb")) || extension.Equals(TEXT(".bmp")) || extension.Equals(TEXT(".dds")))
 		{
@@ -88,8 +88,8 @@ public:
 	bool IsLoaded() const { return BIsLoaded; }
 	bool IsDirty() const { return BIsDirty; }
 
-	void SetAssetName(FString InAssetName) { AssetName = InAssetName; }
-	void SetAssetPath(FString InAssetPath) { AssetPath = InAssetPath; }
+	void SetAssetName(const FString& InAssetName) { AssetName = InAssetName; }
+	void SetAssetPath(const FString& InAssetPath) { AssetPath = InAssetPath; }
 	void SetAssetSize(uint64 InAssetSize) { AssetSize = InAssetSize; }
 	void SetAssetType(EAssetType InAssetType) { Type = InAssetType; }
 	void SetIsLoaded(bool bIsLoaded) { BIsLoaded = bIsLoaded; }
@@ -110,17 +110,16 @@ class UAsset : public UObject
 	DECLARE_CLASS(UAsset, UObject)
 	
 public:
-	UAsset() : UObject() {}
-	virtual ~UAsset();
+	UAsset() = default;
 
 	virtual bool RegisterAsset() = 0;
 	virtual bool Load() = 0;
 	virtual bool Save(FString path = "") = 0;
 	virtual bool Unload() = 0;
 
-	inline void SetMetaData(FAssetMetaData InMetaData) { MetaData = InMetaData; }
-	inline void SetAssetName(FString InAssetName) { MetaData.SetAssetName(InAssetName); }
-	inline void SetAssetPath(FString InAssetPath) { MetaData.SetAssetPath(InAssetPath); }
+	inline void SetMetaData(const FAssetMetaData& InMetaData) { MetaData = InMetaData; }
+	inline void SetAssetName(const FString& InAssetName) { MetaData.SetAssetName(InAssetName); }
+	inline void SetAssetPath(const FString& InAssetPath) { MetaData.SetAssetPath(InAssetPath); }
 	inline void SetIsLoaded(bool bIsLoaded) { MetaData.SetIsLoaded(bIsLoaded); }
 	inline void SetIsDirty(bool bIsDirty) { MetaData.SetIsDirty(bIsDirty); }
 
