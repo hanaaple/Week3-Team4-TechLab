@@ -101,21 +101,11 @@ void URenderer::ReleaseConstantBuffer()
 
 void URenderer::Prepare() const
 {
-    /**
-     * OutputMerger 설정
-     * 렌더링 파이프라인의 최종 단계로써, 어디에 그릴지(렌더 타겟)와 어떻게 그릴지(블렌딩)를 지정
-     */
-	//FViewMode::Get().ApplyViewMode(FDevice::Get().GetDeviceContext());
-    //FDevice::Get().GetDeviceContext()->OMSetBlendState(nullptr, nullptr, 0xffffffff);
 }
 
 void URenderer::PrepareShader() const
 {
-    // 버텍스 쉐이더에 상수 버퍼를 설정
-    // if (ConstantBuffer)
-    // {
-    //     FDevice::Get().GetDeviceContext()->VSSetConstantBuffers(0, 1, &ConstantBuffer);
-    // }
+
     if (ConstantsDepthBuffer)
     {
         FDevice::Get().GetDeviceContext()->PSSetConstantBuffers(2, 1, &ConstantsDepthBuffer);
@@ -140,20 +130,10 @@ void URenderer::RenderPrimitive(class UPrimitiveComponent& PrimitiveComp, const 
 	};
 
 
-    //UpdateConstant(Data);
 
 	PrimitiveComp.GetRenderResourceCollection().Render();
-    //RenderPrimitiveInternal(PrimitiveComp);
 }
 
-// void URenderer::RenderPrimitiveInternal(class UPrimitiveComponent& PrimitiveComp) const
-// {
-//
-// 	PrimitiveComp.Render()
-//
-// 	//FDevice::Get().GetDeviceContext()->IASetPrimitiveTopology(PrimitiveComp.Topology);
-//     //FDevice::Get().GetDeviceContext()->DrawIndexed(PrimitiveComp.IndexBuffer->GetIndexCount(), 0, 0);
-// }
 
 void URenderer::LoadTexture(const wchar_t* texturePath)
 {
