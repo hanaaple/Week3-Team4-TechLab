@@ -5,9 +5,11 @@
 #include "Resource/DirectResource/VertexShader.h"
 #include "Resource/DirectResource/InputLayout.h"
 #include "Resource/DirectResource/BlendState.h"
+#include "Resource/DirectResource/Sampler.h"
 #include "Resource/DirectResource/Rasterizer.h"
 #include "Resource/DirectResource/DepthStencilState.h"
 #include "Resource/DirectResource/ConstantBuffer.h"
+#include "Resource/Texture.h"
 #include "Resource/Mesh.h"
 #include "Resource/Material.h"
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
@@ -71,7 +73,33 @@ void FDevice::InitResource()
 
 		FBlendState::Create("DefaultBlendState", blendDesc);
 	}
+
+	{
+		// Sampler state
+		D3D11_SAMPLER_DESC samplerDesc = {};
+		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.MipLODBias = 0.0f;
+		samplerDesc.MaxAnisotropy = 1;
+		samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+		samplerDesc.BorderColor[0] = 0;
+		samplerDesc.BorderColor[1] = 0;
+		samplerDesc.BorderColor[2] = 0;
+		samplerDesc.BorderColor[3] = 0;
+		samplerDesc.MinLOD = 0;
+		samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+		FSampler::Create("LinearSamplerState", samplerDesc);
+	}
 	
+	{
+		// TextureSRV
+		std::shared_ptr<FTexture> TextureImage = FTexture::Load("font_atlas.dds", "SubUVTexture");
+		TextureImage->CreateShaderResourceView();
+	}
+
 	{
 		// Blend
 		D3D11_BLEND_DESC blendDesc = {};
@@ -99,8 +127,8 @@ void FDevice::InitResource()
 		Mat->SetRasterizer("DefaultRasterizer");
 		Mat->SetBlendState("DefaultBlendState");
 		Mat->SetDepthState("DefaultDepthStencilState");
-		Mat->SetPixelShader("Simple_PS");
 		Mat->SetVertexShader("Simple_VS");
+		Mat->SetPixelShader("Simple_PS");
 	}
 
 	{
@@ -108,8 +136,17 @@ void FDevice::InitResource()
 		Mat->SetRasterizer("DefaultRasterizer");
 		Mat->SetBlendState("DefaultBlendState");
 		Mat->SetDepthState("DefaultDepthStencilState");
-		Mat->SetPixelShader("Font_PS");
 		Mat->SetVertexShader("Font_VS");
+		Mat->SetPixelShader("Font_PS");
+	}
+
+	{
+		std::shared_ptr<FMaterial> Mat = FMaterial::Create("SubUVMaterial");
+		Mat->SetRasterizer("DefaultRasterizer");
+		Mat->SetBlendState("DefaultBlendState");
+		Mat->SetDepthState("DefaultDepthStencilState");
+		Mat->SetVertexShader("Font_VS");
+		Mat->SetPixelShader("SubUV_PS");
 	}
 	
 	/// Mesh

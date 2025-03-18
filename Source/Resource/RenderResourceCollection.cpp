@@ -88,7 +88,7 @@ void FRenderResourceCollection::Reset()
 std::shared_ptr<class FTextureBinding> FRenderResourceCollection::SetTextureBinding(const FString& _Name, int _BindPoint,
                                                                                     bool bIsUseVertexShader, bool bIsUsePixelShader)
 {
-	std::shared_ptr< FTexture> Res = FTexture::Find(_Name);
+	std::shared_ptr<FTexture> Res = FTexture::Find(_Name);
 
 	// if (Res == nullptr)
 	// {

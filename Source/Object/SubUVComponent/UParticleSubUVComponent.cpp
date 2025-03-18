@@ -6,198 +6,42 @@
 #include "Object/World/World.h"
 #include "Object/Actor/Camera.h"
 
-struct alignas(16) FSubUVConstantsBufferData
-{
-	FMatrix MVP;
-	FVector4 Color;
-	// true인 경우 Vertex Color를 사용하고, false인 경우 Color를 사용합니다.
-	uint32 bUseVertexColor;
-	FVector Padding;
-};
-
 UParticleSubUVComponent::UParticleSubUVComponent()
 {
 	bLoop = true;
-	bIsPlaying = false;
+	bIsPlaying = true;
 	bIsPicked = false;
 	PlayRate = 1.0f;
 	CurrentTime = 0.0f;
 	CurrentFrame = 0;
+
+
+
 	TotalFrames = 0;
-	//TextureInfo = Texture;
+	FrameWidth = 1.0f / NumColumns;
+	FrameHeight = 1.0f / NumRows;
 
-	VertexBuffer = FVertexBuffer::Find("TextureQuad");
-	IndexBuffer = FIndexBuffer::Find("TextureQuad");
-	GetRenderResourceCollection().SetConstantBufferBinding("FSubUVVertexConstantsData", &GetVertexConstantsData(), 3, true, false);
-	GetRenderResourceCollection().SetConstantBufferBinding("FSubUVPixelConstantsData", &GetPixelConstantsData(), 4, true, false);
+	GetRenderResourceCollection().SetMesh("Quad");
+	GetRenderResourceCollection().SetMaterial("SubUVMaterial");
+	GetRenderResourceCollection().SetConstantBufferBinding("SubUVVertexConstants", &GetVertexConstantsData(), 0, true, false);
+	GetRenderResourceCollection().SetConstantBufferBinding("SubUVPixelConstants", &GetPixelConstantsData(), 0, false, true);
+	GetRenderResourceCollection().SetTextureBinding("SubUVTexture", 1, false, true);
+	GetRenderResourceCollection().SetSamplerBinding("LinearSamplerState", 0, false, true);
 
-	if (VertexBuffer == nullptr)
-	{
-		FVertexSimple tempArray[] =
-		{
-			{  0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f },
-			{  0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f },
-			{  0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f },
-			{  0.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f }
-		};
-
-		TArray<FVertexSimple> vertices;
-
-		vertices.Add(tempArray[0]);
-		vertices.Add(tempArray[1]);
-		vertices.Add(tempArray[2]);
-		vertices.Add(tempArray[3]);
-
-		uint32 QuadIndices[6] =
-		{
-			0, 1, 2,
-			0, 2, 3
-		};
-
-		TArray<uint32> indices;
-		indices.Add(QuadIndices[0]);
-		indices.Add(QuadIndices[1]);
-		indices.Add(QuadIndices[2]);
-		indices.Add(QuadIndices[3]);
-		indices.Add(QuadIndices[4]);
-		indices.Add(QuadIndices[5]);
-
-		VertexBuffer = FVertexBuffer::Create(FString("TextureQuad"), vertices);
-		IndexBuffer = FIndexBuffer::Create(FString("TextureQuad"), indices);
-	}
-
-	ID3DBlob* vsBlob = nullptr;
-	ID3DBlob* psBlob = nullptr;
-	ID3DBlob* errorBlob = nullptr;
-
-	// 버텍스 쉐이더 컴파일
-	D3DCompileFromFile(L"Shaders/Font_VS.hlsl", nullptr, nullptr, "Font_VS", "vs_5_0",
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &vsBlob, &errorBlob);
-
-	// 픽셀 쉐이더 컴파일
-	D3DCompileFromFile(L"Shaders/SubUV_PS.hlsl", nullptr, nullptr, "SubUV_PS", "ps_5_0",
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &psBlob, &errorBlob);
-
-	// 쉐이더 생성
-	FDevice::Get().GetDevice()->CreateVertexShader(vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), nullptr, &VertexShader);
-	FDevice::Get().GetDevice()->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(), nullptr, &PixelShader);
-
-	// 입력 레이아웃 설정
-
-
-
-
-
-	/*D3D11_INPUT_ELEMENT_DESC layout[] =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-	};
-
-	UINT numElements = ARRAYSIZE(layout);
-
-	FDevice::Get().GetDevice()->CreateInputLayout(layout, numElements, vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), &InputLayout);*/
-	
-	InputLayout = FInputLayout::Find("Simple_VS");
-	BlendState = FBlendState::Find("DefaultBlendState");
-	DepthStencilStat = FDepthStencilState::Find("DefaultDepthStencilState");
-	Rasterizer = FRasterizer::Find("DefaultRasterizer");
-	ConstantBuffer = FConstantBuffer::Find("DefaultConstantBuffer");
+	PixelConstants.UVOffsetAndSize = FVector4(0.0f, 0.0f, FrameWidth, FrameHeight);
+	PixelConstants.AnimationParams = FVector4(0.0f, static_cast<float>(TotalFrames), 0.0f, 0.0f);
+	PixelConstants.ColorModifier = FVector4(1.0f, 1.0f, 1.0f, 1.0f);
 }
-
-//UParticleSubUVComponent::UParticleSubUVComponent(FSubUVTextureInfo& Texture)
-//{
-//	bLoop = true;
-//	bIsPlaying = false;
-//	bIsPicked = false;
-//	PlayRate = 1.0f;
-//	CurrentTime = 0.0f;
-//	CurrentFrame = 0;
-//	TotalFrames = 0;
-//	TextureInfo = Texture;
-//
-//	VertexBuffer = FVertexBuffer::Find("Quad");
-//	IndexBuffer = FIndexBuffer::Find("Quad");
-//
-//	if (VertexBuffer == nullptr)
-//	{
-//		FVertexSimple tempArray[] =
-//		{
-//			{  0.0f, -1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f },
-//			{  0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f },
-//			{  0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f },
-//			{  0.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f }
-//		};
-//
-//		TArray<FVertexSimple> vertices;
-//
-//		vertices.Add(tempArray[0]);
-//		vertices.Add(tempArray[1]);
-//		vertices.Add(tempArray[2]);
-//		vertices.Add(tempArray[3]);
-//
-//		uint32 QuadIndices[6] =
-//		{
-//			0, 1, 2,
-//			0, 2, 3
-//		};
-//
-//		TArray<uint32> indices;
-//		indices.Add(QuadIndices[0]);
-//		indices.Add(QuadIndices[1]);
-//		indices.Add(QuadIndices[2]);
-//		indices.Add(QuadIndices[3]);
-//		indices.Add(QuadIndices[4]);
-//		indices.Add(QuadIndices[5]);
-//
-//		VertexBuffer = FVertexBuffer::Create(FString("Quad"), vertices);
-//		IndexBuffer = FIndexBuffer::Create(FString("Quad"), indices);
-//	}
-//
-//	ID3DBlob* vsBlob = nullptr;
-//	ID3DBlob* psBlob = nullptr;
-//	ID3DBlob* errorBlob = nullptr;
-//
-//	// 버텍스 쉐이더 컴파일
-//	D3DCompileFromFile(L"Shaders/Font_VS.hlsl", nullptr, nullptr, "Font_VS", "vs_5_0",
-//		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &vsBlob, &errorBlob);
-//
-//	// 픽셀 쉐이더 컴파일
-//	D3DCompileFromFile(L"Shaders/SubUV_PS.hlsl", nullptr, nullptr, "SubUV_PS", "ps_5_0",
-//		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &psBlob, &errorBlob);
-//
-//	// 쉐이더 생성
-//	FDevice::Get().GetDevice()->CreateVertexShader(vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), nullptr, &VertexShader);
-//	FDevice::Get().GetDevice()->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(), nullptr, &PixelShader);
-//
-//	// 입력 레이아웃 설정
-//	D3D11_INPUT_ELEMENT_DESC layout[] =
-//	{
-//		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-//		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-//	};
-//
-//	UINT numElements = ARRAYSIZE(layout);
-//
-//	FDevice::Get().GetDevice()->CreateInputLayout(layout, numElements, vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), &InputLayout);
-//
-//	BlendState = FBlendState::Find("DefaultBlendState");
-//	DepthStencilStat = FDepthStencilState::Find("DefaultDepthStencilState");
-//	Rasterizer = FRasterizer::Find("DefaultRasterizer");
-//	//ConstantBuffer = FConstantBuffer::Find("DefaultConstantBuffer");
-//}
 
 void UParticleSubUVComponent::BeginPlay()
 {
-	//USceneComponent::BeginPlay();
+	USceneComponent::BeginPlay();
 
-	if (TextureInfo.NumRows > 0 && TextureInfo.NumColumns > 0)
+	if (NumRows > 0 && NumColumns > 0)
 	{
-		TextureInfo.FrameWidth = 1.0f / TextureInfo.NumColumns;
-		TextureInfo.FrameHeight = 1.0f / TextureInfo.NumRows;
-		TotalFrames = TextureInfo.NumRows * TextureInfo.NumColumns;
+		FrameWidth = 1.0f / NumColumns;
+		FrameHeight = 1.0f / NumRows;
+		TotalFrames = NumRows * NumColumns;
 	}
 }
 
@@ -225,6 +69,15 @@ void UParticleSubUVComponent::Tick(float DeltaTime)
 				bIsPlaying = false;
 			}
 		}
+
+		// 현재 프레임의 UV 오프셋 계산
+		uint32 row = CurrentFrame / NumColumns;
+		uint32 col = CurrentFrame % NumColumns;
+
+		PixelConstants.UVOffsetAndSize.X = col * FrameWidth;
+		PixelConstants.UVOffsetAndSize.Y = row * FrameHeight;
+		PixelConstants.AnimationParams.X = static_cast<float>(CurrentFrame);
+		PixelConstants.AnimationParams.W = CurrentTime;
 	}
 
 	Render();
@@ -277,24 +130,9 @@ void UParticleSubUVComponent::Render()
 		ViewProjectionMatrix
 	);
 
-	FSubUVVertexConstantsData& Data = GetVertexConstantsData();
+	VertexConstants.MVP = MVP;
 
-	Data = {
-		MVP,
-	};
-
-	VertexBuffer->Setting();
-	IndexBuffer->Setting();
-	FDevice::Get().GetDeviceContext()->VSSetShader(VertexShader, nullptr, 0);
-	FDevice::Get().GetDeviceContext()->PSSetShader(PixelShader, nullptr, 0);
-	//FDevice::Get().GetDeviceContext()->IASetInputLayout(InputLayout);
-	InputLayout->Setting();
-	DepthStencilStat->Setting();
-	Rasterizer->Setting();
-	BlendState->Setting();
-	//PrimitiveComp.ConstantBufferBinding->Setting();
-	FDevice::Get().GetDeviceContext()->IASetPrimitiveTopology(Topology);
-	FDevice::Get().GetDeviceContext()->DrawIndexed(IndexBuffer->GetIndexCount(), 0, 0);
+	GetRenderResourceCollection().Render();
 }
 
 void UParticleSubUVComponent::Play()

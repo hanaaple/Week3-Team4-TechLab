@@ -177,12 +177,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Object\Actor\SubUVParticle.cpp" />
     <ClCompile Include="Source\Object\Assets\MeshAsset.cpp" />
     <ClCompile Include="Source\Object\PrimitiveComponent\GizmoComponent.cpp" />
     <ClCompile Include="Source\Core\Rendering\FViewMode.cpp" />
     <ClCompile Include="Source\Debug\EngineShowFlags.cpp" />
     <ClCompile Include="Source\Core\Math\BoxSphereBounds.cpp" />
     <ClCompile Include="Source\Object\Gizmo\GizmoActor.cpp" />
+    <ClCompile Include="Source\Object\SubUVComponent\UParticleSubUVComponent.cpp" />
     <ClCompile Include="Source\Resource\DirectResource\ConstantBuffer.cpp" />
     <ClCompile Include="Source\Resource\DirectResource\Sampler.cpp" />
     <ClCompile Include="Source\Resource\DirectResource\ShaderResourceBinding.cpp" />
@@ -313,12 +315,14 @@
   <ItemGroup>
     <ClInclude Include="Source\Core\Delegates\Delegate.h" />
     <ClInclude Include="Source\Core\Delegates\DelegateCombination.h" />
+    <ClInclude Include="Source\Object\Actor\SubUVParticle.h" />
     <ClInclude Include="Source\Object\Assets\MeshAsset.h" />
     <ClInclude Include="Source\Object\PrimitiveComponent\GizmoComponent.h" />
     <ClInclude Include="Source\Core\Rendering\FViewMode.h" />
     <ClInclude Include="Source\Debug\EngineShowFlags.h" />
     <ClInclude Include="Source\Core\Math\BoxSphereBounds.h" />
     <ClInclude Include="Source\Object\Gizmo\GizmoActor.h" />
+    <ClInclude Include="Source\Object\SubUVComponent\UParticleSubUVComponent.h" />
     <ClInclude Include="Source\Resource\DirectResource\ConstantBuffer.h" />
     <ClInclude Include="Source\Resource\DirectResource\Sampler.h" />
     <ClInclude Include="Source\Resource\DirectResource\ShaderResourceBinding.h" />
