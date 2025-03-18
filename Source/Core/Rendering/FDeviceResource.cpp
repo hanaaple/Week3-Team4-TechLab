@@ -26,14 +26,11 @@ void FDevice::InitResource()
 		std::shared_ptr<FVertexShader> VS = FVertexShader::Load(L"Shaders/Font_VS.hlsl","Font_VS","Font_VS");
 		//FInputLayout::Create("Font_VS" , VS);
 	}
-
+	FPixelShader::Load(L"Shaders/Font_PS.hlsl", "Font_PS", "Font_PS");
 	FConstantBuffer::Create("DefaultConstantBuffer", sizeof(FConstantsComponentData));
 
 	
 	//FPixelShader::Load(L"Shaders/Font_PS.hlsl","Font_PS","Font_PS");
-
-
-	
 	
 	D3D11_RASTERIZER_DESC RasterizerDesc = {};
 	RasterizerDesc.FillMode = D3D11_FILL_SOLID; // 채우기 모드
@@ -53,7 +50,6 @@ void FDevice::InitResource()
 
 		FDepthStencilState::Create("DefaultDepthStencilState", DepthStencilDesc);
 	}
-	
 
 	{
 		// Blend
@@ -104,6 +100,15 @@ void FDevice::InitResource()
 		Mat->SetDepthState("DefaultDepthStencilState");
 		Mat->SetPixelShader("Simple_PS");
 		Mat->SetVertexShader("Simple_VS");
+	}
+
+	{
+		std::shared_ptr<FMaterial> Mat = FMaterial::Create("FontMaterial");
+		Mat->SetRasterizer("DefaultRasterizer");
+		Mat->SetBlendState("DefaultBlendState");
+		Mat->SetDepthState("DefaultDepthStencilState");
+		Mat->SetPixelShader("Font_PS");
+		Mat->SetVertexShader("Font_VS");
 	}
 	
 	/// Mesh
@@ -168,10 +173,10 @@ void FDevice::InitResource()
 	{
 		FVertexSimple tempArray[] =
 		{
-			{  0.0f, -1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f },
-			{  0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f },
-			{  0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f },
-			{  0.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f }
+			{  0.0f, -1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f },
+			{  0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f },
+			{  0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f },
+			{  0.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f }
 		};
 
 		TArray<FVertexSimple> vertices;

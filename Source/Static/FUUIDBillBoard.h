@@ -28,7 +28,7 @@ private:
 private:
 	USceneComponent* TargetObject;
 
-	TArray<FVertexTexture> VertexBuffer;
+	TArray<FVertexSimple> VertexBuffer;
 	TArray<uint32> IndexBuffer;
 
 	// 최대 용량

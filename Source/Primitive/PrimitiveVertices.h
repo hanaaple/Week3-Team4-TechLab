@@ -7,6 +7,8 @@ struct FVertexSimple
 {
     float X, Y, Z;    // Position
     float R, G, B, A; // Color
+	float U, V;		  // Texture UV
+	float NX, NY, NZ;  // Normal
 };
 
 struct FLineVertexSimple {
@@ -14,12 +16,6 @@ struct FLineVertexSimple {
 	FVector4 color;
 
 	FLineVertexSimple(const FVector& pos, const FVector4& col) : position(pos), color(col) {}
-};
-
-struct FVertexTexture
-{
-	float X, Y, Z;    // Position
-	float U, V; // UV
 };
 
 struct FGeometryData

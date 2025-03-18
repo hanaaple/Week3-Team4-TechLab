@@ -8,6 +8,7 @@ struct FVector
     float X, Y, Z;
     FVector() : X(0), Y(0), Z(0) {}
     FVector(float X, float Y, float Z) : X(X), Y(Y), Z(Z) {}
+	FVector(float Scalar) : X(Scalar), Y(Scalar), Z(Scalar) {}
 	// Vector(0, 0, 0)
 	static const FVector ZeroVector;
 	// Vector(1, 1, 1)
