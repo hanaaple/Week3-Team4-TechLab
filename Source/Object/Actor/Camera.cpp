@@ -5,6 +5,7 @@
 #include "Core/Input/PlayerInput.h"
 #include "functional"
 #include "Core/Config/ConfigManager.h"
+#include "Static/FEditorManager.h"
 
 ACamera::ACamera()
 {
@@ -33,6 +34,15 @@ void ACamera::BeginPlay()
 	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::D, [this] { MoveRight(); }, GetUUID());
 	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::Q, [this] { MoveDown(); }, GetUUID());
 	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::E, [this] { MoveUp(); }, GetUUID());
+
+	APlayerInput::Get().RegisterKeyDownCallback(EKeyCode::F, [this]
+	{
+		if (const AActor* SelectedActor = FEditorManager::Get().GetSelectedActor())
+		{
+			if (SelectedActor == this) return;
+			SetActorPosition(SelectedActor->GetActorPosition() - (GetForward() * 10.0f));
+		}
+	}, GetUUID());
 
 	APlayerInput::Get().RegisterMousePressCallback(EKeyCode::RButton, std::bind(&ACamera::Rotate, this, std::placeholders::_1), GetUUID());
 

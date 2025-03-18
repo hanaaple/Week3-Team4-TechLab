@@ -9,9 +9,19 @@ ACylinder::ACylinder()
 
     UCylinderComp* CylinderComponent = AddComponent<UCylinderComp>();
 	
-	UCylinderComp* CylinderComponent2 = AddComponent<UCylinderComp>(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(90, 0, 0), FVector(1, 1, 1)));
+	UCylinderComp* CylinderComponent2 = AddComponent<UCylinderComp>();
+	CylinderComponent2->SetRelativeTransform({
+		FVector(0.0f, 0.0f, 0.0f),
+		FVector(90.0f, 0.0f, 0.0f),
+		FVector(1.0f)
+	});
 
-	UCylinderComp* CylinderComponent3 = AddComponent<UCylinderComp>(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(0, 90, 0), FVector(1, 1, 1)));
+	UCylinderComp* CylinderComponent3 = AddComponent<UCylinderComp>();
+	CylinderComponent3->SetRelativeTransform({
+		FVector(0.0f, 0.0f, 0.0f),
+		FVector(0.0f, 90.0f, 0.0f),
+		FVector(1.0f)
+	});
 
     SetActorTransform(FTransform());
 }
