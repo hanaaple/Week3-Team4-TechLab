@@ -72,6 +72,7 @@ public:
 public:
 	void SetBoundsScale(float NewBoudnsScale);
 
+	virtual void UpdateBounds() override;
 protected:
 	float BoundsScale = 1.0f;
 protected:

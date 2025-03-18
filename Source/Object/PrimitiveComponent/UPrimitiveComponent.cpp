@@ -39,6 +39,7 @@ void UPrimitiveComponent::BeginPlay()
 void UPrimitiveComponent::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime); 
+	UpdateBounds();
 }
 
 void UPrimitiveComponent::UpdateConstantPicking(const URenderer& Renderer, const FVector4 UUIDColor)const
@@ -146,6 +147,12 @@ void UPrimitiveComponent::SetBoundsScale(float NewBoudnsScale)
 {
 	BoundsScale = NewBoudnsScale;
 	UpdateBounds();
+}
+
+void UPrimitiveComponent::UpdateBounds()
+{
+	FBoxSphereBounds OriginalBounds = Bounds;
+	Super::UpdateBounds();
 }
 
 UCubeComp::UCubeComp() : Super()
