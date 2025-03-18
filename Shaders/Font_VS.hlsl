@@ -1,7 +1,9 @@
 struct VS_INPUT
 {
-	float4 Pos : POSITION;
-	float2 Tex : TEXCOORD;
+	float3 Position : POSITION;  // 3개의 float 값 (DXGI_FORMAT_R32G32B32_FLOAT)
+	float4 Color : COLOR;        // 4개의 float 값 (DXGI_FORMAT_R32G32B32A32_FLOAT)
+	float2 Texcoord : TEXCOORD;  // 2개의 float 값 (DXGI_FORMAT_R32G32_FLOAT)
+	float3 Normal : NORMAL;      // 3개의 float 값 (DXGI_FORMAT_R32G32B32_FLOAT)
 };
 
 struct VS_OUTPUT
@@ -30,8 +32,8 @@ VS_OUTPUT Font_VS(VS_INPUT input)
 {
 	VS_OUTPUT output;
 
-	output.Pos = mul(float4(input.Pos.xyz, 1.0f), MVP);
-	output.Tex = input.Tex;
+	output.Pos = mul(float4(input.Position.xyz, 1.0f), MVP);
+	output.Tex = input.Texcoord;
 
 	return output;
 }
