@@ -4,6 +4,7 @@
 #include "FDevice.h"
 #include "Debug/DebugConsole.h"
 #include "Core/Math/Transform.h"
+#include "DirectXTK/DDSTextureLoader.h"
 #include "Object/World/World.h"
 #include "Object/Actor/Camera.h"
 #include "Object/Assets/SceneAsset.h"
@@ -138,6 +139,7 @@ void URenderer::RenderPrimitive(class UPrimitiveComponent& PrimitiveComp, const 
 void URenderer::LoadTexture(const wchar_t* texturePath)
 {
 	DirectX::CreateWICTextureFromFile(FDevice::Get().GetDevice(), FDevice::Get().GetDeviceContext(), texturePath, nullptr, &FontTextureSRV);
+
 	
 	D3D11_SAMPLER_DESC samplerDesc = {};
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;

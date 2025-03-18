@@ -1,13 +1,16 @@
-cbuffer ConstantBuffer : register(b0)
+cbuffer FConstantsComponentData : register(b0)
 {
 	matrix ViewProjectionMatrix;
 }
 
+
 // 버텍스 셰이더
-struct VSInput
+struct VS_INPUT
 {
-	float3 Position : POSITION;
-	float4 Color : COLOR;
+	float3 Position : POSITION;  // 3개의 float 값 (DXGI_FORMAT_R32G32B32_FLOAT)
+	float4 Color : COLOR;        // 4개의 float 값 (DXGI_FORMAT_R32G32B32A32_FLOAT)
+	float2 Texcoord : TEXCOORD;  // 2개의 float 값 (DXGI_FORMAT_R32G32_FLOAT)
+	float3 normal : NORMAL;      // 3개의 float 값 (DXGI_FORMAT_R32G32B32_FLOAT)
 };
 
 struct VSOutput
@@ -17,7 +20,7 @@ struct VSOutput
 };
 
 
-VSOutput ShaderLine_VS(VSInput Input)
+VSOutput ShaderLine_VS(VS_INPUT Input)
 {
 
 	VSOutput Output;
