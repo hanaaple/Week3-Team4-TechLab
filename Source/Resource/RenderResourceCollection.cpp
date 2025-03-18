@@ -63,11 +63,78 @@ void FRenderResourceCollection::Render()
 	{
 		Binding.Value->Setting();
 	}
+	
+	for (auto& Binding : TextureBindings)
+	{
+		Binding.Value->Setting();
+	}
+	
+	for (auto& Binding : SamplerBindings)
+	{
+		Binding.Value->Setting();
+	}
+	
 	Mesh->Draw();
 }
 
+void FRenderResourceCollection::Reset()
+{
+	for (auto& Binding : TextureBindings)
+	{
+		Binding.Value->Reset();
+	}
+}
+
+std::shared_ptr<class FTextureBinding> FRenderResourceCollection::SetTextureBinding(const FString& _Name, int _BindPoint,
+                                                                                    bool bIsUseVertexShader, bool bIsUsePixelShader)
+{
+	std::shared_ptr< FTexture> Res = FTexture::Find(_Name);
+
+	// if (Res == nullptr)
+	// {
+	// 	//없으면 그 사이즈의 이름으로 만듦 이름이 겹치면 몰?루
+	// 	Res = FConstantBuffer::Create(_Name, _DataSize);
+	// }
+	
+	std::shared_ptr<class FTextureBinding> Binding = std::make_shared<FTextureBinding>();
+
+	Binding->Res = Res;
+	Binding->Name = _Name;
+	Binding->bIsUseVertexShader = bIsUseVertexShader;
+	Binding->bIsUsePixelShader = bIsUsePixelShader;
+	Binding->BindPoint = _BindPoint;
+
+	TextureBindings.Add(_Name, Binding);
+
+	return Binding;
+}
+
+std::shared_ptr<class FSamplerBinding> FRenderResourceCollection::SetSamplerBinding(const FString& _Name, int _BindPoint,
+	bool bIsUseVertexShader, bool bIsUsePixelShader)
+{
+	std::shared_ptr< FSampler> Res = FSampler::Find(_Name);
+
+	// if (Res == nullptr)
+	// {
+	// 	//없으면 그 사이즈의 이름으로 만듦 이름이 겹치면 몰?루
+	// 	Res = FConstantBuffer::Create(_Name, _DataSize);
+	// }
+	
+	std::shared_ptr<class FSamplerBinding> Binding = std::make_shared<FSamplerBinding>();
+
+	Binding->Res = Res;
+	Binding->Name = _Name;
+	Binding->bIsUseVertexShader = bIsUseVertexShader;
+	Binding->bIsUsePixelShader = bIsUsePixelShader;
+	Binding->BindPoint = _BindPoint;
+
+	SamplerBindings.Add(_Name, Binding);
+
+	return Binding;
+}
+
 std::shared_ptr<class FConstantBufferBinding> FRenderResourceCollection::SetConstantBufferBinding(const FString& _Name,
-	const void* _CPUDataPtr, int _DataSize, int _BindPoint, bool bIsUseVertexShader, bool bIsUsePixelShader)
+                                                                                                  const void* _CPUDataPtr, int _DataSize, int _BindPoint, bool bIsUseVertexShader, bool bIsUsePixelShader)
 {
 	std::shared_ptr<class FConstantBuffer> Res = FConstantBuffer::Find(_Name);
 
