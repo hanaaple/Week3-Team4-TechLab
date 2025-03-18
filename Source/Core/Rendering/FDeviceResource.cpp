@@ -27,6 +27,7 @@ void FDevice::InitResource()
 		//FInputLayout::Create("Font_VS" , VS);
 	}
 	FPixelShader::Load(L"Shaders/Font_PS.hlsl", "Font_PS", "Font_PS");
+	FPixelShader::Load(L"Shaders/SubUV_PS.hlsl", "SubUV_PS", "SubUV_PS");
 	FConstantBuffer::Create("DefaultConstantBuffer", sizeof(FConstantsComponentData));
 
 	
