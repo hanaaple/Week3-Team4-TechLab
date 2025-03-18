@@ -18,12 +18,6 @@ struct FLineVertexSimple {
 	FLineVertexSimple(const FVector& pos, const FVector4& col) : position(pos), color(col) {}
 };
 
-struct FVertexTexture
-{
-	float X, Y, Z;    // Position
-	float U, V; // UV
-};
-
 struct FGeometryData
 {
 	TArray<FVertexSimple> Vertices;
