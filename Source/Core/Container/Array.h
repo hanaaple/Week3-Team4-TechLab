@@ -46,6 +46,7 @@ public:
     // 이동 할당 연산자
     TArray& operator=(TArray&& Other) noexcept;
 
+	/** Element를 Number개 만큼 초기화 합니다. */
     void Init(const T& Element, SizeType Number);
     SizeType Add(const T& Item);
     SizeType Add(T&& Item);
@@ -54,13 +55,23 @@ public:
 	template <typename... Args>
     SizeType Emplace(Args&&... Item);
 
+	/** Array를 비웁니다 */
     void Empty();
+
+	/** Item과 일치하는 모든 요소를 제거합니다. */
     SizeType Remove(const T& Item);
+
+	/** 왼쪽부터 Item과 일치하는 요소를 1개 제거합니다. */
     bool RemoveSingle(const T& Item);
+
+	/** 특정 위치에 있는 요소를 제거합니다. */
     void RemoveAt(SizeType Index);
+
+	/** Predicate에 부합하는 모든 요소를 제거합니다. */
     template <typename Predicate>
         requires std::is_invocable_r_v<bool, Predicate, const T&>
     SizeType RemoveAll(const Predicate& Pred);
+
     T* GetData();
 
     /**
@@ -71,12 +82,16 @@ public:
     SizeType Find(const T& Item);
     bool Find(const T& Item, SizeType& Index);
 
-    /** Size */
+    /** Array Size를 가져옵니다. */
     SizeType Num() const;
 
-    /** Capacity */
+    /** Array의 Capacity를 가져옵니다. */
     SizeType Len() const;
 
+	/** Array의 Size를 Number로 설정합니다. */
+	void SetNum(SizeType Number);
+
+	/** Array의 Capacity를 Number로 설정합니다. */
     void Reserve(SizeType Number);
 
     void Sort();
@@ -250,6 +265,12 @@ template <typename T, typename Allocator>
 typename TArray<T, Allocator>::SizeType TArray<T, Allocator>::Len() const
 {
     return PrivateVector.capacity();
+}
+
+template <typename T, typename Allocator>
+void TArray<T, Allocator>::SetNum(SizeType Number)
+{
+	PrivateVector.resize(Number);
 }
 
 template <typename T, typename Allocator>
