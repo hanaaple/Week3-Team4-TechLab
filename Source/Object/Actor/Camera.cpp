@@ -85,16 +85,16 @@ void ACamera::UpdateCameraMatrix()
 	float AspectRatio = UEngine::Get().GetScreenRatio();
 
 	float FOV = FMath::DegreesToRadians(GetFieldOfView());
-	float Near =GetNear();
+	float Near = GetNear();
 	float Far = GetFar();
 
 	if (ProjectionMode == ECameraProjectionMode::Perspective)
 	{
 		ProjectionMatrix = FMatrix::PerspectiveFovLH(FOV, AspectRatio, Near, Far);
 	}
-	else if (ProjectionMode == ECameraProjectionMode::Perspective)
+	else if (ProjectionMode == ECameraProjectionMode::Orthographic)
 	{
-		ProjectionMatrix = FMatrix::PerspectiveFovLH(FOV, AspectRatio, Near, Far);
+		ProjectionMatrix = FMatrix::OrthoForLH(UEngine::Get().GetScreenWidth() / ZoomSize, UEngine::Get().GetScreenHeight() / ZoomSize, Near, Far);
 
 		// TODO: 추가 필요.
 		// ProjectionMatrix = FMatrix::OrthoForLH(FOV, AspectRatio, Near, Far);
