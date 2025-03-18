@@ -37,6 +37,7 @@ struct alignas(16) FMatrix
 	static FMatrix GetQuatToRotationMatrixScaleMatrix(const FQuat& Q, const FVector& Scale);
 	static FMatrix LookAtLH(const FVector& EyePosition, const FVector& FocusPoint, const FVector& cameraUp);
 	static FMatrix PerspectiveFovLH(float FieldOfView, float AspectRatio, float NearPlane, float FarPlane);
+	static FMatrix OrthographicLH(float ViewWidth, float ViewHeight, float NearPlane, float FarPlane);
 	static FMatrix OrthoForLH(float ViewWidth, float VeiwHeight, float NearPlane, float FarPlane);
 
 	static FMatrix InverseGaussJordan(FMatrix& mat);
