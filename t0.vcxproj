@@ -185,6 +185,9 @@
     <ClCompile Include="Source\Object\Gizmo\GizmoActor.cpp" />
     <ClCompile Include="Source\Resource\DirectResource\ConstantBuffer.cpp" />
     <ClCompile Include="Source\Resource\DirectResource\ShaderResourceBinding.cpp" />
+    <ClCompile Include="Source\Resource\Material.cpp" />
+    <ClCompile Include="Source\Resource\Mesh.cpp" />
+    <ClCompile Include="Source\Resource\RenderResourceCollection.cpp" />
     <ClCompile Include="Source\Static\FUUIDBillBoard.cpp" />
     <ClCompile Include="Source\Core\Math\Rotator.cpp" />
     <ClCompile Include="Source\Core\Config\ConfigManager.cpp" />
@@ -307,6 +310,9 @@
     <ClInclude Include="Source\Object\Gizmo\GizmoActor.h" />
     <ClInclude Include="Source\Resource\DirectResource\ConstantBuffer.h" />
     <ClInclude Include="Source\Resource\DirectResource\ShaderResourceBinding.h" />
+    <ClInclude Include="Source\Resource\Material.h" />
+    <ClInclude Include="Source\Resource\Mesh.h" />
+    <ClInclude Include="Source\Resource\RenderResourceCollection.h" />
     <ClInclude Include="Source\Static\FUUIDBillBoard.h" />
     <ClInclude Include="Source\Core\Math\Rotator.h" />
     <ClInclude Include="Source\Core\Config\ConfigManager.h" />

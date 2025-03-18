@@ -63,13 +63,7 @@ void URenderer::CreateShader()
 
 void URenderer::CreateConstantBuffer()
 {
-    D3D11_BUFFER_DESC ConstantBufferDesc = {};
-    ConstantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;                        // 매 프레임 CPU에서 업데이트 하기 위해
-    ConstantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;             // 상수 버퍼로 설정
-    ConstantBufferDesc.ByteWidth = sizeof(FConstantsComponentData) + 0xf & 0xfffffff0;  // 16byte의 배수로 올림
-    ConstantBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;            // CPU에서 쓰기 접근이 가능하게 설정
-    
-    FDevice::Get().GetDevice()->CreateBuffer(&ConstantBufferDesc, nullptr, &ConstantBuffer);
+
 
     D3D11_BUFFER_DESC ConstantBufferDescPicking = {};
     ConstantBufferDescPicking.Usage = D3D11_USAGE_DYNAMIC;                        // 매 프레임 CPU에서 업데이트 하기 위해
@@ -90,11 +84,7 @@ void URenderer::CreateConstantBuffer()
 
 void URenderer::ReleaseConstantBuffer()
 {
-    if (ConstantBuffer)
-    {
-        ConstantBuffer->Release();
-        ConstantBuffer = nullptr;
-    }
+
 
     if (ConstantPickingBuffer)
     {
@@ -111,12 +101,6 @@ void URenderer::ReleaseConstantBuffer()
 
 void URenderer::Prepare() const
 {
-    /**
-     * OutputMerger 설정
-     * 렌더링 파이프라인의 최종 단계로써, 어디에 그릴지(렌더 타겟)와 어떻게 그릴지(블렌딩)를 지정
-     */
-	FViewMode::Get().ApplyViewMode(FDevice::Get().GetDeviceContext());
-    FDevice::Get().GetDeviceContext()->OMSetBlendState(nullptr, nullptr, 0xffffffff);
 }
 
 void URenderer::PrepareShader() const
@@ -175,24 +159,7 @@ void URenderer::LoadTexture(const wchar_t* texturePath)
 	FDevice::Get().GetDeviceContext()->PSSetSamplers(0, 1, &FontSamplerState);
 }
 
-void URenderer::UpdateConstant(const FConstantsComponentData& UpdateInfo) const
-{
-    if (!ConstantBuffer) return;
 
-	D3D11_MAPPED_SUBRESOURCE ConstantBufferMSR;
-
-	// 상수 버퍼를 CPU 메모리에 매핑
-    // D3D11_MAP_WRITE_DISCARD는 이전 내용을 무시하고 새로운 데이터로 덮어쓰기 위해 사용
-    FDevice::Get().GetDeviceContext()->Map(ConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ConstantBufferMSR);
-    {
-        // 매핑된 메모리를 FConstants 구조체로 캐스팅
-        FConstantsComponentData* Constants = static_cast<FConstantsComponentData*>(ConstantBufferMSR.pData);
-        Constants->MVP = UpdateInfo.MVP;
-		Constants->Color = UpdateInfo.Color;
-		Constants->bUseVertexColor = UpdateInfo.bUseVertexColor ? 1 : 0;
-    }
-    FDevice::Get().GetDeviceContext()->Unmap(ConstantBuffer, 0);
-}
 
 void URenderer::CreateBlendState() 
 {
