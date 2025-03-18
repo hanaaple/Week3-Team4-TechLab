@@ -75,7 +75,23 @@ void UPrimitiveComponent::Render()
 	FMatrix ModelMatrix;
 	CalculateModelMatrix(ModelMatrix);
 
-	Renderer->RenderPrimitive(*this, ModelMatrix);
+	const FMatrix& ViewProjectionMatrix = UEngine::Get().GetWorld()->GetCamera()->GetViewProjectionMatrix();
+
+	FMatrix MVP = FMatrix::Transpose(
+		ModelMatrix *
+		ViewProjectionMatrix
+);
+
+	FConstantsComponentData& Data = GetConstantsComponentData();
+
+	Data  = {
+		MVP,
+		GetCustomColor(),
+		IsUseVertexColor()
+	};
+	
+
+	Renderer->Render(GetRenderResourceCollection());
 }
 
 void UPrimitiveComponent::CalculateModelMatrix(FMatrix& OutMatrix)

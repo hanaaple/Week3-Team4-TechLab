@@ -3,6 +3,7 @@
 #include "Core/Rendering/FDevice.h"
 #include "Debug/DebugConsole.h"
 
+
 FRasterizer::FRasterizer()
 {
 }

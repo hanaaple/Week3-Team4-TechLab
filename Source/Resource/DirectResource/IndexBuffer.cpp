@@ -15,9 +15,23 @@ void FIndexBuffer::Setting() const
 		MsgBoxAssert("Error: FIndexBuffer Setting Failed");
 	}
 
+	if (bIsDynamic == false)
+	{
+		// 버텍스버퍼를 여러개 넣어줄수 있다.
+		FDevice::Get().GetDeviceContext()->IASetIndexBuffer(Buffer, Format, Offset);
+	}
+	else
+	{
+		// 버텍스 버퍼 업데이트
+		D3D11_MAPPED_SUBRESOURCE mappedResource;
+		// 인덱스 버퍼 업데이트
+		FDevice::Get().GetDeviceContext()->Map(Buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+		memcpy(mappedResource.pData, CPUDataPtr, IndexSize * IndexCount);
+		FDevice::Get().GetDeviceContext()->Unmap(Buffer, 0);
 
-	// 버텍스버퍼를 여러개 넣어줄수 있다.
-	FDevice::Get().GetDeviceContext()->IASetIndexBuffer(Buffer, Format, Offset);
+		
+		FDevice::Get().GetDeviceContext()->IASetIndexBuffer(Buffer, DXGI_FORMAT_R32_UINT, 0);
+	}
 }
 
 void FIndexBuffer::ResCreate(const void* _Data, size_t _IndexCount)
@@ -33,6 +47,25 @@ void FIndexBuffer::ResCreate(const void* _Data, size_t _IndexCount)
 	Data.pSysMem = _Data;
 
 	if (S_OK != FDevice::Get().GetDevice()->CreateBuffer(&BufferInfo, &Data, &Buffer))
+	{
+		MsgBoxAssert("Error: FIndexBuffer Create Failed") ;
+		return;
+	}
+}
+
+void FIndexBuffer::ResCreateDynamic(const void* _Data, size_t _IndexCount)
+{
+
+	CPUDataPtr = _Data;
+	
+	IndexCount = static_cast<UINT>(_IndexCount);
+
+	BufferInfo.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	BufferInfo.ByteWidth = static_cast<UINT>(IndexSize * IndexCount);
+	BufferInfo.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	BufferInfo.Usage = D3D11_USAGE_DYNAMIC;
+
+	if (S_OK != FDevice::Get().GetDevice()->CreateBuffer(&BufferInfo, nullptr, &Buffer))
 	{
 		MsgBoxAssert("Error: FIndexBuffer Create Failed") ;
 		return;

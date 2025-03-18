@@ -113,26 +113,9 @@ void URenderer::PrepareShader() const
     }
 }
 
-void URenderer::RenderPrimitive(class UPrimitiveComponent& PrimitiveComp, const FMatrix& ModelMatrix)
+void URenderer::Render(FRenderResourceCollection& _RenderResourceCollection)
 {
-	const FMatrix& ViewProjectionMatrix = UEngine::Get().GetWorld()->GetCamera()->GetViewProjectionMatrix();
-
-	FMatrix MVP = FMatrix::Transpose(
-		ModelMatrix *
-		ViewProjectionMatrix
-);
-
-	FConstantsComponentData& Data = PrimitiveComp.GetConstantsComponentData();
-
-	Data  = {
-		MVP,
-		PrimitiveComp.GetCustomColor(),
-		PrimitiveComp.IsUseVertexColor()
-	};
-
-
-
-	PrimitiveComp.GetRenderResourceCollection().Render();
+	_RenderResourceCollection.Render();
 }
 
 
@@ -163,15 +146,10 @@ void URenderer::LoadTexture(const wchar_t* texturePath)
 
 
 
-void URenderer::CreateBlendState() 
-{
-
-}
 
 void URenderer::CreateDepthStencilState()
 {
-
-    
+	
     D3D11_DEPTH_STENCIL_DESC IgnoreDepthStencilDesc = {};
     IgnoreDepthStencilDesc.DepthEnable = TRUE;
     IgnoreDepthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
@@ -188,8 +166,6 @@ void URenderer::ReleaseDepthStencilBuffer()
         IgnoreDepthStencilState = nullptr;
     }
 }
-
-
 
 
 

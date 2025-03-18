@@ -1,4 +1,4 @@
-cbuffer FConstantsComponentData : register(b0)
+cbuffer FConstantsComponentData : register(b1)
 {
 	matrix ViewProjectionMatrix;
 }

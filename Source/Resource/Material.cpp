@@ -8,7 +8,9 @@
 
 FMaterial::FMaterial()
 {
-	
+	SetRasterizer("DefaultRasterizer");
+	SetBlendState("DefaultBlendState");
+	SetDepthState("DefaultDepthStencilState");
 }
 
 FMaterial::~FMaterial()

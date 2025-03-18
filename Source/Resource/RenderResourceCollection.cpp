@@ -57,7 +57,7 @@ void FRenderResourceCollection::Render()
 {
 	Mesh->Setting();
 	Layout->Setting();
-	Material->Setting();
+	Material->Setting(); 
 
 	for (auto& Binding : ConstantBufferBindings)
 	{

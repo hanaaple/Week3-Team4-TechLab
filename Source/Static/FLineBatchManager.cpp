@@ -7,6 +7,20 @@
 #include "Object/Actor/Camera.h"
 #include "Object/World/World.h"
 
+#include "Resource/DirectResource/Vertexbuffer.h"
+#include "Resource/DirectResource/IndexBuffer.h"
+#include "Resource/DirectResource/PixelShader.h"
+#include "Resource/DirectResource/VertexShader.h"
+#include "Resource/DirectResource/InputLayout.h"
+#include "Resource/DirectResource/BlendState.h"
+#include "Resource/DirectResource/Rasterizer.h"
+#include "Resource/DirectResource/DepthStencilState.h"
+#include "Resource/DirectResource/ConstantBuffer.h"
+#include "Resource/Mesh.h"
+#include "Resource/Material.h"
+#include "Resource/RenderResourceCollection.h"
+
+
 void FLineBatchManager::AddLine(const FVector& Start, const FVector& End, const FVector4& Color, float Thickness)
 {
 	// 버텍스 버퍼에 두 정점 추가
@@ -93,163 +107,86 @@ void FLineBatchManager::Render()
 	if (VertexBuffer.Num() == 0)
 		return;
 
+	
+
 	//Prepare
-	ID3D11DeviceContext* DeviceContext = FDevice::Get().GetDeviceContext();
+	//ID3D11DeviceContext* DeviceContext = FDevice::Get().GetDeviceContext();
 	
 
 
 	// 버텍스 버퍼 업데이트
-	D3D11_MAPPED_SUBRESOURCE mappedResource;
-	DeviceContext->Map(LineVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-	memcpy(mappedResource.pData, VertexBuffer.GetData(), sizeof(FLineVertexSimple) * VertexBuffer.Num());
-	DeviceContext->Unmap(LineVertexBuffer, 0);
-
-	// 인덱스 버퍼 업데이트
-	DeviceContext->Map(LineIndexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-	memcpy(mappedResource.pData, IndexBuffer.GetData(), sizeof(uint32) * IndexBuffer.Num());
-	DeviceContext->Unmap(LineIndexBuffer, 0);
+	// D3D11_MAPPED_SUBRESOURCE mappedResource;
+	// DeviceContext->Map(LineVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	// memcpy(mappedResource.pData, VertexBuffer.GetData(), sizeof(FLineVertexSimple) * VertexBuffer.Num());
+	// DeviceContext->Unmap(LineVertexBuffer, 0);
+	//
+	// // 인덱스 버퍼 업데이트
+	// DeviceContext->Map(LineIndexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	// memcpy(mappedResource.pData, IndexBuffer.GetData(), sizeof(uint32) * IndexBuffer.Num());
+	// DeviceContext->Unmap(LineIndexBuffer, 0);
 
 	// 파이프라인 상태 설정
-	UINT stride = sizeof(FLineVertexSimple);
-	UINT offset = 0;
+	// UINT stride = sizeof(FLineVertexSimple);
+	// UINT offset = 0;
+	//
+	// // 기본 셰이더랑 InputLayout을 설정
+	//
+	// DeviceContext->IASetVertexBuffers(0, 1, &LineVertexBuffer, &stride, &offset);
+	// DeviceContext->IASetIndexBuffer(LineIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	// DeviceContext->IASetPrimitiveTopology(LinePrimitiveTopology);
 
-	// 기본 셰이더랑 InputLayout을 설정
-
-	DeviceContext->IASetVertexBuffers(0, 1, &LineVertexBuffer, &stride, &offset);
-	DeviceContext->IASetIndexBuffer(LineIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-	DeviceContext->IASetPrimitiveTopology(LinePrimitiveTopology);
-
-
-
-	DeviceContext->VSSetShader(LineVertexShader, nullptr, 0);
-	DeviceContext->PSSetShader(LinePixelShader, nullptr, 0);
-	DeviceContext->IASetInputLayout(LineInputLayout);
-
-
-	// 버텍스 쉐이더에 상수 버퍼를 설정
-	if (LineConstantBuffer)
-	{
-		DeviceContext->VSSetConstantBuffers(0, 1, &LineConstantBuffer);
+	//
+	//
+	// DeviceContext->VSSetShader(LineVertexShader, nullptr, 0);
+	// DeviceContext->PSSetShader(LinePixelShader, nullptr, 0);
+	// DeviceContext->IASetInputLayout(LineInputLayout);
 
 
-		D3D11_MAPPED_SUBRESOURCE ConstantBufferMSR;
+	LineConstantInfo.ViewProjectionMatrix = FMatrix::Transpose(UEngine::Get().GetWorld()->GetCamera()->GetViewProjectionMatrix());
 
-		FLineConstantInfo Constants; 
+	// // 버텍스 쉐이더에 상수 버퍼를 설정
+	// if (LineConstantBuffer)
+	// {
+	// 	DeviceContext->VSSetConstantBuffers(0, 1, &LineConstantBuffer);
+	//
+	//
+	// 	D3D11_MAPPED_SUBRESOURCE ConstantBufferMSR;
+	//
+	// 	FLineConstantInfo Constants; 
+	//
+	// 	URenderer* Renderer = UEngine::Get().GetRenderer();
+	//
+	// 	
+	//
+	//
+	// 	// D3D11_MAP_WRITE_DISCARD는 이전 내용을 무시하고 새로운 데이터로 덮어쓰기 위해 사용
+	// 	DeviceContext->Map(LineConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ConstantBufferMSR);
+	// 	{
+	// 		memcpy(ConstantBufferMSR.pData, &Constants, sizeof(FLineConstantInfo));
+	// 	}
+	// 	DeviceContext->Unmap(LineConstantBuffer, 0);
+	// }
+	//
+	//
+	//
+	//
+	// DeviceContext->DrawIndexed((UINT)IndexBuffer.Num(), 0, 0);
 
-		URenderer* Renderer = UEngine::Get().GetRenderer();
-
-		Constants.ViewProjectionMatrix = FMatrix::Transpose(UEngine::Get().GetWorld()->GetCamera()->GetViewProjectionMatrix());
-
-
-
-		// D3D11_MAP_WRITE_DISCARD는 이전 내용을 무시하고 새로운 데이터로 덮어쓰기 위해 사용
-		DeviceContext->Map(LineConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ConstantBufferMSR);
-		{
-			memcpy(ConstantBufferMSR.pData, &Constants, sizeof(FLineConstantInfo));
-		}
-		DeviceContext->Unmap(LineConstantBuffer, 0);
-	}
-
-
-
-
-	DeviceContext->DrawIndexed((UINT)IndexBuffer.Num(), 0, 0);
+	RenderResourceCollection.Render();
 
 }
 
 void FLineBatchManager::Create()
 {
-	ID3D11Device* Device = FDevice::Get().GetDevice();
-	ID3D11DeviceContext* DeviceContext = FDevice::Get().GetDeviceContext();
-
-	D3D11_BUFFER_DESC vertexBufferDesc = {};
-	vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	vertexBufferDesc.ByteWidth = sizeof(FLineVertexSimple) * MaxVerticesPerBatch;
-	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-
-	// 버텍스 버퍼 생성
-	HRESULT hr = Device->CreateBuffer(&vertexBufferDesc, nullptr, &LineVertexBuffer);
-
-	if (FAILED(hr))
-	{
-		return ;
-	}
-	// 인덱스 버퍼 설명
-	D3D11_BUFFER_DESC IndexBufferDesc = {};
-	IndexBufferDesc.ByteWidth = sizeof(UINT) * MaxIndicesPerBatch; // LineVertex가 아닌 UINT로 수정
-	IndexBufferDesc.Usage = D3D11_USAGE_DYNAMIC; // IMMUTABLE에서 DYNAMIC으로 변경 (Add 함수에서 업데이트하기 위함)
-	IndexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	IndexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE; // 쓰기 접근 권한 추가
-
-	// 인덱스 버퍼 생성
-	hr = Device->CreateBuffer(&IndexBufferDesc, nullptr, &LineIndexBuffer);
-	if (FAILED(hr))
-	{
-	}
-
-	// 라인 쉐이더 컴파일 및 생성
-	ID3DBlob* vsBlob = nullptr;
-	ID3DBlob* psBlob = nullptr;
-	ID3DBlob* errorBlob = nullptr;
-
-	// 버텍스 쉐이더 컴파일
-	hr = D3DCompileFromFile(L"Shaders\\ShaderLine_VS.hlsl", nullptr, nullptr, "ShaderLine_VS", "vs_5_0",
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &vsBlob, &errorBlob);
-	if (FAILED(hr))
-	{
-		// 컴파일 오류 처리
-		if (errorBlob)
-		{
-		}
-	}
-
-	// 픽셀 쉐이더 컴파일
-	hr = D3DCompileFromFile(L"Shaders\\ShaderLine_PS.hlsl", nullptr, nullptr, "ShaderLine_PS", "ps_5_0",
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &psBlob, &errorBlob);
-	if (FAILED(hr))
-	{
-		// 컴파일 오류 처리
-		if (errorBlob)
-		{
-		}
-	}
-
-
-
-	// 쉐이더 생성
-	hr = Device->CreateVertexShader(vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), nullptr, &LineVertexShader);
-	if (FAILED(hr))
-	{
-		// 오류 처리
-	}
-
-	hr = Device->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(), nullptr, &LinePixelShader);
-	if (FAILED(hr))
-	{
-		// 오류 처리
-	}
-
-	// 입력 레이아웃 설정
-	D3D11_INPUT_ELEMENT_DESC layout[] =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-	};
-	UINT numElements = ARRAYSIZE(layout);
-
-	// 입력 레이아웃 생성
-	hr = Device->CreateInputLayout(layout, numElements, vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), &LineInputLayout);
-	if (FAILED(hr))
-	{
-		// 오류 처리
-	}
-
-	// 버텍스/픽셀 쉐이더 블롭 해제
-	if (vsBlob) vsBlob->Release();
-	if (psBlob) psBlob->Release();
+	
+	FVertexBuffer::Create("LineVertexBuffer", VertexBuffer , true);
+	FIndexBuffer::Create("LineIndexBuffer", IndexBuffer , true);
+	std::shared_ptr<FMesh> Mesh =  FMesh::Create("LineBatchMesh" , "LineVertexBuffer", "LineIndexBuffer", D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+	
+	FVertexShader::Load(L"Shaders\\ShaderLine_VS.hlsl", "ShaderLine_VS", "ShaderLine_VS");
+	
+	FPixelShader::Load(L"Shaders\\ShaderLine_PS.hlsl", "ShaderLine_PS", "ShaderLine_PS");
+	
 
 	// 라인 렌더링을 위한 래스터라이저 상태 설정
 	D3D11_RASTERIZER_DESC rasterizerDesc = {};
@@ -261,25 +198,20 @@ void FLineBatchManager::Create()
 	rasterizerDesc.MultisampleEnable = FALSE;
 	rasterizerDesc.AntialiasedLineEnable = TRUE; // 안티앨리어싱된 라인 활성화
 
-	// 래스터라이저 상태 생성
-	hr = Device->CreateRasterizerState(&rasterizerDesc, &LineRasterizerState);
-	if (FAILED(hr))
-	{
-		// 오류 처리
-	}
+	
+	FRasterizer::Create("LineRasterizerState", rasterizerDesc);
 
-	// 상수 버퍼 생성
-	D3D11_BUFFER_DESC ConstantBufferDesc = {};
-	ConstantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;                        // 매 프레임 CPU에서 업데이트 하기 위해
-	ConstantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;             // 상수 버퍼로 설정
-	ConstantBufferDesc.ByteWidth = (sizeof(FLineConstantInfo) + 0xf) & 0xfffffff0;  // 16byte의 배수로 올림
-	ConstantBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;            // CPU에서 쓰기 접근이 가능하게 설정
+	
+	std::shared_ptr<FMaterial> Material = FMaterial::Create("LineBatchMaterial");
+	Material->SetVertexShader("ShaderLine_VS");
+	Material->SetPixelShader("ShaderLine_PS");
+	Material->SetRasterizer("LineRasterizerState");
+	
 
-	Device->CreateBuffer(&ConstantBufferDesc, nullptr, &LineConstantBuffer);
+	RenderResourceCollection.SetConstantBufferBinding("LineConstantInfo",&LineConstantInfo, 1,true,false);
 
-	// 기본 토폴로지는 이미 D3D11_PRIMITIVE_TOPOLOGY_LINELIST로 초기화됨
-	// 따로 설정할 필요 없음
-
+	RenderResourceCollection.SetMesh(Mesh);
+	RenderResourceCollection.SetMaterial(Material);
 }
 
 

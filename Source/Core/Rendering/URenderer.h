@@ -61,7 +61,7 @@ public:
     /** 셰이더를 준비 합니다. */
     void PrepareShader() const;
 
-	void RenderPrimitive(class UPrimitiveComponent& PrimitiveComp , const FMatrix& ModelMatrix);
+	void Render(class FRenderResourceCollection& _RenderResourceCollection);
 
     /**
      * Buffer에 있는 Vertex를 그립니다.
@@ -90,8 +90,6 @@ protected:
     /** 뎁스 스텐실 상태를 생성합니다. */
 	void CreateDepthStencilState();
 	
-	/** 블렌드 상태를 생성합니다. */
-	void CreateBlendState();
 
 	/** 뎁스 스텐실 리소스는 디바이스 뎁스 설정은 여기서 날린다. */
 	void ReleaseDepthStencilBuffer();
