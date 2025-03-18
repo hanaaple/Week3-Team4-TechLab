@@ -1,7 +1,7 @@
 // ShaderW0.hlsl
 //#pragma pack_matrix(column_major)
 
-cbuffer constants : register(b0)
+cbuffer FConstantsComponentData : register(b0)
 {
 	float4x4 MVP;
 	float4 CustomColor;

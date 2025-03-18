@@ -18,27 +18,11 @@
 UPrimitiveComponent::UPrimitiveComponent() : Super()
 {
 	bCanBeRendered = true;
-	VertexShader = FVertexShader::Find("Simple_VS");
-	PixelShader = FPixelShader::Find("Simple_PS");
 
-	// TODO: 이거는 나중에 매쉬같은데서  만들어야함
-	InputLayout = FInputLayout::Find("Simple_VS");
 
-	BlendState = FBlendState::Find("DefaultBlendState");
-	DepthStencilStat = FDepthStencilState::Find("DefaultDepthStencilState");
-	Rasterizer = FRasterizer::Find("DefaultRasterizer");
-	ConstantBuffer = FConstantBuffer::Find("DefaultConstantBuffer");
-
-	ConstantBufferBinding = std::make_shared<FConstantBufferBinding>();
-
-	//std::shared_ptr<FVertexShader> vertexShaderPtr;/* 초기화 */
-	//FShader* shaderPtr = static_cast<FShader*>(vertexShaderPtr.get()); // 내부 포인터 추출
-	ConstantBufferBinding->Res = ConstantBuffer;
-	ConstantBufferBinding->CPUDataPtr = &ConstantsComponentData;
-	ConstantBufferBinding->DataSize = sizeof(ConstantsComponentData);
-	ConstantBufferBinding->ParentShader = VertexShader.get();
-	ConstantBufferBinding->BindPoint = 0;
-	
+	// 기본으로 바인딩되는 데이타
+	GetRenderResourceCollection().SetConstantBufferBinding("FConstantsComponentData", &ConstantsComponentData, 0, true, false);
+	SetMaterial("DefaultMaterial");
 }
 
 UPrimitiveComponent::~UPrimitiveComponent()
@@ -144,185 +128,40 @@ void UPrimitiveComponent::RegisterComponentWithWorld(UWorld* World)
 
 UCubeComp::UCubeComp() : Super()
 {
-	VertexBuffer = FVertexBuffer::Find("Cube");
-	IndexBuffer = FIndexBuffer::Find("Cube");
-	if (VertexBuffer == nullptr)
-	{
-		TArray<FVertexSimple> vertices;
-		TArray<uint32> indices;
-		float size = 1.f;
 
-		UGeometryGenerator::CreateCube(size, &vertices, &indices);
-		
-		VertexBuffer = FVertexBuffer::Create(FString("Cube"), vertices);
-		IndexBuffer = FIndexBuffer::Create(FString("Cube"), indices);
-	}
+	SetMesh("Cube");
 	bCanBeRendered = true;
 }
 
 USphereComp::USphereComp() : Super()
 {
-	VertexBuffer= FVertexBuffer::Find("Sphere");
-	IndexBuffer = FIndexBuffer::Find("Sphere");
-	if (VertexBuffer == nullptr)
-	{
-		TArray<FVertexSimple> vertices;
-		TArray<uint32> indices;
-		int slices = 16;
-		int stacks = 16;
-		int32 radius = 1.f;
-		float height = 1.f;
-
-		UGeometryGenerator::CreateSphere(radius, slices, stacks, &vertices, &indices);
-		
-		VertexBuffer = FVertexBuffer::Create(FString("Sphere"), vertices);
-		IndexBuffer = FIndexBuffer::Create(FString("Sphere"), indices);
-	}
+	SetMesh("Sphere");
 	bCanBeRendered = true;
 }
 
 UTriangleComp::UTriangleComp() : Super()
 {
-	VertexBuffer= FVertexBuffer::Find("Triangle");
-	IndexBuffer = FIndexBuffer::Find("Triangle");
-	if (VertexBuffer == nullptr)
-	{
-		FVertexSimple tempArray[] =
-		{
-			{  0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f },
-			{  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f },
-			{  0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f } 
-		};
-		TArray<FVertexSimple> vertices;
-
-		vertices.Add(tempArray[0]);
-		vertices.Add(tempArray[1]);
-		vertices.Add(tempArray[2]);
-		
-		uint32 TriangleIndices[3] =
-		{
-			0, 1, 2
-		};
-		
-		TArray<uint32> indices;
-		indices.Add(TriangleIndices[0]);
-		indices.Add(TriangleIndices[1]);
-		indices.Add(TriangleIndices[2]);
-		
-		VertexBuffer = FVertexBuffer::Create(FString("Triangle"), vertices);
-		IndexBuffer = FIndexBuffer::Create(FString("Triangle"), indices);
-	}
+	
+	SetMesh("Triangle");
+	bCanBeRendered = true;
 }
 
 UQuadComp::UQuadComp()
 {
-	VertexBuffer = FVertexBuffer::Find("Quad");
-	IndexBuffer = FIndexBuffer::Find("Quad");
-	if (VertexBuffer == nullptr)
-	{
-		FVertexSimple tempArray[] =
-		{
-			{  0.0f, -1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f },
-			{  0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f },
-			{  0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f },
-			{  0.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f }
-		};
-
-		TArray<FVertexSimple> vertices;
-
-		vertices.Add(tempArray[0]);
-		vertices.Add(tempArray[1]);
-		vertices.Add(tempArray[2]);
-		vertices.Add(tempArray[3]);
-
-		uint32 QuadIndices[6] =
-		{
-			0, 1, 2,
-			0, 2, 3
-		};
-
-		TArray<uint32> indices;
-		indices.Add(QuadIndices[0]);
-		indices.Add(QuadIndices[1]);
-		indices.Add(QuadIndices[2]);
-		indices.Add(QuadIndices[3]);
-		indices.Add(QuadIndices[4]);
-		indices.Add(QuadIndices[5]);
-
-		VertexBuffer = FVertexBuffer::Create(FString("Quad"), vertices);
-		IndexBuffer = FIndexBuffer::Create(FString("Quad"), indices);
-	}
+	SetMesh("Quad");
 }
 
 ULineComp::ULineComp() : Super()
-{//없으면 만든다.
-
-	VertexBuffer= FVertexBuffer::Find("Line");
-	IndexBuffer = FIndexBuffer::Find("Line");
-
-	Topology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
-	if (VertexBuffer == nullptr)
-	{
-		FVertexSimple tempArray[2] =
-		{
-			{ -1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f },
-			{ 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f }
-		};
-		TArray<FVertexSimple> vertices;
-
-		vertices.Add(tempArray[0]);
-		vertices.Add(tempArray[1]);
-		
-		uint32 tempIndices[2] =
-		{
-			0, 1
-		};
-		
-		TArray<uint32> indices;
-		indices.Add(tempIndices[0]);
-		indices.Add(tempIndices[1]);
-		
-		VertexBuffer = FVertexBuffer::Create(FString("Line"), vertices);
-		IndexBuffer = FIndexBuffer::Create(FString("Line"), indices);
-	}
+{
+	SetMesh("Line");
 }
 
 UCylinderComp::UCylinderComp() : Super()
 {
-	VertexBuffer= FVertexBuffer::Find("Cylinder");
-	IndexBuffer = FIndexBuffer::Find("Cylinder");
-	if (VertexBuffer == nullptr)
-	{
-		TArray<FVertexSimple> vertices;
-		TArray<uint32> indices;
-		int slices = 36;
-		int stacks = 36;
-		float bRadius = .2f;
-		float tRdius = .2f;
-		float height = 1.f;
-
-		UGeometryGenerator::CreateCylinder(bRadius, tRdius, height, slices, stacks, &vertices , &indices);
-		
-		VertexBuffer = FVertexBuffer::Create(FString("Cylinder"), vertices);
-		IndexBuffer = FIndexBuffer::Create(FString("Cylinder"), indices);
-	}
+	SetMesh("Cylinder");
 }
 
 UConeComp::UConeComp() : Super()
 {
-	VertexBuffer= FVertexBuffer::Find("Cone");
-	IndexBuffer = FIndexBuffer::Find("Cone");
-	if (VertexBuffer == nullptr)
-	{
-		TArray<FVertexSimple> vertices;
-		TArray<uint32> indices;
-		int slices = 36;
-		int stacks = 6;
-		float radius = 1.f;
-		float height = 1.f;
-
-		UGeometryGenerator::CreateCone(radius, height, slices, stacks, &vertices, &indices);
-		VertexBuffer = FVertexBuffer::Create(FString("Cone"), vertices);
-		IndexBuffer = FIndexBuffer::Create(FString("Cone"), indices);
-	}
+	SetMesh("Cone");
 }
