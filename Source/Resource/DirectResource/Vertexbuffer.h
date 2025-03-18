@@ -7,18 +7,16 @@
 #include "Resource/Resource.h"
 #include "Core/Container/String.h"
 #include "Core/Container/Array.h"
+#include "Core/Math/Vector.h"
 
 
 class FVertexBuffer :
 	public FResource<FVertexBuffer> , public FDirectBuffer
 {
-
-
 public:
 
-	
 	template<typename VertexType>																//동적으로 버텍스버퍼를 업데이트 할지 예 :라인 배치
-	static std::shared_ptr<FVertexBuffer> Create(const FString&  _Name, const TArray<VertexType>& _Data, bool _bIsDynamic = false)
+	static std::shared_ptr<FVertexBuffer> Create(const FString& _Name, const TArray<VertexType>& _Data, bool _bIsDynamic = false)
 	{
 		std::shared_ptr<FVertexBuffer> Res = FVertexBuffer::CreateRes(_Name);
 
@@ -31,7 +29,6 @@ public:
 		{
 			Res->ResCreateDynamic(&_Data[0], sizeof(VertexType), _Data.Num());
 		}
-		return Res;
 	}
 
 	// static std::shared_ptr<FVertexBuffer> Create(const FString&  _Name, size_t _VertexSize, size_t _VertexCount)
@@ -42,6 +39,9 @@ public:
 	// }
 
 	void Setting() const;
+
+	FVector GetMin() const { return Min; }
+	FVector GetMax() const { return Max; }
 	
 private:
 	
@@ -56,6 +56,6 @@ private:
 	
 	const void* CPUDataPtr = nullptr; //동적 업데이트용 포인터
 
-	
-	
+	FVector Min;
+	FVector Max;
 };

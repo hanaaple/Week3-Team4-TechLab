@@ -33,7 +33,6 @@ void FVertexBuffer::Setting() const
 
 void FVertexBuffer::ResCreate(const void* _Data, size_t _VertexSize, size_t _VertexCount)
 {
-	
 	VertexSize = static_cast<UINT>(_VertexSize);
 	VertexCount = static_cast<UINT>(_VertexCount);
 

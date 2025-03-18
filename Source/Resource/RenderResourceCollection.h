@@ -27,12 +27,12 @@ public:
 	void SetMesh(std::shared_ptr<class FMesh> _Mesh);
 	void SetMaterial(std::shared_ptr<class FMaterial> _Material);
 
-	std::shared_ptr<FMesh> GetMesh()
+	std::shared_ptr<FMesh> GetMesh() const
 	{
 		return Mesh;
 	}
 
-	std::shared_ptr<FMaterial> GetMaterial()
+	std::shared_ptr<FMaterial> GetMaterial() const
 	{
 		return Material;
 	}
@@ -69,11 +69,9 @@ private:
 	//원래는 메쉬와 메테리얼의 정보 둘다 필요함 일단 버텍스 쉐이더 정보만 받아서 자동화
 	std::shared_ptr<class FInputLayout> Layout = nullptr;
 	
-
 	std::shared_ptr<class FMesh> Mesh = nullptr;
 	std::shared_ptr<class FMaterial> Material = nullptr;
 
-	
 	TMap<FString, std::shared_ptr<class FConstantBufferBinding>> ConstantBufferBindings;
 	TMap<FString, std::shared_ptr<class FTextureBinding>> TextureBindings;
 	TMap<FString, std::shared_ptr<class FSamplerBinding>> SamplerBindings;

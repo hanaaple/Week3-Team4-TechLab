@@ -177,6 +177,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Core\Math\Transform.cpp" />
     <ClCompile Include="Source\Object\Assets\MeshAsset.cpp" />
     <ClCompile Include="Source\Object\PrimitiveComponent\GizmoComponent.cpp" />
     <ClCompile Include="Source\Core\Rendering\FViewMode.cpp" />
