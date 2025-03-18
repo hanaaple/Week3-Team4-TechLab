@@ -62,6 +62,7 @@ void UPrimitiveComponent::Render()
 	{
 		if (bIsPicked)
 		{
+			bUseVertexColor = true;
 			/*bUseVertexColor = false;
 			SetCustomColor(FVector4(1.0f, 0.647f, 0.0f, 1.0f));*/
 		}
