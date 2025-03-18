@@ -7,6 +7,8 @@ struct FVertexSimple
 {
     float X, Y, Z;    // Position
     float R, G, B, A; // Color
+	float U, V;		  // Texture UV
+	float NX, NY, NZ;  // Normal
 };
 
 struct FLineVertexSimple {

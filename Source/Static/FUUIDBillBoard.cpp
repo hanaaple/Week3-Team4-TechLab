@@ -218,6 +218,17 @@ void FUUIDBillBoard::UpdateString(const std::wstring& String)
 			cursorX += 2 * AspectRatio * Kerning;
 		}
 	}
+
+	// 버텍스 버퍼 업데이트
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	FDevice::Get().GetDeviceContext()->Map(FontVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	memcpy(mappedResource.pData, VertexBuffer.GetData(), sizeof(FVertexTexture) * VertexBuffer.Num());
+	FDevice::Get().GetDeviceContext()->Unmap(FontVertexBuffer, 0);
+
+	// 인덱스 버퍼 업데이트
+	FDevice::Get().GetDeviceContext()->Map(FontIndexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	memcpy(mappedResource.pData, IndexBuffer.GetData(), sizeof(uint32) * IndexBuffer.Num());
+	FDevice::Get().GetDeviceContext()->Unmap(FontIndexBuffer, 0);
 }
 
 void FUUIDBillBoard::Flush()
@@ -273,16 +284,6 @@ void FUUIDBillBoard::Render()
 	//Prepare
 	ID3D11DeviceContext* DeviceContext = FDevice::Get().GetDeviceContext();
 
-	// 버텍스 버퍼 업데이트
-	D3D11_MAPPED_SUBRESOURCE mappedResource;
-	DeviceContext->Map(FontVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-	memcpy(mappedResource.pData, VertexBuffer.GetData(), sizeof(FVertexTexture) * VertexBuffer.Num());
-	DeviceContext->Unmap(FontVertexBuffer, 0);
-
-	// 인덱스 버퍼 업데이트
-	DeviceContext->Map(FontIndexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-	memcpy(mappedResource.pData, IndexBuffer.GetData(), sizeof(uint32) * IndexBuffer.Num());
-	DeviceContext->Unmap(FontIndexBuffer, 0);
 
 	// 파이프라인 상태 설정
 	UINT stride = sizeof(FVertexTexture);
