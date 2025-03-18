@@ -289,7 +289,7 @@ void UWorld::RayCasting(const FVector& MouseNDCPos)
 
 	for (auto& Actor : Actors)
 	{
-		UCubeComp* PrimitiveComponent = Actor->GetComponentByClass<UCubeComp>();
+		UPrimitiveComponent* PrimitiveComponent = Actor->GetComponentByClass<UPrimitiveComponent>();
 		if (PrimitiveComponent == nullptr)
 		{
 			continue;
