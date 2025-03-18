@@ -154,10 +154,10 @@ void FUUIDBillBoard::CreateKoreanConsonantVowel(wchar_t jamo, float posX, float 
 	const GlyphInfo& glyph = FFontAtlas::Get().GetGlyph(jamo);
 
 	FVertexSimple vertices[4] = {
-		{ 0.0f, posX + offsetX, 1.0f - offsetY, glyph.u, glyph.v },
-		{ 0.0f, posX + offsetX + FFontAtlas::Get().GlyphAspectRatio, 1.0f - offsetY, glyph.u + glyph.width, glyph.v },
-		{ 0.0f, posX + offsetX + FFontAtlas::Get().GlyphAspectRatio, -1.0f - offsetY, glyph.u + glyph.width, glyph.v + glyph.height },
-		{ 0.0f, posX + offsetX, -1.0f - offsetY, glyph.u, glyph.v + glyph.height }
+		{ 0.0f, posX + offsetX, 1.0f - offsetY, 0.0f, 0.0f, 0.0f, 0.0f, glyph.u, glyph.v },
+		{ 0.0f, posX + offsetX + FFontAtlas::Get().GlyphAspectRatio, 1.0f - offsetY, 0.0f, 0.0f, 0.0f, 0.0f, glyph.u + glyph.width, glyph.v },
+		{ 0.0f, posX + offsetX + FFontAtlas::Get().GlyphAspectRatio, -1.0f - offsetY, 0.0f, 0.0f, 0.0f, 0.0f, glyph.u + glyph.width, glyph.v + glyph.height },
+		{ 0.0f, posX + offsetX, -1.0f - offsetY, 0.0f, 0.0f, 0.0f, 0.0f, glyph.u, glyph.v + glyph.height }
 	};
 
 	// 정점 및 인덱스 버퍼에 추가
@@ -196,10 +196,10 @@ void FUUIDBillBoard::UpdateString(const std::wstring& String)
 
 			FVertexSimple vertices[4] =
 			{
-				{ 0.0f, -AspectRatio + cursorX, 1.0f, glyph.u, glyph.v },
-				{ 0.0f, AspectRatio + cursorX, 1.0f, glyph.u + glyph.width, glyph.v },
-				{ 0.0f, AspectRatio + cursorX, -1.0f, glyph.u + glyph.width, glyph.v + glyph.height },
-				{ 0.0f, -AspectRatio + cursorX, -1.0f, glyph.u, glyph.v + glyph.height }
+				{ 0.0f, -AspectRatio + cursorX, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, glyph.u, glyph.v },
+				{ 0.0f, AspectRatio + cursorX, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, glyph.u + glyph.width, glyph.v },
+				{ 0.0f, AspectRatio + cursorX, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, glyph.u + glyph.width, glyph.v + glyph.height },
+				{ 0.0f, -AspectRatio + cursorX, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, glyph.u, glyph.v + glyph.height }
 			};
 
 			for (int j = 0; j < 4; ++j)
@@ -405,8 +405,8 @@ void FUUIDBillBoard::Create()
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 
