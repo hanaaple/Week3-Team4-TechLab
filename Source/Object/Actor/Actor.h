@@ -113,9 +113,7 @@ public:
 	FQuat GetActorRotationQuat() const;
 	FVector GetActorScale() const;
 
-
-	//TODO: Bounding Box
-
+public:
 	bool SetActorPosition(const FVector& InePosition);
 	bool SetActorRotation(const FVector& InRotation);
 	bool SetActorRotation(const FQuat& InQuat);
@@ -126,6 +124,8 @@ public:
 	bool SetActorScale(const FVector& InScale);
 
 	void SetActorTransform(const FTransform& InTransform);
+
+public:
 	void SetActorRelativePosition(const FVector& InPosition);
 
 	void SetActorRelativeRotation(const FVector& InRotation);
@@ -135,6 +135,7 @@ public:
 	void SetActorRelativeScale(const FVector& InScale);
 	FVector GetActorRelativeScale() const;
 
+public:
 	void AddWorldOffset(const FVector& Delta);
 	void AddActorWorldRotation(const FVector& Delta);
 	void AddActorWorldRotation(const FQuat& Delta);
@@ -148,7 +149,30 @@ public:
 	void AddActorLocalRotation(const FQuat& Delta);
 
 	void AddActorLocalTransform(const FTransform& Delta);
+public:
+	/**
+	 * 이 액터를 구성하는 모든 컴포넌트(ChildActorComponents 제외)의 경계 상자를 반환합니다.
+	 * @param bOnlyCollidingComponents		true인 경우, 충돌이 활성화된 컴포넌트들의 경계 상자만 반환합니다.
+	 * @param Origin						월드 공간에서 액터의 중심으로 설정됩니다.
+	 * @param BoxExtent						3차원 공간에서 액터 크기의 절반으로 설정됩니다.
+	 * @param bIncludeFromChildActors		true인 경우, ChildActor 컴포넌트까지 재귀적으로 포함합니다.
+	 */
+	virtual void GetActorBounds(bool bOnlyCollidingComponents, FVector& Origin, FVector& BoxExtent, bool bIncludeFromChildActors = false) const;
+	/**
+	* 이 액터 내의 모든 컴포넌트의 월드 공간 경계 상자를 반환합니다.
+	* @param bNonColliding 경계 상자에 충돌을 사용하지 않는 컴포넌트를 포함할 것인지 여부를 나타냅니다.
+	* @param bIncludeFromChildActors true이면 ChildActor 컴포넌트 내부로 재귀적으로 들어가 해당 액터들의 적절한 타입의 컴포넌트도 포함합니다.
+	*/
+	virtual FBox GetComponentsBoundingBox(bool bNonColliding = false, bool bIncludeFromChildActors = false) const;
 
+	/**
+	 * Calculates the actor space bounding box of all components in this Actor.  This is slower than GetComponentsBoundingBox(), because the local bounds of the components are not cached -- they are recalculated every time this function is called.
+	 * @param bNonColliding Indicates that you want to include non-colliding components in the bounding box
+	 * @param bIncludeFromChildActors If true then recurse in to ChildActor components and find components of the appropriate type in those Actors as well
+	 */
+	virtual FBox CalculateComponentsBoundingBoxInLocalSpace(bool bNonColliding = false, bool bIncludeFromChildActors = false) const;
+
+public:
 	bool CanEverTick() const { return bCanEverTick; }
 	virtual const char* GetTypeName();
 
@@ -173,7 +197,7 @@ private:
 
 public:
 	AActor* Owner = nullptr;
-
+	TArray<AActor> Children;
 //Editor Only
 	AActor* GroupActor = nullptr;
 };
