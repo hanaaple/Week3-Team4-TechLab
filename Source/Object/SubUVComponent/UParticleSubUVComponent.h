@@ -76,8 +76,8 @@ private:
 
 	std::shared_ptr<class FVertexBuffer> VertexBuffer = nullptr;
 	std::shared_ptr<class FIndexBuffer> IndexBuffer = nullptr;
+	std::shared_ptr<class FInputLayout> InputLayout = nullptr;
 	std::shared_ptr<class FConstantBuffer> ConstantBuffer = nullptr;
-	ID3D11InputLayout* InputLayout = nullptr;
 	D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 	//class std::shared_ptr<class FPixelShader> PixelShader = nullptr;

@@ -33,15 +33,15 @@ UParticleSubUVComponent::UParticleSubUVComponent()
 
 	if (VertexBuffer == nullptr)
 	{
-		FVertexTexture tempArray[] =
+		FVertexSimple tempArray[] =
 		{
-			{  0.0f, -1.0f, 1.0f, 0.0f, 0.0f },
-			{  0.0f, 1.0f, 1.0f, 0.0f, 1.0f },
-			{  0.0f, 1.0f, -1.0f, 1.0f, 1.0f },
-			{  0.0f, -1.0f, -1.0f, 1.0f, 0.0f }
+			{  0.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f },
+			{  0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f },
+			{  0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f },
+			{  0.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f }
 		};
 
-		TArray<FVertexTexture> vertices;
+		TArray<FVertexSimple> vertices;
 
 		vertices.Add(tempArray[0]);
 		vertices.Add(tempArray[1]);
@@ -83,16 +83,24 @@ UParticleSubUVComponent::UParticleSubUVComponent()
 	FDevice::Get().GetDevice()->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(), nullptr, &PixelShader);
 
 	// 입력 레이아웃 설정
-	D3D11_INPUT_ELEMENT_DESC layout[] =
+
+
+
+
+
+	/*D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 
 	UINT numElements = ARRAYSIZE(layout);
 
-	FDevice::Get().GetDevice()->CreateInputLayout(layout, numElements, vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), &InputLayout);
-
+	FDevice::Get().GetDevice()->CreateInputLayout(layout, numElements, vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), &InputLayout);*/
+	
+	InputLayout = FInputLayout::Find("Simple_VS");
 	BlendState = FBlendState::Find("DefaultBlendState");
 	DepthStencilStat = FDepthStencilState::Find("DefaultDepthStencilState");
 	Rasterizer = FRasterizer::Find("DefaultRasterizer");
@@ -279,7 +287,8 @@ void UParticleSubUVComponent::Render()
 	IndexBuffer->Setting();
 	FDevice::Get().GetDeviceContext()->VSSetShader(VertexShader, nullptr, 0);
 	FDevice::Get().GetDeviceContext()->PSSetShader(PixelShader, nullptr, 0);
-	FDevice::Get().GetDeviceContext()->IASetInputLayout(InputLayout);
+	//FDevice::Get().GetDeviceContext()->IASetInputLayout(InputLayout);
+	InputLayout->Setting();
 	DepthStencilStat->Setting();
 	Rasterizer->Setting();
 	BlendState->Setting();
