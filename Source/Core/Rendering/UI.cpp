@@ -498,8 +498,8 @@ void UI::RenderShowFlagsPanel()
 void UI::RenderViewModePanel()
 {
 	if (ImGui::Begin("View Mode"))
-	{
-		static const char* viewModeNames[] = { "Solid", "Wireframe" };
+	{													
+		static const char* viewModeNames[] = { "Default", "Solid", "Wireframe" };
 		int currentViewMode = static_cast<int>(FViewMode::Get().GetViewMode());
 
 		if (ImGui::Combo("View Mode", &currentViewMode, viewModeNames, IM_ARRAYSIZE(viewModeNames)))

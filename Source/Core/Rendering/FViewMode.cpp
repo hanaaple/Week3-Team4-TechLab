@@ -5,7 +5,7 @@ void FViewMode::Initialize(ID3D11Device* InDevice)
 {
 	Device = InDevice;
 	CreateRasterizerStates();
-	CurrentViewMode = EViewModeIndex::VMI_Solid;
+	CurrentViewMode = EViewModeIndex::VMI_Default;
 }
 
 FViewMode::~FViewMode()
@@ -49,14 +49,13 @@ void FViewMode::SetViewMode(EViewModeIndex ViewMode)
 	CurrentViewMode = ViewMode;
 }
 
-void FViewMode::ApplyViewMode(ID3D11DeviceContext* DeviceContext)
+void FViewMode::ApplyViewMode()
 {
-	if (!DeviceContext)
-		return;
-
-	auto res = RasterizerStates.Find(CurrentViewMode);
-	if (res)
-	{
-		DeviceContext->RSSetState(*res);
-	}
+	FDevice::Get().GetDeviceContext()->RSSetState(RasterizerStates[CurrentViewMode]);
+	
+	// auto res = RasterizerStates.Find(CurrentViewMode);
+	// if (res)
+	// {
+	// 	DeviceContext->RSSetState(*res);
+	// }
 }

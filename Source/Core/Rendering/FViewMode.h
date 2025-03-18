@@ -10,6 +10,7 @@ enum class EViewModeIndex : uint32
 	// Lit mode는 추후 업데이트
 	//VMI_Lit, 
 	//VMI_Unlit,
+	VMI_Default, // 전역 레스트라이저를 적용하지 않음
 	VMI_Solid,
 	VMI_Wireframe,
 };
@@ -25,7 +26,7 @@ public:
 
 	void Initialize(ID3D11Device* Device);
 	void SetViewMode(EViewModeIndex ViewMode);
-	void ApplyViewMode(ID3D11DeviceContext* DeviceContext);
+	void ApplyViewMode();
 
 	EViewModeIndex GetViewMode() const { return CurrentViewMode; }
 private:
