@@ -22,8 +22,10 @@ cbuffer Depth : register(b2){
 
 struct VS_INPUT
 {
-    float4 position : POSITION; // Input position from vertex buffer
-    float4 color : COLOR;       // Input color from vertex buffer
+	float3 position : POSITION;  // 3개의 float 값 (DXGI_FORMAT_R32G32B32_FLOAT)
+	float4 color : COLOR;        // 4개의 float 값 (DXGI_FORMAT_R32G32B32A32_FLOAT)
+	float2 texcoord : TEXCOORD;  // 2개의 float 값 (DXGI_FORMAT_R32G32_FLOAT)
+	float3 normal : NORMAL;      // 3개의 float 값 (DXGI_FORMAT_R32G32B32_FLOAT)
 };
 
 struct PS_INPUT

@@ -10,16 +10,26 @@ FRay::FRay(const FMatrix& ViewMatrix, const FMatrix& ProjMatrix, float MouseNDCX
 	FMatrix viewProj = ViewMatrix * ProjMatrix;
 	FMatrix invViewProj = viewProj.Inverse();
 	
-	FVector NDCStart = FVector(MouseNDCX, MouseNDCY, 0.0f);
-	FVector NDCEnd = FVector(MouseNDCX, MouseNDCY, 1.0f);
+	FVector4 NDCStart = FVector4(MouseNDCX, MouseNDCY, 0.0f, 1.0f);
+	FVector4 NDCEnd = FVector4(MouseNDCX, MouseNDCY, 1.0f, 1.0f);
 	
-	FVector4 ViewToWorldStart = invViewProj.TransformVector4(FVector4(NDCStart, 1.0f));
-	ViewToWorldStart *= 1.f / ViewToWorldStart.W;
-	FVector4 ViewToWorldEnd = invViewProj.TransformVector4(FVector4(NDCEnd, 1.0f));
-	ViewToWorldEnd *= 1.f / ViewToWorldEnd.W;
+	FVector4 ViewToWorldStart = invViewProj.TransformVector4(NDCStart);
+	FVector4 ViewToWorldEnd = invViewProj.TransformVector4(NDCEnd);
+
+	FVector RayStartWorldSpace{ViewToWorldStart};
+	FVector RayEndWorldSpace{ViewToWorldEnd};
+
+	if (ViewToWorldStart.W != 0.0f)
+	{
+		RayStartWorldSpace /= ViewToWorldStart.W;
+	}
+	if (ViewToWorldEnd.W != 0.0f)
+	{
+		RayEndWorldSpace /= ViewToWorldEnd.W;
+	}
 	
-	Origin = FVector(ViewToWorldStart);
-	Direction = (ViewToWorldEnd -ViewToWorldStart).GetSafeNormal();
+	Origin = RayStartWorldSpace;
+	Direction = (RayEndWorldSpace - RayStartWorldSpace).GetSafeNormal();
 }
 
 FRay FRay::TransformRayToLocal(const FRay& worldRay, const FMatrix& primWorldMat)

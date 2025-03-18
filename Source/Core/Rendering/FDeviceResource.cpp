@@ -299,4 +299,5 @@ void FDevice::InitResource()
 
 		FMesh::Create(TEXT("GizmoScale"));
 	}
+
 }

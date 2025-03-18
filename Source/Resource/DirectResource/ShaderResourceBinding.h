@@ -2,6 +2,8 @@
 #include "Core/Container/String.h"
 #include "ConstantBuffer.h"
 #include "Shader.h"
+#include "Resource/Texture.h"
+#include "Sampler.h"
 
 //리소스와 다르게 각 객체가 가지게 됨
 class FShaderResourceBinding
@@ -31,6 +33,30 @@ public:
 
 	const void* CPUDataPtr = nullptr;
 	int DataSize = -1;
+
+	void Setting() override;
+	void Reset() override;
+};
+
+//쉐이더가 포인터를 받아 텍스쳐를 바인딩하기 위한 클래스
+class FTextureBinding  : public FShaderResourceBinding
+{
+public:
+	friend class FRenderResourceCollection;
+	
+	std::shared_ptr<FTexture> Res;
+
+	void Setting() override;
+	void Reset() override;
+};
+
+//쉐이더가 샘플러를 받아 텍스쳐를 바인딩하기 위한 클래스
+class FSamplerBinding  : public FShaderResourceBinding
+{
+public:
+	friend class FRenderResourceCollection;
+	
+	std::shared_ptr<FSampler> Res;
 
 	void Setting() override;
 	void Reset() override;

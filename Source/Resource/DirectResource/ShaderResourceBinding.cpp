@@ -42,3 +42,44 @@ void FConstantBufferBinding::Setting()
 void FConstantBufferBinding::Reset()
 {
 }
+
+void FTextureBinding::Setting()
+{
+	if (bIsUseVertexShader == true)
+	{
+		Res->VSSetting(BindPoint);
+	}
+	if (bIsUsePixelShader == true)
+	{
+		Res->PSSetting(BindPoint);
+	}
+}
+
+void FTextureBinding::Reset()
+{
+	if (bIsUseVertexShader == true)
+	{
+		Res->VSReset(BindPoint);
+	}
+	if (bIsUsePixelShader == true)
+	{
+		Res->PSReset(BindPoint);
+	}
+}
+
+void FSamplerBinding::Setting()
+{
+	if (bIsUseVertexShader == true)
+	{
+		Res->VSSetting(BindPoint);
+	}
+	if (bIsUsePixelShader == true)
+	{
+		Res->PSSetting(BindPoint);
+	}
+}
+
+void FSamplerBinding::Reset()
+{
+	FShaderResourceBinding::Reset();
+}

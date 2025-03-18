@@ -132,4 +132,5 @@ void FMaterial::SetDepthState(const FString& _Value)
 	PixelShader();
 	Blend();
 	DepthStencil();
+
 }
