@@ -121,11 +121,7 @@ void URenderer::Prepare() const
 
 void URenderer::PrepareShader() const
 {
-    // 버텍스 쉐이더에 상수 버퍼를 설정
-    if (ConstantBuffer)
-    {
-        FDevice::Get().GetDeviceContext()->VSSetConstantBuffers(0, 1, &ConstantBuffer);
-    }
+
     if (ConstantsDepthBuffer)
     {
         FDevice::Get().GetDeviceContext()->PSSetConstantBuffers(2, 1, &ConstantsDepthBuffer);
@@ -150,45 +146,10 @@ void URenderer::RenderPrimitive(class UPrimitiveComponent& PrimitiveComp, const 
 	};
 
 
-    //UpdateConstant(Data);
-    RenderPrimitiveInternal(PrimitiveComp);
+
+	PrimitiveComp.GetRenderResourceCollection().Render();
 }
 
-void URenderer::RenderPrimitiveInternal(class UPrimitiveComponent& PrimitiveComp) const
-{
-	if (PrimitiveComp.VertexShader == nullptr)
-	{
-		UE_LOG("Error: VertexShader has not been set.");
-	}
-
-	if (PrimitiveComp.PixelShader == nullptr)
-	{
-		UE_LOG("Error: PixelShader has not been set.");
-	}
-
-	if (PrimitiveComp.VertexBuffer == nullptr)
-	{
-		UE_LOG("Error: VertexBuffer has not been set.");
-	}
-
-	if (PrimitiveComp.IndexBuffer == nullptr)
-	{
-		UE_LOG("Error: IndexBuffer has not been set.");
-	}
-	
-	PrimitiveComp.VertexBuffer->Setting();
-	PrimitiveComp.VertexShader->Setting();
-	PrimitiveComp.PixelShader->Setting();
-	PrimitiveComp.IndexBuffer->Setting();
-	PrimitiveComp.InputLayout->Setting();
-	PrimitiveComp.DepthStencilStat->Setting();
-	PrimitiveComp.Rasterizer->Setting();
-	PrimitiveComp.BlendState->Setting();
-	PrimitiveComp.ConstantBufferBinding->Setting();
-
-	FDevice::Get().GetDeviceContext()->IASetPrimitiveTopology(PrimitiveComp.Topology);
-    FDevice::Get().GetDeviceContext()->DrawIndexed(PrimitiveComp.IndexBuffer->GetIndexCount(), 0, 0);
-}
 
 void URenderer::LoadTexture(const wchar_t* texturePath)
 {
