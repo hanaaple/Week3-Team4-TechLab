@@ -256,28 +256,48 @@ void FDevice::InitResource()
 		FIndexBuffer::Create(FString("Cone"), indices);
 	}
 	
-	// {
-	// 	FMesh::Create("Mesh_VS", "Mesh_PS", "Mesh_PS");
-	// 	
-	// }
-	// VertexShader = FVertexShader::Find("Simple_VS");
-	// PixelShader = FPixelShader::Find("Simple_PS");
-	//
-	// // TODO: 이거는 나중에 매쉬같은데서  만들어야함
-	// InputLayout = FInputLayout::Find("Simple_VS");
-	//
-	// BlendState = FBlendState::Find("DefaultBlendState");
-	// DepthStencilStat = FDepthStencilState::Find("DefaultDepthStencilState");
-	// Rasterizer = FRasterizer::Find("DefaultRasterizer");
-	// ConstantBuffer = FConstantBuffer::Find("DefaultConstantBuffer");
-	//
-	// ConstantBufferBinding = std::make_shared<FConstantBufferBinding>();
-	//
-	// //std::shared_ptr<FVertexShader> vertexShaderPtr;/* 초기화 */
-	// //FShader* shaderPtr = static_cast<FShader*>(vertexShaderPtr.get()); // 내부 포인터 추출
-	// ConstantBufferBinding->Res = ConstantBuffer;
-	// ConstantBufferBinding->CPUDataPtr = &ConstantsComponentData;
-	// ConstantBufferBinding->DataSize = sizeof(ConstantsComponentData);
-	// ConstantBufferBinding->ParentShader = VertexShader.get();
-	// ConstantBufferBinding->BindPoint = 0;
+	{
+		TArray<FVertexSimple> vertices;
+		TArray<uint32> indices;
+
+		vertices.SetNum(sizeof(GizmoArrowVertices)/sizeof(FVertexSimple));
+		memcpy(vertices.GetData(), GizmoArrowVertices, sizeof(GizmoArrowVertices));
+		indices.SetNum(sizeof(GizmoArrowIndices) / sizeof(uint32));
+		memcpy(indices.GetData(), GizmoArrowIndices, sizeof(GizmoArrowIndices));
+		FVertexBuffer::Create(FString(TEXT("GizmoArrow")), vertices);
+		FIndexBuffer::Create(FString(TEXT("GizmoArrow")), indices);
+
+		FMesh::Create(TEXT("GizmoArrow"));
+	}
+
+	{
+		TArray<FVertexSimple> vertices;
+		TArray<uint32> indices;
+
+		vertices.SetNum(sizeof(GizmoRotationVertices) / sizeof(FVertexSimple));
+		memcpy(vertices.GetData(), GizmoRotationVertices, sizeof(GizmoRotationVertices));
+		indices.SetNum(sizeof(GizmoRotationIndices) / sizeof(uint32));
+		memcpy(indices.GetData(), GizmoRotationIndices, sizeof(GizmoRotationIndices));
+
+		FVertexBuffer::Create(FString(TEXT("GizmoRotation")), vertices);
+		FIndexBuffer::Create(FString(TEXT("GizmoRotation")), indices);
+
+		FMesh::Create(TEXT("GizmoRotation"));
+	}
+
+	{
+		TArray<FVertexSimple> vertices;
+		TArray<uint32> indices;
+
+		vertices.SetNum(sizeof(GizmoScaleVertices) / sizeof(FVertexSimple));
+		memcpy(vertices.GetData(), GizmoScaleVertices, sizeof(GizmoScaleVertices));
+		indices.SetNum(sizeof(GizmoScaleIndices) / sizeof(uint32));
+		memcpy(indices.GetData(), GizmoScaleIndices, sizeof(GizmoScaleIndices));
+
+		FVertexBuffer::Create(FString(TEXT("GizmoScale")), vertices);
+		FIndexBuffer::Create(FString(TEXT("GizmoScale")), indices);
+
+		FMesh::Create(TEXT("GizmoScale"));
+	}
+
 }

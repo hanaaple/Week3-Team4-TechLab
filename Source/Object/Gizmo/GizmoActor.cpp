@@ -9,21 +9,23 @@ AGizmoActor::AGizmoActor() : AActor()
 
 	RootComponent = AddComponent<USceneComponent>();
 
-	UGizmoComponent* ZGizmo = AddComponent<UGizmoComponent>(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(0, 0, 0), FVector(0.1, 0.1, 2)));
+	UGizmoComponent* ZGizmo = AddComponent<UGizmoComponent>(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(0, 0, 0), FVector(1.0f, 1.0f, 1.0f)));
 	ZGizmo->SetCustomColor(FVector4::BLUE);
 	GizmoComponents.Add(EAxis::Z, ZGizmo);
 
-	UGizmoComponent* YGizmo = AddComponent<UGizmoComponent>(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(90, 0, 0), FVector(0.1, 0.1, 2)));
+	UGizmoComponent* YGizmo = AddComponent<UGizmoComponent>(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(90, 0, 0), FVector(1.0f, 1.0f, 1.0f)));
 	YGizmo->SetCustomColor(FVector4::GREEN);
 	GizmoComponents.Add(EAxis::Y, YGizmo);
 
-	UGizmoComponent* XGizmo = AddComponent<UGizmoComponent>(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(0, 90, 0), FVector(0.1, 0.1, 2)));
+	UGizmoComponent* XGizmo = AddComponent<UGizmoComponent>(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(0, 90, 0), FVector(1.0f, 1.0f, 1.0f)));
 	XGizmo->SetCustomColor(FVector4::RED);
 	GizmoComponents.Add(EAxis::X, XGizmo);
 
 	UEngine::Get().GetWorld()->AddZIgnoreComponent(XGizmo);
 	UEngine::Get().GetWorld()->AddZIgnoreComponent(YGizmo);
 	UEngine::Get().GetWorld()->AddZIgnoreComponent(ZGizmo);
+
+	bIsGizmo = true;
 }
 
 void AGizmoActor::BeginPlay()

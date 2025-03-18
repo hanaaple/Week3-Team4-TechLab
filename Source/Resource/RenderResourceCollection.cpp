@@ -63,8 +63,8 @@ void FRenderResourceCollection::Render()
 	{
 		Binding.Value->Setting();
 	}
-	
-	for (auto& Binding : TextureBindings)
+  
+  for (auto& Binding : TextureBindings)
 	{
 		Binding.Value->Setting();
 	}

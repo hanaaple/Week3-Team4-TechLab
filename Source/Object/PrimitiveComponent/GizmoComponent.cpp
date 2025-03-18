@@ -3,23 +3,8 @@
 
 UGizmoComponent::UGizmoComponent() : Super()
 {
-	// 메쉬 로드
-	//VertexBuffer = FVertexBuffer::Find("Cube");
-	//IndexBuffer = FIndexBuffer::Find("Cube");
-
-	////없으면 만든다.
-	//if (VertexBuffer == nullptr)
-	//{
-	//	TArray<FVertexSimple> vertices;
-	//	TArray<uint32> indices;
-	//	float size = 1.f;
-
-	//	//UGeometryGenerator::CreateCube(size, &vertices, &indices);
-
-	//	VertexBuffer = FVertexBuffer::Create(FString("Cube"), vertices);
-	//	IndexBuffer = FIndexBuffer::Create(FString("Cube"), indices);
-	//}
-	//bCanBeRendered = true;
+	SetMesh(TEXT("GizmoArrow"));
+	bCanBeRendered = true;
 }
 
 void UGizmoComponent::BeginPlay()
@@ -44,15 +29,20 @@ void UGizmoComponent::Render()
 
 void UGizmoComponent::OnChangedGizmoType(EGizmoType Gizmo)
 {
-	// TODO : 이것들 변경
-	// 
-	////테스트 임시 메쉬
-	//VertexBuffer;
-	//IndexBuffer;
-	//InputLayout;
-
-	//// 테스트 임시 메테리얼
-	//PixelShader;
-	//VertexShader;
-
+	switch (Gizmo)
+	{
+	case EGizmoType::Translate:
+		SetMesh(TEXT("GizmoArrow"));
+		break;
+	case EGizmoType::Rotate:
+		SetMesh(TEXT("GizmoRotation"));
+		break;
+	case EGizmoType::Scale:
+		SetMesh(TEXT("GizmoScale"));
+		break;
+	case EGizmoType::Max:
+		break;
+	default:
+		break;
+	}
 }

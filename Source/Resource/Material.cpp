@@ -127,9 +127,10 @@ void FMaterial::SetDepthState(const FString& _Value)
 
  void FMaterial::Setting()
 {
-	void VertexShader();
-	void Rasterizer();
-	void PixelShader();
-	void Blend();
-	void DepthStencil();
+	VertexShader();
+	Rasterizer();
+	PixelShader();
+	Blend();
+	DepthStencil();
+
 }

@@ -41,6 +41,7 @@ public:
 	void Reset();
 
 
+
 	template<typename ConstantType>
 	std::shared_ptr<class FConstantBufferBinding> SetConstantBufferBinding(const FString& _Name,  const ConstantType* DataPtr,
 	 int _BindPoint, bool bIsUseVertexShader, bool bIsUsePixelShader)
@@ -50,8 +51,7 @@ public:
 	
 	
 	std::shared_ptr<class FConstantBufferBinding> SetConstantBufferBinding(const FString& _Name,
-		const void* _CPUDataPtr, int _DataSize,int _BindPoint,
-		bool bIsUseVertexShader, bool bIsUsePixelShader);
+		const void* _CPUDataPtr, int _DataSize,int _BindPoint, bool	bIsUseVertexShader, bool bIsUsePixelShader);
 	
 	
 	std::shared_ptr<class FTextureBinding> SetTextureBinding(const FString& _Name,
@@ -60,7 +60,6 @@ public:
 	
 	std::shared_ptr<class FSamplerBinding> SetSamplerBinding(const FString& _Name,
 		int _BindPoint,	bool bIsUseVertexShader, bool bIsUsePixelShader);
-
 	
 private:
 	//class UPrimitiveComponent* ParentRenderer = nullptr;
@@ -82,6 +81,4 @@ private:
 	// // 테스트 상수버퍼
 	// std::shared_ptr<class FConstantBufferBinding> ConstantBufferBinding = nullptr;
 	// std::shared_ptr<class FConstantBuffer> ConstantBuffer = nullptr;
-
-
 };
