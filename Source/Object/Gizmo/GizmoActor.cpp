@@ -39,8 +39,6 @@ AGizmoActor::AGizmoActor() : AActor()
 	UEngine::Get().GetWorld()->AddZIgnoreComponent(XGizmo);
 	UEngine::Get().GetWorld()->AddZIgnoreComponent(YGizmo);
 	UEngine::Get().GetWorld()->AddZIgnoreComponent(ZGizmo);
-
-	bIsGizmo = true;
 }
 
 void AGizmoActor::BeginPlay()
