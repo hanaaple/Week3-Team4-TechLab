@@ -24,7 +24,17 @@
 void FLineBatchManager::AddLine(const FVector& Start, const FVector& End, const FVector4& Color, float Thickness)
 {
 	// 버텍스 버퍼에 두 정점 추가
+
+
 	uint32 Index = VertexBuffer.Num();
+
+
+	//TO DO 자유롭게 라인 크기 늘리게 하기
+	if (Index + 2 >= MaxVerticesPerBatch)
+	{
+		UE_LOG("Max Line");
+		return;
+	}
 
 	VertexBuffer.Add({ (Start), Color });
 	VertexBuffer.Add({ (End) , Color });
@@ -49,6 +59,10 @@ void FLineBatchManager::DrawWorldGrid(float GridSize, float GridSpacing, const F
 
 	VertexBuffer.Empty();
 	IndexBuffer.Empty();
+
+
+	VertexBuffer.Reserve(MaxVerticesPerBatch);
+	IndexBuffer.Reserve(MaxIndicesPerBatch);
 
 	// 그리드 크기 및 라인 개수 계산
 	int32 LineCount = FMath::CeilToInt(GridSize / GridSpacing) + 1;
@@ -107,7 +121,6 @@ void FLineBatchManager::Render()
 	if (VertexBuffer.Num() == 0)
 		return;
 
-	
 
 	//Prepare
 	//ID3D11DeviceContext* DeviceContext = FDevice::Get().GetDeviceContext();
@@ -140,6 +153,13 @@ void FLineBatchManager::Render()
 	// DeviceContext->VSSetShader(LineVertexShader, nullptr, 0);
 	// DeviceContext->PSSetShader(LinePixelShader, nullptr, 0);
 	// DeviceContext->IASetInputLayout(LineInputLayout);
+
+	//FLineBatchManager* ptr = this;
+
+	//FLineVertexSimple* VertexBufferptr = &this->VertexBuffer[0];
+	//TArray<FLineVertexSimple>* Arrayptr = &this->VertexBuffer;
+
+
 
 
 	LineConstantInfo.ViewProjectionMatrix = FMatrix::Transpose(UEngine::Get().GetWorld()->GetCamera()->GetViewProjectionMatrix());
