@@ -6,10 +6,11 @@
 
 
 #if USE_WIDECHAR
-std::wstring FString::ConvertWideChar(const ANSICHAR* NarrowStr)
+std::wstring FString::ConvertToWideChar(const ANSICHAR* NarrowStr)
 {
 	const int Size = MultiByteToWideChar(CP_UTF8, 0, NarrowStr, -1, nullptr, 0);
-	std::wstring Str(Size, 0);
+	std::wstring Str;
+	Str.resize(Size - 1);
 	MultiByteToWideChar(CP_UTF8, 0, NarrowStr, -1, Str.data(), Size);
 	return Str;
 }

@@ -72,13 +72,13 @@ public:
 
 #if USE_WIDECHAR
 private:
-    static std::wstring ConvertWideChar(const ANSICHAR* NarrowStr);
+    static std::wstring ConvertToWideChar(const ANSICHAR* NarrowStr);
 
 public:
     FString(const std::wstring& InString) : PrivateString(InString) {}
-    FString(const std::string& InString) : PrivateString(ConvertWideChar(InString.c_str())) {}
+    FString(const std::string& InString) : PrivateString(ConvertToWideChar(InString.c_str())) {}
     FString(const WIDECHAR* InString) : PrivateString(InString) {}
-    FString(const ANSICHAR* InString) : PrivateString(ConvertWideChar(InString)) {}
+    FString(const ANSICHAR* InString) : PrivateString(ConvertToWideChar(InString)) {}
 #else
 public:
     FString(const std::string& InString) : PrivateString(InString) {}
