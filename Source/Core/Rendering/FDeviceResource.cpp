@@ -195,7 +195,7 @@ void FDevice::InitResource()
 		TArray<uint32> indices;
 		int slices = 16;
 		int stacks = 16;
-		int32 radius = 1.f;  // 
+		int32 radius = 1.f;  // FIXME: why not float?
 		[[maybe_unused]] float height = 1.f;
 
 		UGeometryGenerator::CreateSphere(radius, slices, stacks, vertices, indices);

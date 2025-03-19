@@ -118,10 +118,9 @@ void UWorld::Render()
 	AActor* SelectedActor = FEditorManager::Get().GetSelectedActor();
 	if (SelectedActor != nullptr)
 	{
-		FVector worldMin, worldMax;
-		worldMax = SelectedActor->GetActorBoundsMax();
-		worldMin = SelectedActor->GetActorBoundsMin();
-		UDebugDrawManager::Get().DrawBox(worldMin, worldMax, FVector4::WHITE);
+		const FVector WorldMax = SelectedActor->GetActorBoundsMax();
+		const FVector WorldMin = SelectedActor->GetActorBoundsMin();
+		UDebugDrawManager::Get().DrawBox(WorldMin, WorldMax, FVector4::WHITE);
 	}
 	UDebugDrawManager::Get().Render();
 

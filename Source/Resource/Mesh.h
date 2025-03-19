@@ -41,7 +41,7 @@ public:
 	}
 
 	static std::shared_ptr<FMesh> Create(
-		const FString& InName, std::shared_ptr<FVertexBuffer> InVertex, std::shared_ptr<FIndexBuffer> InIndex,
+		const FString& InName, const std::shared_ptr<FVertexBuffer>& InVertex, const std::shared_ptr<FIndexBuffer>& InIndex,
 		D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST
 	)
 	{
@@ -59,9 +59,9 @@ public:
 		return Res;
 	}
 
-	void SetTOPOLOGY(D3D11_PRIMITIVE_TOPOLOGY _TOPOLOGY)
+	void SetTopology(D3D11_PRIMITIVE_TOPOLOGY InTopology)
 	{
-		Topology = _TOPOLOGY;
+		Topology = InTopology;
 	}
 
 	void Setting();

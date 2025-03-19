@@ -34,7 +34,7 @@ public:
 
 	void OnResizeComplete();
 
-	FVector4 GetPixel(FVector MPos);
+	FVector4 GetPixel(FVector MPos) const;
     
 private:
     ACamera* Camera = nullptr;

@@ -73,8 +73,8 @@ void FEditorManager::SelectActor(AActor* NewActor)
 		FTransform newActorTransform = NewActor->GetActorTransform();
 		Gizmo->SetActorTransform(newActorTransform);
 		FVector worldMin, worldMax;
-		worldMax = SelectedActor->GetActorBoundsMax();
-		worldMin = SelectedActor->GetActorBoundsMin();
+		// worldMax = SelectedActor->GetActorBoundsMax(); // <- 기즈모 선택하면 여기서 터짐
+		// worldMin = SelectedActor->GetActorBoundsMin();
 		//UDebugDrawManager::Get().DrawBox(worldMin, worldMax, FVector4::WHITE);
 	}
 }
@@ -227,13 +227,13 @@ void FEditorManager::OnResizeComplete()
 	UUIDTexture->CreateRenderTargetView();
 }
 
-FVector4 FEditorManager::GetPixel(FVector MPos)
+FVector4 FEditorManager::GetPixel(FVector MPos) const
 {
 
-	float Width = FDevice::Get().GetViewPortInfo().Width;
-	float Height = FDevice::Get().GetViewPortInfo().Height;
-    MPos.X = FMath::Clamp(MPos.X, 0.0f, FDevice::Get().GetViewPortInfo().Width);
-    MPos.Y = FMath::Clamp(MPos.Y, 0.0f, FDevice::Get().GetViewPortInfo().Height);
+	const float Width = FDevice::Get().GetViewPortInfo().Width;
+	const float Height = FDevice::Get().GetViewPortInfo().Height;
+    MPos.X = FMath::Clamp(MPos.X, 0.0f, Width);
+    MPos.Y = FMath::Clamp(MPos.Y, 0.0f, Height);
     // 1. Staging 텍스처 생성 (1x1 픽셀)
     D3D11_TEXTURE2D_DESC stagingDesc = {};
     stagingDesc.Width = 1; // 픽셀 1개만 복사
@@ -250,13 +250,13 @@ FVector4 FEditorManager::GetPixel(FVector MPos)
     FDevice::Get().GetDevice()->CreateTexture2D(&stagingDesc, nullptr, &stagingTexture);
 
     // 2. 복사할 영역 정의 (D3D11_BOX)
-    D3D11_BOX srcBox = {};
-    srcBox.left = static_cast<UINT>(MPos.X);
-    srcBox.right = srcBox.left + 1; // 1픽셀 너비
-    srcBox.top = static_cast<UINT>(MPos.Y);
-    srcBox.bottom = srcBox.top + 1; // 1픽셀 높이
-    srcBox.front = 0;
-    srcBox.back = 1;
+    D3D11_BOX SrcBox;
+    SrcBox.left = static_cast<UINT>(MPos.X);
+    SrcBox.right = SrcBox.left + 1; // 1픽셀 너비
+    SrcBox.top = static_cast<UINT>(MPos.Y);
+    SrcBox.bottom = SrcBox.top + 1; // 1픽셀 높이
+    SrcBox.front = 0;
+    SrcBox.back = 1;
     FVector4 color {1, 1, 1, 1};
 
     if (stagingTexture == nullptr)
@@ -269,7 +269,7 @@ FVector4 FEditorManager::GetPixel(FVector MPos)
         0, 0, 0,        // 대상 좌표 (x, y, z)
         UUIDTexture->GetTexture2D(), // 원본 텍스처
         0,              // 원본 서브리소스
-        &srcBox         // 복사 영역
+        &SrcBox         // 복사 영역
     );
 
     // 4. 데이터 매핑
