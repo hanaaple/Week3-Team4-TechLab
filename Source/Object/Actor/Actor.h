@@ -163,11 +163,16 @@ public:
 	virtual FBox GetComponentsBoundingBox(bool bNonColliding = false, bool bIncludeFromChildActors = false) const;
 
 	/**
-	 * Calculates the actor space bounding box of all components in this Actor.  This is slower than GetComponentsBoundingBox(), because the local bounds of the components are not cached -- they are recalculated every time this function is called.
-	 * @param bNonColliding Indicates that you want to include non-colliding components in the bounding box
-	 * @param bIncludeFromChildActors If true then recurse in to ChildActor components and find components of the appropriate type in those Actors as well
-	 */
+	* 이 액터에 포함된 모든 컴포넌트들의 액터 공간 바운딩 박스를 계산합니다.
+	* 이 함수는 GetComponentsBoundingBox()보다 느립니다. 왜냐하면 컴포넌트들의 로컬 바운드가 캐시되지 않고, 이 함수가 호출될 때마다 다시 계산되기 때문입니다.
+	* @param bNonColliding 바운딩 박스에 충돌하지 않는 컴포넌트들도 포함할지 여부를 나타냅니다.
+	* @param bIncludeFromChildActors true일 경우, ChildActor 컴포넌트 내부로 재귀적으로 들어가서 해당 액터들 내의 적절한 타입의 컴포넌트들도 찾아 포함합니다.
+	*/
 	virtual FBox CalculateComponentsBoundingBoxInLocalSpace(bool bNonColliding = false, bool bIncludeFromChildActors = false) const;
+
+	// 임시
+	FVector GetActorBoundsMin() const;
+	FVector GetActorBoundsMax() const;
 
 public:
 	bool CanEverTick() const { return bCanEverTick; }

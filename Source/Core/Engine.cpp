@@ -13,6 +13,7 @@
 #include "Static/FLineBatchManager.h"
 #include "Core/Rendering/FDevice.h"
 #include "Object/Assets/AssetManager.h"
+#include "Debug/DebugDrawManager.h"
 
 
 class AArrow;
@@ -75,12 +76,14 @@ void UEngine::Initialize(
 	InitWorld();
 	FDevice::Get().Init(WindowHandle);
     InitRenderer();
+	UDebugDrawManager::Get().Initialize();
 
 	InitializedScreenWidth = ScreenWidth;
 	InitializedScreenHeight = ScreenHeight;
     ui.Initialize(WindowHandle, FDevice::Get(), ScreenWidth, ScreenHeight);
 
 	UAssetManager::Get().RegisterAssetMetaDatas(); // 나중에 멀티쓰레드로?
+	FEditorManager::Get().Init(); // 나중에 멀티쓰레드로?
 	UE_LOG("Engine Initialized!");
 }
 
@@ -143,6 +146,8 @@ void UEngine::Run()
 			FDevice::Get().Prepare();
 			World->Tick(EngineDeltaTime);
 			World->Render();
+
+			FEditorManager::Get().LateTick(EngineDeltaTime);
 		    World->LateTick(EngineDeltaTime);
 		}
 
@@ -223,8 +228,8 @@ void UEngine::InitRenderer()
 	// 렌더러 초기화
 	Renderer = std::make_unique<URenderer>();
 	Renderer->Create(WindowHandle);
-	Renderer->CreateShader();
-	Renderer->CreateConstantBuffer();
+	//Renderer->CreateShader();
+	//Renderer->CreateConstantBuffer();
 }
 
 void UEngine::InitWorld()
@@ -275,10 +280,9 @@ void UEngine::UpdateWindowSize(uint32 InScreenWidth, uint32 InScreenHeight)
 	
 	FDevice::Get().OnUpdateWindowSize(ScreenWidth, ScreenHeight);
 
-    if(Renderer)
-    {
-        Renderer->OnUpdateWindowSize(ScreenWidth, ScreenHeight);
-    }
+	FEditorManager::Get().OnUpdateWindowSize(ScreenWidth, ScreenHeight);
+
+
 
 	if (ui.bIsInitialized)
 	{
@@ -286,10 +290,8 @@ void UEngine::UpdateWindowSize(uint32 InScreenWidth, uint32 InScreenHeight)
 	}
 	
 	FDevice::Get().OnResizeComplete();
-	if (Renderer)
-	{
-		Renderer->OnResizeComplete();
-	}
+	
+	FEditorManager::Get().OnResizeComplete();
 }
 
 UObject* UEngine::GetObjectByUUID(uint32 InUUID) const

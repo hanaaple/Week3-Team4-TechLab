@@ -12,10 +12,12 @@ struct FVertexSimple
 };
 
 struct FLineVertexSimple {
-	FVector position;
-	FVector4 color;
+	float X, Y, Z;
+	float R, G, B, A;
 
-	FLineVertexSimple(const FVector& pos, const FVector4& col) : position(pos), color(col) {}
+	FLineVertexSimple(const FVector& pos = FVector(0.0f, 0.0f, 0.0f), const FVector4& col = FVector4::WHITE)
+		: X(pos.X), Y(pos.Y), Z(pos.Z), R(col.X), G(col.Y), B(col.Z), A(col.W) 
+	{}
 };
 
 struct FGeometryData

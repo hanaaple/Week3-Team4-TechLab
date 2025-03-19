@@ -1,4 +1,4 @@
-#include "UDebugDrawManager.h"
+#include "DebugDrawManager.h"
 #include "Core/Engine.h"
 #include "Object/World/World.h"
 #include "Object/Actor/Camera.h"
@@ -19,18 +19,21 @@ using namespace std;
 
 UDebugDrawManager::UDebugDrawManager()
 {
+	VertexBuffer.SetNum(100);
+	IndexBuffer.SetNum(100);
 }
 
 UDebugDrawManager::~UDebugDrawManager()
 {
-	VertexBuffer.Empty();
-	IndexBuffer.Empty();
+	ClearDebug();
 }
 
 void UDebugDrawManager::Initialize()
 {
 	FVertexBuffer::Create(TEXT("DebugVertexBuffer"), VertexBuffer, true);
 	FIndexBuffer::Create(TEXT("DebugIndexBuffer"), IndexBuffer, true);
+	ClearDebug();
+
 	std::shared_ptr<FMesh> Mesh = FMesh::Create("DebugBatchMesh", "DebugVertexBuffer", "DebugIndexBuffer", D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 
 	D3D11_RASTERIZER_DESC rasterizerDesc = {};
@@ -55,40 +58,39 @@ void UDebugDrawManager::Initialize()
 	RenderResourceCollection.SetMaterial(Material);
 }
 
-void UDebugDrawManager::DrawBoxBrackets(const FBox InActor, const FTransform& InTransform, const FVector4& Color, float LifeTime)
+void UDebugDrawManager::DrawBoxBrackets(const FBox InActor, const FTransform& LocalToWorld, const FVector4& Color, float LifeTime)
 {
-	FVector Min = InActor.Min;
-	FVector Max = InActor.Max;
-	FVector Vertices[8];
-	Vertices[0] = FVector(Min.X, Min.Y, Min.Z);
-	Vertices[1] = FVector(Min.X, Min.Y, Max.Z);
-	Vertices[2] = FVector(Min.X, Max.Y, Min.Z);
-	Vertices[3] = FVector(Min.X, Max.Y, Max.Z);
-	Vertices[4] = FVector(Max.X, Min.Y, Min.Z);
-	Vertices[5] = FVector(Max.X, Min.Y, Max.Z);
-	Vertices[6] = FVector(Max.X, Max.Y, Min.Z);
-	Vertices[7] = FVector(Max.X, Max.Y, Max.Z);
-	for (int i = 0; i < 8; i++)
-	{
-		Vertices[i] = InTransform.TransformPosition(Vertices[i]);
-	}
-	DrawLine(Vertices[0], Vertices[1], Color, LifeTime);
-	DrawLine(Vertices[1], Vertices[3], Color, LifeTime);
-	DrawLine(Vertices[3], Vertices[2], Color, LifeTime);
-	DrawLine(Vertices[2], Vertices[0], Color, LifeTime);
-	DrawLine(Vertices[4], Vertices[5], Color, LifeTime);
-	DrawLine(Vertices[5], Vertices[7], Color, LifeTime);
-	DrawLine(Vertices[7], Vertices[6], Color, LifeTime);
-	DrawLine(Vertices[6], Vertices[4], Color, LifeTime);
-	DrawLine(Vertices[0], Vertices[4], Color, LifeTime);
-	DrawLine(Vertices[1], Vertices[5], Color, LifeTime);
-	DrawLine(Vertices[2], Vertices[6], Color, LifeTime);
-	DrawLine(Vertices[3], Vertices[7], Color, LifeTime);
 }
 
-void UDebugDrawManager::DrawBox(const FVector& Origin, const FVector& BoxExtent, const FVector4& Color, float LifeTime)
+void UDebugDrawManager::DrawBox(const FVector& InMin, const FVector& InMax, const FVector4& Color, float LifeTime)
 {
+	// 8개의 정점 계산
+	FVector v0 = FVector(InMin.X, InMin.Y, InMin.Z);
+	FVector v1 = FVector(InMax.X, InMin.Y, InMin.Z);
+	FVector v2 = FVector(InMax.X, InMax.Y, InMin.Z);
+	FVector v3 = FVector(InMin.X, InMax.Y, InMin.Z);
+	FVector v4 = FVector(InMin.X, InMin.Y, InMax.Z);
+	FVector v5 = FVector(InMax.X, InMin.Y, InMax.Z);
+	FVector v6 = FVector(InMax.X, InMax.Y, InMax.Z);
+	FVector v7 = FVector(InMin.X, InMax.Y, InMax.Z);
 
+	// 바닥면 (아래 사각형) 선 연결
+	DrawLine(v0, v1, Color);
+	DrawLine(v1, v2, Color);
+	DrawLine(v2, v3, Color);
+	DrawLine(v3, v0, Color);
+
+	// 천장면 (위 사각형) 선 연결
+	DrawLine(v4, v5, Color);
+	DrawLine(v5, v6, Color);
+	DrawLine(v6, v7, Color);
+	DrawLine(v7, v4, Color);
+
+	// 수직 엣지 연결
+	DrawLine(v0, v4, Color);
+	DrawLine(v1, v5, Color);
+	DrawLine(v2, v6, Color);
+	DrawLine(v3, v7, Color);
 }
 
 void UDebugDrawManager::DrawSphere(const FVector& Center, float Radius, const FVector4& Color, float LifeTime)
@@ -115,15 +117,20 @@ void UDebugDrawManager::DrawPoint(const FVector& Point, const FVector4& Color, f
 {
 }
 
-void UDebugDrawManager::DrawDebug()
+void UDebugDrawManager::Render()
 {
 	if (VertexBuffer.Num() == 0)
 	{
 		return;
 	}
 
+	//RenderResourceCollection.GetMesh()->GetVertexBuffer()->SetVertexCount(VertexBuffer.Num());
+	//RenderResourceCollection.GetMesh()->GetIndexBuffer()->SetIndexCount(IndexBuffer.Num());
+
 	DebugConstantInfo.ViewProjectionMatrix = FMatrix::Transpose(UEngine::Get().GetWorld()->GetCamera()->GetViewProjectionMatrix());
 	RenderResourceCollection.Render();
+
+	ClearDebug();
 }
 
 void UDebugDrawManager::ClearDebug()

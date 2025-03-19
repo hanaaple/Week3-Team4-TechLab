@@ -38,6 +38,11 @@ static std::shared_ptr<FIndexBuffer> Create(const FString&  _Name, const TArray<
 	{
 		return IndexCount;
 	}
+
+	inline void SetIndexCount(uint32 InIndexCount)
+	{
+		IndexSize = InIndexCount;
+	}
 	
 private:
 	

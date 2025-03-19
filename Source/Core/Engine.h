@@ -8,6 +8,7 @@
 #include "AbstractClass/Singleton.h"
 #include "Container/Map.h"
 #include "Core/Container/Array.h"
+#include "UObject/Casts.h"
 
 class UObject;
 class UWorld;
@@ -105,14 +106,15 @@ public:
     TMap<uint32, std::shared_ptr<UObject>> GObjects;
 };
 
-template <typename ObjectType> requires std::derived_from<ObjectType, UObject>
+template <typename ObjectType>
+	requires std::derived_from<ObjectType, UObject>
 ObjectType* UEngine::GetObjectByUUID(uint32 InUUID) const
 {
     if (const std::shared_ptr<UObject>* Obj = GObjects.Find(InUUID))
     {
-        if (const auto PriComp = std::dynamic_pointer_cast<ObjectType, UObject>(*Obj))
+    	if (ObjectType* CastedObject = Cast<ObjectType>(Obj->get()))
         {
-            return PriComp.get();
+            return CastedObject;
         }
     }
     return nullptr;

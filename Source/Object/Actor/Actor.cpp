@@ -162,12 +162,9 @@ FBox AActor::GetComponentsBoundingBox(bool bNonColliding, bool bIncludeFromChild
 
 	for (auto& Component : Components)
 	{
-		if (bNonColliding)
+		if (UPrimitiveComponent* PrimitiveComponent = dynamic_cast<UPrimitiveComponent*>(Component))
 		{
-			if (UPrimitiveComponent* PrimitiveComponent = dynamic_cast<UPrimitiveComponent*>(Component))
-			{
-				Box += PrimitiveComponent->Bounds.GetBox();
-			}
+			Box += PrimitiveComponent->Bounds.GetBox();
 		}
 	}
 
@@ -182,17 +179,42 @@ FBox AActor::CalculateComponentsBoundingBoxInLocalSpace(bool bNonColliding, bool
 
 	for (auto& Component : Components)
 	{
-		if (bNonColliding)
+		if (UPrimitiveComponent* PrimitiveComponent = dynamic_cast<UPrimitiveComponent*>(Component))
 		{
-			if (UPrimitiveComponent* PrimitiveComponent = dynamic_cast<UPrimitiveComponent*>(Component))
-			{
-				const FTransform& ComponentToWorld = PrimitiveComponent->GetComponentTransform();
-				Box += PrimitiveComponent->CalcBounds(ComponentToWorld).GetBox();
-			}
+			const FTransform& ComponentToWorld = PrimitiveComponent->GetComponentTransform();
+			Box += PrimitiveComponent->CalcBounds(ComponentToWorld).GetBox();
 		}
 	}
 
 	return Box;
+}
+
+FVector AActor::GetActorBoundsMin() const
+{
+	for (auto& Component : Components)
+	{
+		if (USceneComponent* SceneComponent = dynamic_cast<USceneComponent*>(Component))
+		{
+			if (SceneComponent->Min != FVector::ZeroVector)
+			{
+				return GetActorTransform().TransformPosition(SceneComponent->Min);
+			}
+		}
+	}
+}
+
+FVector AActor::GetActorBoundsMax() const
+{
+	for (auto& Component : Components)
+	{
+		if (USceneComponent* SceneComponent = dynamic_cast<USceneComponent*>(Component))
+		{
+			if (SceneComponent->Max != FVector::ZeroVector)
+			{
+				return GetActorTransform().TransformPosition(SceneComponent->Max);
+			}
+		}
+	}
 }
 
 bool AActor::SetActorPosition(const FVector& InPosition)

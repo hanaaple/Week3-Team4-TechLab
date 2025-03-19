@@ -17,6 +17,7 @@
 #include "Resource/DirectResource/ShaderResourceBinding.h"
 #include "Resource/RenderResourceCollection.h"
 #include "Resource/Mesh.h"
+#include "Static/FEditorManager.h"
 
 UPrimitiveComponent::UPrimitiveComponent() : Super()
 {
@@ -24,7 +25,7 @@ UPrimitiveComponent::UPrimitiveComponent() : Super()
 
 
 	// 기본으로 바인딩되는 데이타
-	GetRenderResourceCollection().SetConstantBufferBinding("FConstantsComponentData", &ConstantsComponentData, 0, true, false);
+	GetRenderResourceCollection().SetConstantBufferBinding("FConstantsComponentData", &ConstantsComponentData, 0, true, true);
 	SetMaterial("DefaultMaterial");
 }
 
@@ -43,15 +44,15 @@ void UPrimitiveComponent::Tick(float DeltaTime)
 	UpdateBounds();
 }
 
-void UPrimitiveComponent::UpdateConstantPicking(const URenderer& Renderer, const FVector4 UUIDColor)const
-{
-	Renderer.UpdateConstantPicking(UUIDColor);
-}
+// void UPrimitiveComponent::UpdateConstantPicking(const URenderer& Renderer, const FVector4 UUIDColor)const
+// {
+// 	Renderer.UpdateConstantPicking(UUIDColor);
+// }
 
-void UPrimitiveComponent::UpdateConstantDepth(const URenderer& Renderer, const int Depth)const
-{
-	Renderer.UpdateConstantDepth(Depth);
-}
+// void UPrimitiveComponent::UpdateConstantDepth(const URenderer& Renderer, const int Depth)const
+// {
+// 	Renderer.UpdateConstantDepth(Depth);
+// }
 
 void UPrimitiveComponent::Render()
 {
@@ -60,7 +61,7 @@ void UPrimitiveComponent::Render()
 	{
 		return;
 	}
-	// if (GetOwner()->IsA<AGizmoActor>() == false) // TODO: RTTI 개선하면 사용
+	// if (GetOwner()->Implements<IGizmoInterface>() == false) // TODO: RTTI 개선하면 사용
 	if (!dynamic_cast<IGizmoInterface*>(GetOwner()))
 	{
 		if (bIsPicked)
@@ -83,12 +84,17 @@ void UPrimitiveComponent::Render()
 		ModelMatrix *
 		ViewProjectionMatrix
 );
+	
+	uint32 ID = GetOwner()->GetUUID();
+
+	FVector4 UUIDCOlor = FEditorManager::EncodeUUID(ID);
 
 	FConstantsComponentData& Data = GetConstantsComponentData();
 
 	Data  = {
 		MVP,
 		GetCustomColor(),
+		UUIDCOlor,
 		IsUseVertexColor()
 	};
 	
@@ -161,7 +167,11 @@ UCubeComp::UCubeComp() : Super()
 {
 	SetMesh("Cube");
 	bCanBeRendered = true;
-	BoxExtent = FVector(1.0f, 1.0f, 1.0f);
+	Max = GetMesh()->GetVertexBuffer()->GetMax();
+	Min = GetMesh()->GetVertexBuffer()->GetMin();
+
+	FVector extent = (Max - Min) / 2;
+	SetBoxExtent(extent);
 }
 
 void UCubeComp::SetBoxExtent(const FVector& InExtent)
@@ -179,7 +189,13 @@ USphereComp::USphereComp() : Super()
 {
 	SetMesh("Sphere");
 	bCanBeRendered = true;
-	Radius = 1.0f;
+	Max = GetMesh()->GetVertexBuffer()->GetMax();
+	Min = GetMesh()->GetVertexBuffer()->GetMin();
+
+	FVector extent = (Max - Min) / 2;
+	float radius = extent.Length();
+
+	SetSphereRadius(radius);
 }
 
 void USphereComp::SetSphereRadius(float InSphereRadius)

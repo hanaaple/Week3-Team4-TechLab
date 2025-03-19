@@ -12,6 +12,7 @@ struct alignas(16) FConstantsComponentData
 	FMatrix MVP;
 	FVector4 Color;
 	// true인 경우 Vertex Color를 사용하고, false인 경우 Color를 사용합니다.
+	FVector4 UUIDColor;
 	uint32 bUseVertexColor;
 	FVector Padding;
 };
@@ -27,8 +28,8 @@ public:
 public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
-	void UpdateConstantPicking(const URenderer& Renderer, FVector4 UUIDColor) const;
-	void UpdateConstantDepth(const URenderer& Renderer, int Depth) const;
+	//void UpdateConstantPicking(const URenderer& Renderer, FVector4 UUIDColor) const;
+	//void UpdateConstantDepth(const URenderer& Renderer, int Depth) const;
 	virtual void Render();
 	virtual void CalculateModelMatrix(FMatrix& OutMatrix);
 

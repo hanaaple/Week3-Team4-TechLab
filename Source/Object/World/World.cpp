@@ -24,6 +24,8 @@
 
 #include "Resource/Mesh.h"
 
+#include "Debug/DebugDrawManager.h"
+
 
 void UWorld::InitWorld()
 {
@@ -111,7 +113,19 @@ void UWorld::Render()
 	RenderMainTexture(*Renderer);
 
 	FLineBatchManager::Get().Render();
-	FUUIDBillBoard::Get().Render();
+
+	AActor* SelectedActor = FEditorManager::Get().GetSelectedActor();
+	if (SelectedActor != nullptr)
+	{
+		FVector worldMin, worldMax;
+		worldMax = SelectedActor->GetActorBoundsMax();
+		worldMin = SelectedActor->GetActorBoundsMin();
+		UDebugDrawManager::Get().DrawBox(worldMin, worldMax, FVector4::WHITE);
+	}
+	UDebugDrawManager::Get().Render();
+
+	//FUUIDBillBoard::Get().Render();
+
 
 	//DisplayPickingTexture(*Renderer);
 
@@ -119,8 +133,8 @@ void UWorld::Render()
 
 void UWorld::RenderPickingTexture(URenderer& Renderer)
 {
-	Renderer.PreparePicking();
-	Renderer.PreparePickingShader();
+	// Renderer.PreparePicking();
+	// Renderer.PreparePickingShader();
 
 	for (auto& RenderComponent : RenderComponents)
 	{
@@ -128,26 +142,30 @@ void UWorld::RenderPickingTexture(URenderer& Renderer)
 		{
 			continue;
 		}
-		uint32 UUID = RenderComponent->GetUUID();
-		RenderComponent->UpdateConstantPicking(Renderer, APicker::EncodeUUID(UUID));
+		// uint32 UUID = RenderComponent->GetUUID();
+		// RenderComponent->UpdateConstantPicking(Renderer, APicker::EncodeUUID(UUID));
 		RenderComponent->Render();
 	}
 
-	Renderer.PrepareZIgnore();
+	// Renderer.PrepareZIgnore();
 	for (auto& RenderComponent: ZIgnoreRenderComponents)
 	{
-		uint32 UUID = RenderComponent->GetUUID();
-		RenderComponent->UpdateConstantPicking(Renderer, APicker::EncodeUUID(UUID));
-		uint32 depth = RenderComponent->GetOwner()->GetDepth();
+		
 		RenderComponent->Render();
+		//MsgBoxAssert("없어진 기능입니다");
+		// uint32 UUID = RenderComponent->GetUUID();
+		// RenderComponent->UpdateConstantPicking(Renderer, APicker::EncodeUUID(UUID));
+		// uint32 depth = RenderComponent->GetOwner()->GetDepth();
+		// RenderComponent->Render();
 	}
 }
 
 void UWorld::RenderMainTexture(URenderer& Renderer)
 {
-	Renderer.Prepare();
-	Renderer.PrepareShader();
-	Renderer.PrepareMain();
+	// Renderer.Prepare();
+	// Renderer.PrepareShader();
+	// Renderer.PrepareMain();
+
 	//Renderer.PrepareMainShader();
 	for (auto& RenderComponent : RenderComponents)
 	{
@@ -160,7 +178,7 @@ void UWorld::RenderMainTexture(URenderer& Renderer)
 		RenderComponent->Render();
 	}
 
-	Renderer.PrepareZIgnore();
+	//Renderer.PrepareZIgnore();
 	for (auto& RenderComponent: ZIgnoreRenderComponents)
 	{
 		uint32 depth = RenderComponent->GetOwner()->GetDepth();
@@ -168,17 +186,17 @@ void UWorld::RenderMainTexture(URenderer& Renderer)
 	}
 }
 
-void UWorld::DisplayPickingTexture(URenderer& Renderer)
-{
-	Renderer.RenderPickingTexture();
-}
+// void UWorld::DisplayPickingTexture(URenderer& Renderer)
+// {
+// 	Renderer.RenderPickingTexture();
+// }
 
 void UWorld::ClearWorld()
 {
 	TArray CopyActors = Actors;
 	for (AActor* Actor : CopyActors)
 	{
-		// if (!Actor->Implements<AGizmoActor>()) // TODO: RTTI 개선하면 사용
+		// if (!Actor->Implements<IGizmoInterface>()) // TODO: RTTI 개선하면 사용
 		if (!dynamic_cast<IGizmoInterface*>(Actor))
 		{
 			DestroyActor(Actor);
@@ -386,7 +404,7 @@ UWorldInfo UWorld::GetWorldInfo() const
 	uint32 i = 0;
 	for (auto& actor : Actors)
 	{
-		// if (actor->IsA<AGizmoActor>()) // TODO: RTTI 개선하면 사용
+		// if (actor->Implements<IGizmoInterface>()) // TODO: RTTI 개선하면 사용
 		if (dynamic_cast<IGizmoInterface*>(actor))
 		{
 			WorldInfo.ActorCount--;

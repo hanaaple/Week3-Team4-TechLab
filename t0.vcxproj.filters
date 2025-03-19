@@ -339,6 +339,21 @@
     <ClCompile Include="Source\Core\Math\Transform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Resource\DirectResource\Sampler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Resource\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Object\Actor\SubUVParticle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Object\SubUVComponent\UParticleSubUVComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Debug\DebugDrawManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\ShaderW0.hlsl">
@@ -348,6 +363,7 @@
     <FxCompile Include="Shaders\Font_PS.hlsl" />
     <FxCompile Include="Shaders\ShaderLine_PS.hlsl" />
     <FxCompile Include="Shaders\ShaderLine_VS.hlsl" />
+    <FxCompile Include="Shaders\SubUV_PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Core\Container\Array.h">
@@ -698,9 +714,6 @@
     <ClInclude Include="Source\Object\PrimitiveComponent\GizmoComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Object\Assets\MeshAsset.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Resource\DirectResource\ConstantBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -737,17 +750,42 @@
     <ClInclude Include="Source\Resource\RenderResourceCollection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Resource\DirectResource\Sampler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Resource\Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Interfaces\GizmoInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Object\Actor\SubUVParticle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Object\SubUVComponent\UParticleSubUVComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Debug\DebugDrawManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
     <None Include=".editorconfig" />
     <None Include="imgui.ini" />
     <None Include="README.md" />
-    <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="font_atlas.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="font_atlas.dds" />
+    <Image Include="Pretendard_Kor.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="font_atlas.txt" />
+    <Text Include="Pretendard_Kor.txt" />
   </ItemGroup>
 </Project>

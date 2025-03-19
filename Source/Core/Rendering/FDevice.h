@@ -62,6 +62,8 @@ private:
 
 
 	FLOAT ClearColor[4] = { 0.025f, 0.025f, 0.025f, 1.0f }; // 화면(스왑버퍼)을 초기화(clear)할 때 사용할 색상 (RGBA)
+
+	FLOAT PickingClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f }; //
 	
     D3D11_VIEWPORT ViewportInfo = {};                       // 렌더링 영역을 정의하는 뷰포트 정보
 
