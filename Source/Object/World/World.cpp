@@ -113,6 +113,7 @@ void UWorld::Render()
 	RenderMainTexture(*Renderer);
 
 	FLineBatchManager::Get().Render();
+	FUUIDBillBoard::Get().Render();
 
 	AActor* SelectedActor = FEditorManager::Get().GetSelectedActor();
 	if (SelectedActor != nullptr)
