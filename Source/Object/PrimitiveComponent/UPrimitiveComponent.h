@@ -3,8 +3,6 @@
 #include "Core/Engine.h"
 #include "Object/USceneComponent.h"
 #include "Primitive/PrimitiveVertices.h"
-#include "Resource/DirectResource/Vertexbuffer.h"
-#include "Resource/DirectResource/IndexBuffer.h"
 #include "Resource/RenderResourceCollection.h"
 
 
@@ -33,9 +31,6 @@ public:
 	void UpdateConstantDepth(const URenderer& Renderer, int Depth) const;
 	virtual void Render();
 	virtual void CalculateModelMatrix(FMatrix& OutMatrix);
-
-
-	
 
 	virtual EPrimitiveType GetType() { return EPrimitiveType::EPT_None; }
 
@@ -67,12 +62,19 @@ public:
 	FConstantsComponentData& GetConstantsComponentData() { return ConstantsComponentData; }
 	//void SetConstantsComponentData(FConstantsComponentData& ) { bIsBillboard = bBillboard; }
 
+	std::shared_ptr<class FMesh> GetMesh() { return RenderResourceCollection.GetMesh(); }
+	std::shared_ptr<class FMaterial> GetMaterial() { return RenderResourceCollection.GetMaterial(); }
 
 	void SetMesh(const FString& _Name) { RenderResourceCollection.SetMesh(_Name); }
 	void SetMaterial(const FString& _Name) { RenderResourceCollection.SetMaterial(_Name); }
 	
 	FRenderResourceCollection& GetRenderResourceCollection() { return RenderResourceCollection; }
-	
+public:
+	void SetBoundsScale(float NewBoudnsScale);
+
+	virtual void UpdateBounds() override;
+protected:
+	float BoundsScale = 1.0f;
 protected:
 	bool bCanBeRendered = false;
 	bool bIsBillboard = false;
@@ -81,11 +83,7 @@ protected:
 	bool bIsPicking = false;
 
 	FVector4 CustomColor = FVector4(1.0f, 1.0f, 1.0f, 1.0f);
-
-
-
-	
-private:
+protected:
 	FRenderResourceCollection RenderResourceCollection;
 	FConstantsComponentData ConstantsComponentData;
 };
@@ -97,11 +95,22 @@ class UCubeComp : public UPrimitiveComponent
 public:
 	UCubeComp();
 
-	virtual EPrimitiveType GetType() override
+	EPrimitiveType GetType() override
 	{
 
 		return EPrimitiveType::EPT_Cube;
 	}
+
+public:
+	void SetBoxExtent(const FVector& InExtent);
+
+	inline FVector GetScaledBoxExtent() const { return BoxExtent * GetComponentTransform().GetScale(); }
+
+	virtual FBoxSphereBounds CalcBounds(const FTransform& LocalToWorld) const override;
+
+	inline void InitBoxExtent(const FVector& InExtent) { BoxExtent = InExtent; }
+protected:
+	FVector BoxExtent;
 };
 
 class USphereComp : public UPrimitiveComponent
@@ -111,10 +120,41 @@ class USphereComp : public UPrimitiveComponent
 public:
 	USphereComp();
 
-	virtual EPrimitiveType GetType() override
+	EPrimitiveType GetType() override
 	{
 		return EPrimitiveType::EPT_Sphere;
 	}
+
+	/**
+	* Change the sphere radius. This is the unscaled radius, before component scale is applied.
+	* @param	InSphereRadius: the new sphere radius
+	* @param	bUpdateOverlaps: if true and this shape is registered and collides, updates touching array for owner actor.
+	*/
+	void SetSphereRadius(float InSphereRadius);
+
+	// @return the radius of the sphere, with component scale applied.
+	inline float GetScaledSphereRadius() const { return Radius * GetShapeScale(); }
+
+	// @return the radius of the sphere, ignoring component scale.
+	inline float GetUnscaledSphereRadius() const { return Radius; }
+
+	//~ Begin UPrimitiveComponent Interface.
+	virtual inline bool IsZeroExtent() { return Radius == 0.0f; };
+	//virtual struct FCollisionShape GetCollisionShape(float Inflation = 0.0f) const override;
+	//~ End UPrimitiveComponent Interface.
+
+	//~ Begin USceneComponent Interface
+	virtual FBoxSphereBounds CalcBounds(const FTransform& LocalToWorld) const override;
+	//~ End USceneComponent Interface
+
+	// Get the scale used by this shape. This is a uniform scale that is the minimum of any non-uniform scaling.
+	// @return the scale used by this shape.
+	float GetShapeScale() const;
+
+	// Sets the sphere radius without triggering a render or physics update.
+	inline void InitSphereRadius(float InSphereRadius) { Radius = InSphereRadius; }
+protected:
+	float Radius;
 };
 
 class UTriangleComp : public UPrimitiveComponent
@@ -124,7 +164,7 @@ class UTriangleComp : public UPrimitiveComponent
 public:
 	UTriangleComp();
 
-	virtual EPrimitiveType GetType() override
+	EPrimitiveType GetType() override
 	{
 		return EPrimitiveType::EPT_Triangle;
 	}
@@ -138,7 +178,7 @@ class ULineComp : public UPrimitiveComponent
 public:
 	ULineComp();
 
-	virtual EPrimitiveType GetType() override
+	EPrimitiveType GetType() override
 	{
 		return EPrimitiveType::EPT_Line;
 	}
@@ -152,7 +192,7 @@ class UCylinderComp : public UPrimitiveComponent
 public:
 	UCylinderComp();
 
-	virtual EPrimitiveType GetType() override
+	EPrimitiveType GetType() override
 	{
 		return EPrimitiveType::EPT_Cylinder;
 	}
@@ -165,7 +205,7 @@ class UConeComp : public UPrimitiveComponent
 public:
 	UConeComp();
 
-	virtual EPrimitiveType GetType() override
+	EPrimitiveType GetType() override
 	{
 		return EPrimitiveType::EPT_Cone;
 	}
@@ -178,7 +218,7 @@ class UQuadComp : public UPrimitiveComponent
 public:
 	UQuadComp();
 
-	virtual EPrimitiveType GetType() override
+	EPrimitiveType GetType() override
 	{
 		return EPrimitiveType::EPT_Quad;
 	}

@@ -14,6 +14,8 @@
 #include "Resource/DirectResource/DepthStencilState.h"
 #include "Resource/DirectResource/Rasterizer.h"
 #include "Resource/DirectResource/ShaderResourceBinding.h"
+#include "Resource/RenderResourceCollection.h"
+#include "Resource/Mesh.h"
 
 UPrimitiveComponent::UPrimitiveComponent() : Super()
 {
@@ -27,8 +29,6 @@ UPrimitiveComponent::UPrimitiveComponent() : Super()
 
 UPrimitiveComponent::~UPrimitiveComponent()
 {
-	class std::shared_ptr<class FVertexBuffer> VertexBuffer = nullptr;
-	class std::shared_ptr<class FIndexBuffer> IndexBuffer = nullptr;
 }
 
 void UPrimitiveComponent::BeginPlay()
@@ -39,6 +39,7 @@ void UPrimitiveComponent::BeginPlay()
 void UPrimitiveComponent::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime); 
+	UpdateBounds();
 }
 
 void UPrimitiveComponent::UpdateConstantPicking(const URenderer& Renderer, const FVector4 UUIDColor)const
@@ -62,9 +63,8 @@ void UPrimitiveComponent::Render()
 	{
 		if (bIsPicked)
 		{
-			bUseVertexColor = true;
-			/*bUseVertexColor = false;
-			SetCustomColor(FVector4(1.0f, 0.647f, 0.0f, 1.0f));*/
+			bUseVertexColor = false;
+			SetCustomColor(FVector4(1.0f, 0.647f, 0.0f, 1.0f));
 		}
 		else
 		{
@@ -143,22 +143,77 @@ void UPrimitiveComponent::RegisterComponentWithWorld(UWorld* World)
 	World->AddRenderComponent(this);
 }
 
+void UPrimitiveComponent::SetBoundsScale(float NewBoudnsScale)
+{
+	BoundsScale = NewBoudnsScale;
+	UpdateBounds();
+}
+
+void UPrimitiveComponent::UpdateBounds()
+{
+	FBoxSphereBounds OriginalBounds = Bounds;
+	Super::UpdateBounds();
+}
+
 UCubeComp::UCubeComp() : Super()
 {
-
 	SetMesh("Cube");
 	bCanBeRendered = true;
+	BoxExtent = FVector(1.0f, 1.0f, 1.0f);
+}
+
+void UCubeComp::SetBoxExtent(const FVector& InExtent)
+{
+	BoxExtent = InExtent;
+	UpdateBounds();
+}
+
+FBoxSphereBounds UCubeComp::CalcBounds(const FTransform& LocalToWorld) const
+{
+	return FBoxSphereBounds(FBox(-BoxExtent, BoxExtent)).TransformBy(LocalToWorld);
 }
 
 USphereComp::USphereComp() : Super()
 {
 	SetMesh("Sphere");
 	bCanBeRendered = true;
+	Radius = 1.0f;
+}
+
+void USphereComp::SetSphereRadius(float InSphereRadius)
+{
+	Radius = InSphereRadius;
+	UpdateBounds();
+}
+
+FBoxSphereBounds USphereComp::CalcBounds(const FTransform& LocalToWorld) const
+{
+	return FBoxSphereBounds(FVector::ZeroVector, FVector(Radius, Radius, Radius), Radius).TransformBy(LocalToWorld);
+}
+
+float USphereComp::GetShapeScale() const
+{
+	FTransform LocalToWorld = GetComponentTransform();
+
+	// Scale3DAbsXYZ1 = { Abs(X), Abs(Y)), Abs(Z), 0 }
+	FVector4 ScaleAbsXYYZ0 = FVector4(FMath::Abs(LocalToWorld.GetScale().X), FMath::Abs(LocalToWorld.GetScale().Y), FMath::Abs(LocalToWorld.GetScale().Z), 0.0f);
+	// Scale3DAbsYZX1 = { Abs(Y),Abs(Z)),Abs(X), 0 }
+	FVector4 ScaledAbsYZX0 = FVector4(ScaleAbsXYYZ0.Y, ScaleAbsXYYZ0.Z, ScaleAbsXYYZ0.X, 0.0f);
+	// Scale3DAbsZXY1 = { Abs(Z),Abs(X)),Abs(Y), 0 }
+	FVector4 ScaledAbsZXY0 = FVector4(ScaleAbsXYYZ0.Z, ScaleAbsXYYZ0.X, ScaleAbsXYYZ0.Y, 0.0f);
+
+	// t0 = { Min(Abs(X), Abs(Y)),  Min(Abs(Y), Abs(Z)), Min(Abs(Z), Abs(X)), 0 }
+	FVector4 t0 = FVector4(FMath::Min(ScaleAbsXYYZ0.X, ScaledAbsYZX0.X), FMath::Min(ScaleAbsXYYZ0.Y, ScaleAbsXYYZ0.Y), FMath::Min(ScaleAbsXYYZ0.Z, ScaleAbsXYYZ0.Z), 0.0f);
+	// t1 = { Min(Abs(X), Abs(Y), Abs(Z)), Min(Abs(Y), Abs(Z), Abs(X)), Min(Abs(Z), Abs(X), Abs(Y)), 0 }
+	FVector4 t2 = FVector4(FMath::Max(t0.X, ScaledAbsZXY0.X), FMath::Max(t0.Y, ScaledAbsZXY0.Y), FMath::Max(t0.Z, ScaledAbsZXY0.Z), 0.0f);
+	// Scale3DAbsMax = Min(Abs(X), Abs(Y), Abs(Z));
+	float scaleAbsMin = FMath::Min(t2.X, FMath::Min(t2.Y, t2.Z));
+
+	return scaleAbsMin;
 }
 
 UTriangleComp::UTriangleComp() : Super()
 {
-	
 	SetMesh("Triangle");
 	bCanBeRendered = true;
 }

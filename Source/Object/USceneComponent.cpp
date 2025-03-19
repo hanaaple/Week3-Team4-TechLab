@@ -186,10 +186,12 @@ void USceneComponent::PropagateTransformUpdate(bool bTransformChanged)
 {
 	if (bTransformChanged)
 	{
+		UpdateBounds();
 		UpdateChildTransforms();
 	}
 	else
 	{
+		UpdateBounds();
 		// TODO: Update Bounds
 		UpdateChildTransforms();
 	}
@@ -496,6 +498,42 @@ void USceneComponent::SetupAttachment(USceneComponent* InParent, bool bUpdateChi
 
 FBoxSphereBounds USceneComponent::GetLocalBounds() const
 {
-	//TODO: 구현
-	return FBoxSphereBounds();
+	if (bComputeFastLocalBounds)
+	{
+		return Bounds.TransformBy(GetWorldMatrix().Inverse());
+	}
+
+
+	if (bUsedAttachParentBound && Parent != nullptr)
+	{
+		return Parent->Bounds.TransformBy(GetWorldMatrix().Inverse());
+	}
+
+	return CalcBounds(FTransform());
+}
+
+FBoxSphereBounds USceneComponent::CalcLocalBounds() const
+{
+	return GetLocalBounds();
+}
+
+void USceneComponent::UpdateBounds()
+{
+	if (bUsedAttachParentBound && Parent != nullptr)
+	{
+		Bounds = Parent->Bounds;
+	}
+	else
+	{
+		Bounds = CalcBounds(GetComponentTransform());
+	}
+}
+
+FBoxSphereBounds USceneComponent::CalcBounds(const FTransform& LocalToWorld) const
+{
+	FBoxSphereBounds NewBounds;
+	NewBounds.Origin = LocalToWorld.GetPosition();
+	NewBounds.BoxExtent = FVector::ZeroVector;
+	NewBounds.SphereRadius = 0.f;
+	return NewBounds;
 }
