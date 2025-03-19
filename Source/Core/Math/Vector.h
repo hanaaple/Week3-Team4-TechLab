@@ -1,5 +1,6 @@
 #pragma once
 #include "MathUtility.h"
+#include "Core/Container/Array.h"
 
 struct FQuat;
 
@@ -97,6 +98,8 @@ public:
 	{
 		return { FMath::Max(A.X, B.X), FMath::Max(A.Y, B.Y), FMath::Max(A.Z, B.Z) };
 	}
+
+	static void CaculateMinMax(TArray<FVector> vertices, FVector& OutMin, FVector& OutMax);
 };
 
 inline float FVector::DotProduct(const FVector& A, const FVector& B)
@@ -250,6 +253,31 @@ inline bool FVector::operator!=(const FVector& Other) const
     return X != Other.X || Y != Other.Y || Z != Other.Z;
 }
 
+inline void FVector::CaculateMinMax(TArray<FVector> vertices, FVector& OutMin, FVector& OutMax)
+{
+	if (vertices.Num() == 0)
+	{
+		OutMin = FVector::ZeroVector;
+		OutMax = FVector::ZeroVector;
+		return;
+	}
+
+	// 초기값: 첫번째 정점으로 설정
+	OutMin = vertices[0];
+	OutMax = vertices[0];
+
+	// 각 정점을 순회하며 최소/최대값 갱신
+	for (const FVector& vertex : vertices)
+	{
+		OutMin.X = FMath::Min(OutMin.X, vertex.X);
+		OutMin.Y = FMath::Min(OutMin.Y, vertex.Y);
+		OutMin.Z = FMath::Min(OutMin.Z, vertex.Z);
+
+		OutMax.X = FMath::Max(OutMax.X, vertex.X);
+		OutMax.Y = FMath::Max(OutMax.Y, vertex.Y);
+		OutMax.Z = FMath::Max(OutMax.Z, vertex.Z);
+	}
+}
 struct FVector4 : public FVector
 {
     using FVector::X;

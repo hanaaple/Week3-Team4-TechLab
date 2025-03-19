@@ -62,7 +62,116 @@ void UDebugDrawManager::DrawBoxBrackets(const FBox InActor, const FTransform& Lo
 {
 }
 
-void UDebugDrawManager::DrawBox(const FVector& InMin, const FVector& InMax, const FVector4& Color, float LifeTime)
+void UDebugDrawManager::DrawOBBBoxFromLocalMinMax(const FVector& LocalMin, const FVector& LocalMax, const FTransform& LocalToWorld, const FVector4& Color, float LifeTime)
+{
+	const FTransform WorldTransform = LocalToWorld;
+	const FMatrix ModelMatrix = WorldTransform.GetMatrix();
+	// 로컬 공간에서 중심과 반 크기(Extent)를 계산
+	const FVector LocalCenter = (LocalMin + LocalMax) * 0.5f;
+	const FVector LocalExtent = (LocalMax - LocalMin) * 0.5f;
+
+	// 로컬 공간의 8개 정점 계산
+	const FVector v0 = LocalCenter + FVector(-LocalExtent.X, -LocalExtent.Y, -LocalExtent.Z);
+	const FVector v1 = LocalCenter + FVector(LocalExtent.X, -LocalExtent.Y, -LocalExtent.Z);
+	const FVector v2 = LocalCenter + FVector(LocalExtent.X, LocalExtent.Y, -LocalExtent.Z);
+	const FVector v3 = LocalCenter + FVector(-LocalExtent.X, LocalExtent.Y, -LocalExtent.Z);
+	const FVector v4 = LocalCenter + FVector(-LocalExtent.X, -LocalExtent.Y, LocalExtent.Z);
+	const FVector v5 = LocalCenter + FVector(LocalExtent.X, -LocalExtent.Y, LocalExtent.Z);
+	const FVector v6 = LocalCenter + FVector(LocalExtent.X, LocalExtent.Y, LocalExtent.Z);
+	const FVector v7 = LocalCenter + FVector(-LocalExtent.X, LocalExtent.Y, LocalExtent.Z);
+
+	const FVector WorldV0 = ModelMatrix.TransformVector(v0);
+	const FVector WorldV1 = ModelMatrix.TransformVector(v1);
+	const FVector WorldV2 = ModelMatrix.TransformVector(v2);
+	const FVector WorldV3 = ModelMatrix.TransformVector(v3);
+	const FVector WorldV4 = ModelMatrix.TransformVector(v4);
+	const FVector WorldV5 = ModelMatrix.TransformVector(v5);
+	const FVector WorldV6 = ModelMatrix.TransformVector(v6);
+	const FVector WorldV7 = ModelMatrix.TransformVector(v7);
+
+	// 바닥면 (아래 사각형) 선 연결
+	DrawLine(WorldV0, WorldV1, Color, LifeTime);
+	DrawLine(WorldV1, WorldV2, Color, LifeTime);
+	DrawLine(WorldV2, WorldV3, Color, LifeTime);
+	DrawLine(WorldV3, WorldV0, Color, LifeTime);
+
+	// 천장면 (위 사각형) 선 연결
+	DrawLine(WorldV4, WorldV5, Color, LifeTime);
+	DrawLine(WorldV5, WorldV6, Color, LifeTime);
+	DrawLine(WorldV6, WorldV7, Color, LifeTime);
+	DrawLine(WorldV7, WorldV4, Color, LifeTime);
+
+	// 수직 엣지 연결
+	DrawLine(WorldV0, WorldV4, Color, LifeTime);
+	DrawLine(WorldV1, WorldV5, Color, LifeTime);
+	DrawLine(WorldV2, WorldV6, Color, LifeTime);
+	DrawLine(WorldV3, WorldV7, Color, LifeTime);
+}
+
+void UDebugDrawManager::DrawBoundingBox(const FVector& LocalMin, const FVector& LocalMax, const FTransform& LocalToWorld, const FVector4& Color, float LifeTime)
+{
+	const FTransform WorldTransform = LocalToWorld;
+	const FMatrix ModelMatrix = WorldTransform.GetMatrix();
+	// 로컬 공간에서 중심과 반 크기(Extent)를 계산
+	const FVector LocalCenter = (LocalMin + LocalMax) * 0.5f;
+	const FVector LocalExtent = (LocalMax - LocalMin) * 0.5f;
+
+	// 로컬 공간의 8개 정점 계산
+	const FVector v0 = LocalCenter + FVector(-LocalExtent.X, -LocalExtent.Y, -LocalExtent.Z);
+	const FVector v1 = LocalCenter + FVector(LocalExtent.X, -LocalExtent.Y, -LocalExtent.Z);
+	const FVector v2 = LocalCenter + FVector(LocalExtent.X, LocalExtent.Y, -LocalExtent.Z);
+	const FVector v3 = LocalCenter + FVector(-LocalExtent.X, LocalExtent.Y, -LocalExtent.Z);
+	const FVector v4 = LocalCenter + FVector(-LocalExtent.X, -LocalExtent.Y, LocalExtent.Z);
+	const FVector v5 = LocalCenter + FVector(LocalExtent.X, -LocalExtent.Y, LocalExtent.Z);
+	const FVector v6 = LocalCenter + FVector(LocalExtent.X, LocalExtent.Y, LocalExtent.Z);
+	const FVector v7 = LocalCenter + FVector(-LocalExtent.X, LocalExtent.Y, LocalExtent.Z);
+
+	TArray<FVector> vertices;
+	const FVector WorldV0 = ModelMatrix.TransformVector(v0);
+	const FVector WorldV1 = ModelMatrix.TransformVector(v1);
+	const FVector WorldV2 = ModelMatrix.TransformVector(v2);
+	const FVector WorldV3 = ModelMatrix.TransformVector(v3);
+	const FVector WorldV4 = ModelMatrix.TransformVector(v4);
+	const FVector WorldV5 = ModelMatrix.TransformVector(v5);
+	const FVector WorldV6 = ModelMatrix.TransformVector(v6);
+	const FVector WorldV7 = ModelMatrix.TransformVector(v7);
+
+	FVector NewMin = FVector::ZeroVector;
+	FVector NewMax = FVector::ZeroVector;
+
+	vertices.Add(WorldV0);
+	vertices.Add(WorldV1);
+	vertices.Add(WorldV2);
+	vertices.Add(WorldV3);
+	vertices.Add(WorldV4);
+	vertices.Add(WorldV5);
+	vertices.Add(WorldV6);
+	vertices.Add(WorldV7);
+
+	FVector::CaculateMinMax(vertices, NewMin, NewMax);
+
+	DrawAABBBox(NewMin, NewMax, FVector4::BLUE, LifeTime);
+
+	// 바닥면 (아래 사각형) 선 연결
+	DrawLine(WorldV0, WorldV1, Color, LifeTime);
+	DrawLine(WorldV1, WorldV2, Color, LifeTime);
+	DrawLine(WorldV2, WorldV3, Color, LifeTime);
+	DrawLine(WorldV3, WorldV0, Color, LifeTime);
+
+	// 천장면 (위 사각형) 선 연결
+	DrawLine(WorldV4, WorldV5, Color, LifeTime);
+	DrawLine(WorldV5, WorldV6, Color, LifeTime);
+	DrawLine(WorldV6, WorldV7, Color, LifeTime);
+	DrawLine(WorldV7, WorldV4, Color, LifeTime);
+
+	// 수직 엣지 연결
+	DrawLine(WorldV0, WorldV4, Color, LifeTime);
+	DrawLine(WorldV1, WorldV5, Color, LifeTime);
+	DrawLine(WorldV2, WorldV6, Color, LifeTime);
+	DrawLine(WorldV3, WorldV7, Color, LifeTime);
+}
+
+void UDebugDrawManager::DrawAABBBox(const FVector& InMin, const FVector& InMax, const FVector4& Color, float LifeTime)
 {
 	// 8개의 정점 계산
 	FVector v0 = FVector(InMin.X, InMin.Y, InMin.Z);

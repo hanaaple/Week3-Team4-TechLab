@@ -229,3 +229,20 @@ bool FQuat::Equals(const FQuat& Other, float Tolerance) const
 
 	return AbsDelta.X <= Tolerance && AbsDelta.Y <= Tolerance && AbsDelta.Z <= Tolerance && FMath::Abs(W - Other.W) <= Tolerance;
 }
+
+FQuat FQuat::Normalized() const
+{
+	// 쿼터니언의 제곱 노름(크기의 제곱) 계산
+	const float SqNorm = X * X + Y * Y + Z * Z + W * W;
+
+	// 아주 작은 값인지 확인 (SMALL_NUMBER는 충분히 작은 값, 예: 1e-8f)
+	if (SqNorm > SMALL_NUMBER)
+	{
+		// 역제곱근 계산
+		const float InvNorm = 1.0f / sqrtf(SqNorm);
+		return FQuat(X * InvNorm, Y * InvNorm, Z * InvNorm, W * InvNorm);
+	}
+
+	// 크기가 0에 가까우면 항등 쿼터니언 반환 (회전 없음)
+	return FQuat(0.0f, 0.0f, 0.0f, 1.0f);
+}

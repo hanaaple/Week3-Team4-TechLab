@@ -71,13 +71,9 @@ void FEditorManager::SelectActor(AActor* NewActor)
     if (SelectedActor != nullptr)
     {
         SelectedActor->Pick();
-		FTransform newActorTransform = NewActor->GetActorTransform();
-		Gizmo->SetActorTransform(newActorTransform);
-		FVector worldMin, worldMax;
-		worldMax = SelectedActor->GetActorBoundsMax();
-		worldMin = SelectedActor->GetActorBoundsMin();
-		//UDebugDrawManager::Get().DrawBox(worldMin, worldMax, FVector4::WHITE);
-	}
+		    FTransform newActorTransform = NewActor->GetActorTransform();
+		    Gizmo->SetActorTransform(newActorTransform);
+	   }
 }
 
 void FEditorManager::SetCamera(ACamera* NewCamera)
@@ -112,6 +108,7 @@ void FEditorManager::LateTick(float DeltaTime)
 
 		//float Width = FDevice::Get().GetViewPortInfo().Width;
 		//float Height = FDevice::Get().GetViewPortInfo().Height;
+
 		//      float ratioX = UEngine::Get().GetInitializedScreenWidth() / Width;
 		//      float ratioY = UEngine::Get().GetInitializedScreenHeight() / Height;
 		//      pt.x = pt.x * ratioX;

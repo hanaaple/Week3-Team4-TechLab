@@ -171,8 +171,11 @@ public:
 	virtual FBox CalculateComponentsBoundingBoxInLocalSpace(bool bNonColliding = false, bool bIncludeFromChildActors = false) const;
 
 	// 임시
-	FVector GetActorBoundsMin() const;
-	FVector GetActorBoundsMax() const;
+	FVector GetActorWorldBoundsMin() const;
+	FVector GetActorWorldBoundsMax() const;
+
+	FVector GetActorLocalBoundsMin() const;
+	FVector GetActorLocalBoundsMax() const;
 
 public:
 	bool CanEverTick() const { return bCanEverTick; }
