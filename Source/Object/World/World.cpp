@@ -113,6 +113,7 @@ void UWorld::Render()
 	RenderMainTexture(*Renderer);
 
 	FLineBatchManager::Get().Render();
+	FUUIDBillBoard::Get().Render();
 
 	AActor* SelectedActor = FEditorManager::Get().GetSelectedActor();
 	if (SelectedActor != nullptr)
@@ -127,7 +128,7 @@ void UWorld::Render()
 	}
 	UDebugDrawManager::Get().Render();
 
-	FUUIDBillBoard::Get().Render();
+	//FUUIDBillBoard::Get().Render();
 
 
 	//DisplayPickingTexture(*Renderer);
@@ -165,10 +166,10 @@ void UWorld::RenderPickingTexture(URenderer& Renderer)
 
 void UWorld::RenderMainTexture(URenderer& Renderer)
 {
-	FDevice::Get().Prepare();
 	// Renderer.Prepare();
 	// Renderer.PrepareShader();
 	// Renderer.PrepareMain();
+
 	//Renderer.PrepareMainShader();
 	for (auto& RenderComponent : RenderComponents)
 	{
@@ -199,7 +200,7 @@ void UWorld::ClearWorld()
 	TArray CopyActors = Actors;
 	for (AActor* Actor : CopyActors)
 	{
-		// if (!Actor->Implements<AGizmoActor>()) // TODO: RTTI 개선하면 사용
+		// if (!Actor->Implements<IGizmoInterface>()) // TODO: RTTI 개선하면 사용
 		if (!dynamic_cast<IGizmoInterface*>(Actor))
 		{
 			DestroyActor(Actor);
@@ -407,7 +408,7 @@ UWorldInfo UWorld::GetWorldInfo() const
 	uint32 i = 0;
 	for (auto& actor : Actors)
 	{
-		// if (actor->IsA<AGizmoActor>()) // TODO: RTTI 개선하면 사용
+		// if (actor->Implements<IGizmoInterface>()) // TODO: RTTI 개선하면 사용
 		if (dynamic_cast<IGizmoInterface*>(actor))
 		{
 			WorldInfo.ActorCount--;

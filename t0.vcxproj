@@ -256,6 +256,10 @@
     <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Source\FontAtlas.cpp" />
+    <ClCompile Include="Source\Object\Light\LightComponentBase.cpp" />
+    <ClCompile Include="Source\Object\Light\LightComponent.cpp" />
+    <ClCompile Include="Source\Object\Light\SpotLightComponent.cpp" />
+    <ClCompile Include="Source\Object\Actor\SpotLight.cpp" />
     <ClCompile Include="WorldGrid.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -440,6 +444,11 @@
     <ClInclude Include="Source\Core\Interfaces\GizmoInterface.h" />
     <ClInclude Include="Source\Object\Actor\SubUVParticle.h" />
     <ClInclude Include="Source\Object\SubUVComponent\UParticleSubUVComponent.h" />
+    <ClInclude Include="Source\Debug\UDebugDrawManager.h" />
+    <ClInclude Include="Source\Object\Light\LightComponentBase.h" />
+    <ClInclude Include="Source\Object\Light\LightComponent.h" />
+    <ClInclude Include="Source\Object\Light\SpotLightComponent.h" />
+    <ClInclude Include="Source\Object\Actor\SpotLight.h" />
     <ClInclude Include="WorldGrid.h" />
   </ItemGroup>
   <ItemGroup>

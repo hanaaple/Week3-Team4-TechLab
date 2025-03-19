@@ -29,11 +29,11 @@ public:
 		Res->bIsDynamic = _bIsDynamic;
 		if (Res->bIsDynamic == false)
 		{
-			Res->ResCreate(&_Data[0], sizeof(VertexType), _Data.Num());
+			Res->ResCreate(&_Data[0], sizeof(VertexType), _Data.Len());
 		}
 		else
 		{
-			Res->ResCreateDynamic(&_Data[0], sizeof(VertexType), _Data.Num());
+			Res->ResCreateDynamic(&_Data[0], sizeof(VertexType), _Data.Len());
 		}
 		 
 		return Res;
