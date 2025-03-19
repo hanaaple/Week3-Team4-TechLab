@@ -196,7 +196,7 @@ void UWorld::ClearWorld()
 	TArray CopyActors = Actors;
 	for (AActor* Actor : CopyActors)
 	{
-		// if (!Actor->Implements<AGizmoActor>()) // TODO: RTTI 개선하면 사용
+		// if (!Actor->Implements<IGizmoInterface>()) // TODO: RTTI 개선하면 사용
 		if (!dynamic_cast<IGizmoInterface*>(Actor))
 		{
 			DestroyActor(Actor);
@@ -404,7 +404,7 @@ UWorldInfo UWorld::GetWorldInfo() const
 	uint32 i = 0;
 	for (auto& actor : Actors)
 	{
-		// if (actor->IsA<AGizmoActor>()) // TODO: RTTI 개선하면 사용
+		// if (actor->Implements<IGizmoInterface>()) // TODO: RTTI 개선하면 사용
 		if (dynamic_cast<IGizmoInterface*>(actor))
 		{
 			WorldInfo.ActorCount--;

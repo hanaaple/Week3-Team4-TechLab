@@ -61,7 +61,7 @@ void UPrimitiveComponent::Render()
 	{
 		return;
 	}
-	// if (GetOwner()->IsA<AGizmoActor>() == false) // TODO: RTTI 개선하면 사용
+	// if (GetOwner()->Implements<IGizmoInterface>() == false) // TODO: RTTI 개선하면 사용
 	if (!dynamic_cast<IGizmoInterface*>(GetOwner()))
 	{
 		if (bIsPicked)
