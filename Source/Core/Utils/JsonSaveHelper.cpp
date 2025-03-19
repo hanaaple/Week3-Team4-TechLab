@@ -1,6 +1,7 @@
 ﻿#include "JsonSaveHelper.h"
 
 #include <fstream>
+#include <ranges>
 
 #include "Core/EngineStatics.h"
 #include "Debug/DebugConsole.h"
@@ -9,7 +10,7 @@
 using json::JSON;
 
 // SceneName - 확장자 제외
-UWorldInfo* JsonSaveHelper::LoadScene(std::string SceneName)
+std::unique_ptr<UWorldInfo> JsonSaveHelper::LoadScene(const std::string& SceneName)
 {
     std::ifstream Input(SceneName + ".scene");
 
@@ -27,40 +28,30 @@ UWorldInfo* JsonSaveHelper::LoadScene(std::string SceneName)
 
     JSON Json = JSON::Load(Contents);
 
-    UWorldInfo* WorldInfo = new UWorldInfo();
+	std::unique_ptr<UWorldInfo> WorldInfo = std::make_unique<UWorldInfo>();
      
     WorldInfo->Version = Json["Version"].ToInt();
     WorldInfo->SceneName = Json["SceneName"].ToString();
     WorldInfo->ActorCount = Json["ActorCount"].ToInt();
-    WorldInfo->ObjctInfos = new UObjectInfo*[WorldInfo->ActorCount];
-    uint32 NextUUID = Json["NextUUID"].ToInt();
-    NextUUID = FMath::Max(NextUUID, WorldInfo->ActorCount);
-    int index = 0;
-    for (uint32 i = 0; i < NextUUID ; i++){
-        if (!Json["Actors"].hasKey(std::to_string(i)))
-        {
-            continue;
-        }
-        std::string UUID = std::to_string(i);
-        
-        UObjectInfo* ObjectInfo = new UObjectInfo();
-        WorldInfo->ObjctInfos[index] = ObjectInfo;
-        
-        JSON Location = Json["Actors"][UUID]["Location"];
-        JSON Rotation = Json["Actors"][UUID]["Rotation"];
-        JSON Scale = Json["Actors"][UUID]["Scale"];
+	UEngineStatics::NextUUID = Json["NextUUID"].ToInt();
+	for (JSON& ActorInfo : Json["Actors"].ObjectRange() | std::views::values)
+    {
+        std::unique_ptr<UObjectInfo> ObjectInfo = std::make_unique<UObjectInfo>();
+
+        JSON Location = ActorInfo["Location"];
+        JSON Rotation = ActorInfo["Rotation"];
+        JSON Scale = ActorInfo["Scale"];
         ObjectInfo->Location = FVector(Location[0].ToFloat(), Location[1].ToFloat(), Location[2].ToFloat());
         ObjectInfo->Rotation = FVector(Rotation[0].ToFloat(), Rotation[1].ToFloat(), Rotation[2].ToFloat());
         ObjectInfo->Scale = FVector(Scale[0].ToFloat(), Scale[1].ToFloat(), Scale[2].ToFloat());
 
-        ObjectInfo->ObjectType = Json["Actors"][UUID]["Type"].ToString();
-        
-        index++;
+        ObjectInfo->ObjectType = ActorInfo["Type"].ToString();
+		WorldInfo->ObjectInfos.push(std::move(ObjectInfo));
     }
     return WorldInfo;
 }
 
-void JsonSaveHelper::SaveScene(const UWorldInfo& WorldInfo)
+void JsonSaveHelper::SaveScene(UWorldInfo WorldInfo)
 {
     if (WorldInfo.SceneName.empty())
         return;
@@ -71,9 +62,12 @@ void JsonSaveHelper::SaveScene(const UWorldInfo& WorldInfo)
     Json["ActorCount"] = WorldInfo.ActorCount;
     Json["SceneName"] = WorldInfo.SceneName;
 
-    for (uint32 i = 0; i < WorldInfo.ActorCount; i++)
+    // for (uint32 i = 0; i < WorldInfo.ActorCount; i++)
+	while (!WorldInfo.ObjectInfos.empty())
     {
-        UObjectInfo* ObjectInfo = WorldInfo.ObjctInfos[i];
+        std::unique_ptr<UObjectInfo> ObjectInfo = std::move(WorldInfo.ObjectInfos.front());
+		WorldInfo.ObjectInfos.pop();
+
         std::string Uuid = std::to_string(ObjectInfo->UUID);
         
         Json["Actors"][Uuid]["Location"].append(ObjectInfo->Location.X, ObjectInfo->Location.Y, ObjectInfo->Location.Z);
