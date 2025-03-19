@@ -36,4 +36,6 @@ struct alignas(16) FQuat : public FVector4{
 
 	bool Equals(const FQuat& Other, const float Tolerance = KINDA_SMALL_NUMBER) const;
 
+	FQuat Normalized() const;
+
 };

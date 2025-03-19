@@ -73,10 +73,6 @@ void FEditorManager::SelectActor(AActor* NewActor)
         SelectedActor->Pick();
 		FTransform newActorTransform = NewActor->GetActorTransform();
 		Gizmo->SetActorTransform(newActorTransform);
-		FVector worldMin, worldMax;
-		worldMax = SelectedActor->GetActorBoundsMax();
-		worldMin = SelectedActor->GetActorBoundsMin();
-		UDebugDrawManager::Get().DrawBox(worldMin, worldMax, FVector4::WHITE);
 	}
 }
 
@@ -124,7 +120,7 @@ void FEditorManager::LateTick(float DeltaTime)
 
         if (PickedComponent != nullptr)
         {
-            AActor* PickedActor = PickedComponent->GetOwner();
+            AActor* PickedActor = PickedComponent->GetOwner(); 
 
             if (PickedActor == nullptr) return;
             /*if (PickedComponent->GetOwner()->IsGizmoActor() == false)

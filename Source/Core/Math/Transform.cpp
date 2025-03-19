@@ -124,7 +124,7 @@ FMatrix FTransform::ToMatrixWithScale() const
 	// OutMatrix.M[1][3] = 0.0f;                            // DiagonalsXYZ_W0.W
 	FVector4 SubX_DC_DiagY_DC = FVector4(Subtracts.X, Subtracts.X, Diagonals4.Y, Diagonals4.X);
 	FVector4 AddY_DC_DiagW_DC = FVector4(Adds.Y, Adds.X, Diagonals4.W, Diagonals4.X);
-	FVector4 Row1 = FVector4(SubX_DC_DiagY_DC.X, SubX_DC_DiagY_DC.Z, AddY_DC_DiagW_DC.Y, AddY_DC_DiagW_DC.Z);
+	FVector4 Row1 = FVector4(SubX_DC_DiagY_DC.X, SubX_DC_DiagY_DC.Z, AddY_DC_DiagW_DC.X, AddY_DC_DiagW_DC.Z);
 
 	// OutMatrix.M[2][0] = (xz2 + wy2) * Scale.Z;             // Adds.Z
 	// OutMatrix.M[2][1] = (yz2 - wx2) * Scale.Z;             // Subtracts.Y

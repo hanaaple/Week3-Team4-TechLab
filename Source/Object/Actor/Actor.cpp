@@ -189,7 +189,7 @@ FBox AActor::CalculateComponentsBoundingBoxInLocalSpace(bool bNonColliding, bool
 	return Box;
 }
 
-FVector AActor::GetActorBoundsMin() const
+FVector AActor::GetActorWorldBoundsMin() const
 {
 	for (auto& Component : Components)
 	{
@@ -201,9 +201,11 @@ FVector AActor::GetActorBoundsMin() const
 			}
 		}
 	}
+
+	return FVector::ZeroVector;
 }
 
-FVector AActor::GetActorBoundsMax() const
+FVector AActor::GetActorWorldBoundsMax() const
 {
 	for (auto& Component : Components)
 	{
@@ -215,6 +217,40 @@ FVector AActor::GetActorBoundsMax() const
 			}
 		}
 	}
+
+	return FVector::ZeroVector;
+}
+
+FVector AActor::GetActorLocalBoundsMin() const
+{
+	for (auto& Component : Components)
+	{
+		if (UPrimitiveComponent* PrimitiveComponent = dynamic_cast<UPrimitiveComponent*>(Component))
+		{
+			if (PrimitiveComponent->Min != FVector::ZeroVector)
+			{
+				return PrimitiveComponent->Min;
+			}
+		}
+	}
+
+	return FVector::ZeroVector;
+}
+
+FVector AActor::GetActorLocalBoundsMax() const
+{
+	for (auto& Component : Components)
+	{
+		if (UPrimitiveComponent* PrimitiveComponent = dynamic_cast<UPrimitiveComponent*>(Component))
+		{
+			if (PrimitiveComponent->Max != FVector::ZeroVector)
+			{
+				return PrimitiveComponent->Max;
+			}
+		}
+	}
+
+	return FVector::ZeroVector;
 }
 
 bool AActor::SetActorPosition(const FVector& InPosition)
