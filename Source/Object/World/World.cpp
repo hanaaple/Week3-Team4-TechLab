@@ -145,7 +145,6 @@ void UWorld::RenderPickingTexture(URenderer& Renderer)
 
 void UWorld::RenderMainTexture(URenderer& Renderer)
 {
-	FDevice::Get().Prepare();
 	Renderer.Prepare();
 	Renderer.PrepareShader();
 	Renderer.PrepareMain();
