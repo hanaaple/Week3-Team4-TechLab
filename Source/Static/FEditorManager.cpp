@@ -1,7 +1,6 @@
 #include "FEditorManager.h"
 #include "Core/Engine.h"
 #include "Object/World/World.h"
-#include "Object/Gizmo/GizmoHandle.h"
 #include "Core/Math/Vector.h"
 #include "Core/Math/Transform.h"
 #include <Object/Gizmo/GizmoActor.h>

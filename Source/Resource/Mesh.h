@@ -16,19 +16,21 @@ class FMesh : public FResource<FMesh>
 public:
 
 	FMesh();
-	~FMesh();
+	virtual ~FMesh() override;
 
-	static std::shared_ptr<FMesh> Create(const FString& _Name, D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST)
+	static std::shared_ptr<FMesh> Create(const FString& InName, D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST)
 	{
-		return Create(_Name, _Name, _Name, Topology);
+		return Create(InName, InName, InName, Topology);
 	}
 
-	static std::shared_ptr<FMesh> Create(const FString& _Name, const FString& _VtxName, const FString& _IdxName
-		, D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST)
+	static std::shared_ptr<FMesh> Create(
+		const FString& InName, const FString& VertexName, const FString& IndexName
+		, D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST
+	)
 	{
-		std::shared_ptr<FMesh> Res = CreateRes(_Name);
-		Res->VertexBuffer = FVertexBuffer::Find(_VtxName);
-		Res->IndexBuffer = FIndexBuffer::Find(_IdxName);
+		std::shared_ptr<FMesh> Res = CreateRes(InName);
+		Res->VertexBuffer = FVertexBuffer::Find(VertexName);
+		Res->IndexBuffer = FIndexBuffer::Find(IndexName);
 		Res->Topology = Topology;
 
 		if (nullptr == Res->VertexBuffer

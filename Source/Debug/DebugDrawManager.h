@@ -4,6 +4,7 @@
 #include "Core/Container/Array.h"
 #include "Resource/RenderResourceCollection.h"
 #include "wrl.h"
+#include "Core/Math/Matrix.h"
 
 struct FVector;
 struct FVector4;
@@ -23,7 +24,7 @@ public:
 	void Initialize();
 	void Render();
 
-	void DrawBoxBrackets(const FBox InActor, const FTransform& LocalToWorld, const FVector4& Color, float LifeTime = 1.0f);
+	void DrawBoxBrackets(FBox InActor, const FTransform& LocalToWorld, const FVector4& Color, float LifeTime = 1.0f);
 	void DrawBox(const FVector& InMin, const FVector& InMax, const FVector4& Color, float LifeTime = 1.0f);
 	void DrawSphere(const FVector& Center, float Radius, const FVector4& Color, float LifeTime = 1.0f);
 	void DrawBoxSphereBounds(const FVector& Origin, const FVector& BoxExtent, float SphereRadius, const FVector4& Color, float LifeTime = 1.0f);

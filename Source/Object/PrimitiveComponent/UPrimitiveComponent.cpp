@@ -23,8 +23,6 @@ UPrimitiveComponent::UPrimitiveComponent()
 
 UPrimitiveComponent::~UPrimitiveComponent()
 {
-	VertexBuffer.reset();
-	IndexBuffer.reset();
 }
 
 void UPrimitiveComponent::BeginPlay()

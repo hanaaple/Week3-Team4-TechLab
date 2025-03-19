@@ -8,7 +8,6 @@
 #include "Object/Assets/AssetManager.h"
 #include "Object/World/World.h"
 #include "Rendering/FDevice.h"
-#include "Rendering/URenderer.h"
 #include "Static/FEditorManager.h"
 #include "Static/FLineBatchManager.h"
 

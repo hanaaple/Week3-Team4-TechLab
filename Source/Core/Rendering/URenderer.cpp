@@ -114,9 +114,9 @@ void URenderer::ReleaseConstantBuffer()
 //     }
 // }
 
-void URenderer::Render(FRenderResourceCollection& _RenderResourceCollection)
+void URenderer::Render(FRenderResourceCollection& InRenderResourceCollection)
 {
-	_RenderResourceCollection.Render();
+	InRenderResourceCollection.Render();
 }
 
 

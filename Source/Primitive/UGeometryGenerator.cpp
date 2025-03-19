@@ -1,10 +1,10 @@
 #include "UGeometryGenerator.h"
 #include <cmath>
 
-void UGeometryGenerator::CreateCube(float size, TArray<FVertexSimple>& OutVertices, TArray<uint32>& OutIndices)
+void UGeometryGenerator::CreateCube(float Size, TArray<FVertexSimple>& OutVertices, TArray<uint32>& OutIndices)
 {
     // 정육면체의 반 크기
-    float halfSize = size / 2.0f;
+    float halfSize = Size / 2.0f;
 
     // 정육면체의 8개 정점 정의
     OutVertices.Emplace(-halfSize, -halfSize, -halfSize, 0.0f, 0.0f, 0.0f, 1.0f); // 0
@@ -277,9 +277,9 @@ void UGeometryGenerator::CreateCone(float BottomRadius, float Height, uint32 Sli
     }
 }
 
-void UGeometryGenerator::CreateRadialCone(float height, float angle, uint32 sliceCount, TArray<FVertexSimple>* vertices, TArray<uint32>* indices)
+void UGeometryGenerator::CreateRadialCone(float Height, float Angle, uint32 SliceCount, TArray<FVertexSimple>* Vertices, TArray<uint32>* Indices)
 {
-	float radius = height * tanf(angle * 0.5f);
+	float radius = Height * tanf(Angle * 0.5f);
 
 	float r = 1.0f;
 	float g = 1.0f;
@@ -287,31 +287,31 @@ void UGeometryGenerator::CreateRadialCone(float height, float angle, uint32 slic
 	float a = 1.0f;
 
 	// 꼭대기 정점
-	uint32 apexIndex = vertices->Num();
-	vertices->Add(FVertexSimple(
+	uint32 apexIndex = Vertices->Num();
+	Vertices->Add(FVertexSimple(
 		0.0f, 0.0f, 0.0f,
 		r, g, b, a
 	));
 
 	// 원뿔 바닥의 원 정점들 생성
-	uint32 baseStartIndex = vertices->Num();
-	for (uint32 slice = 0; slice <= sliceCount; ++slice)
+	uint32 baseStartIndex = Vertices->Num();
+	for (uint32 slice = 0; slice <= SliceCount; ++slice)
 	{
-		float theta = 2.0f * PI * slice / sliceCount;
+		float theta = 2.0f * PI * slice / SliceCount;
 
-		vertices->Add(FVertexSimple(
+		Vertices->Add(FVertexSimple(
 			radius * sinf(theta),
 			radius * cosf(theta),
-			height,
+			Height,
 			r, g, b, a
 		));
 	}
 
 	// 원뿔의 옆면 인덱스 (삼각형)
-	for (uint32 slice = 0; slice < sliceCount; ++slice)
+	for (uint32 slice = 0; slice < SliceCount; ++slice)
 	{
-		indices->Add(apexIndex);
-		indices->Add(baseStartIndex + slice);
-		indices->Add(baseStartIndex + slice + 1);
+		Indices->Add(apexIndex);
+		Indices->Add(baseStartIndex + slice);
+		Indices->Add(baseStartIndex + slice + 1);
 	}
 }

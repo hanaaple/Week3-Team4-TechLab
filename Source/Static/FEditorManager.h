@@ -1,5 +1,8 @@
 #pragma once
+#include <memory>
+
 #include "Core/AbstractClass/Singleton.h"
+#include "Core/Math/Vector.h"
 
 class ACamera;
 class AActor;

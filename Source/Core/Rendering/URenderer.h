@@ -3,9 +3,7 @@
 #define _TCHAR_DEFINED  // TCHAR 재정의 에러 때문
 #include <d3d11.h>
 
-#include "Core/Engine.h"
 #include "Core/Math/Vector.h"
-#include "Core/Math/Matrix.h"
 
 struct FVertexSimple;
 struct FVector4;
@@ -57,7 +55,7 @@ public:
     /** 셰이더를 준비 합니다. */
     //void PrepareShader() const;
 
-	void Render(class FRenderResourceCollection& _RenderResourceCollection);
+	void Render(class FRenderResourceCollection& InRenderResourceCollection);
 
     /** PrimitiveComponent를 초기화 합니다. */
     // void RenderPrimitiveInternal(UPrimitiveComponent& PrimitiveComp) const;

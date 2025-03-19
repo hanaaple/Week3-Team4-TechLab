@@ -7,6 +7,7 @@
 #include "Core/Math/Matrix.h"
 #include "Object/USceneComponent.h"
 #include "Primitive/PrimitiveVertices.h"
+#include "Resource/RenderResourceCollection.h"
 #include "Resource/DirectResource/IndexBuffer.h"
 #include "Resource/DirectResource/Vertexbuffer.h"
 
@@ -78,11 +79,11 @@ public:
 	FConstantsComponentData& GetConstantsComponentData() { return ConstantsComponentData; }
 	//void SetConstantsComponentData(FConstantsComponentData& ) { bIsBillboard = bBillboard; }
 
-	std::shared_ptr<class FMesh> GetMesh() { return RenderResourceCollection.GetMesh(); }
-	std::shared_ptr<class FMaterial> GetMaterial() { return RenderResourceCollection.GetMaterial(); }
+	std::shared_ptr<FMesh> GetMesh() const { return RenderResourceCollection.GetMesh(); }
+	std::shared_ptr<FMaterial> GetMaterial() const { return RenderResourceCollection.GetMaterial(); }
 
-	void SetMesh(const FString& _Name) { RenderResourceCollection.SetMesh(_Name); }
-	void SetMaterial(const FString& _Name) { RenderResourceCollection.SetMaterial(_Name); }
+	void SetMesh(const FString& InName) { RenderResourceCollection.SetMesh(InName); }
+	void SetMaterial(const FString& InName) { RenderResourceCollection.SetMaterial(InName); }
 	
 	FRenderResourceCollection& GetRenderResourceCollection() { return RenderResourceCollection; }
 public:
@@ -145,7 +146,6 @@ public:
 	/**
 	* Change the sphere radius. This is the unscaled radius, before component scale is applied.
 	* @param	InSphereRadius: the new sphere radius
-	* @param	bUpdateOverlaps: if true and this shape is registered and collides, updates touching array for owner actor.
 	*/
 	void SetSphereRadius(float InSphereRadius);
 
@@ -156,7 +156,7 @@ public:
 	inline float GetUnscaledSphereRadius() const { return Radius; }
 
 	//~ Begin UPrimitiveComponent Interface.
-	virtual inline bool IsZeroExtent() { return Radius == 0.0f; };
+	virtual inline bool IsZeroExtent() { return Radius == 0.0f; }
 	//virtual struct FCollisionShape GetCollisionShape(float Inflation = 0.0f) const override;
 	//~ End UPrimitiveComponent Interface.
 
