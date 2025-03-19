@@ -127,14 +127,14 @@ void UDebugDrawManager::DrawBoundingBox(const FVector& LocalMin, const FVector& 
 	const FVector v7 = LocalCenter + FVector(-LocalExtent.X, LocalExtent.Y, LocalExtent.Z);
 
 	TArray<FVector> vertices;
-	const FVector WorldV0 = ModelMatrix.TransformVector(v0);
-	const FVector WorldV1 = ModelMatrix.TransformVector(v1);
-	const FVector WorldV2 = ModelMatrix.TransformVector(v2);
-	const FVector WorldV3 = ModelMatrix.TransformVector(v3);
-	const FVector WorldV4 = ModelMatrix.TransformVector(v4);
-	const FVector WorldV5 = ModelMatrix.TransformVector(v5);
-	const FVector WorldV6 = ModelMatrix.TransformVector(v6);
-	const FVector WorldV7 = ModelMatrix.TransformVector(v7);
+	const FVector WorldV0 = ModelMatrix.TransformVector4(FVector4(v0, 1));
+	const FVector WorldV1 = ModelMatrix.TransformVector4(FVector4(v1, 1));
+	const FVector WorldV2 = ModelMatrix.TransformVector4(FVector4(v2, 1));
+	const FVector WorldV3 = ModelMatrix.TransformVector4(FVector4(v3, 1));
+	const FVector WorldV4 = ModelMatrix.TransformVector4(FVector4(v4, 1));
+	const FVector WorldV5 = ModelMatrix.TransformVector4(FVector4(v5, 1));
+	const FVector WorldV6 = ModelMatrix.TransformVector4(FVector4(v6, 1));
+	const FVector WorldV7 = ModelMatrix.TransformVector4(FVector4(v7, 1));
 
 	FVector NewMin = FVector::ZeroVector;
 	FVector NewMax = FVector::ZeroVector;
