@@ -345,6 +345,12 @@
     <ClCompile Include="Source\Resource\Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Object\Actor\SubUVParticle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Object\SubUVComponent\UParticleSubUVComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Debug\DebugDrawManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -708,9 +714,6 @@
     <ClInclude Include="Source\Object\PrimitiveComponent\GizmoComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Object\Assets\MeshAsset.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Resource\DirectResource\ConstantBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -753,6 +756,15 @@
     <ClInclude Include="Source\Resource\Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Interfaces\GizmoInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Object\Actor\SubUVParticle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Object\SubUVComponent\UParticleSubUVComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Debug\DebugDrawManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -767,5 +779,13 @@
     <Image Include="font_atlas.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="font_atlas.dds" />
+    <Image Include="Pretendard_Kor.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="font_atlas.txt" />
+    <Text Include="Pretendard_Kor.txt" />
   </ItemGroup>
 </Project>

@@ -127,8 +127,8 @@ void FEditorManager::LateTick(float DeltaTime)
             AActor* PickedActor = PickedComponent->GetOwner();
 
             if (PickedActor == nullptr) return;
-            if (PickedComponent->GetOwner()->IsGizmoActor() == false)
-            {
+            /*if (PickedComponent->GetOwner()->IsGizmoActor() == false)
+            {*/
                 if (PickedActor == FEditorManager::Get().GetSelectedActor())
                 {
                     FEditorManager::Get().SelectActor(nullptr);   
@@ -137,7 +137,7 @@ void FEditorManager::LateTick(float DeltaTime)
                 {
                     FEditorManager::Get().SelectActor(PickedActor);
                 }
-            }
+            //}
         }
         UE_LOG("Pick - UUID: %d", UUID);
     }

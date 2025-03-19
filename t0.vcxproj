@@ -178,6 +178,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\Math\Transform.cpp" />
+    <ClCompile Include="Source\Debug\DebugDrawManager.cpp" />
     <ClCompile Include="Source\Object\Actor\SubUVParticle.cpp" />
     <ClCompile Include="Source\Object\Assets\MeshAsset.cpp" />
     <ClCompile Include="Source\Object\PrimitiveComponent\GizmoComponent.cpp" />
@@ -255,7 +256,6 @@
     <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Source\FontAtlas.cpp" />
-    <ClCompile Include="Source\Debug\DebugDrawManager.cpp" />
     <ClCompile Include="WorldGrid.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -309,6 +309,7 @@
   <ItemGroup>
     <ClInclude Include="Source\Core\Delegates\Delegate.h" />
     <ClInclude Include="Source\Core\Delegates\DelegateCombination.h" />
+    <ClInclude Include="Source\Debug\DebugDrawManager.h" />
     <ClInclude Include="Source\Object\PrimitiveComponent\GizmoComponent.h" />
     <ClInclude Include="Source\Core\Rendering\FViewMode.h" />
     <ClInclude Include="Source\Debug\EngineShowFlags.h" />
@@ -428,9 +429,7 @@
     <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imstb_truetype.h" />
     <ClInclude Include="Source\ThirdParty\SimpleJSON\include\SimpleJSON\Json.hpp" />
     <ClInclude Include="Source\FontAtlas.h" />
-    <ClInclude Include="Source\Debug\DebugDrawManager.h" />
     <ClCompile Include="Source\Object\SubUVComponent\UParticleSubUVComponent.cpp" />
-    <ClCompile Include="Source\Debug\UDebugDrawManager.cpp" />
     <FxCompile Include="Shaders\SubUV_PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
@@ -441,7 +440,6 @@
     <ClInclude Include="Source\Core\Interfaces\GizmoInterface.h" />
     <ClInclude Include="Source\Object\Actor\SubUVParticle.h" />
     <ClInclude Include="Source\Object\SubUVComponent\UParticleSubUVComponent.h" />
-    <ClInclude Include="Source\Debug\UDebugDrawManager.h" />
     <ClInclude Include="WorldGrid.h" />
   </ItemGroup>
   <ItemGroup>
