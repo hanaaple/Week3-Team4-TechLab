@@ -159,7 +159,11 @@ UCubeComp::UCubeComp() : Super()
 {
 	SetMesh("Cube");
 	bCanBeRendered = true;
-	BoxExtent = FVector(1.0f, 1.0f, 1.0f);
+	Max = GetMesh()->GetVertexBuffer()->GetMax();
+	Min = GetMesh()->GetVertexBuffer()->GetMin();
+
+	FVector extent = (Max - Min) / 2;
+	SetBoxExtent(extent);
 }
 
 void UCubeComp::SetBoxExtent(const FVector& InExtent)
@@ -177,7 +181,13 @@ USphereComp::USphereComp() : Super()
 {
 	SetMesh("Sphere");
 	bCanBeRendered = true;
-	Radius = 1.0f;
+	Max = GetMesh()->GetVertexBuffer()->GetMax();
+	Min = GetMesh()->GetVertexBuffer()->GetMin();
+
+	FVector extent = (Max - Min) / 2;
+	float radius = extent.Length();
+
+	SetSphereRadius(radius);
 }
 
 void USphereComp::SetSphereRadius(float InSphereRadius)

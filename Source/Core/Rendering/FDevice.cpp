@@ -1,6 +1,7 @@
 #include "FDevice.h"
 
 #include "DirectXTK/SimpleMath.h"
+#include <Debug/DebugConsole.h>
 
 void FDevice::Init(HWND _hwnd)
 {
@@ -180,7 +181,17 @@ void FDevice::CreateDepthStencilBuffer()
 	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	dsvDesc.Texture2D.MipSlice = 0;
     
+	if (DepthStencilBuffer == nullptr)
+	{
+		UE_LOG("DepthStencilBuffer is nullptr");
+	}
+
 	result = Device->CreateDepthStencilView(DepthStencilBuffer, &dsvDesc, &DepthStencilView);
+
+	if (FAILED(result))
+	{
+		UE_LOG("Failed to create DepthStencilView");
+	}
 }
 
 void FDevice::ReleaseFrameBuffer()
@@ -214,16 +225,14 @@ void FDevice::ReleaseDepthStencilBuffer()
 
 void FDevice::Prepare() const
 {
+	// Rasterization할 Viewport를 설정 
+	FDevice::Get().GetDeviceContext()->RSSetViewports(1, &ViewportInfo);
+	FDevice::Get().GetDeviceContext()->OMSetRenderTargets(1, &FrameBufferRTV, DepthStencilView);    // DepthStencil 뷰 및 스왑버퍼 세팅
 	// 스왑버퍼랑 뎁스스텐실 화면 지우기
 	FDevice::Get().GetDeviceContext()->ClearRenderTargetView(FrameBufferRTV, ClearColor); 
 	FDevice::Get().GetDeviceContext()->ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	// FDevice::Get().GetDeviceContext()->
     
 	// InputAssembler의 Vertex 해석 방식을 설정
-
-	// Rasterization할 Viewport를 설정 
-	FDevice::Get().GetDeviceContext()->RSSetViewports(1, &ViewportInfo);
-	FDevice::Get().GetDeviceContext()->OMSetRenderTargets(1, &FrameBufferRTV, DepthStencilView);    // DepthStencil 뷰 및 스왑버퍼 세팅
-	
 }
 

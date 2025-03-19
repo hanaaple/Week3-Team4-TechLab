@@ -5,6 +5,7 @@
 #include "Core/Math/Vector.h"
 #include "Core/Math/Transform.h"
 #include <Object/Gizmo/GizmoActor.h>
+#include "Debug/DebugDrawManager.h"
 
 void FEditorManager::SelectActor(AActor* NewActor)
 {
@@ -29,6 +30,10 @@ void FEditorManager::SelectActor(AActor* NewActor)
         SelectedActor->Pick();
 		FTransform newActorTransform = NewActor->GetActorTransform();
 		Gizmo->SetActorTransform(newActorTransform);
+		FVector worldMin, worldMax;
+		worldMax = SelectedActor->GetActorBoundsMax();
+		worldMin = SelectedActor->GetActorBoundsMin();
+		UDebugDrawManager::Get().DrawBox(worldMin, worldMax, FVector4::WHITE);
 	}
 }
 

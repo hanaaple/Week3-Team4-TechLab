@@ -19,6 +19,12 @@ public:
 	static std::shared_ptr<FVertexBuffer> Create(const FString& _Name, const TArray<VertexType>& _Data, bool _bIsDynamic = false)
 	{
 		std::shared_ptr<FVertexBuffer> Res = FVertexBuffer::CreateRes(_Name);
+	
+		for(const auto& Vertex : _Data)
+		{
+			Res->Min = FVector::Min(Res->Min, FVector(Vertex.X, Vertex.Y, Vertex.Z));
+			Res->Max = FVector::Max(Res->Max, FVector(Vertex.X, Vertex.Y, Vertex.Z));
+		}
 
 		Res->bIsDynamic = _bIsDynamic;
 		if (Res->bIsDynamic == false)
@@ -29,7 +35,7 @@ public:
 		{
 			Res->ResCreateDynamic(&_Data[0], sizeof(VertexType), _Data.Num());
 		}
-
+		 
 		return Res;
 	}
 
@@ -45,6 +51,8 @@ public:
 	FVector GetMin() const { return Min; }
 	FVector GetMax() const { return Max; }
 	
+	void SetVertexCount(uint32 InVertexCount) { VertexCount = InVertexCount; }
+
 private:
 	
 	void ResCreate(const void* _Data, size_t _VertexSize, size_t _VertexCount);
@@ -58,6 +66,6 @@ private:
 	
 	const void* CPUDataPtr = nullptr; //동적 업데이트용 포인터
 
-	FVector Min;
-	FVector Max;
+	FVector Min = D3D11_FLOAT32_MAX;
+	FVector Max = -D3D11_FLOAT32_MAX;
 };
