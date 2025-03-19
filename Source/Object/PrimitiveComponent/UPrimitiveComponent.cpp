@@ -163,6 +163,17 @@ void UPrimitiveComponent::UpdateBounds()
 	Super::UpdateBounds();
 }
 
+void UPrimitiveComponent::SetBoxExtent(const FVector& InExtent)
+{
+	BoxExtent = InExtent;
+	UpdateBounds();
+}
+
+FBoxSphereBounds UPrimitiveComponent::CalcBounds(const FTransform& LocalToWorld) const
+{
+	return FBoxSphereBounds(FBox(-BoxExtent, BoxExtent)).TransformBy(LocalToWorld);
+}
+
 UCubeComp::UCubeComp() : Super()
 {
 	SetMesh("Cube");
@@ -172,17 +183,6 @@ UCubeComp::UCubeComp() : Super()
 
 	FVector extent = (Max - Min) / 2;
 	SetBoxExtent(extent);
-}
-
-void UCubeComp::SetBoxExtent(const FVector& InExtent)
-{
-	BoxExtent = InExtent;
-	UpdateBounds();
-}
-
-FBoxSphereBounds UCubeComp::CalcBounds(const FTransform& LocalToWorld) const
-{
-	return FBoxSphereBounds(FBox(-BoxExtent, BoxExtent)).TransformBy(LocalToWorld);
 }
 
 USphereComp::USphereComp() : Super()

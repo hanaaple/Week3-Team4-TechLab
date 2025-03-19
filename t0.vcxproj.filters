@@ -351,6 +351,18 @@
     <ClCompile Include="Source\Debug\DebugDrawManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Object\Light\LightComponentBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Object\Light\LightComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Object\Light\SpotLightComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Object\Actor\SpotLight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\ShaderW0.hlsl">
@@ -762,6 +774,21 @@
     <ClInclude Include="Source\Debug\DebugDrawManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Debug\UDebugDrawManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Object\Light\LightComponentBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Object\Light\LightComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Object\Light\SpotLightComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Object\Actor\SpotLight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
@@ -781,5 +808,8 @@
   <ItemGroup>
     <Text Include="font_atlas.txt" />
     <Text Include="Pretendard_Kor.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="t0.natvis" />
   </ItemGroup>
 </Project>

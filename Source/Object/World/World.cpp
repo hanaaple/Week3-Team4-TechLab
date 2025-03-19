@@ -112,14 +112,18 @@ void UWorld::Render()
 
 	RenderMainTexture(*Renderer);
 
+	FLineBatchManager::Get().Render();
 
 	AActor* SelectedActor = FEditorManager::Get().GetSelectedActor();
 	if (SelectedActor != nullptr)
 	{
-		FVector worldMin, worldMax;
-		worldMax = SelectedActor->GetActorBoundsMax();
-		worldMin = SelectedActor->GetActorBoundsMin();
-		UDebugDrawManager::Get().DrawBox(worldMin, worldMax, FVector4::WHITE);
+		FVector localMax = SelectedActor->GetActorLocalBoundsMax();
+		FVector localMin = SelectedActor->GetActorLocalBoundsMin();
+
+		FVector WorldMax = SelectedActor->GetActorWorldBoundsMax();
+		FVector WorldMin = SelectedActor->GetActorWorldBoundsMin();
+
+		UDebugDrawManager::Get().DrawBoundingBox(localMax, localMin, SelectedActor->GetActorTransform(), FVector4::RED);
 	}
 	UDebugDrawManager::Get().Render();
 
@@ -164,10 +168,10 @@ void UWorld::RenderPickingTexture(URenderer& Renderer)
 
 void UWorld::RenderMainTexture(URenderer& Renderer)
 {
-	FDevice::Get().Prepare();
 	// Renderer.Prepare();
 	// Renderer.PrepareShader();
 	// Renderer.PrepareMain();
+
 	//Renderer.PrepareMainShader();
 	for (auto& RenderComponent : RenderComponents)
 	{

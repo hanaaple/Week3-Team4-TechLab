@@ -21,6 +21,8 @@
 #include "Static/FEditorManager.h"
 #include "Object/World/World.h"
 #include "Object/Gizmo/GizmoHandle.h"
+#include "Object/Actor/SpotLight.h"
+#include "Object/Light/SpotLightComponent.h"
 #include <Core/Input/PlayerInput.h>
 
 
@@ -164,7 +166,7 @@ void UI::RenderMemoryUsage()
 
 void UI::RenderPrimitiveSelection()
 {
-    const char* items[] = { "Sphere", "Cube", "Cylinder", "Cone" };
+    const char* items[] = { "Sphere", "Cube", "Cylinder", "Cone", "SpotLight"};
 
     ImGui::Combo("Primitive", &currentItem, items, IM_ARRAYSIZE(items));
 
@@ -185,10 +187,14 @@ void UI::RenderPrimitiveSelection()
             {
                 World->SpawnActor<ACylinder>();
             }
-            else if (strcmp(items[currentItem], "Cone") == 0)
-            {
-                World->SpawnActor<ACone>();
-            }
+			else if (strcmp(items[currentItem], "Cone") == 0)
+			{
+				World->SpawnActor<ACone>();
+			}
+			else if (strcmp(items[currentItem], "SpotLight") == 0)
+			{
+				World->SpawnActor<ASpotLight>();
+			}
             //else if (strcmp(items[currentItem], "Triangle") == 0)
             //{
             //    Actor->AddComponent<UTriangleComp>();   
@@ -380,6 +386,69 @@ void UI::RenderPropertyWindow()
 				ImGui::Text("GizmoType: Scale");
 			}
 		}*/
+
+		// SpotLight 속성 표시
+		ASpotLight* spotLight = dynamic_cast<ASpotLight*>(selectedActor);
+		if (spotLight != nullptr)
+		{
+			ImGui::Separator();
+			ImGui::Text("SpotLight Properties");
+
+			// SpotLightComponent 가져오기
+			USpotLightComponent* spotLightComp = dynamic_cast<USpotLightComponent*>(spotLight->GetRootComponent());
+			if (spotLightComp != nullptr)
+			{
+				// 조명 색상
+				/*FVector4 lightColor = spotLightComp->GetLightColor();
+				float color[4] = { lightColor.X, lightColor.Y, lightColor.Z, lightColor.W };
+				if (ImGui::ColorEdit4("Light Color", color))
+				{
+					spotLightComp->SetLightColor(FVector4(color[0], color[1], color[2], color[3]));
+				}*/
+
+				// 조명 강도
+				/*float intensity = spotLightComp->GetIntensity();
+				if (ImGui::DragFloat("Intensity", &intensity, 0.1f, 0.0f, 100.0f))
+				{
+					spotLightComp->SetIntensity(intensity);
+				}*/
+
+				// 감쇠 반경
+				float attenRadius = spotLightComp->GetAttenuationRadius();
+				if (ImGui::DragFloat("Attenuation Radius", &attenRadius, 1.0f, 1.0f, 100.0f))
+				{
+					spotLightComp->SetAttenuationRadius(attenRadius);
+				}
+
+				// 내부 원뿔 각도 (라디안에서 도로 변환)
+				/*float innerAngleDegrees = spotLightComp->GetInnerConeAngle() * (180.0f / PI);
+				if (ImGui::SliderFloat("Inner Cone Angle", &innerAngleDegrees, 0.0f, 90.0f))
+				{
+					spotLightComp->SetInnerConeAngle(innerAngleDegrees * (PI / 180.0f));
+				}*/
+
+				// 외부 원뿔 각도 (라디안에서 도로 변환)
+				float outerAngleDegrees = spotLightComp->GetOuterConeAngle() * (180.0f / PI);
+				if (ImGui::SliderFloat("Outer Cone Angle", &outerAngleDegrees, 0.0f, 120.0f))
+				{
+					spotLightComp->SetOuterConeAngle(outerAngleDegrees * (PI / 180.0f));
+				}
+
+				// 그림자 캐스팅 여부
+				/*bool castShadows = spotLightComp->GetCastShadows();
+				if (ImGui::Checkbox("Cast Shadows", &castShadows))
+				{
+					spotLightComp->SetCastShadows(castShadows);
+				}*/
+
+				// 조명 활성화 여부
+				/*bool lightEnabled = spotLightComp->IsLightEnabled();
+				if (ImGui::Checkbox("Light Enabled", &lightEnabled))
+				{
+					spotLightComp->SetLightEnabled(lightEnabled);
+				}*/
+			}
+		}
     }
     ImGui::End();
 }

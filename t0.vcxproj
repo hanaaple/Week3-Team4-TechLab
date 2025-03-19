@@ -180,6 +180,7 @@
     <ClCompile Include="Source\Core\Math\Transform.cpp" />
     <ClCompile Include="Source\Debug\DebugDrawManager.cpp" />
     <ClCompile Include="Source\Object\Actor\SubUVParticle.cpp" />
+    <ClCompile Include="Source\Object\Actor\WorldGrid.cpp" />
     <ClCompile Include="Source\Object\Assets\MeshAsset.cpp" />
     <ClCompile Include="Source\Object\PrimitiveComponent\GizmoComponent.cpp" />
     <ClCompile Include="Source\Core\Rendering\FViewMode.cpp" />
@@ -255,7 +256,10 @@
     <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Source\FontAtlas.cpp" />
-    <ClCompile Include="WorldGrid.cpp" />
+    <ClCompile Include="Source\Object\Light\LightComponentBase.cpp" />
+    <ClCompile Include="Source\Object\Light\LightComponent.cpp" />
+    <ClCompile Include="Source\Object\Light\SpotLightComponent.cpp" />
+    <ClCompile Include="Source\Object\Actor\SpotLight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\Font_VS.hlsl">
@@ -309,6 +313,7 @@
     <ClInclude Include="Source\Core\Delegates\Delegate.h" />
     <ClInclude Include="Source\Core\Delegates\DelegateCombination.h" />
     <ClInclude Include="Source\Debug\DebugDrawManager.h" />
+    <ClInclude Include="Source\Object\Actor\WorldGrid.h" />
     <ClInclude Include="Source\Object\PrimitiveComponent\GizmoComponent.h" />
     <ClInclude Include="Source\Core\Rendering\FViewMode.h" />
     <ClInclude Include="Source\Debug\EngineShowFlags.h" />
@@ -438,7 +443,11 @@
     <ClInclude Include="Source\Core\Interfaces\GizmoInterface.h" />
     <ClInclude Include="Source\Object\Actor\SubUVParticle.h" />
     <ClInclude Include="Source\Object\SubUVComponent\UParticleSubUVComponent.h" />
-    <ClInclude Include="WorldGrid.h" />
+    <ClInclude Include="Source\Debug\UDebugDrawManager.h" />
+    <ClInclude Include="Source\Object\Light\LightComponentBase.h" />
+    <ClInclude Include="Source\Object\Light\LightComponent.h" />
+    <ClInclude Include="Source\Object\Light\SpotLightComponent.h" />
+    <ClInclude Include="Source\Object\Actor\SpotLight.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -454,6 +463,9 @@
   <ItemGroup>
     <Text Include="font_atlas.txt" />
     <Text Include="Pretendard_Kor.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="t0.natvis" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
