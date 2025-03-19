@@ -19,6 +19,7 @@
 #include "Object/Actor/Cone.h"
 #include "Object/Actor/Cylinder.h"
 #include "Static/FEditorManager.h"
+#include "Static/FUUIDBillBoard.h"
 #include "Object/World/World.h"
 #include "Object/Gizmo/GizmoHandle.h"
 #include "Object/Actor/SpotLight.h"
@@ -510,6 +511,7 @@ void UI::RenderSceneManager()
 					//CurActor->IsHighlightValue = false;
 				CurActor = Actor;
 				FEditorManager::Get().SelectActor(CurActor);
+				FUUIDBillBoard::Get().SetTarget(CurActor);
 			}
 		}
 	}
