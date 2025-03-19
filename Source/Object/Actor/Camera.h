@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/HAL/PlatformType.h"
+#include "Core/Interfaces/GizmoInterface.h"
 #include "Core/Math/Matrix.h"
 #include "Core/Math/Transform.h"
 #include "Core/Math/Vector.h"
@@ -15,12 +16,16 @@ namespace ECameraProjectionMode
     };
 }
 
-class ACamera : public AActor
+class ACamera : public AActor, public IGizmoInterface
 {
 	DECLARE_CLASS(ACamera, AActor)
     
 public:
     ACamera();
+
+	//~ Begin IGizmoInterface
+	virtual bool IsGizmo() override { return true; }
+	//~ End IGizmoInterface
 
 private:    
     float Near;

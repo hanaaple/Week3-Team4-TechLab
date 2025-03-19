@@ -1,14 +1,20 @@
 #pragma once
+#include "Core/Interfaces/GizmoInterface.h"
 #include "object/actor/actor.h"
 #include "Object/PrimitiveComponent/GizmoComponent.h"
 
-class AGizmoActor : public AActor
+
+class AGizmoActor : public AActor, public IGizmoInterface
 {
 public:
 	AGizmoActor();
 	virtual ~AGizmoActor() = default;
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
+
+	//~ Begin IGizmoInterface
+	virtual bool IsGizmo() override { return true; }
+	//~ End IGizmoInterface
 
 	void SetSelectedAxis(EAxis InAxis) { SelectedAxis = InAxis; }
 	EAxis GetSelectedAxis() const { return SelectedAxis; }

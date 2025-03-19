@@ -5,9 +5,11 @@
 #include "Resource/DirectResource/VertexShader.h"
 #include "Resource/DirectResource/InputLayout.h"
 #include "Resource/DirectResource/BlendState.h"
+#include "Resource/DirectResource/Sampler.h"
 #include "Resource/DirectResource/Rasterizer.h"
 #include "Resource/DirectResource/DepthStencilState.h"
 #include "Resource/DirectResource/ConstantBuffer.h"
+#include "Resource/Texture.h"
 #include "Resource/Mesh.h"
 #include "Resource/Material.h"
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
@@ -26,17 +28,28 @@ void FDevice::InitResource()
 		//FInputLayout::Create("Font_VS" , VS);
 	}
 	FPixelShader::Load(L"Shaders/Font_PS.hlsl", "Font_PS", "Font_PS");
+	FPixelShader::Load(L"Shaders/SubUV_PS.hlsl", "SubUV_PS", "SubUV_PS");
 	FConstantBuffer::Create("DefaultConstantBuffer", sizeof(FConstantsComponentData));
 
 	
 	//FPixelShader::Load(L"Shaders/Font_PS.hlsl","Font_PS","Font_PS");
+	{
+		D3D11_RASTERIZER_DESC RasterizerDesc = {};
+		RasterizerDesc.FillMode = D3D11_FILL_SOLID; // 채우기 모드
+		RasterizerDesc.CullMode = D3D11_CULL_BACK;  // 백 페이스 컬링
+		RasterizerDesc.FrontCounterClockwise = FALSE;
 	
-	D3D11_RASTERIZER_DESC RasterizerDesc = {};
-	RasterizerDesc.FillMode = D3D11_FILL_SOLID; // 채우기 모드
-	RasterizerDesc.CullMode = D3D11_CULL_BACK;  // 백 페이스 컬링
-	RasterizerDesc.FrontCounterClockwise = FALSE;
-	
-	FRasterizer::Create("DefaultRasterizer", RasterizerDesc);
+		FRasterizer::Create("DefaultRasterizer", RasterizerDesc);
+	}
+
+	{
+		D3D11_RASTERIZER_DESC RasterizerDesc = {};
+		RasterizerDesc.FillMode = D3D11_FILL_WIREFRAME; // 채우기 모드
+		RasterizerDesc.CullMode = D3D11_CULL_NONE;  // 백 페이스 컬링
+		RasterizerDesc.FrontCounterClockwise = FALSE;
+
+		FRasterizer::Create("DebugRasterizer", RasterizerDesc);
+	}
 
 	{
 		D3D11_DEPTH_STENCIL_DESC DepthStencilDesc = {};
@@ -78,47 +91,33 @@ void FDevice::InitResource()
 	
 		FBlendState::Create("DefaultBlendState", blendDesc);
 	}
-	// {
-	// 	D3D11_BLEND_DESC Desc = {};
-	//
-	// 	// 이건 좀 느린데.
-	// 	// 깊이버퍼라는 것과 관련이 있습니다.
-	// 	// 나중에 함
-	// 	// Desc.AlphaToCoverageEnable
-	//
-	// 	// 랜더타겟을 세팅하는것과 관련이 있는데.
-	// 	// 랜더타겟은 한번에 8개를 세팅할수 있다.
-	// 	// 그걸 1개 이상을 세팅했을때 각기 다른 세팅을 니가 일일이 넣어줄거냐 라는 옵션입니다.
-	// 	// 안한다하면 0번째걸로 나머지 모두를 세팅한다.
-	// 	Desc.IndependentBlendEnable = false;
-	//
-	// 	// 블랜드 켤거냐.
-	// 	Desc.RenderTarget[0].BlendEnable = true;
-	//
-	// 	// 색깔 전체를 대상으로 삼겠다.
-	// 	Desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-	//
-	// 	// + 빼고 써본적이 없어요.
-	// 	Desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-	//
-	// 	// https://learn.microsoft.com/ko-kr/windows/win32/api/d3d11/ne-d3d11-d3d11_blend
-	//
-	// 	// src srcColor * src의 알파
-	// 	// 1, 0, 0(, 1) * 1.0f
-	// 	Desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA; // src팩터
-	//
-	// 	// src 1, 0, 0, 1 * (1 - src의 알파)
-	// 	Desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-	//
-	// 	// 
-	// 	Desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-	// 	Desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-	// 	Desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
-	//
-	// 	
-	// 	FBlendState::Create("DefaultBlendState", Desc);
-	// }
+
+	{
+		// Sampler state
+		D3D11_SAMPLER_DESC samplerDesc = {};
+		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.MipLODBias = 0.0f;
+		samplerDesc.MaxAnisotropy = 1;
+		samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+		samplerDesc.BorderColor[0] = 0;
+		samplerDesc.BorderColor[1] = 0;
+		samplerDesc.BorderColor[2] = 0;
+		samplerDesc.BorderColor[3] = 0;
+		samplerDesc.MinLOD = 0;
+		samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+		FSampler::Create("LinearSamplerState", samplerDesc);
+	}
 	
+	{
+		// TextureSRV
+		std::shared_ptr<FTexture> TextureImage = FTexture::Load("font_atlas.dds", "SubUVTexture");
+		TextureImage->CreateShaderResourceView();
+	}
+
 	{
 		// Blend
 		D3D11_BLEND_DESC blendDesc = {};
@@ -146,8 +145,8 @@ void FDevice::InitResource()
 		Mat->SetRasterizer("DefaultRasterizer");
 		Mat->SetBlendState("DefaultBlendState");
 		Mat->SetDepthState("DefaultDepthStencilState");
-		Mat->SetPixelShader("Simple_PS");
 		Mat->SetVertexShader("Simple_VS");
+		Mat->SetPixelShader("Simple_PS");
 	}
 
 	{
@@ -155,10 +154,28 @@ void FDevice::InitResource()
 		Mat->SetRasterizer("DefaultRasterizer");
 		Mat->SetBlendState("DefaultBlendState");
 		Mat->SetDepthState("DefaultDepthStencilState");
-		Mat->SetPixelShader("Font_PS");
 		Mat->SetVertexShader("Font_VS");
+		Mat->SetPixelShader("Font_PS");
 	}
-	
+
+	{
+		std::shared_ptr<FMaterial> Mat = FMaterial::Create("SubUVMaterial");
+		Mat->SetRasterizer("DefaultRasterizer");
+		Mat->SetBlendState("DefaultBlendState");
+		Mat->SetDepthState("DefaultDepthStencilState");
+		Mat->SetVertexShader("Font_VS");
+		Mat->SetPixelShader("SubUV_PS");
+	}
+
+	{
+		std::shared_ptr<FMaterial> Mat = FMaterial::Create("DebugMaterial");
+		Mat->SetRasterizer("DebugRasterizer");
+		Mat->SetBlendState("DefaultBlendState");
+		Mat->SetDepthState("DefaultDepthStencilState");
+		Mat->SetVertexShader("Simple_VS");
+		Mat->SetPixelShader("Simple_PS");
+	}
+
 	/// Mesh
 	{
 		TArray<FVertexSimple> vertices;

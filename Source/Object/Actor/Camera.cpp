@@ -9,8 +9,6 @@
 
 ACamera::ACamera()
 {
-    bIsGizmo = true;
-    
     Near = .1f;
     Far = 1000.f;
     FieldOfView = 45.f;
