@@ -124,7 +124,7 @@ void UWorld::Render()
 		[[maybe_unused]] FVector WorldMax = SelectedActor->GetActorWorldBoundsMax();
 		[[maybe_unused]] FVector WorldMin = SelectedActor->GetActorWorldBoundsMin();
 
-		UDebugDrawManager::Get().DrawBoundingBox(LocalMax, LocalMin, SelectedActor->GetActorTransform(), FVector4::RED);
+		UDebugDrawManager::Get().DrawBoundingBox(LocalMin, LocalMax, SelectedActor->GetActorTransform(), FVector4::RED);
 	}
 	UDebugDrawManager::Get().Render();
 
