@@ -1,5 +1,6 @@
 #include "Material.h"
 
+#include "Debug/DebugConsole.h"
 #include "Resource/DirectResource/BlendState.h"
 #include "Resource/DirectResource/DepthStencilState.h"
 #include "Resource/DirectResource/VertexShader.h"
@@ -73,9 +74,9 @@ void FMaterial::DepthStencil()
 	DepthStencilPtr->Setting();
 }
 
-void FMaterial::SetVertexShader(const FString& _Value)
+void FMaterial::SetVertexShader(const FString& InValue)
 {
-	VertexShaderPtr = FVertexShader::Find(_Value);
+	VertexShaderPtr = FVertexShader::Find(InValue);
 
 	if (nullptr == VertexShaderPtr)
 	{
@@ -83,9 +84,9 @@ void FMaterial::SetVertexShader(const FString& _Value)
 	}
 }
 
-void FMaterial::SetRasterizer(const FString& _Value)
+void FMaterial::SetRasterizer(const FString& InValue)
 {
-	RasterizerPtr = FRasterizer::Find(_Value);
+	RasterizerPtr = FRasterizer::Find(InValue);
 
 	if (nullptr == RasterizerPtr)
 	{
@@ -94,9 +95,9 @@ void FMaterial::SetRasterizer(const FString& _Value)
 	}
 }
 
-void FMaterial::SetPixelShader(const FString& _Value)
+void FMaterial::SetPixelShader(const FString& InValue)
 {
-	PixelShaderPtr = FPixelShader::Find(_Value);
+	PixelShaderPtr = FPixelShader::Find(InValue);
 
 	if (nullptr == PixelShaderPtr)
 	{
@@ -105,9 +106,9 @@ void FMaterial::SetPixelShader(const FString& _Value)
 	}
 }
 
-void FMaterial::SetBlendState(const FString& _Value)
+void FMaterial::SetBlendState(const FString& InValue)
 {
-	BlendStatePtr = FBlendState::Find(_Value);
+	BlendStatePtr = FBlendState::Find(InValue);
 
 	if (nullptr == BlendStatePtr)
 	{
@@ -116,9 +117,9 @@ void FMaterial::SetBlendState(const FString& _Value)
 	}
 }
 
-void FMaterial::SetDepthState(const FString& _Value)
+void FMaterial::SetDepthState(const FString& InValue)
 {
-	DepthStencilPtr = FDepthStencilState::Find(_Value);
+	DepthStencilPtr = FDepthStencilState::Find(InValue);
 
 	if (nullptr == DepthStencilPtr)
 	{

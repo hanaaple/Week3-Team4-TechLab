@@ -3,7 +3,7 @@
 
 #include "Core/Container/String.h"
 #include "Core/Container/Map.h"
-#include "Debug/DebugConsole.h"
+
 
 template <typename ResourcesType>
 class FResource
@@ -26,11 +26,11 @@ public:
 		return (pResult != nullptr) ? *pResult : nullptr;
 	}
 
-	static void Release(FString _Name)
+	static void Release(FString InName)
 	{
 		std::lock_guard<std::mutex> Lock(NameMutex);
 
-		NameRes.Remove(_Name);
+		NameRes.Remove(InName);
 		//auto pResult = NameRes.Find(_Name);
 
 	/*	if (pResult == nullptr)

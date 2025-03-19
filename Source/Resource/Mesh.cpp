@@ -1,15 +1,7 @@
 #include "Mesh.h"
-
 #include "Core/Engine.h"
-#include  "Core/Rendering/FDevice.h"
+#include "Core/Rendering/FDevice.h"
 
-FMesh::FMesh()
-{
-}
-
-FMesh::~FMesh()
-{
-}
 
 void FMesh::Setting()
 {

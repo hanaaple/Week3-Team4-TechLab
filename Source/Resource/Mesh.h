@@ -14,9 +14,7 @@
 class FMesh : public FResource<FMesh>
 {
 public:
-
-	FMesh();
-	virtual ~FMesh() override;
+	FMesh() = default;
 
 	static std::shared_ptr<FMesh> Create(const FString& InName, D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST)
 	{
@@ -42,12 +40,14 @@ public:
 		return Res;
 	}
 
-	static std::shared_ptr<FMesh> Create(const FString& _Name, std::shared_ptr<class FVertexBuffer> _Vtx, std::shared_ptr<FIndexBuffer> _Idx,
-		D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST)
+	static std::shared_ptr<FMesh> Create(
+		const FString& InName, std::shared_ptr<class FVertexBuffer> InVertex, std::shared_ptr<FIndexBuffer> InIndex,
+		D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST
+	)
 	{
-		std::shared_ptr<FMesh> Res = CreateRes(_Name);
-		Res->VertexBuffer = _Vtx;
-		Res->IndexBuffer = _Idx;
+		std::shared_ptr<FMesh> Res = CreateRes(InName);
+		Res->VertexBuffer = InVertex;
+		Res->IndexBuffer = InIndex;
 		Res->Topology = Topology;
 
 		if (nullptr == Res->VertexBuffer
