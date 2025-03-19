@@ -207,7 +207,7 @@ void AGizmoActor::DoTransform(FTransform& AT, FVector Result, AActor* Actor)
  			AT.RotatePitch(Result.X);
  			break;
  		case EGizmoType::Scale:
- 			AT.AddScale({ Result.X * .1f, 0, AP.Z * .1f });
+ 			AT.AddScale({ Result.X * .01f, 0, 0 });
  			break;
  		}
  	}
@@ -222,7 +222,7 @@ void AGizmoActor::DoTransform(FTransform& AT, FVector Result, AActor* Actor)
  			AT.RotateRoll(Result.Y);
  			break;
  		case EGizmoType::Scale:
- 			AT.AddScale({ 0, Result.Y * .1f, 0 });
+ 			AT.AddScale({ 0, Result.Y * .01f, 0 });
  			break;
  		}
  	}
@@ -237,7 +237,7 @@ void AGizmoActor::DoTransform(FTransform& AT, FVector Result, AActor* Actor)
  			AT.RotatePitch(-Result.Z);
  			break;
  		case EGizmoType::Scale:
- 			AT.AddScale({0, 0, Result.Z * .1f });
+ 			AT.AddScale({0, 0, Result.Z * .01f });
  			break;
  		}
  	}

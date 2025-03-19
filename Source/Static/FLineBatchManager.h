@@ -52,20 +52,6 @@ public:
 	void Render();
 
 private:
-	// 
-	// // GPU 렌더링을 위한 버퍼
-	// ID3D11Buffer* LineVertexBuffer = nullptr;
-	// ID3D11Buffer* LineIndexBuffer = nullptr;
-	// ID3D11Buffer* LineConstantBuffer = nullptr;                 // 쉐이더에 데이터를 전달하기 위한 상수 버퍼
-	//
-	//
-	// // 라인 렌더링 전용 쉐이더 리소스
-	// ID3D11VertexShader* LineVertexShader = nullptr;
-	// ID3D11PixelShader* LinePixelShader = nullptr;
-	// ID3D11InputLayout* LineInputLayout = nullptr;
-	//
-	// // 라인 렌더링 전용 상태
-	// D3D11_PRIMITIVE_TOPOLOGY LinePrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
 
 	// 라인 렌더링을 위한 특수 상태
 	ID3D11RasterizerState* LineRasterizerState = nullptr; // 종종 다른 컬링 방식 필요

@@ -121,76 +121,8 @@ void FLineBatchManager::Render()
 	if (VertexBuffer.Num() == 0)
 		return;
 
-
-	//Prepare
-	//ID3D11DeviceContext* DeviceContext = FDevice::Get().GetDeviceContext();
-	
-
-
-	// 버텍스 버퍼 업데이트
-	// D3D11_MAPPED_SUBRESOURCE mappedResource;
-	// DeviceContext->Map(LineVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-	// memcpy(mappedResource.pData, VertexBuffer.GetData(), sizeof(FLineVertexSimple) * VertexBuffer.Num());
-	// DeviceContext->Unmap(LineVertexBuffer, 0);
-	//
-	// // 인덱스 버퍼 업데이트
-	// DeviceContext->Map(LineIndexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-	// memcpy(mappedResource.pData, IndexBuffer.GetData(), sizeof(uint32) * IndexBuffer.Num());
-	// DeviceContext->Unmap(LineIndexBuffer, 0);
-
-	// 파이프라인 상태 설정
-	// UINT stride = sizeof(FLineVertexSimple);
-	// UINT offset = 0;
-	//
-	// // 기본 셰이더랑 InputLayout을 설정
-	//
-	// DeviceContext->IASetVertexBuffers(0, 1, &LineVertexBuffer, &stride, &offset);
-	// DeviceContext->IASetIndexBuffer(LineIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-	// DeviceContext->IASetPrimitiveTopology(LinePrimitiveTopology);
-
-	//
-	//
-	// DeviceContext->VSSetShader(LineVertexShader, nullptr, 0);
-	// DeviceContext->PSSetShader(LinePixelShader, nullptr, 0);
-	// DeviceContext->IASetInputLayout(LineInputLayout);
-
-	//FLineBatchManager* ptr = this;
-
-	//FLineVertexSimple* VertexBufferptr = &this->VertexBuffer[0];
-	//TArray<FLineVertexSimple>* Arrayptr = &this->VertexBuffer;
-
-
-
-
 	LineConstantInfo.ViewProjectionMatrix = FMatrix::Transpose(UEngine::Get().GetWorld()->GetCamera()->GetViewProjectionMatrix());
 
-	// // 버텍스 쉐이더에 상수 버퍼를 설정
-	// if (LineConstantBuffer)
-	// {
-	// 	DeviceContext->VSSetConstantBuffers(0, 1, &LineConstantBuffer);
-	//
-	//
-	// 	D3D11_MAPPED_SUBRESOURCE ConstantBufferMSR;
-	//
-	// 	FLineConstantInfo Constants; 
-	//
-	// 	URenderer* Renderer = UEngine::Get().GetRenderer();
-	//
-	// 	
-	//
-	//
-	// 	// D3D11_MAP_WRITE_DISCARD는 이전 내용을 무시하고 새로운 데이터로 덮어쓰기 위해 사용
-	// 	DeviceContext->Map(LineConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &ConstantBufferMSR);
-	// 	{
-	// 		memcpy(ConstantBufferMSR.pData, &Constants, sizeof(FLineConstantInfo));
-	// 	}
-	// 	DeviceContext->Unmap(LineConstantBuffer, 0);
-	// }
-	//
-	//
-	//
-	//
-	// DeviceContext->DrawIndexed((UINT)IndexBuffer.Num(), 0, 0);
 
 	RenderResourceCollection.Render();
 
