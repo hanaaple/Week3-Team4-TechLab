@@ -126,10 +126,12 @@ void FEditorManager::LateTick(float DeltaTime)
 			assert(PickedActor);
 
 			// if (GetOwner()->Implements<IGizmoInterface>() == false) // TODO: RTTI 개선하면 사용
-			//if (!dynamic_cast<IGizmoInterface*>(PickedActor) and SelectedActor->IsA<AGizmoActor>() == true)
-			
+			if (!dynamic_cast<IGizmoInterface*>(PickedActor))
+			{
 				// PickedActor를 한번 더 클릭하면 UnPicked
-			SelectActor(PickedActor);
+				SelectActor(PickedActor);
+			}
+				
 			
 			UE_LOG("Pick - UUID: %d", UUID);
 
@@ -140,48 +142,48 @@ void FEditorManager::LateTick(float DeltaTime)
 		}
 	}
 
-	if (APlayerInput::Get().GetKeyPress(EKeyCode::LButton))
-	{
-		if (SelectedActor != nullptr)
-		{
-			if (AGizmoActor* Gizmo = Cast<AGizmoActor>(SelectedActor))
-			{
-				//Gizmo->SetSelectedAxis(ESelectedAxis::Y);
+	//if (APlayerInput::Get().GetKeyPress(EKeyCode::LButton))
+	//{
+	//	if (SelectedActor != nullptr)
+	//	{
+	//		if (AGizmoActor* Gizmo = Cast<AGizmoActor>(SelectedActor))
+	//		{
+	//			//Gizmo->SetSelectedAxis(ESelectedAxis::Y);
 
 
-				//FVector MousePos = APlayerInput::Get().GetMouseScreenDeltaPos();
+	//			//FVector MousePos = APlayerInput::Get().GetMouseScreenDeltaPos();
 
-				//FVector Dir = FVector{ 0.0f, MousePos.X, MousePos.Y } *0.1f;
+	//			//FVector Dir = FVector{ 0.0f, MousePos.X, MousePos.Y } *0.1f;
 
-				//Gizmo->AddActorLocalOffset(Dir);
+	//			//Gizmo->AddActorLocalOffset(Dir);
 
 
 
-				//if (Gizmo->GetSelectedAxis() != ESelectedAxis::None) return;
-				//UCylinderComp* CylinderComp = static_cast<UCylinderComp*>(PickedComponent);
-				//FVector4 CompColor = CylinderComp->GetCustomColor();
-				//if (1.0f - FMath::Abs(CompColor.X) < KINDA_SMALL_NUMBER) // Red - X축
-				//{
-				//    Gizmo->SetSelectedAxis(ESelectedAxis::X);
-				//}
-				//else if (1.0f - FMath::Abs(CompColor.Y) < KINDA_SMALL_NUMBER) // Green - Y축
-				//{
-				//    Gizmo->SetSelectedAxis(ESelectedAxis::Y);
-				//}
-				//else  // Blue - Z축
-				//{
-				//    Gizmo->SetSelectedAxis(ESelectedAxis::Z);
-				//}
-			}
-		}
-	}
-	else
-	{
-		// if (AGizmoHandle* Handle = FEditorManager::Get().GetGizmoHandle())
-		// {
-		//     Handle->SetSelectedAxis(ESelectedAxis::None);
-		// }
-	}
+	//			//if (Gizmo->GetSelectedAxis() != ESelectedAxis::None) return;
+	//			//UCylinderComp* CylinderComp = static_cast<UCylinderComp*>(PickedComponent);
+	//			//FVector4 CompColor = CylinderComp->GetCustomColor();
+	//			//if (1.0f - FMath::Abs(CompColor.X) < KINDA_SMALL_NUMBER) // Red - X축
+	//			//{
+	//			//    Gizmo->SetSelectedAxis(ESelectedAxis::X);
+	//			//}
+	//			//else if (1.0f - FMath::Abs(CompColor.Y) < KINDA_SMALL_NUMBER) // Green - Y축
+	//			//{
+	//			//    Gizmo->SetSelectedAxis(ESelectedAxis::Y);
+	//			//}
+	//			//else  // Blue - Z축
+	//			//{
+	//			//    Gizmo->SetSelectedAxis(ESelectedAxis::Z);
+	//			//}
+	//		}
+	//	}
+	//}
+	//else
+	//{
+	//	// if (AGizmoHandle* Handle = FEditorManager::Get().GetGizmoHandle())
+	//	// {
+	//	//     Handle->SetSelectedAxis(ESelectedAxis::None);
+	//	// }
+	//}
 		 
 }
 

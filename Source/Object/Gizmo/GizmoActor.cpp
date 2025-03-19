@@ -17,7 +17,7 @@ AGizmoActor::AGizmoActor() : AActor()
 	ZGizmo->SetRelativeTransform({
 		FVector(0.0f, 0.0f, 0.0f),
 		FVector(0.0f, 0.0f, 0.0f),
-		FVector(1.0f)
+		FVector(0.5f)
 	});
 	ZGizmo->SetCustomColor(FVector4::BLUE * 0.75f);
 	ZGizmo->Axis = ESelectedAxis::Z;
@@ -28,7 +28,7 @@ AGizmoActor::AGizmoActor() : AActor()
 	YGizmo->SetRelativeTransform({
 		FVector(0.0f, 0.0f, 0.0f),
 		FVector(90.0f, 0.0f, 0.0f),
-		FVector(1.0f)
+		FVector(0.5f)
 	});
 
 	YGizmo->SetCustomColor(FVector4::GREEN * 0.75f);
@@ -42,7 +42,7 @@ AGizmoActor::AGizmoActor() : AActor()
 	XGizmo->SetRelativeTransform({
 		FVector(0.0f, 0.0f, 0.0f),
 		FVector(0, 90, 0),
-		FVector(1.0f)
+		FVector(0.5f)
 	});
 	XGizmo->SetCustomColor(FVector4::RED * 0.757f);
 	GizmoComponents.Add(ESelectedAxis::X, XGizmo);
@@ -55,7 +55,7 @@ AGizmoActor::AGizmoActor() : AActor()
 	Comp->SetRelativeTransform({
 	FVector(0.0f, 0.0f, 0.0f),
 	FVector(0, 0, 0),
-	FVector(0.2f)
+	FVector(0.1f)
 		});
 
 	FVector4 Color = FVector4::WHITE * 0.8f;
@@ -97,6 +97,8 @@ void AGizmoActor::SetScaleByDistance()
 	// float scaleFactor = clamp(1.0f / distance, minScale, maxScale);
 
 	MyTransform.SetScale(scaleFactor, scaleFactor, scaleFactor);
+
+	SetActorTransform(MyTransform);
 }
 
 
@@ -105,9 +107,8 @@ void AGizmoActor::Tick(float DeltaTime)
 {
 	AActor::Tick(DeltaTime);
 
-	SetScaleByDistance();
 
-	if (SelectedAxis != ESelectedAxis::None and IsPicked() == true and APlayerInput::Get().GetKeyPress(EKeyCode::LButton))
+	if (SelectedAxis != ESelectedAxis::None and APlayerInput::Get().GetKeyPress(EKeyCode::LButton))
 	{
 		if (AActor* Actor = FEditorManager::Get().GetSelectedActor())
 		{
@@ -159,6 +160,8 @@ void AGizmoActor::Tick(float DeltaTime)
 
 			DoTransform(AT, Result, Actor);
 
+
+			SetActorTransform(Actor->GetActorTransform());
 		}
 	}
 	
@@ -184,6 +187,9 @@ void AGizmoActor::Tick(float DeltaTime)
 			iter.Value->OnChangedGizmoType(GizmoType);
 		}
 	}
+
+
+	SetScaleByDistance();
 }
 
 void AGizmoActor::DoTransform(FTransform& AT, FVector Result, AActor* Actor)
