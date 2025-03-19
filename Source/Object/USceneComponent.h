@@ -148,14 +148,24 @@ protected:
 
 	bool bHiddenInGame = false;
 
+public:
+	// bUsedAttachParentBound: 이 값이 true이면, 해당 컴포넌트는 부착되었을 때 부모 컴포넌트의 경계를 사용합니다.
+	// 많은 컴포넌트가 함께 부착되어 있을 때, 각각의 경계를 개별적으로 계산하는 비용을 절감할 수 있어 성능 최적화에 도움이 됩니다.
 	bool bUsedAttachParentBound = false;
 
+	// bComputeFastLocalBounds: 이 값이 true이면, 컴포넌트는 로컬 경계를 보다 빠른 방법으로 계산합니다.
+	// 정확도보다는 성능을 우선시하는 최적화 옵션으로, 계산 비용을 줄이는 대신 경계 계산의 정밀도가 다소 떨어질 수 있습니다.
+	bool bComputeFastLocalBounds = false;
 private:
 	bool bComponentToWorldUpdated = false;
-
 public:
-	FBoxSphereBounds GetLocalBounds() const;
+	virtual FBoxSphereBounds GetLocalBounds() const;
 
+	virtual FBoxSphereBounds CalcLocalBounds() const;
+
+	virtual void UpdateBounds();
+
+	virtual FBoxSphereBounds CalcBounds(const FTransform& LocalToWorld) const;
 public:
 	FBoxSphereBounds Bounds;
 	//TODO : 빌보드 컴포넌트 추가

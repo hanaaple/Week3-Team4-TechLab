@@ -22,6 +22,8 @@
 #include "Core/Config/ConfigManager.h"
 #include "Object/Gizmo/GizmoActor.h"
 
+#include "Resource/Mesh.h"
+
 
 void UWorld::InitWorld()
 {
@@ -101,10 +103,10 @@ void UWorld::Render()
 	cam->UpdateCameraMatrix();
 
 
-	if (APlayerInput::Get().GetKeyDown(EKeyCode::LButton))
-	{
-		RenderPickingTexture(*Renderer);
-	}
+	//if (APlayerInput::Get().GetKeyDown(EKeyCode::LButton))
+	//{
+	//	RenderPickingTexture(*Renderer);
+	//}
 
 	RenderMainTexture(*Renderer);
 
@@ -299,6 +301,9 @@ void UWorld::RayCasting(const FVector& MouseNDCPos)
 
 		FMatrix primWorldMat = PrimitiveComponent->GetComponentTransform().GetMatrix();
 		FRay localRay = FRay::TransformRayToLocal(worldRay, primWorldMat.Inverse());
+
+		std::shared_ptr<FMesh> CurMesh = PrimitiveComponent->GetMesh();
+		CurMesh->GetVertexBuffer();
 
 		float outT = 0.0f;
 		bool bHit = false;

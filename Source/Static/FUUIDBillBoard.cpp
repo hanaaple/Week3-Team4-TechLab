@@ -124,7 +124,7 @@ void FUUIDBillBoard::CreateKoreanQuad(const wchar_t character, float& cursorX, i
 			wchar_t secondPart = GetSecondPartOfComplex(jamo.jung);
 
 			if (firstPart) {
-				CreateKoreanConsonantVowel(firstPart, cursorX, 0.0f, 0.7f); // 아래 부분
+				CreateKoreanConsonantVowel(firstPart, cursorX, 0.0f, 0.8f); // 아래 부분
 			}
 			if (secondPart) {
 				CreateKoreanConsonantVowel(secondPart, cursorX, 0.5f, 0.3f); // 오른쪽 부분
