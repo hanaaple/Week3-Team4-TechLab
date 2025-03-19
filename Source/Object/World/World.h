@@ -39,7 +39,7 @@ public:
 	
 	void Render();
 	void RenderPickingTexture(URenderer& Renderer);
-	void DisplayPickingTexture(URenderer& Renderer);
+	//void DisplayPickingTexture(URenderer& Renderer);
 	void RenderMainTexture(URenderer& Renderer);
 
 	void ClearWorld();

@@ -116,8 +116,8 @@ void UWorld::Render()
 
 void UWorld::RenderPickingTexture(URenderer& Renderer)
 {
-	Renderer.PreparePicking();
-	Renderer.PreparePickingShader();
+	// Renderer.PreparePicking();
+	// Renderer.PreparePickingShader();
 
 	for (auto& RenderComponent : RenderComponents)
 	{
@@ -125,27 +125,30 @@ void UWorld::RenderPickingTexture(URenderer& Renderer)
 		{
 			continue;
 		}
-		uint32 UUID = RenderComponent->GetUUID();
-		RenderComponent->UpdateConstantPicking(Renderer, APicker::EncodeUUID(UUID));
+		// uint32 UUID = RenderComponent->GetUUID();
+		// RenderComponent->UpdateConstantPicking(Renderer, APicker::EncodeUUID(UUID));
 		RenderComponent->Render();
 	}
 
-	Renderer.PrepareZIgnore();
+	// Renderer.PrepareZIgnore();
 	for (auto& RenderComponent: ZIgnoreRenderComponents)
 	{
-		uint32 UUID = RenderComponent->GetUUID();
-		RenderComponent->UpdateConstantPicking(Renderer, APicker::EncodeUUID(UUID));
-		uint32 depth = RenderComponent->GetOwner()->GetDepth();
+		
 		RenderComponent->Render();
+		//MsgBoxAssert("없어진 기능입니다");
+		// uint32 UUID = RenderComponent->GetUUID();
+		// RenderComponent->UpdateConstantPicking(Renderer, APicker::EncodeUUID(UUID));
+		// uint32 depth = RenderComponent->GetOwner()->GetDepth();
+		// RenderComponent->Render();
 	}
 }
 
 void UWorld::RenderMainTexture(URenderer& Renderer)
 {
 	FDevice::Get().Prepare();
-	Renderer.Prepare();
-	Renderer.PrepareShader();
-	Renderer.PrepareMain();
+	// Renderer.Prepare();
+	// Renderer.PrepareShader();
+	// Renderer.PrepareMain();
 	//Renderer.PrepareMainShader();
 	for (auto& RenderComponent : RenderComponents)
 	{
@@ -158,7 +161,7 @@ void UWorld::RenderMainTexture(URenderer& Renderer)
 		RenderComponent->Render();
 	}
 
-	Renderer.PrepareZIgnore();
+	//Renderer.PrepareZIgnore();
 	for (auto& RenderComponent: ZIgnoreRenderComponents)
 	{
 		uint32 depth = RenderComponent->GetOwner()->GetDepth();
@@ -166,10 +169,10 @@ void UWorld::RenderMainTexture(URenderer& Renderer)
 	}
 }
 
-void UWorld::DisplayPickingTexture(URenderer& Renderer)
-{
-	Renderer.RenderPickingTexture();
-}
+// void UWorld::DisplayPickingTexture(URenderer& Renderer)
+// {
+// 	Renderer.RenderPickingTexture();
+// }
 
 void UWorld::ClearWorld()
 {
