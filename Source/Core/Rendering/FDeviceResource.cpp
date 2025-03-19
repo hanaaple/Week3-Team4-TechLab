@@ -34,13 +34,23 @@ void FDevice::InitResource()
 
 	
 	//FPixelShader::Load(L"Shaders/Font_PS.hlsl","Font_PS","Font_PS");
+	{
+		D3D11_RASTERIZER_DESC RasterizerDesc = {};
+		RasterizerDesc.FillMode = D3D11_FILL_SOLID; // 채우기 모드
+		RasterizerDesc.CullMode = D3D11_CULL_BACK;  // 백 페이스 컬링
+		RasterizerDesc.FrontCounterClockwise = FALSE;
 	
-	D3D11_RASTERIZER_DESC RasterizerDesc = {};
-	RasterizerDesc.FillMode = D3D11_FILL_SOLID; // 채우기 모드
-	RasterizerDesc.CullMode = D3D11_CULL_BACK;  // 백 페이스 컬링
-	RasterizerDesc.FrontCounterClockwise = FALSE;
-	
-	FRasterizer::Create("DefaultRasterizer", RasterizerDesc);
+		FRasterizer::Create("DefaultRasterizer", RasterizerDesc);
+	}
+
+	{
+		D3D11_RASTERIZER_DESC RasterizerDesc = {};
+		RasterizerDesc.FillMode = D3D11_FILL_WIREFRAME; // 채우기 모드
+		RasterizerDesc.CullMode = D3D11_CULL_NONE;  // 백 페이스 컬링
+		RasterizerDesc.FrontCounterClockwise = FALSE;
+
+		FRasterizer::Create("DebugRasterizer", RasterizerDesc);
+	}
 
 	{
 		D3D11_DEPTH_STENCIL_DESC DepthStencilDesc = {};
@@ -148,7 +158,16 @@ void FDevice::InitResource()
 		Mat->SetVertexShader("Font_VS");
 		Mat->SetPixelShader("SubUV_PS");
 	}
-	
+
+	{
+		std::shared_ptr<FMaterial> Mat = FMaterial::Create("DebugMaterial");
+		Mat->SetRasterizer("DebugRasterizer");
+		Mat->SetBlendState("DefaultBlendState");
+		Mat->SetDepthState("DefaultDepthStencilState");
+		Mat->SetVertexShader("Simple_VS");
+		Mat->SetPixelShader("Simple_PS");
+	}
+
 	/// Mesh
 	{
 		TArray<FVertexSimple> vertices;
