@@ -40,8 +40,6 @@ public:
 	UWorld* GetWorld() const { return World; }
 	void SetWorld(UWorld* InWorld) { World = InWorld; }
 
-	bool IsGizmoActor() const { return bIsGizmo; }
-
 private:
 	virtual void Pick();
 	virtual void UnPick();
@@ -54,7 +52,7 @@ public:
 public:
 	template<typename T>
 		requires std::derived_from<T, UActorComponent>
-	T* AddComponent(const FTransform& RelativeTransform = FTransform())
+	T* AddComponent()
 	{
 		T* ObjectInstance = FObjectFactory::ConstructObject<T>();
 		Components.Add(ObjectInstance);
@@ -72,7 +70,6 @@ public:
 				NewSceneComp->SetupAttachment(RootComponent);
 			}
 
-			NewSceneComp->SetRelativeTransform(RelativeTransform);
 		}
 
 		return ObjectInstance;
@@ -113,9 +110,7 @@ public:
 	FQuat GetActorRotationQuat() const;
 	FVector GetActorScale() const;
 
-
-	//TODO: Bounding Box
-
+public:
 	bool SetActorPosition(const FVector& InePosition);
 	bool SetActorRotation(const FVector& InRotation);
 	bool SetActorRotation(const FQuat& InQuat);
@@ -126,6 +121,8 @@ public:
 	bool SetActorScale(const FVector& InScale);
 
 	void SetActorTransform(const FTransform& InTransform);
+
+public:
 	void SetActorRelativePosition(const FVector& InPosition);
 
 	void SetActorRelativeRotation(const FVector& InRotation);
@@ -135,6 +132,7 @@ public:
 	void SetActorRelativeScale(const FVector& InScale);
 	FVector GetActorRelativeScale() const;
 
+public:
 	void AddWorldOffset(const FVector& Delta);
 	void AddActorWorldRotation(const FVector& Delta);
 	void AddActorWorldRotation(const FQuat& Delta);
@@ -148,7 +146,35 @@ public:
 	void AddActorLocalRotation(const FQuat& Delta);
 
 	void AddActorLocalTransform(const FTransform& Delta);
+public:
+	/**
+	 * 이 액터를 구성하는 모든 컴포넌트(ChildActorComponents 제외)의 경계 상자를 반환합니다.
+	 * @param bOnlyCollidingComponents		true인 경우, 충돌이 활성화된 컴포넌트들의 경계 상자만 반환합니다.
+	 * @param Origin						월드 공간에서 액터의 중심으로 설정됩니다.
+	 * @param BoxExtent						3차원 공간에서 액터 크기의 절반으로 설정됩니다.
+	 * @param bIncludeFromChildActors		true인 경우, ChildActor 컴포넌트까지 재귀적으로 포함합니다.
+	 */
+	virtual void GetActorBounds(bool bOnlyCollidingComponents, FVector& Origin, FVector& BoxExtent, bool bIncludeFromChildActors = false) const;
+	/**
+	* 이 액터 내의 모든 컴포넌트의 월드 공간 경계 상자를 반환합니다.
+	* @param bNonColliding 경계 상자에 충돌을 사용하지 않는 컴포넌트를 포함할 것인지 여부를 나타냅니다.
+	* @param bIncludeFromChildActors true이면 ChildActor 컴포넌트 내부로 재귀적으로 들어가 해당 액터들의 적절한 타입의 컴포넌트도 포함합니다.
+	*/
+	virtual FBox GetComponentsBoundingBox(bool bNonColliding = false, bool bIncludeFromChildActors = false) const;
 
+	/**
+	* 이 액터에 포함된 모든 컴포넌트들의 액터 공간 바운딩 박스를 계산합니다.
+	* 이 함수는 GetComponentsBoundingBox()보다 느립니다. 왜냐하면 컴포넌트들의 로컬 바운드가 캐시되지 않고, 이 함수가 호출될 때마다 다시 계산되기 때문입니다.
+	* @param bNonColliding 바운딩 박스에 충돌하지 않는 컴포넌트들도 포함할지 여부를 나타냅니다.
+	* @param bIncludeFromChildActors true일 경우, ChildActor 컴포넌트 내부로 재귀적으로 들어가서 해당 액터들 내의 적절한 타입의 컴포넌트들도 찾아 포함합니다.
+	*/
+	virtual FBox CalculateComponentsBoundingBoxInLocalSpace(bool bNonColliding = false, bool bIncludeFromChildActors = false) const;
+
+	// 임시
+	FVector GetActorBoundsMin() const;
+	FVector GetActorBoundsMax() const;
+
+public:
 	bool CanEverTick() const { return bCanEverTick; }
 	virtual const char* GetTypeName();
 
@@ -165,7 +191,6 @@ public:
 protected:
 	bool bCanEverTick = true;
 	USceneComponent* RootComponent = nullptr;
-	bool bIsGizmo = false;
 
 private:
 	UWorld* World = nullptr;
@@ -173,7 +198,7 @@ private:
 
 public:
 	AActor* Owner = nullptr;
-
+	TArray<AActor> Children;
 //Editor Only
 	AActor* GroupActor = nullptr;
 };

@@ -39,6 +39,11 @@ void AActor::LateTick(float DeltaTime)
 void AActor::Destroyed()
 {
 	EndPlay(EEndPlayReason::Destroyed);
+	
+	for (auto& Component : Components)
+	{
+		Component->Destroyed();
+	}
 }
 
 
@@ -140,6 +145,75 @@ void AActor::UnPick()
 		bIsPicked = false;
 		RootComponent->Pick(false);
 	}	
+}
+
+void AActor::GetActorBounds(bool bOnlyCollidingComponents, FVector& Origin, FVector& BoxExtent, bool bIncludeFromChildActors) const
+{
+	const FBox Bounds = GetComponentsBoundingBox(bOnlyCollidingComponents, bIncludeFromChildActors);
+
+	Origin = Bounds.GetCenter();
+	BoxExtent = Bounds.GetExtent();
+}
+
+FBox AActor::GetComponentsBoundingBox(bool bNonColliding, bool bIncludeFromChildActors) const
+{
+	FBox Box = FBox();
+
+	for (auto& Component : Components)
+	{
+		if (UPrimitiveComponent* PrimitiveComponent = dynamic_cast<UPrimitiveComponent*>(Component))
+		{
+			Box += PrimitiveComponent->Bounds.GetBox();
+		}
+	}
+
+	return Box;
+}
+
+FBox AActor::CalculateComponentsBoundingBoxInLocalSpace(bool bNonColliding, bool bIncludeFromChildActors) const
+{
+	FBox Box = FBox();
+	const FTransform& ActorToWorld = GetActorTransform();
+	const FTransform WorldToActor = ActorToWorld.Inverse();
+
+	for (auto& Component : Components)
+	{
+		if (UPrimitiveComponent* PrimitiveComponent = dynamic_cast<UPrimitiveComponent*>(Component))
+		{
+			const FTransform& ComponentToWorld = PrimitiveComponent->GetComponentTransform();
+			Box += PrimitiveComponent->CalcBounds(ComponentToWorld).GetBox();
+		}
+	}
+
+	return Box;
+}
+
+FVector AActor::GetActorBoundsMin() const
+{
+	for (auto& Component : Components)
+	{
+		if (USceneComponent* SceneComponent = dynamic_cast<USceneComponent*>(Component))
+		{
+			if (SceneComponent->Min != FVector::ZeroVector)
+			{
+				return GetActorTransform().TransformPosition(SceneComponent->Min);
+			}
+		}
+	}
+}
+
+FVector AActor::GetActorBoundsMax() const
+{
+	for (auto& Component : Components)
+	{
+		if (USceneComponent* SceneComponent = dynamic_cast<USceneComponent*>(Component))
+		{
+			if (SceneComponent->Max != FVector::ZeroVector)
+			{
+				return GetActorTransform().TransformPosition(SceneComponent->Max);
+			}
+		}
+	}
 }
 
 bool AActor::SetActorPosition(const FVector& InPosition)

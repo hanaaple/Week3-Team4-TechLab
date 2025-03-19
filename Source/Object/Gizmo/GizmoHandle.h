@@ -1,8 +1,9 @@
 #pragma once
 #include "Object/Actor/Actor.h"
+#include "Core/Interfaces/GizmoInterface.h"
 
 
-class AGizmoHandle : public AActor
+class AGizmoHandle : public AActor, public IGizmoInterface
 {
 	DECLARE_CLASS(AGizmoHandle, AActor)
 
@@ -14,6 +15,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	void SetScaleByDistance();
 	void SetActive(bool bActive);
+
+	//~ Begin IGizmoInterface
+	virtual bool IsGizmo() override { return true; }
+	//~ End IGizmoInterface
+
 	//void SetSelectedAxis(ESelectedAxis NewAxis) { SelectedAxis = NewAxis; }
 //	ESelectedAxis GetSelectedAxis() const { return SelectedAxis; }
 //	EGizmoType GetGizmoType() const { return GizmoType; }

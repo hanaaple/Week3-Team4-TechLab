@@ -28,6 +28,7 @@ public:// UIWindows
     void RenderSceneManager();
 	void RenderShowFlagsPanel() const;
 	void RenderViewModePanel() const;
+	void RenderGridSettings() const;
 
 private:
 	// Mouse 전용

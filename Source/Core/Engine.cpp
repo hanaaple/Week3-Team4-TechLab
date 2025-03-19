@@ -1,5 +1,6 @@
 #include "Engine.h"
 
+#include "Debug/DebugDrawManager.h"
 #include "Input/PlayerController.h"
 #include "Input/PlayerInput.h"
 #include "Math/Vector.h"
@@ -38,6 +39,15 @@ LRESULT UEngine::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_SIZE:
 		UEngine::Get().UpdateWindowSize(LOWORD(lParam), HIWORD(lParam));
 		break;
+	case WM_MOUSEWHEEL:
+	{
+		// 마우스 휠 이벤트 처리
+		short zDelta = GET_WHEEL_DELTA_WPARAM(wParam);
+		float curZoomSize = UEngine::Get().GetWorld()->GetCamera()->GetZoomSize();
+		UEngine::Get().GetWorld()->GetCamera()->SetZoomSize(curZoomSize + zDelta);
+		break;
+
+	}
 	default:
 		return DefWindowProc(hWnd, uMsg, wParam, lParam);
 	}
@@ -60,16 +70,17 @@ void UEngine::Initialize(
 
     InitWindow(InScreenWidth, InScreenHeight);
 
+	InitWorld();
 	FDevice::Get().Init(WindowHandle);
     InitRenderer();
-
-	InitWorld();
+	UDebugDrawManager::Get().Initialize();
 
 	InitializedScreenWidth = ScreenWidth;
 	InitializedScreenHeight = ScreenHeight;
     ui.Initialize(WindowHandle, FDevice::Get(), ScreenWidth, ScreenHeight);
 
 	UAssetManager::Get().RegisterAssetMetaDatas(); // 나중에 멀티쓰레드로?
+	FEditorManager::Get().Init(); // 나중에 멀티쓰레드로?
 	UE_LOG("Engine Initialized!");
 }
 
@@ -131,6 +142,8 @@ void UEngine::Run()
 		{
 			World->Tick(EngineDeltaTime);
 			World->Render();
+
+			FEditorManager::Get().LateTick(EngineDeltaTime);
 		    World->LateTick(EngineDeltaTime);
 		}
 
@@ -161,6 +174,7 @@ void UEngine::Run()
 
 void UEngine::Shutdown()
 {
+	World->OnDestroy();
 	Renderer->Release();
 	FDevice::Get().Release();
     ShutdownWindow();
@@ -210,13 +224,14 @@ void UEngine::InitRenderer()
 	// 렌더러 초기화
 	Renderer = std::make_unique<URenderer>();
 	Renderer->Create(WindowHandle);
-	Renderer->CreateShader();
-	Renderer->CreateConstantBuffer();
+	//Renderer->CreateShader();
+	//Renderer->CreateConstantBuffer();
 }
 
 void UEngine::InitWorld()
 {
     World = FObjectFactory::ConstructObject<UWorld>();
+	World->InitWorld();
 
 	World->SetCamera(World->SpawnActor<ACamera>());
 
@@ -228,7 +243,7 @@ void UEngine::InitWorld()
 	//FLineBatchManager::Get().AddLine(FVector{ 6.0f,6.0f,7.0f }, { -6.f,-6.f,-7.0f });
 	//FLineBatchManager::Get().AddLine(FVector{ 6.0f,6.0f,8.0f }, { -6.f,-6.f,-8.0f });
 
-	FLineBatchManager::Get().DrawWorldGrid(100.f,1.f);
+	FLineBatchManager::Get().DrawWorldGrid(World->GetGridSize(), World->GetGridSize() / 100.f);
 
     //// Test
     //AArrow* Arrow = World->SpawnActor<AArrow>();
@@ -261,10 +276,9 @@ void UEngine::UpdateWindowSize(uint32 InScreenWidth, uint32 InScreenHeight)
 	
 	FDevice::Get().OnUpdateWindowSize(ScreenWidth, ScreenHeight);
 
-    if(Renderer)
-    {
-        Renderer->OnUpdateWindowSize(ScreenWidth, ScreenHeight);
-    }
+	FEditorManager::Get().OnUpdateWindowSize(ScreenWidth, ScreenHeight);
+
+
 
 	if (ui.bIsInitialized)
 	{
@@ -272,10 +286,8 @@ void UEngine::UpdateWindowSize(uint32 InScreenWidth, uint32 InScreenHeight)
 	}
 	
 	FDevice::Get().OnResizeComplete();
-	if (Renderer)
-	{
-		Renderer->OnResizeComplete();
-	}
+	
+	FEditorManager::Get().OnResizeComplete();
 }
 
 UObject* UEngine::GetObjectByUUID(uint32 InUUID) const

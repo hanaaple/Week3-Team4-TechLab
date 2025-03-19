@@ -177,6 +177,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Core\Math\Transform.cpp" />
+    <ClCompile Include="Source\Debug\DebugDrawManager.cpp" />
+    <ClCompile Include="Source\Object\Actor\SubUVParticle.cpp" />
     <ClCompile Include="Source\Object\Assets\MeshAsset.cpp" />
     <ClCompile Include="Source\Object\PrimitiveComponent\GizmoComponent.cpp" />
     <ClCompile Include="Source\Core\Rendering\FViewMode.cpp" />
@@ -184,7 +187,12 @@
     <ClCompile Include="Source\Core\Math\BoxSphereBounds.cpp" />
     <ClCompile Include="Source\Object\Gizmo\GizmoActor.cpp" />
     <ClCompile Include="Source\Resource\DirectResource\ConstantBuffer.cpp" />
+    <ClCompile Include="Source\Resource\DirectResource\Sampler.cpp" />
     <ClCompile Include="Source\Resource\DirectResource\ShaderResourceBinding.cpp" />
+    <ClCompile Include="Source\Resource\Material.cpp" />
+    <ClCompile Include="Source\Resource\Mesh.cpp" />
+    <ClCompile Include="Source\Resource\RenderResourceCollection.cpp" />
+    <ClCompile Include="Source\Resource\Texture.cpp" />
     <ClCompile Include="Source\Static\FUUIDBillBoard.cpp" />
     <ClCompile Include="Source\Core\Math\Rotator.cpp" />
     <ClCompile Include="Source\Core\Config\ConfigManager.cpp" />
@@ -248,6 +256,7 @@
     <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Source\FontAtlas.cpp" />
+    <ClCompile Include="WorldGrid.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\Font_VS.hlsl">
@@ -298,14 +307,21 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Object\Assets\MeshAsset.h" />
+    <ClInclude Include="Source\Core\Delegates\Delegate.h" />
+    <ClInclude Include="Source\Core\Delegates\DelegateCombination.h" />
+    <ClInclude Include="Source\Debug\DebugDrawManager.h" />
     <ClInclude Include="Source\Object\PrimitiveComponent\GizmoComponent.h" />
     <ClInclude Include="Source\Core\Rendering\FViewMode.h" />
     <ClInclude Include="Source\Debug\EngineShowFlags.h" />
     <ClInclude Include="Source\Core\Math\BoxSphereBounds.h" />
     <ClInclude Include="Source\Object\Gizmo\GizmoActor.h" />
     <ClInclude Include="Source\Resource\DirectResource\ConstantBuffer.h" />
+    <ClInclude Include="Source\Resource\DirectResource\Sampler.h" />
     <ClInclude Include="Source\Resource\DirectResource\ShaderResourceBinding.h" />
+    <ClInclude Include="Source\Resource\Material.h" />
+    <ClInclude Include="Source\Resource\Mesh.h" />
+    <ClInclude Include="Source\Resource\RenderResourceCollection.h" />
+    <ClInclude Include="Source\Resource\Texture.h" />
     <ClInclude Include="Source\Static\FUUIDBillBoard.h" />
     <ClInclude Include="Source\Core\Math\Rotator.h" />
     <ClInclude Include="Source\Core\Config\ConfigManager.h" />
@@ -413,6 +429,18 @@
     <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imstb_truetype.h" />
     <ClInclude Include="Source\ThirdParty\SimpleJSON\include\SimpleJSON\Json.hpp" />
     <ClInclude Include="Source\FontAtlas.h" />
+    <ClCompile Include="Source\Object\SubUVComponent\UParticleSubUVComponent.cpp" />
+    <FxCompile Include="Shaders\SubUV_PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <ClInclude Include="Source\Core\Interfaces\GizmoInterface.h" />
+    <ClInclude Include="Source\Object\Actor\SubUVParticle.h" />
+    <ClInclude Include="Source\Object\SubUVComponent\UParticleSubUVComponent.h" />
+    <ClInclude Include="WorldGrid.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -421,7 +449,13 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="font_atlas.dds" />
     <Image Include="font_atlas.png" />
+    <Image Include="Pretendard_Kor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="font_atlas.txt" />
+    <Text Include="Pretendard_Kor.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

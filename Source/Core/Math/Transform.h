@@ -590,50 +590,11 @@ public:
 	// InMatrix : 변환 행렬 (스케일이 포함된 회전+이동 행렬)
 	// DesiredScale : 원하는 스케일 (컴포넌트별 값)
 	// OutTransform : 복원된 변환(Translation, Rotation, Scale)을 저장할 대상
-	FTransform ConstructTransformFromMatrixWithDesiredScale(const FMatrix& InMatrix, const FVector& DesiredScale) const
-	{
-		// 1. Translation 추출  
-		//    Translation은 4번째 행의 앞 세 개 요소에 저장되어 있다고 가정합니다.
-		FVector Translation(
-			InMatrix.M[3][0],
-			InMatrix.M[3][1],
-			InMatrix.M[3][2]
-		);
+	FTransform ConstructTransformFromMatrixWithDesiredScale(const FMatrix& InMatrix, const FVector& DesiredScale) const;
 
-		// 2. 회전 행렬 복원  
-		//    상위 3x3 부분은 (스케일 * 회전) 행렬입니다.
-		//    각 행 i (0,1,2)에 대해, DesiredScale의 해당 성분으로 나누어 정규화된 회전 행렬 R를 구합니다.
-		FMatrix RotationMatrix;
-		for (int i = 0; i < 3; ++i)
-		{
-			// 각 행에 대해 스케일 값 선택
-			float ScaleComponent = (i == 0) ? DesiredScale.X : (i == 1 ? DesiredScale.Y : DesiredScale.Z);
+	FTransform Inverse() const;
 
-			// 스케일 값이 0이 아닐 경우에만 나눕니다.
-			// (0이면 기본값 0을 유지)
-			for (int j = 0; j < 3; ++j)
-			{
-				RotationMatrix.M[i][j] = (ScaleComponent != 0.0f) ? (InMatrix.M[i][j] / ScaleComponent) : 0.0f;
-			}
-		}
-		// 나머지 행/열은 단위행렬로 설정
-		RotationMatrix.M[0][3] = 0.0f;
-		RotationMatrix.M[1][3] = 0.0f;
-		RotationMatrix.M[2][3] = 0.0f;
-		RotationMatrix.M[3][0] = 0.0f;
-		RotationMatrix.M[3][1] = 0.0f;
-		RotationMatrix.M[3][2] = 0.0f;
-		RotationMatrix.M[3][3] = 1.0f;
+	void ToMatrixInternal(FVector& OutDiagonals, FVector& OutAdds, FVector& OutSubtracts) const;
 
-		// 3. 회전 행렬로부터 쿼터니언 복원  
-		FQuat TempRotation = FQuat::MakeFromRotationMatrix(RotationMatrix);
-
-		// 4. 결과 할당  
-		FTransform OutTransform;
-		OutTransform.Position = Translation;
-		OutTransform.Rotation = TempRotation;
-		OutTransform.Scale = DesiredScale;
-
-		return OutTransform;
-	}
+	FMatrix ToMatrixWithScale() const;
 };

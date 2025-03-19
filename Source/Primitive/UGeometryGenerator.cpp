@@ -276,3 +276,42 @@ void UGeometryGenerator::CreateCone(float BottomRadius, float Height, uint32 Sli
         }
     }
 }
+
+void UGeometryGenerator::CreateRadialCone(float height, float angle, uint32 sliceCount, TArray<FVertexSimple>* vertices, TArray<uint32>* indices)
+{
+	float radius = height * tanf(angle * 0.5f);
+
+	float r = 1.0f;
+	float g = 1.0f;
+	float b = 0.0f;
+	float a = 1.0f;
+
+	// 꼭대기 정점
+	uint32 apexIndex = vertices->Num();
+	vertices->Add(FVertexSimple(
+		0.0f, 0.0f, 0.0f,
+		r, g, b, a
+	));
+
+	// 원뿔 바닥의 원 정점들 생성
+	uint32 baseStartIndex = vertices->Num();
+	for (uint32 slice = 0; slice <= sliceCount; ++slice)
+	{
+		float theta = 2.0f * PI * slice / sliceCount;
+
+		vertices->Add(FVertexSimple(
+			radius * sinf(theta),
+			radius * cosf(theta),
+			height,
+			r, g, b, a
+		));
+	}
+
+	// 원뿔의 옆면 인덱스 (삼각형)
+	for (uint32 slice = 0; slice < sliceCount; ++slice)
+	{
+		indices->Add(apexIndex);
+		indices->Add(baseStartIndex + slice);
+		indices->Add(baseStartIndex + slice + 1);
+	}
+}

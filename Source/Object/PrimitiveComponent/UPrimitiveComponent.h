@@ -27,6 +27,7 @@ struct alignas(16) FConstantsComponentData
 	FMatrix MVP;
 	FVector4 Color;
 	// true인 경우 Vertex Color를 사용하고, false인 경우 Color를 사용합니다.
+	FVector4 UUIDColor;
 	uint32 bUseVertexColor;
 	FVector Padding;
 };
@@ -42,26 +43,10 @@ public:
 public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
-	void UpdateConstantPicking(const URenderer& Renderer, FVector4 UUIDColor) const;
-	void UpdateConstantDepth(const URenderer& Renderer, int Depth) const;
+	//void UpdateConstantPicking(const URenderer& Renderer, FVector4 UUIDColor) const;
+	//void UpdateConstantDepth(const URenderer& Renderer, int Depth) const;
 	virtual void Render();
 	virtual void CalculateModelMatrix(FMatrix& OutMatrix);
-
-	//테스트 임시 메쉬
-	std::shared_ptr<FVertexBuffer> VertexBuffer = nullptr;
-	std::shared_ptr<FIndexBuffer> IndexBuffer = nullptr;
-	std::shared_ptr<FInputLayout> InputLayout = nullptr;
-	D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-
-	std::shared_ptr<FPixelShader> PixelShader = nullptr;
-	std::shared_ptr<FVertexShader> VertexShader = nullptr;
-	std::shared_ptr<FBlendState> BlendState = nullptr;
-	std::shared_ptr<FDepthStencilState> DepthStencilStat = nullptr;
-	std::shared_ptr<FRasterizer> Rasterizer = nullptr;
-
-	// 테스트 상수버퍼
-	std::shared_ptr<FConstantBufferBinding> ConstantBufferBinding = nullptr;
-	std::shared_ptr<FConstantBuffer> ConstantBuffer = nullptr;
 
 	virtual EPrimitiveType GetType() { return EPrimitiveType::EPT_None; }
 
@@ -93,7 +78,19 @@ public:
 	FConstantsComponentData& GetConstantsComponentData() { return ConstantsComponentData; }
 	//void SetConstantsComponentData(FConstantsComponentData& ) { bIsBillboard = bBillboard; }
 
+	std::shared_ptr<class FMesh> GetMesh() { return RenderResourceCollection.GetMesh(); }
+	std::shared_ptr<class FMaterial> GetMaterial() { return RenderResourceCollection.GetMaterial(); }
+
+	void SetMesh(const FString& _Name) { RenderResourceCollection.SetMesh(_Name); }
+	void SetMaterial(const FString& _Name) { RenderResourceCollection.SetMaterial(_Name); }
 	
+	FRenderResourceCollection& GetRenderResourceCollection() { return RenderResourceCollection; }
+public:
+	void SetBoundsScale(float NewBoudnsScale);
+
+	virtual void UpdateBounds() override;
+protected:
+	float BoundsScale = 1.0f;
 protected:
 	bool bCanBeRendered = false;
 	bool bIsBillboard = false;
@@ -103,8 +100,8 @@ protected:
 
 	FVector4 CustomColor = FVector4(1.0f, 1.0f, 1.0f, 1.0f);
 
-
-private:
+protected:
+	FRenderResourceCollection RenderResourceCollection;
 	FConstantsComponentData ConstantsComponentData;
 };
 
@@ -120,6 +117,17 @@ public:
 
 		return EPrimitiveType::EPT_Cube;
 	}
+
+public:
+	void SetBoxExtent(const FVector& InExtent);
+
+	inline FVector GetScaledBoxExtent() const { return BoxExtent * GetComponentTransform().GetScale(); }
+
+	virtual FBoxSphereBounds CalcBounds(const FTransform& LocalToWorld) const override;
+
+	inline void InitBoxExtent(const FVector& InExtent) { BoxExtent = InExtent; }
+protected:
+	FVector BoxExtent;
 };
 
 class USphereComp : public UPrimitiveComponent
@@ -133,6 +141,38 @@ public:
 	{
 		return EPrimitiveType::EPT_Sphere;
 	}
+
+	/**
+	* Change the sphere radius. This is the unscaled radius, before component scale is applied.
+	* @param	InSphereRadius: the new sphere radius
+	* @param	bUpdateOverlaps: if true and this shape is registered and collides, updates touching array for owner actor.
+	*/
+	void SetSphereRadius(float InSphereRadius);
+
+	// @return the radius of the sphere, with component scale applied.
+	inline float GetScaledSphereRadius() const { return Radius * GetShapeScale(); }
+
+	// @return the radius of the sphere, ignoring component scale.
+	inline float GetUnscaledSphereRadius() const { return Radius; }
+
+	//~ Begin UPrimitiveComponent Interface.
+	virtual inline bool IsZeroExtent() { return Radius == 0.0f; };
+	//virtual struct FCollisionShape GetCollisionShape(float Inflation = 0.0f) const override;
+	//~ End UPrimitiveComponent Interface.
+
+	//~ Begin USceneComponent Interface
+	virtual FBoxSphereBounds CalcBounds(const FTransform& LocalToWorld) const override;
+	//~ End USceneComponent Interface
+
+	// Get the scale used by this shape. This is a uniform scale that is the minimum of any non-uniform scaling.
+	// @return the scale used by this shape.
+	float GetShapeScale() const;
+
+	// Sets the sphere radius without triggering a render or physics update.
+	inline void InitSphereRadius(float InSphereRadius) { Radius = InSphereRadius; }
+
+protected:
+	float Radius;
 };
 
 class UTriangleComp : public UPrimitiveComponent

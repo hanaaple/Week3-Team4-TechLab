@@ -7,19 +7,17 @@ struct FVertexSimple
 {
     float X, Y, Z;    // Position
     float R, G, B, A; // Color
+	float U, V;		  // Texture UV
+	float NX, NY, NZ;  // Normal
 };
 
 struct FLineVertexSimple {
-	FVector position;
-	FVector4 color;
+	float X, Y, Z;
+	float R, G, B, A;
 
-	FLineVertexSimple(const FVector& pos, const FVector4& col) : position(pos), color(col) {}
-};
-
-struct FVertexTexture
-{
-	float X, Y, Z;    // Position
-	float U, V; // UV
+	FLineVertexSimple(const FVector& pos = FVector(0.0f, 0.0f, 0.0f), const FVector4& col = FVector4::WHITE)
+		: X(pos.X), Y(pos.Y), Z(pos.Z), R(col.X), G(col.Y), B(col.Z), A(col.W) 
+	{}
 };
 
 struct FGeometryData
@@ -43,7 +41,18 @@ enum class EPrimitiveType : uint8
 	EPT_Max,
 };
 
-extern FVertexSimple LineVertices[2];
+extern FVertexSimple GizmoArrowVertices[49];
+extern uint32 GizmoArrowIndices[282];
+
+extern FVertexSimple GizmoRotationVertices[128];
+extern uint32 GizmoRotationIndices[768];
+
+extern FVertexSimple GizmoScaleVertices[40];
+extern uint32 GizmoScaleIndices[174];
+
+extern FVertexSimple MonkeyVertices[507];
+extern uint32 MonkeyIndices[2901];
+
 extern FVertexSimple CubeVertices[36];
 extern FVertexSimple SphereVertices[2400];
 extern FVertexSimple TriangleVertices[3];

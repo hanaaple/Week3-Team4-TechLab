@@ -1,5 +1,7 @@
 ﻿#pragma once
+#include <memory>
 #include <string>
+#include <queue>
 
 #include "Core/HAL/PlatformType.h"
 #include "Core/Math/Vector.h"
@@ -17,8 +19,8 @@ struct UObjectInfo
 
 struct UWorldInfo
 {
-	UObjectInfo** ObjctInfos;
-	uint32 ActorCount;
+	//UObjectInfo** ObjctInfos;
+	std::queue<std::unique_ptr<UObjectInfo>> ObjectInfos;uint32 ActorCount;
 	uint32 Version;
 	std::string SceneName;
 };
@@ -27,6 +29,6 @@ class JsonSaveHelper
 {
 public:
 	// SceneName - 확장자 제외
-	static UWorldInfo* LoadScene(const std::string& SceneName);
-	static void SaveScene(const UWorldInfo& WorldInfo);
+	static std::unique_ptr<UWorldInfo> LoadScene(const std::string& SceneName);
+	static void SaveScene(UWorldInfo WorldInfo);
 };

@@ -8,7 +8,7 @@ using namespace std;
 
 bool UConfigManager::LoadConfig(const FString& InConfigName)
 {
-	if (IsDebuggerPresent())
+	// if (IsDebuggerPresent())
 	{
 		filesystem::path curPath = filesystem::current_path();
 		filesystem::path configPath = curPath / "Config" / InConfigName.GetData();
@@ -56,13 +56,14 @@ bool UConfigManager::LoadConfig(const FString& InConfigName)
 			Configs[currentSection][key] = value;
 		}
 
+		configFile.close();
 		return true;
 	}
-	else
-	{
-		// 빌드된 실행 파일의 경로로 설정
-		return false;
-	}
+	// else
+	// {
+	// 	// 빌드된 실행 파일의 경로로 설정
+	// 	return false;
+	// }
 
 }
 

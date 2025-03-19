@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/HAL/PlatformType.h"
+#include "Core/Interfaces/GizmoInterface.h"
 #include "Object/Actor/Actor.h"
 
 namespace ECameraProjectionMode
@@ -11,12 +12,16 @@ namespace ECameraProjectionMode
     };
 }
 
-class ACamera : public AActor
+class ACamera : public AActor, public IGizmoInterface
 {
 	DECLARE_CLASS(ACamera, AActor)
     
 public:
     ACamera();
+
+	//~ Begin IGizmoInterface
+	virtual bool IsGizmo() override { return true; }
+	//~ End IGizmoInterface
 
 private:    
     float Near;
@@ -29,7 +34,7 @@ private:
 	FMatrix ProjectionMatrix;
 	FMatrix ViewProjectionMatrix;
 
-
+	float ZoomSize = 1000.f;
 public:
     const float MaxYDegree = 89.8f;
     //카메라 스피드 IMGui용 나중에 Velocity로 관리하면 없어질애라 편하게 public에서 관리
@@ -50,6 +55,8 @@ public:
     float GetNear() const;
     float GetFar() const;
 
+	void SetZoomSize(float InZoomSize) { ZoomSize = FMath::Clamp(InZoomSize, 100.f, 1000.f); }
+	float GetZoomSize() const { return ZoomSize; }
 
 	
 	const FMatrix& GetProjectionMatrix() const { return ProjectionMatrix; }

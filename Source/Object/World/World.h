@@ -22,9 +22,13 @@ public:
 	UWorld() = default;
 
 public:
+	void InitWorld();
+
 	void BeginPlay();
 	void Tick(float DeltaTime);
 	void LateTick(float DeltaTime);
+
+	void OnDestroy();
 
 	template <typename T>
 		requires std::derived_from<T, AActor>
@@ -34,7 +38,7 @@ public:
 	
 	void Render();
 	void RenderPickingTexture(URenderer& Renderer);
-	void DisplayPickingTexture(URenderer& Renderer);
+	//void DisplayPickingTexture(URenderer& Renderer);
 	void RenderMainTexture(URenderer& Renderer);
 
 	void ClearWorld();
@@ -54,10 +58,20 @@ public:
 
 	void RayCasting(const FVector& MouseNDCPos);
 
+	void PickByPixel(const FVector& MousePos);
+
 	TArray<AActor*>& GetActors() { return Actors; }
+
+	float& GetGridSizePtr() { return GridSize; }
+
+	void OnChangedGridSize();
+
+	float GetGridSize() const { return GridSize; }
 private:
 	UWorldInfo GetWorldInfo() const;
 	class ACamera* Camera = nullptr;
+
+	float GridSize = 100.0f;
 
 public:
 	FString SceneName;
@@ -69,6 +83,38 @@ protected:
 	TArray<AActor*> ActorsToSpawn;
 	TArray<AActor*> PendingDestroyActors; // TODO: 추후에 TQueue로 변경
 	TSet<UPrimitiveComponent*> RenderComponents;
+
+// Editor Only
+public:
+	//TArray<class ULayer*> Layers;
+
+	TArray<AActor*> ActiveGroupActors;
+// End Editor Only
+public:
+	//class ULevel* Level = nullptr;
+	//class ULineBatchComponent* LineBatcher;
+
+	//TArray<FVector> ViewLocationRenderedLastFrame;
+	//TArray<FWorldCachedViewInfo> CachedViewInfoRenderedLastFrame;
+
+	//class AGameModeBase* GameMode = nullptr;
+	//class AGameStateBase* GameState = nullptr;
+	//class UGameInstance* GameInstance = nullptr;
+
+private:
+	//TArray<class AController> Controllers;
+	//TArray<class APlayerController> PlayerControllers;
+	//TArray<class ACameraActor> CameraActors;
+
+	//class FTimeManger* TimeManager = nullptr;
+
+// Editor Only
+public:
+	//class FSceneInterface* Scene = nullptr;
+	//TArray<FLevelViewportInfo> EditorViews;
+// End Editor Only
+
+
 };
 
 template <typename T>

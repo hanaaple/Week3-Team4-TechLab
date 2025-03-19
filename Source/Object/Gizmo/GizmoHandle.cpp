@@ -8,7 +8,6 @@
 
 AGizmoHandle::AGizmoHandle()
 {
-	bIsGizmo = true;
 	// !NOTE : Z방향으로 서있음
 	// 
 	

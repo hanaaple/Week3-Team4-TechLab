@@ -3,6 +3,7 @@
 
 #include "Core/Container/String.h"
 #include "Core/Container/Map.h"
+#include "Debug/DebugConsole.h"
 
 template <typename ResourcesType>
 class FResource
@@ -10,7 +11,6 @@ class FResource
 public:
 	FResource() = default;
 	virtual ~FResource() = default;
-
 
 	// delete Function
 	FResource(const FResource& Other) = delete;
@@ -24,6 +24,20 @@ public:
 		auto pResult = NameRes.Find(InName);
 
 		return (pResult != nullptr) ? *pResult : nullptr;
+	}
+
+	static void Release(FString _Name)
+	{
+		std::lock_guard<std::mutex> Lock(NameMutex);
+
+		NameRes.Remove(_Name);
+		//auto pResult = NameRes.Find(_Name);
+
+	/*	if (pResult == nullptr)
+		{
+			MsgBoxAssert("존재하지도 않는 리소스를 지우려고 했습니다.");
+			return;
+		}*/
 	}
 
 

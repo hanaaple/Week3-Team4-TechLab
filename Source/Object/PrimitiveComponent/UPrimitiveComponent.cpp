@@ -5,59 +5,20 @@
 #include "Object/Actor/Actor.h"
 #include "Object/Actor/Camera.h"
 #include "Object/World/World.h"
-#include "Primitive/UGeometryGenerator.h"
+#include "Resource/Mesh.h"
 #include "Resource/DirectResource/BlendState.h"
-#include "Resource/DirectResource/ConstantBuffer.h"
-#include "Resource/DirectResource/DepthStencilState.h"
-#include "Resource/DirectResource/IndexBuffer.h"
-#include "Resource/DirectResource/InputLayout.h"
-#include "Resource/DirectResource/PixelShader.h"
-#include "Resource/DirectResource/Rasterizer.h"
-#include "Resource/DirectResource/ShaderResourceBinding.h"
 #include "Resource/DirectResource/Vertexbuffer.h"
-#include "Resource/DirectResource/VertexShader.h"
-// #include "Object/World/World.h"
-// #include "Object/Actor/Actor.h"
-// #include "Core/Engine.h"
-// #include "Core/Rendering/URenderer.h"
-// #include "Object/Actor/Camera.h"
-// #include "Primitive/UGeometryGenerator.h"
-// #include "Resource/DirectResource/Vertexbuffer.h"
-// #include "Resource/DirectResource/VertexShader.h"
-// #include "Resource/DirectResource/PixelShader.h"
-// #include "Resource/DirectResource/InputLayout.h"
-// #include "Resource/DirectResource/ConstantBuffer.h"
-// #include "Debug/EngineShowFlags.h"
-// #include "Resource/DirectResource/BlendState.h"
-// #include "Resource/DirectResource/DepthStencilState.h"
-// #include "Resource/DirectResource/IndexBuffer.h"
-// #include "Resource/DirectResource/Rasterizer.h"
-// #include "Resource/DirectResource/ShaderResourceBinding.h"
+#include "Static/FEditorManager.h"
 
-UPrimitiveComponent::UPrimitiveComponent() : Super()
+
+UPrimitiveComponent::UPrimitiveComponent()
 {
 	bCanBeRendered = true;
-	VertexShader = FVertexShader::Find("Simple_VS");
-	PixelShader = FPixelShader::Find("Simple_PS");
 
-	// TODO: 이거는 나중에 매쉬같은데서  만들어야함
-	InputLayout = FInputLayout::Find("Simple_VS");
 
-	BlendState = FBlendState::Find("DefaultBlendState");
-	DepthStencilStat = FDepthStencilState::Find("DefaultDepthStencilState");
-	Rasterizer = FRasterizer::Find("DefaultRasterizer");
-	ConstantBuffer = FConstantBuffer::Find("DefaultConstantBuffer");
-
-	ConstantBufferBinding = std::make_shared<FConstantBufferBinding>();
-
-	//std::shared_ptr<FVertexShader> vertexShaderPtr;/* 초기화 */
-	//FShader* shaderPtr = static_cast<FShader*>(vertexShaderPtr.get()); // 내부 포인터 추출
-	ConstantBufferBinding->Res = ConstantBuffer;
-	ConstantBufferBinding->CPUDataPtr = &ConstantsComponentData;
-	ConstantBufferBinding->DataSize = sizeof(ConstantsComponentData);
-	ConstantBufferBinding->ParentShader = VertexShader.get();
-	ConstantBufferBinding->BindPoint = 0;
-	
+	// 기본으로 바인딩되는 데이타
+	GetRenderResourceCollection().SetConstantBufferBinding("FConstantsComponentData", &ConstantsComponentData, 0, true, true);
+	SetMaterial("DefaultMaterial");
 }
 
 UPrimitiveComponent::~UPrimitiveComponent()
@@ -74,17 +35,18 @@ void UPrimitiveComponent::BeginPlay()
 void UPrimitiveComponent::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime); 
+	UpdateBounds();
 }
 
-void UPrimitiveComponent::UpdateConstantPicking(const URenderer& Renderer, const FVector4 UUIDColor)const
-{
-	Renderer.UpdateConstantPicking(UUIDColor);
-}
+// void UPrimitiveComponent::UpdateConstantPicking(const URenderer& Renderer, const FVector4 UUIDColor)const
+// {
+// 	Renderer.UpdateConstantPicking(UUIDColor);
+// }
 
-void UPrimitiveComponent::UpdateConstantDepth(const URenderer& Renderer, const int Depth)const
-{
-	Renderer.UpdateConstantDepth(Depth);
-}
+// void UPrimitiveComponent::UpdateConstantDepth(const URenderer& Renderer, const int Depth)const
+// {
+// 	Renderer.UpdateConstantDepth(Depth);
+// }
 
 void UPrimitiveComponent::Render()
 {
@@ -93,12 +55,13 @@ void UPrimitiveComponent::Render()
 	{
 		return;
 	}
-	if (GetOwner()->IsGizmoActor() == false)
+	// if (GetOwner()->Implements<IGizmoInterface>() == false) // TODO: RTTI 개선하면 사용
+	if (!dynamic_cast<IGizmoInterface*>(GetOwner()))
 	{
 		if (bIsPicked)
 		{
-			/*bUseVertexColor = false;
-			SetCustomColor(FVector4(1.0f, 0.647f, 0.0f, 1.0f));*/
+			bUseVertexColor = false;
+			SetCustomColor(FVector4(1.0f, 0.647f, 0.0f, 1.0f));
 		}
 		else
 		{
@@ -109,7 +72,28 @@ void UPrimitiveComponent::Render()
 	FMatrix ModelMatrix;
 	CalculateModelMatrix(ModelMatrix);
 
-	Renderer->RenderPrimitive(*this, ModelMatrix);
+	const FMatrix& ViewProjectionMatrix = UEngine::Get().GetWorld()->GetCamera()->GetViewProjectionMatrix();
+
+	FMatrix MVP = FMatrix::Transpose(
+		ModelMatrix *
+		ViewProjectionMatrix
+);
+	
+	uint32 ID = GetOwner()->GetUUID();
+
+	FVector4 UUIDCOlor = FEditorManager::EncodeUUID(ID);
+
+	FConstantsComponentData& Data = GetConstantsComponentData();
+
+	Data = {
+		.MVP = MVP,
+		.Color = GetCustomColor(),
+		.UUIDColor = UUIDCOlor,
+		.bUseVertexColor = IsUseVertexColor()
+	};
+	
+
+	Renderer->Render(GetRenderResourceCollection());
 }
 
 void UPrimitiveComponent::CalculateModelMatrix(FMatrix& OutMatrix)
@@ -161,187 +145,107 @@ void UPrimitiveComponent::RegisterComponentWithWorld(UWorld* World)
 	World->AddRenderComponent(this);
 }
 
-UCubeComp::UCubeComp() : Super()
+void UPrimitiveComponent::SetBoundsScale(float NewBoudnsScale)
 {
-	VertexBuffer = FVertexBuffer::Find("Cube");
-	IndexBuffer = FIndexBuffer::Find("Cube");
-	if (VertexBuffer == nullptr)
-	{
-		TArray<FVertexSimple> vertices;
-		TArray<uint32> indices;
-		float size = 1.f;
-
-		UGeometryGenerator::CreateCube(size, vertices, indices);
-		
-		VertexBuffer = FVertexBuffer::Create(FString("Cube"), vertices);
-		IndexBuffer = FIndexBuffer::Create(FString("Cube"), indices);
-	}
-	bCanBeRendered = true;
+	BoundsScale = NewBoudnsScale;
+	UpdateBounds();
 }
 
-USphereComp::USphereComp() : Super()
+void UPrimitiveComponent::UpdateBounds()
 {
-	VertexBuffer= FVertexBuffer::Find("Sphere");
-	IndexBuffer = FIndexBuffer::Find("Sphere");
-	if (VertexBuffer == nullptr)
-	{
-		TArray<FVertexSimple> vertices;
-		TArray<uint32> indices;
-		int slices = 16;
-		int stacks = 16;
-		int32 radius = 1.f;
-		float height = 1.f;
-
-		UGeometryGenerator::CreateSphere(radius, slices, stacks, vertices, indices);
-		
-		VertexBuffer = FVertexBuffer::Create(FString("Sphere"), vertices);
-		IndexBuffer = FIndexBuffer::Create(FString("Sphere"), indices);
-	}
-	bCanBeRendered = true;
+	FBoxSphereBounds OriginalBounds = Bounds;
+	Super::UpdateBounds();
 }
 
-UTriangleComp::UTriangleComp() : Super()
+UCubeComp::UCubeComp()
 {
-	VertexBuffer= FVertexBuffer::Find("Triangle");
-	IndexBuffer = FIndexBuffer::Find("Triangle");
-	if (VertexBuffer == nullptr)
-	{
-		FVertexSimple tempArray[] =
-		{
-			{  0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f },
-			{  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f },
-			{  0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f } 
-		};
-		TArray<FVertexSimple> vertices;
+	SetMesh("Cube");
+	bCanBeRendered = true;
+	Max = GetMesh()->GetVertexBuffer()->GetMax();
+	Min = GetMesh()->GetVertexBuffer()->GetMin();
 
-		vertices.Add(tempArray[0]);
-		vertices.Add(tempArray[1]);
-		vertices.Add(tempArray[2]);
-		
-		uint32 TriangleIndices[3] =
-		{
-			0, 1, 2
-		};
-		
-		TArray<uint32> indices;
-		indices.Add(TriangleIndices[0]);
-		indices.Add(TriangleIndices[1]);
-		indices.Add(TriangleIndices[2]);
-		
-		VertexBuffer = FVertexBuffer::Create(FString("Triangle"), vertices);
-		IndexBuffer = FIndexBuffer::Create(FString("Triangle"), indices);
-	}
+	FVector extent = (Max - Min) / 2;
+	SetBoxExtent(extent);
+}
+
+void UCubeComp::SetBoxExtent(const FVector& InExtent)
+{
+	BoxExtent = InExtent;
+	UpdateBounds();
+}
+
+FBoxSphereBounds UCubeComp::CalcBounds(const FTransform& LocalToWorld) const
+{
+	return FBoxSphereBounds(FBox(-BoxExtent, BoxExtent)).TransformBy(LocalToWorld);
+}
+
+USphereComp::USphereComp()
+{
+	SetMesh("Sphere");
+	bCanBeRendered = true;
+	Max = GetMesh()->GetVertexBuffer()->GetMax();
+	Min = GetMesh()->GetVertexBuffer()->GetMin();
+
+	FVector extent = (Max - Min) / 2;
+	float radius = extent.Length();
+
+	SetSphereRadius(radius);
+}
+
+void USphereComp::SetSphereRadius(float InSphereRadius)
+{
+	Radius = InSphereRadius;
+	UpdateBounds();
+}
+
+FBoxSphereBounds USphereComp::CalcBounds(const FTransform& LocalToWorld) const
+{
+	return FBoxSphereBounds(FVector::ZeroVector, FVector(Radius, Radius, Radius), Radius).TransformBy(LocalToWorld);
+}
+
+float USphereComp::GetShapeScale() const
+{
+	FTransform LocalToWorld = GetComponentTransform();
+
+	// Scale3DAbsXYZ1 = { Abs(X), Abs(Y)), Abs(Z), 0 }
+	FVector4 ScaleAbsXYYZ0 = FVector4(FMath::Abs(LocalToWorld.GetScale().X), FMath::Abs(LocalToWorld.GetScale().Y), FMath::Abs(LocalToWorld.GetScale().Z), 0.0f);
+	// Scale3DAbsYZX1 = { Abs(Y),Abs(Z)),Abs(X), 0 }
+	FVector4 ScaledAbsYZX0 = FVector4(ScaleAbsXYYZ0.Y, ScaleAbsXYYZ0.Z, ScaleAbsXYYZ0.X, 0.0f);
+	// Scale3DAbsZXY1 = { Abs(Z),Abs(X)),Abs(Y), 0 }
+	FVector4 ScaledAbsZXY0 = FVector4(ScaleAbsXYYZ0.Z, ScaleAbsXYYZ0.X, ScaleAbsXYYZ0.Y, 0.0f);
+
+	// t0 = { Min(Abs(X), Abs(Y)),  Min(Abs(Y), Abs(Z)), Min(Abs(Z), Abs(X)), 0 }
+	FVector4 t0 = FVector4(FMath::Min(ScaleAbsXYYZ0.X, ScaledAbsYZX0.X), FMath::Min(ScaleAbsXYYZ0.Y, ScaleAbsXYYZ0.Y), FMath::Min(ScaleAbsXYYZ0.Z, ScaleAbsXYYZ0.Z), 0.0f);
+	// t1 = { Min(Abs(X), Abs(Y), Abs(Z)), Min(Abs(Y), Abs(Z), Abs(X)), Min(Abs(Z), Abs(X), Abs(Y)), 0 }
+	FVector4 t2 = FVector4(FMath::Max(t0.X, ScaledAbsZXY0.X), FMath::Max(t0.Y, ScaledAbsZXY0.Y), FMath::Max(t0.Z, ScaledAbsZXY0.Z), 0.0f);
+	// Scale3DAbsMax = Min(Abs(X), Abs(Y), Abs(Z));
+	float scaleAbsMin = FMath::Min(t2.X, FMath::Min(t2.Y, t2.Z));
+
+	return scaleAbsMin;
+}
+
+UTriangleComp::UTriangleComp()
+{
+	SetMesh("Triangle");
+	bCanBeRendered = true;
 }
 
 UQuadComp::UQuadComp()
 {
-	VertexBuffer = FVertexBuffer::Find("Quad");
-	IndexBuffer = FIndexBuffer::Find("Quad");
-	if (VertexBuffer == nullptr)
-	{
-		FVertexSimple tempArray[] =
-		{
-			{  0.0f, -1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f },
-			{  0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f },
-			{  0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f },
-			{  0.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f }
-		};
-
-		TArray<FVertexSimple> vertices;
-
-		vertices.Add(tempArray[0]);
-		vertices.Add(tempArray[1]);
-		vertices.Add(tempArray[2]);
-		vertices.Add(tempArray[3]);
-
-		uint32 QuadIndices[6] =
-		{
-			0, 1, 2,
-			0, 2, 3
-		};
-
-		TArray<uint32> indices;
-		indices.Add(QuadIndices[0]);
-		indices.Add(QuadIndices[1]);
-		indices.Add(QuadIndices[2]);
-		indices.Add(QuadIndices[3]);
-		indices.Add(QuadIndices[4]);
-		indices.Add(QuadIndices[5]);
-
-		VertexBuffer = FVertexBuffer::Create(FString("Quad"), vertices);
-		IndexBuffer = FIndexBuffer::Create(FString("Quad"), indices);
-	}
+	SetMesh("Quad");
 }
 
-ULineComp::ULineComp() : Super()
-{//없으면 만든다.
-
-	VertexBuffer= FVertexBuffer::Find("Line");
-	IndexBuffer = FIndexBuffer::Find("Line");
-
-	Topology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
-	if (VertexBuffer == nullptr)
-	{
-		FVertexSimple tempArray[2] =
-		{
-			{ -1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f },
-			{ 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f }
-		};
-		TArray<FVertexSimple> vertices;
-
-		vertices.Add(tempArray[0]);
-		vertices.Add(tempArray[1]);
-		
-		uint32 tempIndices[2] =
-		{
-			0, 1
-		};
-		
-		TArray<uint32> indices;
-		indices.Add(tempIndices[0]);
-		indices.Add(tempIndices[1]);
-		
-		VertexBuffer = FVertexBuffer::Create(FString("Line"), vertices);
-		IndexBuffer = FIndexBuffer::Create(FString("Line"), indices);
-	}
-}
-
-UCylinderComp::UCylinderComp() : Super()
+ULineComp::ULineComp()
 {
-	VertexBuffer= FVertexBuffer::Find("Cylinder");
-	IndexBuffer = FIndexBuffer::Find("Cylinder");
-	if (VertexBuffer == nullptr)
-	{
-		TArray<FVertexSimple> vertices;
-		TArray<uint32> indices;
-		int slices = 36;
-		int stacks = 36;
-		float bRadius = .2f;
-		float tRdius = .2f;
-		float height = 1.f;
-
-		UGeometryGenerator::CreateCylinder(bRadius, tRdius, height, slices, stacks, vertices , indices);
-		
-		VertexBuffer = FVertexBuffer::Create(FString("Cylinder"), vertices);
-		IndexBuffer = FIndexBuffer::Create(FString("Cylinder"), indices);
-	}
+	SetMesh("Line");
 }
 
-UConeComp::UConeComp() : Super()
+UCylinderComp::UCylinderComp()
 {
-	VertexBuffer= FVertexBuffer::Find("Cone");
-	IndexBuffer = FIndexBuffer::Find("Cone");
-	if (VertexBuffer == nullptr)
-	{
-		TArray<FVertexSimple> vertices;
-		TArray<uint32> indices;
-		int slices = 36;
-		int stacks = 6;
-		float radius = 1.f;
-		float height = 1.f;
+	SetMesh("Cylinder");
+}
 
-		UGeometryGenerator::CreateCone(radius, height, slices, stacks, vertices, indices);
-		VertexBuffer = FVertexBuffer::Create(FString("Cone"), vertices);
-		IndexBuffer = FIndexBuffer::Create(FString("Cone"), indices);
-	}
+UConeComp::UConeComp()
+{
+	SetMesh("Cone");
 }

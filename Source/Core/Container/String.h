@@ -105,6 +105,9 @@ public:
 #else
 	FORCEINLINE std::wstring ToWideString() const
 	{
+#if USE_WIDECHAR
+		return PrivateString;
+#else
 		// Narrow 문자열을 UTF-8로 가정하고 wide 문자열로 변환
 		if (PrivateString.empty())
 		{
@@ -118,6 +121,7 @@ public:
 		std::wstring wstr(sizeNeeded, 0);
 		MultiByteToWideChar(CP_UTF8, 0, PrivateString.c_str(), -1, &wstr[0], sizeNeeded);
 		return wstr;
+#endif
 	}
 #endif
 	template <typename Number>
@@ -125,6 +129,8 @@ public:
     static FString FromInt(Number Num);
 
     static FString SanitizeFloat(float InFloat);
+
+	static float ToFloat(const FString& InString);
 
 public:
     FORCEINLINE int32 Len() const;

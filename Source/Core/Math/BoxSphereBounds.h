@@ -1,6 +1,9 @@
 #pragma once
 #include "Vector.h"
 
+struct FMatrix;
+struct FTransform;
+
 struct FBox
 {
 public:
@@ -20,6 +23,42 @@ public:
 	}
 
 public:
+	FORCEINLINE FBox& operator+=(const FBox& Other)
+	{
+		Min.X = FMath::Min(Min.X, Other.Min.X);
+		Min.Y = FMath::Min(Min.Y, Other.Min.Y);
+		Min.Z = FMath::Min(Min.Z, Other.Min.Z);
+
+		Max.X = FMath::Max(Max.X, Other.Max.X);
+		Max.Y = FMath::Max(Max.Y, Other.Max.Y);
+		Max.Z = FMath::Max(Max.Z, Other.Max.Z);
+
+		return *this;
+	}
+
+	FBox operator+(const FBox& Other) const
+	{
+		return FBox(*this) += Other;
+	}
+
+	FBox operator+=(const FVector& Other)
+	{
+		Min.X = FMath::Min(Min.X, Other.X);
+		Min.Y = FMath::Min(Min.Y, Other.Y);
+		Min.Z = FMath::Min(Min.Z, Other.Z);
+
+		Max.X = FMath::Max(Max.X, Other.X);
+		Max.Y = FMath::Max(Max.Y, Other.Y);
+		Max.Z = FMath::Max(Max.Z, Other.Z);
+
+		return *this;
+	}
+
+	FBox operator+(const FVector& Other) const
+	{
+		return FBox(*this) += Other;
+	}
+
 	float GetWidth() const { return Max.X - Min.X; }
 	float GetHeight() const { return Max.Y - Min.Y; }
 	float GetDepth() const { return Max.Z - Min.Z; }
@@ -165,6 +204,14 @@ public:
 	{
 	}
 
+	FBoxSphereBounds(FBox InBox)
+	{
+		FVector LocalExtent;
+		Origin = InBox.GetCenter();
+		BoxExtent = InBox.GetExtent();
+		SphereRadius = BoxExtent.Length();
+	}
+
 	FBox GetBox() const
 	{
 		return FBox(Origin - BoxExtent, Origin + BoxExtent);
@@ -184,5 +231,9 @@ public:
 	{
 		return FBoxSphereBounds(Origin, { BoxExtent.X + V, BoxExtent.Y + V, BoxExtent.Z + V }, SphereRadius + V);
 	}
+
+	FBoxSphereBounds TransformBy(const FMatrix& InMatrix) const;
+
+	FBoxSphereBounds TransformBy(const FTransform& InTransform) const;
 };
 

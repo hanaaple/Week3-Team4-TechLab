@@ -23,6 +23,8 @@ public:
 
 	FVector GetActorPosition() const;
 
+	virtual void Destroyed();
+
 protected:
 	bool bCanEverTick = true;
 	AActor* Owner = nullptr;

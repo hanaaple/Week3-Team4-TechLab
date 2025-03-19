@@ -8,6 +8,7 @@ struct FVector
     float X, Y, Z;
     FVector() : X(0), Y(0), Z(0) {}
     FVector(float X, float Y, float Z) : X(X), Y(Y), Z(Z) {}
+	FVector(float Scalar) : X(Scalar), Y(Scalar), Z(Scalar) {}
 	// Vector(0, 0, 0)
 	static const FVector ZeroVector;
 	// Vector(1, 1, 1)
@@ -86,6 +87,16 @@ public:
     {
         return X < Other.X && Y < Other.Y && Z < Other.Z;
     }
+
+	static FVector Min(const FVector& A, const FVector& B)
+	{
+		return { FMath::Min(A.X, B.X), FMath::Min(A.Y, B.Y), FMath::Min(A.Z, B.Z) };
+	}
+
+	static FVector Max(const FVector& A, const FVector& B)
+	{
+		return { FMath::Max(A.X, B.X), FMath::Max(A.Y, B.Y), FMath::Max(A.Z, B.Z) };
+	}
 };
 
 inline float FVector::DotProduct(const FVector& A, const FVector& B)
@@ -271,6 +282,11 @@ struct FVector4 : public FVector
 	{
 		return { A.X * B.X + C.X, A.Y * B.Y + C.Y, A.Z * B.Z + C.Z, A.W * B.W + C.W};
 	}
+
+	static FVector4 VectorMax(const FVector4& A, const FVector4& B)
+	{
+		return { FMath::Max(A.X, B.X), FMath::Max(A.Y, B.Y), FMath::Max(A.Z, B.Z), FMath::Max(A.W, B.W) };
+	}	
 
 	static const FVector4 ONE;
 	static const FVector4 ONENULL;

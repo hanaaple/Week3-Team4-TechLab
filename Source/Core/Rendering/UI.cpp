@@ -125,6 +125,7 @@ void UI::RenderControlPanel()
     RenderMemoryUsage();
     RenderPrimitiveSelection();
     RenderCameraSettings();
+	RenderGridSettings();
     
     ImGui::End();
 }
@@ -416,30 +417,30 @@ void UI::RenderSceneManager()
 		}
 	}
 
-		PrevSize = Actors.Num();
+	PrevSize = Actors.Num();
 
-		static int SelectUUIDIndex = 0;
+	static int SelectUUIDIndex = 0;
 
-		if (ImGui::ListBox("ActorList", &SelectUUIDIndex, &cUUIDNames[0], static_cast<int>(cUUIDNames.Num())))
+	if (ImGui::ListBox("ActorList", &SelectUUIDIndex, &cUUIDNames[0], static_cast<int>(cUUIDNames.Num())))
+	{
+		uint32 UUID = UUIDs[SelectUUIDIndex];
+
+		for (int i = 0; i < Actors.Num(); i++)
 		{
-			uint32 UUID = UUIDs[SelectUUIDIndex];
-
-			for (int i = 0; i < Actors.Num(); i++)
+			AActor* Actor = Actors[i];
+			if (Actor->GetUUID() == UUID)
 			{
-				AActor* Actor = Actors[i];
-				if (Actor->GetUUID() == UUID)
-				{
-					//if (CurActor != nullptr)
-						//CurActor->IsHighlightValue = false;
-					CurActor = Actor;
-					FEditorManager::Get().SelectActor(CurActor);
-				}
+				//if (CurActor != nullptr)
+					//CurActor->IsHighlightValue = false;
+				CurActor = Actor;
+				FEditorManager::Get().SelectActor(CurActor);
 			}
 		}
+	}
 
-	
 
-	
+
+
 
 	// if (CurActor != nullptr)
 	// {
@@ -464,7 +465,7 @@ void UI::RenderSceneManager()
 	// 	}
 	// 	CurObject->IsHighlightValue = true;
 	// }
-	
+
 	ImGui::End();
 }
 
@@ -490,8 +491,8 @@ void UI::RenderShowFlagsPanel() const
 void UI::RenderViewModePanel() const
 {
 	if (ImGui::Begin("View Mode"))
-	{
-		static const char* viewModeNames[] = { "Solid", "Wireframe" };
+	{													
+		static const char* viewModeNames[] = { "Default", "Solid", "Wireframe" };
 		int currentViewMode = static_cast<int>(FViewMode::Get().GetViewMode());
 
 		if (ImGui::Combo("View Mode", &currentViewMode, viewModeNames, IM_ARRAYSIZE(viewModeNames)))
@@ -500,4 +501,20 @@ void UI::RenderViewModePanel() const
 		}
 	}
 	ImGui::End();
+}
+
+void UI::RenderGridSettings() const
+{
+	UEngine* Engine = &UEngine::Get();
+	UWorld* World = Engine->GetWorld();
+
+	if (World == nullptr)
+	{
+		return;
+	}
+
+	if(ImGui::SliderFloat("Grid Size", &World->GetGridSizePtr(), 100.f, 1000.f, "%.2f"))
+	{
+		World->OnChangedGridSize();
+	}
 }

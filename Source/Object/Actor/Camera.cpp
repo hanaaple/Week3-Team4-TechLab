@@ -1,13 +1,12 @@
 #include "Camera.h"
 
-#include "Core/Config/ConfigManager.h"
 #include "Core/Input/PlayerInput.h"
+#include "Core/Config/ConfigManager.h"
+#include "Static/FEditorManager.h"
 
 
 ACamera::ACamera()
 {
-    bIsGizmo = true;
-    
     Near = .1f;
     Far = 1000.f;
     FieldOfView = 45.f;
@@ -31,6 +30,15 @@ void ACamera::BeginPlay()
 	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::D, [this] { MoveRight(); }, GetUUID());
 	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::Q, [this] { MoveDown(); }, GetUUID());
 	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::E, [this] { MoveUp(); }, GetUUID());
+
+	APlayerInput::Get().RegisterKeyDownCallback(EKeyCode::F, [this]
+	{
+		if (const AActor* SelectedActor = FEditorManager::Get().GetSelectedActor())
+		{
+			if (SelectedActor == this) return;
+			SetActorPosition(SelectedActor->GetActorPosition() - (GetForward() * 10.0f));
+		}
+	}, GetUUID());
 
 	APlayerInput::Get().RegisterMousePressCallback(EKeyCode::RButton, std::bind(&ACamera::Rotate, this, std::placeholders::_1), GetUUID());
 
@@ -92,7 +100,7 @@ void ACamera::UpdateCameraMatrix()
 	}
 	else if (ProjectionMode == ECameraProjectionMode::Orthographic)
 	{
-		ProjectionMatrix = FMatrix::PerspectiveFovLH(FOV, AspectRatio, Near, Far);
+		ProjectionMatrix = FMatrix::OrthoForLH(UEngine::Get().GetScreenWidth() / ZoomSize, UEngine::Get().GetScreenHeight() / ZoomSize, Near, Far);
 
 		// TODO: 추가 필요.
 		// ProjectionMatrix = FMatrix::OrthoForLH(FOV, AspectRatio, Near, Far);
