@@ -124,8 +124,8 @@ void UDebugDrawManager::Render()
 		return;
 	}
 
-	RenderResourceCollection.GetMesh()->GetVertexBuffer()->SetVertexCount(VertexBuffer.Num());
-	RenderResourceCollection.GetMesh()->GetIndexBuffer()->SetIndexCount(IndexBuffer.Num());
+	//RenderResourceCollection.GetMesh()->GetVertexBuffer()->SetVertexCount(VertexBuffer.Num());
+	//RenderResourceCollection.GetMesh()->GetIndexBuffer()->SetIndexCount(IndexBuffer.Num());
 
 	DebugConstantInfo.ViewProjectionMatrix = FMatrix::Transpose(UEngine::Get().GetWorld()->GetCamera()->GetViewProjectionMatrix());
 	RenderResourceCollection.Render();

@@ -76,7 +76,7 @@ void FEditorManager::SelectActor(AActor* NewActor)
 		FVector worldMin, worldMax;
 		worldMax = SelectedActor->GetActorBoundsMax();
 		worldMin = SelectedActor->GetActorBoundsMin();
-		UDebugDrawManager::Get().DrawBox(worldMin, worldMax, FVector4::WHITE);
+		//UDebugDrawManager::Get().DrawBox(worldMin, worldMax, FVector4::WHITE);
 	}
 }
 

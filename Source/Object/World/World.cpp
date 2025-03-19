@@ -124,7 +124,7 @@ void UWorld::Render()
 	}
 	UDebugDrawManager::Get().Render();
 
-	FUUIDBillBoard::Get().Render();
+	//FUUIDBillBoard::Get().Render();
 
 
 	//DisplayPickingTexture(*Renderer);
