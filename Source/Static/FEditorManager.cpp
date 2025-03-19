@@ -189,7 +189,7 @@ void FEditorManager::OnUpdateWindowSize(uint32 Width, uint32 Height)
 
 	if (UUIDTexture != nullptr)
 	{
-		UUIDTexture->Release("UUIDTexture");
+		FTexture::Release("UUIDTexture");
 		UUIDTexture = nullptr;
 	}
 
