@@ -20,6 +20,7 @@
 #include "Object/Actor/Arrow.h"
 #include "Object/Actor/Picker.h"
 #include "Core/Config/ConfigManager.h"
+#include "Object/Gizmo/GizmoActor.h"
 
 #include "Resource/Mesh.h"
 
@@ -178,7 +179,8 @@ void UWorld::ClearWorld()
 	TArray CopyActors = Actors;
 	for (AActor* Actor : CopyActors)
 	{
-		if (!Actor->IsGizmoActor())
+		// if (!Actor->Implements<AGizmoActor>()) // TODO: RTTI 개선하면 사용
+		if (!dynamic_cast<IGizmoInterface*>(Actor))
 		{
 			DestroyActor(Actor);
 		}
@@ -216,8 +218,7 @@ bool UWorld::DestroyActor(AActor* InActor)
 
 void UWorld::SaveWorld()
 {
-	const UWorldInfo& WorldInfo = GetWorldInfo();
-	JsonSaveHelper::SaveScene(WorldInfo);
+	JsonSaveHelper::SaveScene(GetWorldInfo());
 }
 
 void UWorld::AddZIgnoreComponent(UPrimitiveComponent* InComponent)
@@ -231,20 +232,21 @@ void UWorld::LoadWorld(const char* InSceneName)
 	if (InSceneName == nullptr || strcmp(InSceneName, "") == 0){
 		return;
 	}
-	
-	UWorldInfo* WorldInfo = JsonSaveHelper::LoadScene(InSceneName);
+
+	const std::unique_ptr<UWorldInfo> WorldInfo = JsonSaveHelper::LoadScene(InSceneName);
 	if (WorldInfo == nullptr) return;
 
 	ClearWorld();
 
 	Version = WorldInfo->Version;
 	this->SceneName = WorldInfo->SceneName;
-	uint32 ActorCount = WorldInfo->ActorCount;
 
 	// Type 확인
-	for (uint32 i = 0; i < ActorCount; i++)
+	while (!WorldInfo->ObjectInfos.empty())
 	{
-		UObjectInfo* ObjectInfo = WorldInfo->ObjctInfos[i];
+		const std::unique_ptr<UObjectInfo> ObjectInfo = std::move(WorldInfo->ObjectInfos.front());
+		WorldInfo->ObjectInfos.pop();
+
 		FTransform Transform = FTransform(ObjectInfo->Location, FQuat(), ObjectInfo->Scale);
 		Transform.Rotate(ObjectInfo->Rotation);
 
@@ -380,25 +382,26 @@ UWorldInfo UWorld::GetWorldInfo() const
 {
 	UWorldInfo WorldInfo;
 	WorldInfo.ActorCount = Actors.Num();
-	WorldInfo.ObjctInfos = new UObjectInfo*[WorldInfo.ActorCount];
 	WorldInfo.SceneName = *SceneName;
 	WorldInfo.Version = 1;
 	uint32 i = 0;
 	for (auto& actor : Actors)
 	{
-		if (actor->IsGizmoActor())
+		// if (actor->IsA<AGizmoActor>()) // TODO: RTTI 개선하면 사용
+		if (dynamic_cast<IGizmoInterface*>(actor))
 		{
 			WorldInfo.ActorCount--;
 			continue;
 		}
-		WorldInfo.ObjctInfos[i] = new UObjectInfo();
-		const FTransform& Transform = actor->GetActorTransform();
-		WorldInfo.ObjctInfos[i]->Location = Transform.GetPosition();
-		WorldInfo.ObjctInfos[i]->Rotation = Transform.GetRotation();
-		WorldInfo.ObjctInfos[i]->Scale = Transform.GetScale();
-		WorldInfo.ObjctInfos[i]->ObjectType = actor->GetTypeName();
-
-		WorldInfo.ObjctInfos[i]->UUID = actor->GetUUID();
+		WorldInfo.ObjectInfos.push(std::make_unique<UObjectInfo>(
+			UObjectInfo{
+				.Location = actor->GetActorPosition(),
+				.Rotation = actor->GetActorRotation(),
+				.Scale = actor->GetActorScale(),
+				.ObjectType = actor->GetTypeName(),
+				.UUID = actor->GetUUID()
+			}
+		));
 		i++;
 	}
 	return WorldInfo;

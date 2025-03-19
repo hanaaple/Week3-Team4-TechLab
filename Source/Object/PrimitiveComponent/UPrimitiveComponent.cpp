@@ -10,6 +10,7 @@
 #include "Resource/DirectResource/InputLayout.h"
 #include "Resource/DirectResource/ConstantBuffer.h"
 #include "Debug/EngineShowFlags.h"
+#include "Object/Gizmo/GizmoActor.h"
 #include "Resource/DirectResource/BlendState.h"
 #include "Resource/DirectResource/DepthStencilState.h"
 #include "Resource/DirectResource/Rasterizer.h"
@@ -59,7 +60,8 @@ void UPrimitiveComponent::Render()
 	{
 		return;
 	}
-	if (GetOwner()->IsGizmoActor() == false)
+	// if (GetOwner()->IsA<AGizmoActor>() == false) // TODO: RTTI 개선하면 사용
+	if (!dynamic_cast<IGizmoInterface*>(GetOwner()))
 	{
 		if (bIsPicked)
 		{
