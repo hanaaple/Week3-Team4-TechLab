@@ -13,6 +13,7 @@
 #include "Object/Actor/Cube.h"
 #include "Object/Actor/Cylinder.h"
 #include "Object/Actor/Sphere.h"
+#include "Object/Actor/Sphere.h"
 #include "Object/Actor/SpotLight.h"
 #include "Object/Light/SpotLightComponent.h"
 #include "Object/World/World.h"
@@ -503,6 +504,7 @@ void UI::RenderSceneManager()
 					//CurActor->IsHighlightValue = false;
 				CurActor = Actor;
 				FEditorManager::Get().SelectActor(CurActor);
+				FUUIDBillBoard::Get().SetTarget(CurActor);
 			}
 		}
 	}
