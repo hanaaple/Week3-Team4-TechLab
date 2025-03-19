@@ -24,6 +24,8 @@
 
 #include "Resource/Mesh.h"
 
+#include "Debug/DebugDrawManager.h"
+
 
 void UWorld::InitWorld()
 {
@@ -111,7 +113,19 @@ void UWorld::Render()
 	RenderMainTexture(*Renderer);
 
 	FLineBatchManager::Get().Render();
+
+	AActor* SelectedActor = FEditorManager::Get().GetSelectedActor();
+	if (SelectedActor != nullptr)
+	{
+		FVector worldMin, worldMax;
+		worldMax = SelectedActor->GetActorBoundsMax();
+		worldMin = SelectedActor->GetActorBoundsMin();
+		UDebugDrawManager::Get().DrawBox(worldMin, worldMax, FVector4::WHITE);
+	}
+	UDebugDrawManager::Get().Render();
+
 	FUUIDBillBoard::Get().Render();
+
 
 	//DisplayPickingTexture(*Renderer);
 

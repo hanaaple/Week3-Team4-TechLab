@@ -168,5 +168,10 @@ public:
 	virtual FBoxSphereBounds CalcBounds(const FTransform& LocalToWorld) const;
 public:
 	FBoxSphereBounds Bounds;
+
+	// 임시 : Component의 MinMax
+	FVector Min;
+	FVector Max;
+
 	//TODO : 빌보드 컴포넌트 추가
 };

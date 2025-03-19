@@ -13,6 +13,7 @@
 #include "Static/FLineBatchManager.h"
 #include "Core/Rendering/FDevice.h"
 #include "Object/Assets/AssetManager.h"
+#include "Debug/DebugDrawManager.h"
 
 
 class AArrow;
@@ -75,6 +76,7 @@ void UEngine::Initialize(
 	InitWorld();
 	FDevice::Get().Init(WindowHandle);
     InitRenderer();
+	UDebugDrawManager::Get().Initialize();
 
 	InitializedScreenWidth = ScreenWidth;
 	InitializedScreenHeight = ScreenHeight;

@@ -23,14 +23,13 @@ public:
 	void Initialize();
 	void Render();
 
-	void DrawBoxBrackets(const FBox InActor, const FTransform& InTransform, const FVector4& Color, float LifeTime = 1.0f);
-	void DrawBox(const FVector& Origin, const FVector& BoxExtent, const FVector4& Color, float LifeTime = 1.0f);
+	void DrawBoxBrackets(const FBox InActor, const FTransform& LocalToWorld, const FVector4& Color, float LifeTime = 1.0f);
+	void DrawBox(const FVector& InMin, const FVector& InMax, const FVector4& Color, float LifeTime = 1.0f);
 	void DrawSphere(const FVector& Center, float Radius, const FVector4& Color, float LifeTime = 1.0f);
 	void DrawBoxSphereBounds(const FVector& Origin, const FVector& BoxExtent, float SphereRadius, const FVector4& Color, float LifeTime = 1.0f);
 	void DrawLine(const FVector& Start, const FVector& End, const FVector4& Color, float LifeTime = 1.0f);
 	void DrawPoint(const FVector& Point, const FVector4& Color, float LifeTime = 1.0f);
 	//void DrawText(const FVector& Location, const FString& Text, const FColor& Color, float LifeTime = 0.0f);
-	void DrawDebug();
 	void ClearDebug();
 
 public:

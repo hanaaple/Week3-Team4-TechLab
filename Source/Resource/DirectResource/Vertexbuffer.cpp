@@ -23,6 +23,12 @@ void FVertexBuffer::Setting() const
 	{
 		// 버텍스 버퍼 업데이트
 		D3D11_MAPPED_SUBRESOURCE mappedResource;
+		if (Buffer == nullptr)
+		{
+			MsgBoxAssert("Error: Vertexbuffer Setting Failed");
+			return;
+		}
+
 		FDevice::Get().GetDeviceContext()->Map(Buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 		memcpy(mappedResource.pData, CPUDataPtr, VertexSize * VertexCount);
 		FDevice::Get().GetDeviceContext()->Unmap(Buffer, 0);

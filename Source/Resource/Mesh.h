@@ -57,11 +57,6 @@ public:
 		return Res;
 	}
 
-	std::shared_ptr<class FVertexBuffer> GetVertexBuffer()
-	{
-		return VertexBuffer;
-	}
-
 	void SetTOPOLOGY(D3D11_PRIMITIVE_TOPOLOGY _TOPOLOGY)
 	{
 		Topology = _TOPOLOGY;
@@ -69,6 +64,16 @@ public:
 
 	void Setting();
 	void Draw();
+
+	std::shared_ptr<class FVertexBuffer> GetVertexBuffer()
+	{
+		return VertexBuffer;
+	}
+
+	std::shared_ptr<class FIndexBuffer> GetIndexBuffer()
+	{
+		return IndexBuffer;
+	}
 	
 private:
 	std::shared_ptr<class FVertexBuffer> VertexBuffer = nullptr;

@@ -1,6 +1,7 @@
 #include "FDevice.h"
 
 #include "DirectXTK/SimpleMath.h"
+#include <Debug/DebugConsole.h>
 #include "Static/FEditorManager.h"
 #include "Resource/Texture.h"
 
@@ -182,7 +183,17 @@ void FDevice::CreateDepthStencilBuffer()
 	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	dsvDesc.Texture2D.MipSlice = 0;
     
+	if (DepthStencilBuffer == nullptr)
+	{
+		UE_LOG("DepthStencilBuffer is nullptr");
+	}
+
 	result = Device->CreateDepthStencilView(DepthStencilBuffer, &dsvDesc, &DepthStencilView);
+
+	if (FAILED(result))
+	{
+		UE_LOG("Failed to create DepthStencilView");
+	}
 }
 
 void FDevice::ReleaseFrameBuffer()
@@ -216,12 +227,7 @@ void FDevice::ReleaseDepthStencilBuffer()
 
 void FDevice::Prepare() const
 {
-	// 스왑버퍼랑 뎁스스텐실 화면 지우기
-	FDevice::Get().GetDeviceContext()->ClearRenderTargetView(FrameBufferRTV, ClearColor); 
-	FDevice::Get().GetDeviceContext()->ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-	// FDevice::Get().GetDeviceContext()->
-    
-	// InputAssembler의 Vertex 해석 방식을 설정
+
 
 	// DepthStencil 상태 설정. StencilRef: 스텐실 테스트 결과의 레퍼런스
 
