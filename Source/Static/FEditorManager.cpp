@@ -101,93 +101,95 @@ int FEditorManager::DecodeUUID(FVector4 color)
 {
 	return (static_cast<unsigned int>(color.W)<<24) | (static_cast<unsigned int>(color.Z)<<16) | (static_cast<unsigned int>(color.Y)<<8) | (static_cast<unsigned int>(color.X));
 }
+
 void FEditorManager::LateTick(float DeltaTime)
 {
- if(APlayerInput::Get().GetKeyDown(EKeyCode::LButton))
-    {
-        POINT pt;
-        GetCursorPos(&pt);
-        ScreenToClient(UEngine::Get().GetWindowHandle(), &pt);
+	if (APlayerInput::Get().GetKeyDown(EKeyCode::LButton))
+	{
+		POINT pt;
+		GetCursorPos(&pt);
+		ScreenToClient(UEngine::Get().GetWindowHandle(), &pt);
 
 		//float Width = FDevice::Get().GetViewPortInfo().Width;
 		//float Height = FDevice::Get().GetViewPortInfo().Height;
-  //      float ratioX = UEngine::Get().GetInitializedScreenWidth() / Width;
-  //      float ratioY = UEngine::Get().GetInitializedScreenHeight() / Height;
-  //      pt.x = pt.x * ratioX;
-  //      pt.y = pt.y * ratioY;
-        
-        FVector4 color = GetPixel(FVector(pt.x, pt.y, 0));
+		//      float ratioX = UEngine::Get().GetInitializedScreenWidth() / Width;
+		//      float ratioY = UEngine::Get().GetInitializedScreenHeight() / Height;
+		//      pt.x = pt.x * ratioX;
+		//      pt.y = pt.y * ratioY;
 
-        uint32_t UUID = DecodeUUID(color);
+		FVector4 color = GetPixel(FVector(pt.x, pt.y, 0));
+		uint32_t UUID = DecodeUUID(color);
 
-        UActorComponent* PickedComponent = UEngine::Get().GetObjectByUUID<UActorComponent>(UUID);
-
-        if (PickedComponent != nullptr)
-        {
-            AActor* PickedActor = PickedComponent->GetOwner();
-
-            if (PickedActor == nullptr) return;
-            /*if (PickedComponent->GetOwner()->IsGizmoActor() == false)
-            {*/
-                if (PickedActor == FEditorManager::Get().GetSelectedActor())
-                {
-                    FEditorManager::Get().SelectActor(nullptr);   
-                }
-                else
-                {
-                    FEditorManager::Get().SelectActor(PickedActor);
-                }
-            //}
-        }
-        UE_LOG("Pick - UUID: %d", UUID);
-    }
-
-    if (APlayerInput::Get().GetKeyPress(EKeyCode::LButton))
-    {
-        POINT pt;
-        GetCursorPos(&pt);
-        ScreenToClient(UEngine::Get().GetWindowHandle(), &pt);
-        FVector4 color = GetPixel(FVector(pt.x, pt.y, 0));
-        uint32_t UUID = DecodeUUID(color);
-
-        UActorComponent* PickedComponent = UEngine::Get().GetObjectByUUID<UActorComponent>(UUID);
-        // if (PickedComponent != nullptr)
-        // {
-        //     if (AGizmoHandle* Gizmo = dynamic_cast<AGizmoHandle*>(PickedComponent->GetOwner()))
-        //     {
-        //         if (Gizmo->GetSelectedAxis() != ESelectedAxis::None) return;
-        //         UCylinderComp* CylinderComp = static_cast<UCylinderComp*>(PickedComponent);
-        //         FVector4 CompColor = CylinderComp->GetCustomColor();
-        //         if (1.0f - FMath::Abs(CompColor.X) < KINDA_SMALL_NUMBER) // Red - X축
-        //         {
-        //             Gizmo->SetSelectedAxis(ESelectedAxis::X);
-        //         }
-        //         else if (1.0f - FMath::Abs(CompColor.Y) < KINDA_SMALL_NUMBER) // Green - Y축
-        //         {
-        //             Gizmo->SetSelectedAxis(ESelectedAxis::Y);
-        //         }
-        //         else  // Blue - Z축
-        //         {
-        //             Gizmo->SetSelectedAxis(ESelectedAxis::Z);
-        //         }
-        //     }
-        // }
-    }
-    else
-    {
-        // if (AGizmoHandle* Handle = FEditorManager::Get().GetGizmoHandle())
-        // {
-        //     Handle->SetSelectedAxis(ESelectedAxis::None);
-        // }
-    }
+		if (const UActorComponent* PickedComponent = UEngine::Get().GetObjectByUUID<UActorComponent>(UUID))
+		{
+			// Component의 Owner도 Engine.GObjects에서 관리되기에, Component가 존재한다면 항상 존재 해야함
+			AActor* PickedActor = PickedComponent->GetOwner();
+			assert(PickedActor);
 	
+			// if (GetOwner()->Implements<IGizmoInterface>() == false) // TODO: RTTI 개선하면 사용
+			if (!dynamic_cast<IGizmoInterface*>(PickedActor))
+			{
+				// PickedActor를 한번 더 클릭하면 UnPicked
+				SelectActor(
+					GetSelectedActor() == PickedActor
+						? nullptr
+						: PickedActor
+				);
+			}
+			UE_LOG("Pick - UUID: %d", UUID);
+		}
+	}
+
+	if (APlayerInput::Get().GetKeyPress(EKeyCode::LButton))
+	{
+		POINT pt;
+		GetCursorPos(&pt);
+		ScreenToClient(UEngine::Get().GetWindowHandle(), &pt);
+		FVector4 color = GetPixel(FVector(pt.x, pt.y, 0));
+		uint32_t UUID = DecodeUUID(color);
+
+		UActorComponent* PickedComponent = UEngine::Get().GetObjectByUUID<UActorComponent>(UUID);
+		// if (PickedComponent != nullptr)
+		// {
+		//     if (AGizmoHandle* Gizmo = dynamic_cast<AGizmoHandle*>(PickedComponent->GetOwner()))
+		//     {
+		//         if (Gizmo->GetSelectedAxis() != ESelectedAxis::None) return;
+		//         UCylinderComp* CylinderComp = static_cast<UCylinderComp*>(PickedComponent);
+		//         FVector4 CompColor = CylinderComp->GetCustomColor();
+		//         if (1.0f - FMath::Abs(CompColor.X) < KINDA_SMALL_NUMBER) // Red - X축
+		//         {
+		//             Gizmo->SetSelectedAxis(ESelectedAxis::X);
+		//         }
+		//         else if (1.0f - FMath::Abs(CompColor.Y) < KINDA_SMALL_NUMBER) // Green - Y축
+		//         {
+		//             Gizmo->SetSelectedAxis(ESelectedAxis::Y);
+		//         }
+		//         else  // Blue - Z축
+		//         {
+		//             Gizmo->SetSelectedAxis(ESelectedAxis::Z);
+		//         }
+		//     }
+		// }
+	}
+	else
+	{
+		// if (AGizmoHandle* Handle = FEditorManager::Get().GetGizmoHandle())
+		// {
+		//     Handle->SetSelectedAxis(ESelectedAxis::None);
+		// }
+	}
 }
 
 void FEditorManager::OnUpdateWindowSize(uint32 Width, uint32 Height)
 {
+	if (Width == 0 || Height == 0)
+	{
+		return;
+	}
+
 	if (UUIDTexture != nullptr)
 	{
-		UUIDTexture->Release("UUIDTexture");
+		FTexture::Release("UUIDTexture");
 		UUIDTexture = nullptr;
 	}
 
