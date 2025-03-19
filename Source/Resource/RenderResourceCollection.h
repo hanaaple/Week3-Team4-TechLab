@@ -50,8 +50,8 @@ public:
 	}
 	
 	
-	std::shared_ptr<class FConstantBufferBinding> SetConstantBufferBinding(const FString& _Name,
-		const void* _CPUDataPtr, int _DataSize,int _BindPoint, bool	bIsUseVertexShader, bool bIsUsePixelShader);
+	std::shared_ptr<FConstantBufferBinding> SetConstantBufferBinding(const FString& _Name,
+	                                                                 const void* _CPUDataPtr, int _DataSize,int _BindPoint, bool	bIsUseVertexShader, bool bIsUsePixelShader);
 	
 	
 	std::shared_ptr<class FTextureBinding> SetTextureBinding(const FString& _Name,
@@ -69,12 +69,12 @@ private:
 	//원래는 메쉬와 메테리얼의 정보 둘다 필요함 일단 버텍스 쉐이더 정보만 받아서 자동화
 	std::shared_ptr<class FInputLayout> Layout = nullptr;
 	
-	std::shared_ptr<class FMesh> Mesh = nullptr;
-	std::shared_ptr<class FMaterial> Material = nullptr;
+	std::shared_ptr<FMesh> Mesh = nullptr;
+	std::shared_ptr<FMaterial> Material = nullptr;
 
-	TMap<FString, std::shared_ptr<class FConstantBufferBinding>> ConstantBufferBindings;
-	TMap<FString, std::shared_ptr<class FTextureBinding>> TextureBindings;
-	TMap<FString, std::shared_ptr<class FSamplerBinding>> SamplerBindings;
+	TMap<FString, std::shared_ptr<FConstantBufferBinding>> ConstantBufferBindings;
+	TMap<FString, std::shared_ptr<FTextureBinding>> TextureBindings;
+	TMap<FString, std::shared_ptr<FSamplerBinding>> SamplerBindings;
 	
 	// // 테스트 상수버퍼
 	// std::shared_ptr<class FConstantBufferBinding> ConstantBufferBinding = nullptr;

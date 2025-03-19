@@ -19,7 +19,7 @@ void FRenderResourceCollection::SetMaterial(const FString& _Name)
 	SetMaterial(Material);
 }
 
-void FRenderResourceCollection::SetMesh(std::shared_ptr<class FMesh> _Mesh)
+void FRenderResourceCollection::SetMesh(std::shared_ptr<FMesh> _Mesh)
 {
 	Mesh = _Mesh;
 
@@ -36,7 +36,7 @@ void FRenderResourceCollection::SetMesh(std::shared_ptr<class FMesh> _Mesh)
 	}
 }
 
-void FRenderResourceCollection::SetMaterial(std::shared_ptr<class FMaterial> _Material)
+void FRenderResourceCollection::SetMaterial(std::shared_ptr<FMaterial> _Material)
 {
 	Material = _Material;
 
@@ -85,8 +85,8 @@ void FRenderResourceCollection::Reset()
 	}
 }
 
-std::shared_ptr<class FTextureBinding> FRenderResourceCollection::SetTextureBinding(const FString& _Name, int _BindPoint,
-                                                                                    bool bIsUseVertexShader, bool bIsUsePixelShader)
+std::shared_ptr<FTextureBinding> FRenderResourceCollection::SetTextureBinding(const FString& _Name, int _BindPoint,
+                                                                              bool bIsUseVertexShader, bool bIsUsePixelShader)
 {
 	std::shared_ptr<FTexture> Res = FTexture::Find(_Name);
 
@@ -96,7 +96,7 @@ std::shared_ptr<class FTextureBinding> FRenderResourceCollection::SetTextureBind
 	// 	Res = FConstantBuffer::Create(_Name, _DataSize);
 	// }
 	
-	std::shared_ptr<class FTextureBinding> Binding = std::make_shared<FTextureBinding>();
+	std::shared_ptr<FTextureBinding> Binding = std::make_shared<FTextureBinding>();
 
 	Binding->Res = Res;
 	Binding->Name = _Name;
@@ -109,8 +109,8 @@ std::shared_ptr<class FTextureBinding> FRenderResourceCollection::SetTextureBind
 	return Binding;
 }
 
-std::shared_ptr<class FSamplerBinding> FRenderResourceCollection::SetSamplerBinding(const FString& _Name, int _BindPoint,
-	bool bIsUseVertexShader, bool bIsUsePixelShader)
+std::shared_ptr<FSamplerBinding> FRenderResourceCollection::SetSamplerBinding(const FString& _Name, int _BindPoint,
+                                                                              bool bIsUseVertexShader, bool bIsUsePixelShader)
 {
 	std::shared_ptr< FSampler> Res = FSampler::Find(_Name);
 
@@ -120,7 +120,7 @@ std::shared_ptr<class FSamplerBinding> FRenderResourceCollection::SetSamplerBind
 	// 	Res = FConstantBuffer::Create(_Name, _DataSize);
 	// }
 	
-	std::shared_ptr<class FSamplerBinding> Binding = std::make_shared<FSamplerBinding>();
+	std::shared_ptr<FSamplerBinding> Binding = std::make_shared<FSamplerBinding>();
 
 	Binding->Res = Res;
 	Binding->Name = _Name;
@@ -133,10 +133,10 @@ std::shared_ptr<class FSamplerBinding> FRenderResourceCollection::SetSamplerBind
 	return Binding;
 }
 
-std::shared_ptr<class FConstantBufferBinding> FRenderResourceCollection::SetConstantBufferBinding(const FString& _Name,
-                                                                                                  const void* _CPUDataPtr, int _DataSize, int _BindPoint, bool bIsUseVertexShader, bool bIsUsePixelShader)
+std::shared_ptr<FConstantBufferBinding> FRenderResourceCollection::SetConstantBufferBinding(const FString& _Name,
+                                                                                            const void* _CPUDataPtr, int _DataSize, int _BindPoint, bool bIsUseVertexShader, bool bIsUsePixelShader)
 {
-	std::shared_ptr<class FConstantBuffer> Res = FConstantBuffer::Find(_Name);
+	std::shared_ptr<FConstantBuffer> Res = FConstantBuffer::Find(_Name);
 
 	if (Res == nullptr)
 	{
@@ -144,7 +144,7 @@ std::shared_ptr<class FConstantBufferBinding> FRenderResourceCollection::SetCons
 		Res = FConstantBuffer::Create(_Name, _DataSize);
 	}
 	
-	std::shared_ptr<class FConstantBufferBinding> Binding = std::make_shared<FConstantBufferBinding>();
+	std::shared_ptr<FConstantBufferBinding> Binding = std::make_shared<FConstantBufferBinding>();
 
 	Binding->DataSize = _DataSize;
 	Binding->CPUDataPtr = _CPUDataPtr;

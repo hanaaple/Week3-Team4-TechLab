@@ -18,7 +18,7 @@
 
 
 
-void UI::Initialize(HWND hWnd, const class FDevice& Device, UINT ScreenWidth, UINT ScreenHeight)
+void UI::Initialize(HWND hWnd, const FDevice& Device, UINT ScreenWidth, UINT ScreenHeight)
 {
     // ImGui 초기화
     IMGUI_CHECKVERSION();

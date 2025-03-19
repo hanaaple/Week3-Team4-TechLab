@@ -41,7 +41,7 @@ public:
 	}
 
 	static std::shared_ptr<FMesh> Create(
-		const FString& InName, std::shared_ptr<class FVertexBuffer> InVertex, std::shared_ptr<FIndexBuffer> InIndex,
+		const FString& InName, std::shared_ptr<FVertexBuffer> InVertex, std::shared_ptr<FIndexBuffer> InIndex,
 		D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST
 	)
 	{
@@ -67,18 +67,18 @@ public:
 	void Setting();
 	void Draw();
 
-	std::shared_ptr<class FVertexBuffer> GetVertexBuffer()
+	std::shared_ptr<FVertexBuffer> GetVertexBuffer()
 	{
 		return VertexBuffer;
 	}
 
-	std::shared_ptr<class FIndexBuffer> GetIndexBuffer()
+	std::shared_ptr<FIndexBuffer> GetIndexBuffer()
 	{
 		return IndexBuffer;
 	}
 	
 private:
-	std::shared_ptr<class FVertexBuffer> VertexBuffer = nullptr;
-	std::shared_ptr<class FIndexBuffer> IndexBuffer = nullptr;
+	std::shared_ptr<FVertexBuffer> VertexBuffer = nullptr;
+	std::shared_ptr<FIndexBuffer> IndexBuffer = nullptr;
 	D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 };

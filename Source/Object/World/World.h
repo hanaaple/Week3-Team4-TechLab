@@ -50,11 +50,11 @@ public:
 	bool ContainsZIgnoreComponent(UPrimitiveComponent* InComponent) {return ZIgnoreRenderComponents.Find(InComponent) != -1; }
 	
 	// render
-	void AddRenderComponent(class UPrimitiveComponent* Component) { RenderComponents.Add(Component); }
-	void RemoveRenderComponent(class UPrimitiveComponent* Component) { RenderComponents.Remove(Component); }
+	void AddRenderComponent(UPrimitiveComponent* Component) { RenderComponents.Add(Component); }
+	void RemoveRenderComponent(UPrimitiveComponent* Component) { RenderComponents.Remove(Component); }
 
-	inline class ACamera* GetCamera() const { return Camera; }
-	void SetCamera(class ACamera* NewCamera) { Camera = NewCamera; }
+	inline ACamera* GetCamera() const { return Camera; }
+	void SetCamera(ACamera* NewCamera) { Camera = NewCamera; }
 
 	void RayCasting(const FVector& MouseNDCPos);
 
@@ -69,7 +69,7 @@ public:
 	float GetGridSize() const { return GridSize; }
 private:
 	UWorldInfo GetWorldInfo() const;
-	class ACamera* Camera = nullptr;
+	ACamera* Camera = nullptr;
 
 	float GridSize = 100.0f;
 
