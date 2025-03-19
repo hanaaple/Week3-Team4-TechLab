@@ -1,15 +1,19 @@
 #pragma once
-
 #include "Actor.h"
+#include "Core/Interfaces/GizmoInterface.h"
 
-class APicker : public AActor
+
+class APicker : public AActor, public IGizmoInterface
 {
 	DECLARE_CLASS(APicker, AActor)
 
 public:
-    APicker();
-    ~APicker() = default;
-    
+    APicker() = default;
+
+	//~ Begin IGizmoInterface
+	virtual bool IsGizmo() override { return true; }
+	//~ End IGizmoInterface
+
     static FVector4 EncodeUUID(unsigned int UUID);
     static int DecodeUUID(FVector4 color);
 
