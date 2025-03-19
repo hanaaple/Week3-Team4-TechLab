@@ -1,7 +1,7 @@
 #pragma once
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
 
-enum class EAxis : uint8
+enum class ESelectedAxis : uint8
 {
 	None,
 	X,
@@ -21,6 +21,8 @@ class UGizmoComponent : public UPrimitiveComponent
 {
 	DECLARE_CLASS(UGizmoComponent, UPrimitiveComponent)
 
+	friend class AGizmoActor;
+
 public:
 	UGizmoComponent();
 	virtual ~UGizmoComponent() = default;
@@ -33,8 +35,12 @@ public:
 
 	EPrimitiveType GetType() const { return EPrimitiveType::EPT_Gizmo; }
 
+	ESelectedAxis GetSelectedAxis() const { return Axis; }
+
 private:
 	void OnChangedGizmoType(EGizmoType Gizmo);
+
+	ESelectedAxis Axis = ESelectedAxis::None;
 
 private:
 	

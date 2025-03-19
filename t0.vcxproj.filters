@@ -312,9 +312,6 @@
     <ClCompile Include="Source\Resource\DirectResource\ShaderResourceBinding.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Object\Gizmo\Gizmo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Resource\DirectResource\BlendState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -718,9 +715,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Resource\DirectResource\ShaderResourceBinding.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Object\Gizmo\Gizmo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Resource\DirectResource\BlendState.h">

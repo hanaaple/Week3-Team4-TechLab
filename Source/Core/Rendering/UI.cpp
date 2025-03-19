@@ -411,7 +411,7 @@ void UI::RenderSceneManager()
 		int Cnt = 0;
 		for (int i = 0; i < Actors.Num(); i++) {
 
-			FString UUIDName = Actors[i]->GetTypeName();
+			FString UUIDName = Actors[i]->GetClass()->GetName();
 			UUIDName += std::to_string(Actors[i]->GetUUID());
 			UUIDNames.Add(UUIDName);
 

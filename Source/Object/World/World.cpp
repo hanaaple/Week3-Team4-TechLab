@@ -112,7 +112,6 @@ void UWorld::Render()
 
 	RenderMainTexture(*Renderer);
 
-	FLineBatchManager::Get().Render();
 
 	AActor* SelectedActor = FEditorManager::Get().GetSelectedActor();
 	if (SelectedActor != nullptr)
@@ -124,7 +123,10 @@ void UWorld::Render()
 	}
 	UDebugDrawManager::Get().Render();
 
-	//FUUIDBillBoard::Get().Render();
+
+	FLineBatchManager::Get().Render();
+
+	FUUIDBillBoard::Get().Render();
 
 
 	//DisplayPickingTexture(*Renderer);
@@ -178,12 +180,16 @@ void UWorld::RenderMainTexture(URenderer& Renderer)
 		RenderComponent->Render();
 	}
 
+	FDevice::Get().PickingPrepare();
+
 	//Renderer.PrepareZIgnore();
 	for (auto& RenderComponent: ZIgnoreRenderComponents)
 	{
 		uint32 depth = RenderComponent->GetOwner()->GetDepth();
 		RenderComponent->Render();
 	}
+
+	FDevice::Get().SetRenderTarget();
 }
 
 // void UWorld::DisplayPickingTexture(URenderer& Renderer)

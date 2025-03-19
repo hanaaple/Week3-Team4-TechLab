@@ -1,6 +1,7 @@
 #pragma once
 #include "Core/Interfaces/GizmoInterface.h"
 #include "Object/Actor/Actor.h"
+#include <Object/PrimitiveComponent/GizmoComponent.h>
 
 
 class AGizmoHandle : public AActor, public IGizmoInterface
@@ -28,8 +29,8 @@ public:
 //	bool bIsActive = false;
 //	TArray<class UCylinderComp*> CylinderComponents;
 //
-//	ESelectedAxis SelectedAxis = ESelectedAxis::None;
-//	EGizmoType GizmoType = EGizmoType::Translate;
+	ESelectedAxis SelectedAxis = ESelectedAxis::None;
+	EGizmoType GizmoType = EGizmoType::Translate;
 
 	virtual const char* GetTypeName() override;
 

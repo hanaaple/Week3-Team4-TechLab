@@ -6,6 +6,8 @@
 
 class AGizmoActor : public AActor, public IGizmoInterface
 {
+	DECLARE_CLASS(AGizmoActor, AActor)
+
 public:
 	AGizmoActor();
 	virtual ~AGizmoActor() = default;
@@ -16,15 +18,18 @@ public:
 	virtual bool IsGizmo() override { return true; }
 	//~ End IGizmoInterface
 
-	void SetSelectedAxis(EAxis InAxis) { SelectedAxis = InAxis; }
-	EAxis GetSelectedAxis() const { return SelectedAxis; }
+	void SetSelectedAxis(ESelectedAxis InAxis) { SelectedAxis = InAxis; }
+	ESelectedAxis GetSelectedAxis() const { return SelectedAxis; }
 
 	EGizmoType GetGizmoType() const { return GizmoType; }
 
+	void SetScaleByDistance();
+	void DoTransform(FTransform& AT, FVector Result, AActor* Actor);
+
 private:
-	EAxis SelectedAxis = EAxis::None;
+	ESelectedAxis SelectedAxis = ESelectedAxis::None;
 	EGizmoType GizmoType = EGizmoType::Translate;
 
-	TMap<EAxis, UGizmoComponent*> GizmoComponents;
+	TMap<ESelectedAxis, UGizmoComponent*> GizmoComponents;
 };
 

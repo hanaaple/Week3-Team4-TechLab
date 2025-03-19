@@ -85,7 +85,7 @@ void UPrimitiveComponent::Render()
 		ViewProjectionMatrix
 );
 	
-	uint32 ID = GetOwner()->GetUUID();
+	uint32 ID = GetUUID();
 
 	FVector4 UUIDCOlor = FEditorManager::EncodeUUID(ID);
 
