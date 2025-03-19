@@ -143,6 +143,7 @@ void UEngine::Run()
 		// World Update
 		if (World)
 		{
+			FDevice::Get().Prepare();
 			World->Tick(EngineDeltaTime);
 			World->Render();
 
