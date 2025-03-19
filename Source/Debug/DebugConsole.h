@@ -4,9 +4,10 @@
 #include "ImGui/imgui.h"
 
 
-#define MsgBoxAssert(Text) \
-std::string Value = Text; \
-MessageBoxA(nullptr, Value.c_str(), "Error", MB_OK); assert(false);
+#define MsgBoxAssert(Text) do { \
+	std::string Value = Text; \
+	MessageBoxA(nullptr, Value.c_str(), "Error", MB_OK); assert(false); \
+} while (0)
 
 
 #define UE_LOG(format, ...) Debug::Log(format, ##__VA_ARGS__)
