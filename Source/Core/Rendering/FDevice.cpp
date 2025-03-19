@@ -2,6 +2,8 @@
 
 #include "DirectXTK/SimpleMath.h"
 #include <Debug/DebugConsole.h>
+#include "Static/FEditorManager.h"
+#include "Resource/Texture.h"
 
 void FDevice::Init(HWND _hwnd)
 {
@@ -225,14 +227,31 @@ void FDevice::ReleaseDepthStencilBuffer()
 
 void FDevice::Prepare() const
 {
+
+
+	// DepthStencil 상태 설정. StencilRef: 스텐실 테스트 결과의 레퍼런스
+
+
 	// Rasterization할 Viewport를 설정 
-	FDevice::Get().GetDeviceContext()->RSSetViewports(1, &ViewportInfo);
-	FDevice::Get().GetDeviceContext()->OMSetRenderTargets(1, &FrameBufferRTV, DepthStencilView);    // DepthStencil 뷰 및 스왑버퍼 세팅
-	// 스왑버퍼랑 뎁스스텐실 화면 지우기
-	FDevice::Get().GetDeviceContext()->ClearRenderTargetView(FrameBufferRTV, ClearColor); 
-	FDevice::Get().GetDeviceContext()->ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-	// FDevice::Get().GetDeviceContext()->
-    
-	// InputAssembler의 Vertex 해석 방식을 설정
+	FDevice::Get().GetDeviceContext()->RSSetViewports(1, &ViewportInfo);  // DepthStencil 뷰 및 스왑버퍼 세팅
+
+	// FDevice::Get().GetDeviceContext()->OMSetRenderTargets(1, &FrameBufferRTV, DepthStencilView);  
+
+	///////////////////////
+	///일단 임시로 여기서 UUID 픽킹 텍스쳐 바인딩
+	//UUID 텍스쳐 초기화
+	FDevice::Get().GetDeviceContext()->ClearRenderTargetView(FEditorManager::Get().UUIDTexture->GetRTV(), PickingClearColor);
+	//FDevice::Get().GetDeviceContext()->ClearDepthStencilView(FEditorManager::Get().UUIDTextureDepthStecil->GetDSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+	ID3D11RenderTargetView* RTV = FEditorManager::Get().UUIDTexture->GetRTV();
+	//ID3D11DepthStencilView* DSV	= FEditorManager::Get().UUIDTextureDepthStecil->GetDSV();
+
+	
+	// 렌더 타겟 바인딩
+	ID3D11RenderTargetView* RTVs[2] = { FrameBufferRTV, RTV };
+	FDevice::Get().GetDeviceContext()->OMSetRenderTargets(2, RTVs, DepthStencilView);
+	
+	// FDevice::Get().GetDeviceContext()->OMSetRenderTargets(2, &RTV, nullptr);
+	
 }
 

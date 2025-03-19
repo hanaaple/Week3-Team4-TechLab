@@ -3,6 +3,8 @@
 
 #include "Core/Container/String.h"
 #include "Core/Container/Map.h"
+#include "Debug/DebugConsole.h"
+
 template<typename ResourcesType>
 class FResource 
 {
@@ -27,6 +29,20 @@ public:
 		auto pResult = NameRes.Find(_Name);
 		
 		return (pResult != nullptr) ? *pResult : std::shared_ptr<ResourcesType>();
+	}
+
+	static void Release(FString _Name)
+	{
+		std::lock_guard<std::mutex> Lock(NameMutex);
+
+		NameRes.Remove(_Name);
+		//auto pResult = NameRes.Find(_Name);
+
+	/*	if (pResult == nullptr)
+		{
+			MsgBoxAssert("존재하지도 않는 리소스를 지우려고 했습니다.");
+			return;
+		}*/
 	}
 
 	

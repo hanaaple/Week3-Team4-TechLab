@@ -10,12 +10,14 @@
 #include "Resource/DirectResource/InputLayout.h"
 #include "Resource/DirectResource/ConstantBuffer.h"
 #include "Debug/EngineShowFlags.h"
+#include "Object/Gizmo/GizmoActor.h"
 #include "Resource/DirectResource/BlendState.h"
 #include "Resource/DirectResource/DepthStencilState.h"
 #include "Resource/DirectResource/Rasterizer.h"
 #include "Resource/DirectResource/ShaderResourceBinding.h"
 #include "Resource/RenderResourceCollection.h"
 #include "Resource/Mesh.h"
+#include "Static/FEditorManager.h"
 
 UPrimitiveComponent::UPrimitiveComponent() : Super()
 {
@@ -23,7 +25,7 @@ UPrimitiveComponent::UPrimitiveComponent() : Super()
 
 
 	// 기본으로 바인딩되는 데이타
-	GetRenderResourceCollection().SetConstantBufferBinding("FConstantsComponentData", &ConstantsComponentData, 0, true, false);
+	GetRenderResourceCollection().SetConstantBufferBinding("FConstantsComponentData", &ConstantsComponentData, 0, true, true);
 	SetMaterial("DefaultMaterial");
 }
 
@@ -42,15 +44,15 @@ void UPrimitiveComponent::Tick(float DeltaTime)
 	UpdateBounds();
 }
 
-void UPrimitiveComponent::UpdateConstantPicking(const URenderer& Renderer, const FVector4 UUIDColor)const
-{
-	Renderer.UpdateConstantPicking(UUIDColor);
-}
+// void UPrimitiveComponent::UpdateConstantPicking(const URenderer& Renderer, const FVector4 UUIDColor)const
+// {
+// 	Renderer.UpdateConstantPicking(UUIDColor);
+// }
 
-void UPrimitiveComponent::UpdateConstantDepth(const URenderer& Renderer, const int Depth)const
-{
-	Renderer.UpdateConstantDepth(Depth);
-}
+// void UPrimitiveComponent::UpdateConstantDepth(const URenderer& Renderer, const int Depth)const
+// {
+// 	Renderer.UpdateConstantDepth(Depth);
+// }
 
 void UPrimitiveComponent::Render()
 {
@@ -59,7 +61,8 @@ void UPrimitiveComponent::Render()
 	{
 		return;
 	}
-	if (GetOwner()->IsGizmoActor() == false)
+	// if (GetOwner()->IsA<AGizmoActor>() == false) // TODO: RTTI 개선하면 사용
+	if (!dynamic_cast<IGizmoInterface*>(GetOwner()))
 	{
 		if (bIsPicked)
 		{
@@ -81,12 +84,17 @@ void UPrimitiveComponent::Render()
 		ModelMatrix *
 		ViewProjectionMatrix
 );
+	
+	uint32 ID = GetOwner()->GetUUID();
+
+	FVector4 UUIDCOlor = FEditorManager::EncodeUUID(ID);
 
 	FConstantsComponentData& Data = GetConstantsComponentData();
 
 	Data  = {
 		MVP,
 		GetCustomColor(),
+		UUIDCOlor,
 		IsUseVertexColor()
 	};
 	

@@ -31,16 +31,16 @@ private:
   //       FVector Padding;
   //   };
 	
-	struct alignas(16) FPickingConstants
-	{
-		FVector4 UUIDColor;
-	};
-
-	struct alignas(16) FDepthConstants{
-		unsigned int DepthOffset;
-		int nearPlane;
-		int farPlane;
-	};
+	// struct alignas(16) FPickingConstants
+	// {
+	// 	FVector4 UUIDColor;
+	// };
+	//
+	// struct alignas(16) FDepthConstants{
+	// 	unsigned int DepthOffset;
+	// 	int nearPlane;
+	// 	int farPlane;
+	// };
 public:
 	
     /** Renderer를 초기화 합니다. */
@@ -49,17 +49,17 @@ public:
     /** Renderer에 사용된 모든 리소스를 해제합니다. */
     void Release();
 
-    void CreateShader();
+    //void CreateShader();
 
-    void CreateConstantBuffer();
+  //  void CreateConstantBuffer();
 
     void ReleaseConstantBuffer();
 
     /** 렌더링 파이프라인을 준비 합니다. */
-    void Prepare() const;
+    // void Prepare() const;
 
     /** 셰이더를 준비 합니다. */
-    void PrepareShader() const;
+    //void PrepareShader() const;
 
 	void Render(class FRenderResourceCollection& _RenderResourceCollection);
 
@@ -83,16 +83,14 @@ public:
      */
 
     
-	void OnUpdateWindowSize(uint32 Width, uint32 Height);
 
-	void OnResizeComplete();
 protected:
     /** 뎁스 스텐실 상태를 생성합니다. */
-	void CreateDepthStencilState();
+	//void CreateDepthStencilState();
 	
 
 	/** 뎁스 스텐실 리소스는 디바이스 뎁스 설정은 여기서 날린다. */
-	void ReleaseDepthStencilBuffer();
+	//void ReleaseDepthStencilBuffer();
 protected:
 
 
@@ -122,30 +120,31 @@ protected:
 #pragma region picking
 protected:
 	// 피킹용 버퍼들
-	ID3D11Texture2D* PickingFrameBuffer = nullptr;                 // 화면 출력용 텍스처
-	ID3D11RenderTargetView* PickingFrameBufferRTV = nullptr;       // 텍스처를 렌더 타겟으로 사용하는 뷰
-	ID3D11Buffer* ConstantPickingBuffer = nullptr;                 // 뷰 상수 버퍼
-	FLOAT PickingClearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f }; //
-	ID3D11PixelShader* PickingPixelShader = nullptr;         // Pixel의 색상을 결정하는 Pixel 셰이더
-	ID3D11Buffer* ConstantsDepthBuffer = nullptr;
+	// ID3D11Texture2D* PickingFrameBuffer = nullptr;                 // 화면 출력용 텍스처
+	// ID3D11RenderTargetView* PickingFrameBufferRTV = nullptr;       // 텍스처를 렌더 타겟으로 사용하는 뷰
+	//ID3D11Buffer* ConstantPickingBuffer = nullptr;                 // 뷰 상수 버퍼
+	
+	//ID3D11PixelShader* PickingPixelShader = nullptr;         // Pixel의 색상을 결정하는 Pixel 셰이더
+	//ID3D11Buffer* ConstantsDepthBuffer = nullptr;
 
-	ID3D11DepthStencilState* IgnoreDepthStencilState = nullptr;   // DepthStencil 상태(깊이 테스트, 스텐실 테스트 등 정의)
+	//ID3D11DepthStencilState* IgnoreDepthStencilState = nullptr;   // DepthStencil 상태(깊이 테스트, 스텐실 테스트 등 정의)
 
 public:
 	//피킹용 함수들	
-    void ReleasePickingFrameBuffer();
-    void CreatePickingTexture(HWND hWnd);
-    void PrepareZIgnore();
-    void PreparePicking();
-	void PreparePickingShader() const;
-	void UpdateConstantPicking(FVector4 UUIDColor) const;
-    void UpdateConstantDepth(int Depth) const;
+   // void ReleasePickingFrameBuffer();
+    //void CreatePickingTexture(HWND hWnd);
+    //void PrepareZIgnore();
+    //void PreparePicking();
+	//FLOAT PickingClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f }; //
+	//void PreparePickingShader() const;
+	//void UpdateConstantPicking(FVector4 UUIDColor) const;
+    //void UpdateConstantDepth(int Depth) const;
 
-    void PrepareMain();
+    //void PrepareMain();
 
-	FVector4 GetPixel(FVector MPos);
+	//FVector4 GetPixel(FVector MPos);
 
-	void RenderPickingTexture();
+	//void RenderPickingTexture(); 
 #pragma endregion picking
 
 #pragma region Ray

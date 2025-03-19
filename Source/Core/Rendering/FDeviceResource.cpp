@@ -22,7 +22,6 @@ void FDevice::InitResource()
 	FInputLayout::Create("Simple_VS" , VS);
 	FPixelShader::Load(L"Shaders/ShaderW0.hlsl","Simple_PS","mainPS");
 
-	FPixelShader::Load(L"Shaders/ShaderW0.hlsl","Picking_PS","PickingPS");
 	{
 		
 		std::shared_ptr<FVertexShader> VS = FVertexShader::Load(L"Shaders/Font_VS.hlsl","Font_VS","Font_VS");
@@ -34,13 +33,23 @@ void FDevice::InitResource()
 
 	
 	//FPixelShader::Load(L"Shaders/Font_PS.hlsl","Font_PS","Font_PS");
+	{
+		D3D11_RASTERIZER_DESC RasterizerDesc = {};
+		RasterizerDesc.FillMode = D3D11_FILL_SOLID; // 채우기 모드
+		RasterizerDesc.CullMode = D3D11_CULL_BACK;  // 백 페이스 컬링
+		RasterizerDesc.FrontCounterClockwise = FALSE;
 	
-	D3D11_RASTERIZER_DESC RasterizerDesc = {};
-	RasterizerDesc.FillMode = D3D11_FILL_SOLID; // 채우기 모드
-	RasterizerDesc.CullMode = D3D11_CULL_BACK;  // 백 페이스 컬링
-	RasterizerDesc.FrontCounterClockwise = FALSE;
-	
-	FRasterizer::Create("DefaultRasterizer", RasterizerDesc);
+		FRasterizer::Create("DefaultRasterizer", RasterizerDesc);
+	}
+
+	{
+		D3D11_RASTERIZER_DESC RasterizerDesc = {};
+		RasterizerDesc.FillMode = D3D11_FILL_WIREFRAME; // 채우기 모드
+		RasterizerDesc.CullMode = D3D11_CULL_NONE;  // 백 페이스 컬링
+		RasterizerDesc.FrontCounterClockwise = FALSE;
+
+		FRasterizer::Create("DebugRasterizer", RasterizerDesc);
+	}
 
 	{
 		D3D11_DEPTH_STENCIL_DESC DepthStencilDesc = {};
@@ -58,9 +67,9 @@ void FDevice::InitResource()
 		// Blend
 		D3D11_BLEND_DESC blendDesc = {};
 		blendDesc.AlphaToCoverageEnable = FALSE;
-		blendDesc.IndependentBlendEnable = FALSE;
+		blendDesc.IndependentBlendEnable = TRUE;
 		blendDesc.RenderTarget[0].BlendEnable = TRUE;
-
+	
 		// src srcColor * src의 알파
 		// 1, 0, 0(, 1) * 1.0f
 		blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
@@ -71,6 +80,15 @@ void FDevice::InitResource()
 		blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 		blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
+		blendDesc.RenderTarget[1].BlendEnable = false;
+		blendDesc.RenderTarget[1].SrcBlend = D3D11_BLEND_ONE;
+		blendDesc.RenderTarget[1].DestBlend = D3D11_BLEND_ZERO;
+		blendDesc.RenderTarget[1].BlendOp = D3D11_BLEND_OP_ADD;
+		blendDesc.RenderTarget[1].SrcBlendAlpha = D3D11_BLEND_ONE;
+		blendDesc.RenderTarget[1].DestBlendAlpha = D3D11_BLEND_ZERO;
+		blendDesc.RenderTarget[1].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+		blendDesc.RenderTarget[1].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	
 		FBlendState::Create("DefaultBlendState", blendDesc);
 	}
 
@@ -148,7 +166,16 @@ void FDevice::InitResource()
 		Mat->SetVertexShader("Font_VS");
 		Mat->SetPixelShader("SubUV_PS");
 	}
-	
+
+	{
+		std::shared_ptr<FMaterial> Mat = FMaterial::Create("DebugMaterial");
+		Mat->SetRasterizer("DebugRasterizer");
+		Mat->SetBlendState("DefaultBlendState");
+		Mat->SetDepthState("DefaultDepthStencilState");
+		Mat->SetVertexShader("Simple_VS");
+		Mat->SetPixelShader("Simple_PS");
+	}
+
 	/// Mesh
 	{
 		TArray<FVertexSimple> vertices;

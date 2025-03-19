@@ -66,7 +66,26 @@ public:
 	// 깊버거 세팅용
 	void CreateDepthStencilView();
 
+	ID3D11Texture2D* GetTexture2D() const 
+	{
+		return Texture2D;
+	}
 
+	ID3D11RenderTargetView* GetRTV() 
+	{
+		return RTV;
+	}
+
+	
+	ID3D11DepthStencilView*	GetDSV() 
+	{
+		return DSV;
+	}
+	ID3D11ShaderResourceView* GetSRV() 
+	{
+		return SRV;
+	}
+	
 private:
 	D3D11_TEXTURE2D_DESC Desc;
 
