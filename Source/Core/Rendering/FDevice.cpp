@@ -178,6 +178,8 @@ void FDevice::CreateDepthStencilBuffer()
 
 	HRESULT result = Device->CreateTexture2D(&DepthBufferDesc, nullptr, &DepthStencilBuffer);
 
+	Device->CreateTexture2D(&DepthBufferDesc, nullptr, &PickingDepthStencilBuffer);
+
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
 	dsvDesc.Format = DepthBufferDesc.Format;
 	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
@@ -189,11 +191,13 @@ void FDevice::CreateDepthStencilBuffer()
 	}
 
 	result = Device->CreateDepthStencilView(DepthStencilBuffer, &dsvDesc, &DepthStencilView);
+	Device->CreateDepthStencilView(PickingDepthStencilBuffer, &dsvDesc, &PickingDepthStencilView);
 
 	if (FAILED(result))
 	{
 		UE_LOG("Failed to create DepthStencilView");
 	}
+
 }
 
 void FDevice::ReleaseFrameBuffer()
@@ -223,37 +227,61 @@ void FDevice::ReleaseDepthStencilBuffer()
 		DepthStencilView->Release();
 		DepthStencilView = nullptr;
 	}
+
+	if (PickingDepthStencilBuffer)
+	{
+		PickingDepthStencilBuffer->Release();
+		PickingDepthStencilBuffer = nullptr;
+	}
+	if (PickingDepthStencilView)
+	{
+		PickingDepthStencilView->Release();
+		PickingDepthStencilView = nullptr;
+	}
 }
 
 void FDevice::Prepare() const
 {
+	Clear();
+	SetRenderTarget();
+}
 
-
-	// Rasterization할 Viewport를 설정 
-	FDevice::Get().GetDeviceContext()->RSSetViewports(1, &ViewportInfo);
+void FDevice::Clear() const
+{
 	// 스왑버퍼랑 뎁스스텐실 화면 지우기
 	FDevice::Get().GetDeviceContext()->ClearRenderTargetView(FrameBufferRTV, ClearColor);
 	FDevice::Get().GetDeviceContext()->ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-	// FDevice::Get().GetDeviceContext()->
-	// DepthStencil 상태 설정. StencilRef: 스텐실 테스트 결과의 레퍼런스
 
+	//UUID 텍스쳐 초기화
+	FDevice::Get().GetDeviceContext()->ClearRenderTargetView(FEditorManager::Get().UUIDTexture->GetRTV(), PickingClearColor);
 
+	//후처리 뎁스텍스쳐 초기화
+	FDevice::Get().GetDeviceContext()->ClearDepthStencilView(PickingDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+}
+
+void FDevice::SetRenderTarget() const
+{
 	// Rasterization할 Viewport를 설정 
 	FDevice::Get().GetDeviceContext()->RSSetViewports(1, &ViewportInfo);  // DepthStencil 뷰 및 스왑버퍼 세팅
 
-	// FDevice::Get().GetDeviceContext()->OMSetRenderTargets(1, &FrameBufferRTV, DepthStencilView);  
-
 	///////////////////////
 	///일단 임시로 여기서 UUID 픽킹 텍스쳐 바인딩
-	//UUID 텍스쳐 초기화
-	FDevice::Get().GetDeviceContext()->ClearRenderTargetView(FEditorManager::Get().UUIDTexture->GetRTV(), PickingClearColor);
-	
+
 	ID3D11RenderTargetView* RTV = FEditorManager::Get().UUIDTexture->GetRTV();
 	// 렌더 타겟 바인딩
 	ID3D11RenderTargetView* RTVs[2] = { FrameBufferRTV, RTV };
 	FDevice::Get().GetDeviceContext()->OMSetRenderTargets(2, RTVs, DepthStencilView);
-	
+
 	// FDevice::Get().GetDeviceContext()->OMSetRenderTargets(2, &RTV, nullptr);
-	
+}
+
+void FDevice::PickingPrepare() const
+{
+
+	ID3D11RenderTargetView* RTV = FEditorManager::Get().UUIDTexture->GetRTV();
+	// 렌더 타겟 바인딩
+	ID3D11RenderTargetView* RTVs[2] = { FrameBufferRTV, RTV };
+
+	FDevice::Get().GetDeviceContext()->OMSetRenderTargets(2, RTVs, PickingDepthStencilView);
 }
 

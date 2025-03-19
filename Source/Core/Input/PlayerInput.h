@@ -191,6 +191,8 @@ public:
     FVector GetMousePos() const { return MousePos;}
     FVector GetMouseNDCPos() const { return MouseNDCPos;}
 	FVector GetMouseDeltaPos() const { return MouseNDCPos - MousePreNDCPos; }
+	float GetMouseMovementDistance() const { return GetMouseDeltaPos().Length(); }
+	FVector GetMouseScreenDeltaPos() const { return (MousePos - MousePrePos); }
 
 	template <typename Fn>
 	void RegisterKeyDownCallback(EKeyCode KeyCode, const Fn& Callback, uint32 uuid);
@@ -238,6 +240,7 @@ private:
 
     FVector MousePreNDCPos;
     FVector MousePos;
+    FVector MousePrePos;
     FVector MouseNDCPos;
 };
 

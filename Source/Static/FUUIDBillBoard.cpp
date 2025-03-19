@@ -301,6 +301,7 @@ void FUUIDBillBoard::Render()
 
 	DeviceContext->RSSetState(RasterizerState);
 	DeviceContext->OMSetBlendState(BlendState, BlendFactor, 0xffffffff);
+	DeviceContext->OMSetDepthStencilState(DepthStencilState, 0);
 
 	// Billboard
 	FMatrix ModelMatrix;
@@ -463,4 +464,12 @@ void FUUIDBillBoard::Create()
 	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
 	Device->CreateBlendState(&blendDesc, &BlendState);
+
+	D3D11_DEPTH_STENCIL_DESC AlwaysVisibleDepthStencilDesc = {};
+	AlwaysVisibleDepthStencilDesc.DepthEnable = false;                       // Disable depth testing completely
+	AlwaysVisibleDepthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;  // Don't write to depth buffer
+	AlwaysVisibleDepthStencilDesc.DepthFunc = D3D11_COMPARISON_ALWAYS;       // Optional since testing is disabled
+	AlwaysVisibleDepthStencilDesc.StencilEnable = false;                     // Stencil not needed
+
+	Device->CreateDepthStencilState(&AlwaysVisibleDepthStencilDesc, &DepthStencilState);
 }

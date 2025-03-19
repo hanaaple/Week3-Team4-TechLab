@@ -22,6 +22,7 @@ APlayerInput::APlayerInput()
 	MousePreNDCPos = FVector(0.0f, 0.0f, 0.0f);
 
 	MousePos = FVector(0.0f, 0.0f, 0.0f);
+	MousePrePos = FVector(0.0f, 0.0f, 0.0f);
 	MouseNDCPos = FVector(0.0f, 0.0f, 0.0f);
 }
 
@@ -110,6 +111,7 @@ bool APlayerInput::IsKeyDown(EKeyCode code) const
 void APlayerInput::SetMousePos(HWND hWnd, uint32 FrameBufferWidth, uint32 FrameBufferHeight)
 {
 	MousePreNDCPos = MouseNDCPos;
+	MousePrePos = MousePos;
 	POINT Pts = {};
 	GetCursorPos(&Pts);
 

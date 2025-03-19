@@ -41,6 +41,13 @@ public:
 
 	/** 렌더링 파이프라인을 준비 합니다. */
 	void Prepare() const;
+
+	void Clear() const;
+	
+	void SetRenderTarget() const;
+
+	/** 픽킹렌더링 파이프라인을 준비 합니다. */
+	void PickingPrepare() const;
 	
 	/** 스왑 체인의 백 버퍼와 프론트 버퍼를 교체하여 화면에 출력 */
 	void SwapBuffer() const;
@@ -74,6 +81,9 @@ private:
 	// Depth Stenil Buffer
 	ID3D11Texture2D* DepthStencilBuffer = nullptr;          // DepthStencil버퍼 역할을 하는 텍스쳐
 	ID3D11DepthStencilView* DepthStencilView = nullptr;     // DepthStencil버퍼를 렌더 타겟으로 사용하는 뷰
+
+	ID3D11Texture2D* PickingDepthStencilBuffer = nullptr;          // DepthStencil버퍼 역할을 하는 텍스쳐
+	ID3D11DepthStencilView* PickingDepthStencilView = nullptr;     // DepthStencil버퍼를 렌더 타겟으로 사용하는 뷰
 
 	bool bIsInit = FALSE;
 

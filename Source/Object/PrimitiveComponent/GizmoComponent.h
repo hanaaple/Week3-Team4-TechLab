@@ -2,7 +2,7 @@
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
 
 
-enum class EAxis : uint8
+enum class ESelectedAxis : uint8
 {
 	None,
 	X,
@@ -22,21 +22,24 @@ class UGizmoComponent : public UPrimitiveComponent
 {
 	DECLARE_CLASS(UGizmoComponent, UPrimitiveComponent)
 
+	friend class AGizmoActor;
+
 public:
 	UGizmoComponent();
 
-	void BeginPlay() override;
-	void Tick(float DeltaTime) override;
-	void EndPlay(EEndPlayReason::Type Reason) override;
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
+	virtual void EndPlay(EEndPlayReason::Type Reason) override;
 
-	void Render() override;
+	virtual void Render() override;
 
 	EPrimitiveType GetType() const { return EPrimitiveType::EPT_Gizmo; }
+
+	ESelectedAxis GetSelectedAxis() const { return Axis; }
 
 private:
 	void OnChangedGizmoType(EGizmoType Gizmo);
 
-private:
-	
+	ESelectedAxis Axis = ESelectedAxis::None;
 };
 

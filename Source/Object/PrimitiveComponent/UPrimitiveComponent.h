@@ -104,6 +104,18 @@ protected:
 protected:
 	FRenderResourceCollection RenderResourceCollection;
 	FConstantsComponentData ConstantsComponentData;
+
+public:
+	void SetBoxExtent(const FVector& InExtent);
+
+	inline FVector GetScaledBoxExtent() const { return BoxExtent * GetComponentTransform().GetScale(); }
+
+	virtual FBoxSphereBounds CalcBounds(const FTransform& LocalToWorld) const override;
+
+	inline void InitBoxExtent(const FVector& InExtent) { BoxExtent = InExtent; }
+
+public:
+	FVector BoxExtent;
 };
 
 class UCubeComp : public UPrimitiveComponent
@@ -118,17 +130,6 @@ public:
 
 		return EPrimitiveType::EPT_Cube;
 	}
-
-public:
-	void SetBoxExtent(const FVector& InExtent);
-
-	inline FVector GetScaledBoxExtent() const { return BoxExtent * GetComponentTransform().GetScale(); }
-
-	virtual FBoxSphereBounds CalcBounds(const FTransform& LocalToWorld) const override;
-
-	inline void InitBoxExtent(const FVector& InExtent) { BoxExtent = InExtent; }
-protected:
-	FVector BoxExtent;
 };
 
 class USphereComp : public UPrimitiveComponent

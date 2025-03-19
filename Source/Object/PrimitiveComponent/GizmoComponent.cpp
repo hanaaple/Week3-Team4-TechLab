@@ -4,6 +4,7 @@
 
 UGizmoComponent::UGizmoComponent()
 {
+	//SetMaterial(TEXT("AlwaysVisibleMaterial"));
 	SetMesh(TEXT("GizmoArrow"));
 	bCanBeRendered = true;
 }

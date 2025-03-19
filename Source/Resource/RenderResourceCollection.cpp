@@ -136,6 +136,10 @@ std::shared_ptr<FSamplerBinding> FRenderResourceCollection::SetSamplerBinding(co
 std::shared_ptr<FConstantBufferBinding> FRenderResourceCollection::SetConstantBufferBinding(const FString& _Name,
                                                                                             const void* _CPUDataPtr, int _DataSize, int _BindPoint, bool bIsUseVertexShader, bool bIsUsePixelShader)
 {
+
+	/*std::shared_ptr<class FConstantBufferBinding>* Binding = ConstantBufferBindings.Find(_Name);
+
+	if()*/
 	std::shared_ptr<FConstantBuffer> Res = FConstantBuffer::Find(_Name);
 
 	if (Res == nullptr)

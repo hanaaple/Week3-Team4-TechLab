@@ -118,13 +118,20 @@ void UWorld::Render()
 	AActor* SelectedActor = FEditorManager::Get().GetSelectedActor();
 	if (SelectedActor != nullptr)
 	{
-		const FVector WorldMax = SelectedActor->GetActorBoundsMax();
-		const FVector WorldMin = SelectedActor->GetActorBoundsMin();
-		UDebugDrawManager::Get().DrawBox(WorldMin, WorldMax, FVector4::WHITE);
+		const FVector LocalMax = SelectedActor->GetActorLocalBoundsMax();
+		const FVector LocalMin = SelectedActor->GetActorLocalBoundsMin();
+
+		[[maybe_unused]] FVector WorldMax = SelectedActor->GetActorWorldBoundsMax();
+		[[maybe_unused]] FVector WorldMin = SelectedActor->GetActorWorldBoundsMin();
+
+		UDebugDrawManager::Get().DrawBoundingBox(LocalMax, LocalMin, SelectedActor->GetActorTransform(), FVector4::RED);
 	}
 	UDebugDrawManager::Get().Render();
 
-	//FUUIDBillBoard::Get().Render();
+
+	FLineBatchManager::Get().Render();
+
+	FUUIDBillBoard::Get().Render();
 
 
 	//DisplayPickingTexture(*Renderer);
@@ -178,12 +185,16 @@ void UWorld::RenderMainTexture(URenderer& Renderer)
 		RenderComponent->Render();
 	}
 
+	FDevice::Get().PickingPrepare();
+
 	//Renderer.PrepareZIgnore();
 	for (auto& RenderComponent: ZIgnoreRenderComponents)
 	{
 		uint32 depth = RenderComponent->GetOwner()->GetDepth();
 		RenderComponent->Render();
 	}
+
+	FDevice::Get().SetRenderTarget();
 }
 
 // void UWorld::DisplayPickingTexture(URenderer& Renderer)

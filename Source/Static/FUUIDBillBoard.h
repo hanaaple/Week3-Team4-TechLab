@@ -55,6 +55,8 @@ private:
 	// 렌더링을 위한 특수 상태
 	ID3D11RasterizerState* RasterizerState = nullptr;
 
+	ID3D11DepthStencilState* DepthStencilState = nullptr;
+
 	// Blend state
 	ID3D11BlendState* BlendState = nullptr;
 	float BlendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };

@@ -9,6 +9,7 @@
 struct FVector;
 struct FVector4;
 struct FBox;
+struct FQuat;
 
 struct alignas(16) FDebugConstantInfo
 {
@@ -25,7 +26,9 @@ public:
 	void Render();
 
 	void DrawBoxBrackets(FBox InActor, const FTransform& LocalToWorld, const FVector4& Color, float LifeTime = 1.0f);
-	void DrawBox(const FVector& InMin, const FVector& InMax, const FVector4& Color, float LifeTime = 1.0f);
+	void DrawOBBBoxFromLocalMinMax(const FVector& LocalMin, const FVector& LocalMax, const FTransform& LocalToWorld, const FVector4& Color, float LifeTime = 1);
+	void DrawBoundingBox(const FVector& LocalMin, const FVector& LocalMax, const FTransform& LocalToWorld, const FVector4& Color, float LifeTime = 1);
+	void DrawAABBBox(const FVector& InMin, const FVector& InMax, const FVector4& Color, float LifeTime = 1.0f);
 	void DrawSphere(const FVector& Center, float Radius, const FVector4& Color, float LifeTime = 1.0f);
 	void DrawBoxSphereBounds(const FVector& Origin, const FVector& BoxExtent, float SphereRadius, const FVector4& Color, float LifeTime = 1.0f);
 	void DrawLine(const FVector& Start, const FVector& End, const FVector4& Color, float LifeTime = 1.0f);

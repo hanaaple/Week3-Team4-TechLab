@@ -65,6 +65,17 @@ void FDevice::InitResource()
 	}
 
 	{
+		D3D11_DEPTH_STENCIL_DESC AlwaysVisibleDepthStencilDesc = {};
+		AlwaysVisibleDepthStencilDesc.DepthEnable = false;                       // Disable depth testing completely
+		AlwaysVisibleDepthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;  // Don't write to depth buffer
+		AlwaysVisibleDepthStencilDesc.DepthFunc = D3D11_COMPARISON_ALWAYS;       // Optional since testing is disabled
+		AlwaysVisibleDepthStencilDesc.StencilEnable = false;                     // Stencil not needed
+
+		FDepthStencilState::Create("AlwaysVisibleDepthStencilState", AlwaysVisibleDepthStencilDesc);
+	}
+
+
+	{
 		// Blend
 		D3D11_BLEND_DESC blendDesc = {};
 		blendDesc.AlphaToCoverageEnable = FALSE;
@@ -146,6 +157,15 @@ void FDevice::InitResource()
 		Mat->SetRasterizer("DefaultRasterizer");
 		Mat->SetBlendState("DefaultBlendState");
 		Mat->SetDepthState("DefaultDepthStencilState");
+		Mat->SetVertexShader("Simple_VS");
+		Mat->SetPixelShader("Simple_PS");
+	}
+	
+	{
+		std::shared_ptr<FMaterial> Mat = FMaterial::Create("AlwaysVisibleMaterial");
+		Mat->SetRasterizer("DefaultRasterizer");
+		Mat->SetBlendState("DefaultBlendState");
+		Mat->SetDepthState("AlwaysVisibleDepthStencilState");
 		Mat->SetVertexShader("Simple_VS");
 		Mat->SetPixelShader("Simple_PS");
 	}
@@ -325,6 +345,9 @@ void FDevice::InitResource()
 		UGeometryGenerator::CreateCone(radius, height, slices, stacks, vertices, indices);
 		FVertexBuffer::Create(FString("Cone"), vertices);
 		FIndexBuffer::Create(FString("Cone"), indices);
+
+
+		FMesh::Create(FString("Cone"));
 	}
 	
 	{

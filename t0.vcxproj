@@ -180,6 +180,7 @@
     <ClCompile Include="Source\Core\Math\Transform.cpp" />
     <ClCompile Include="Source\Debug\DebugDrawManager.cpp" />
     <ClCompile Include="Source\Object\Actor\SubUVParticle.cpp" />
+    <ClCompile Include="Source\Object\Actor\WorldGrid.cpp" />
     <ClCompile Include="Source\Object\Assets\MeshAsset.cpp" />
     <ClCompile Include="Source\Object\PrimitiveComponent\GizmoComponent.cpp" />
     <ClCompile Include="Source\Core\Rendering\FViewMode.cpp" />
@@ -212,7 +213,6 @@
     <ClCompile Include="Source\Object\Actor\Cone.cpp" />
     <ClCompile Include="Source\Object\Actor\Cylinder.cpp" />
     <ClCompile Include="Source\Object\Actor\Quad.cpp" />
-    <ClCompile Include="Source\Object\Gizmo\Gizmo.cpp" />
     <ClCompile Include="Source\Object\Gizmo\GizmoHandle.cpp" />
     <ClCompile Include="Source\Object\Actor\Arrow.cpp" />
     <ClCompile Include="Source\Core\Input\PlayerController.cpp" />
@@ -260,7 +260,6 @@
     <ClCompile Include="Source\Object\Light\LightComponent.cpp" />
     <ClCompile Include="Source\Object\Light\SpotLightComponent.cpp" />
     <ClCompile Include="Source\Object\Actor\SpotLight.cpp" />
-    <ClCompile Include="WorldGrid.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\Font_VS.hlsl">
@@ -314,6 +313,7 @@
     <ClInclude Include="Source\Core\Delegates\Delegate.h" />
     <ClInclude Include="Source\Core\Delegates\DelegateCombination.h" />
     <ClInclude Include="Source\Debug\DebugDrawManager.h" />
+    <ClInclude Include="Source\Object\Actor\WorldGrid.h" />
     <ClInclude Include="Source\Object\PrimitiveComponent\GizmoComponent.h" />
     <ClInclude Include="Source\Core\Rendering\FViewMode.h" />
     <ClInclude Include="Source\Debug\EngineShowFlags.h" />
@@ -364,7 +364,6 @@
     <ClInclude Include="Source\Object\Actor\Cylinder.h" />
     <ClInclude Include="Source\Object\Actor\Quad.h" />
     <ClInclude Include="Source\Object\Gizmo\Axis.h" />
-    <ClInclude Include="Source\Object\Gizmo\Gizmo.h" />
     <ClInclude Include="Source\Object\ObjectFactory.h" />
     <ClInclude Include="Source\Object\PrimitiveComponent\UPrimitiveComponent.h" />
     <ClInclude Include="Source\Object\World\World.h" />
@@ -449,7 +448,6 @@
     <ClInclude Include="Source\Object\Light\LightComponent.h" />
     <ClInclude Include="Source\Object\Light\SpotLightComponent.h" />
     <ClInclude Include="Source\Object\Actor\SpotLight.h" />
-    <ClInclude Include="WorldGrid.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -465,6 +463,9 @@
   <ItemGroup>
     <Text Include="font_atlas.txt" />
     <Text Include="Pretendard_Kor.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="t0.natvis" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

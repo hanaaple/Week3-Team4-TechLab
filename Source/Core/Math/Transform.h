@@ -316,18 +316,24 @@ public:
 	// 점(위치) 변환 함수: P' = Q.Rotate(S * P) + T
 	FVector TransformPosition(const FVector& Vector) const
 	{
-		FVector scaledVec3 = Vector * Scale;
-		FVector rotatedVec3 = Rotation.RotateVector(scaledVec3);
-		FVector translatedVec3 = rotatedVec3 + Position;
-		return translatedVec3;
+		FVector4 InputVectorW0 = FVector4(Vector, 0.0f);
+		FQuat NormalizedQuat = Rotation.Normalized();
+
+		FVector4 scaledVector = FVector4(InputVectorW0.X * Scale.X, InputVectorW0.Y * Scale.Y, InputVectorW0.Z * Scale.Z, 0.0f);
+		FVector4 rotatedVector = FQuat::VectorQuaternionRotateVector(NormalizedQuat, scaledVector);
+		FVector4 translatedVector = FVector4(rotatedVector.X + Position.X, rotatedVector.Y + Position.Y, rotatedVector.Z + Position.Z, 1.0f);
+		return FVector(translatedVector.X, translatedVector.Y, translatedVector.Z);
 	}
 
 	// 스케일을 적용하지 않고 점(위치) 변환: P' = Q.Rotate(P) + T
 	FVector TransformPositionNoScale(const FVector& Vector) const
 	{
-		FVector rotatedVec3 = Rotation.RotateVector(Vector);
-		FVector translatedVec3 = rotatedVec3 + Position;
-		return translatedVec3;
+		FVector4 InputVectorW0 = FVector4(Vector, 0.0f);
+
+		FVector4 rotatedVector = FQuat::VectorQuaternionRotateVector(Rotation, InputVectorW0);
+		FVector4 translatedVector = FVector4(rotatedVector.X + Position.X, rotatedVector.Y + Position.Y, rotatedVector.Z + Position.Z, 1.0f);
+
+		return FVector(translatedVector.X, translatedVector.Y, translatedVector.Z);
 	}
 
 	// 벡터(방향) 변환 함수: V' = Q.Rotate(S * V)
