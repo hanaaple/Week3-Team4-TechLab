@@ -43,6 +43,8 @@ FTransform FTransform::ConstructTransformFromMatrixWithDesiredScale(const FMatri
 	OutTransform.Position = Translation;
 	OutTransform.Rotation = Rotation;
 	OutTransform.Scale = DesiredScale;
+
+	return OutTransform;
 }
 
 FTransform FTransform::Inverse() const
@@ -57,7 +59,7 @@ FTransform FTransform::Inverse() const
 	return FTransform(InverseTranslation, InverseRotation, FVector(InverseScale.X, InverseScale.Y, InverseScale.Z));
 }
 
-FMatrix FTransform::ToMatrixInternal(FVector& OutDiagonals, FVector& OutAdds, FVector& OutSubtracts) const
+void FTransform::ToMatrixInternal(FVector& OutDiagonals, FVector& OutAdds, FVector& OutSubtracts) const
 {
 	const FVector4 MyRotation = Rotation;
 	const FVector4 RotationX2Y2Z2 = FVector4(MyRotation.X + MyRotation.X, MyRotation.Y + MyRotation.Y, MyRotation.Z + MyRotation.Z, 0.f);

@@ -597,7 +597,7 @@ public:
 
 	FTransform Inverse() const;
 
-	FMatrix ToMatrixInternal(FVector& OutDiagonals, FVector& OutAdds, FVector& OutSubtracts) const;
+	void ToMatrixInternal(FVector& OutDiagonals, FVector& OutAdds, FVector& OutSubtracts) const;
 
 	FMatrix ToMatrixWithScale() const;
 };

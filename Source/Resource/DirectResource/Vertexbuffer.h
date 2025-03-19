@@ -29,6 +29,8 @@ public:
 		{
 			Res->ResCreateDynamic(&_Data[0], sizeof(VertexType), _Data.Num());
 		}
+
+		return Res;
 	}
 
 	// static std::shared_ptr<FVertexBuffer> Create(const FString&  _Name, size_t _VertexSize, size_t _VertexCount)
