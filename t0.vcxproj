@@ -178,6 +178,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\Math\Transform.cpp" />
+    <ClCompile Include="Source\Core\Rendering\FontAtlas.cpp" />
     <ClCompile Include="Source\Debug\DebugDrawManager.cpp" />
     <ClCompile Include="Source\Object\Actor\SubUVParticle.cpp" />
     <ClCompile Include="Source\Object\Actor\WorldGrid.cpp" />
@@ -255,7 +256,6 @@
     <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="Source\FontAtlas.cpp" />
     <ClCompile Include="Source\Object\Light\LightComponentBase.cpp" />
     <ClCompile Include="Source\Object\Light\LightComponent.cpp" />
     <ClCompile Include="Source\Object\Light\SpotLightComponent.cpp" />
@@ -312,6 +312,7 @@
   <ItemGroup>
     <ClInclude Include="Source\Core\Delegates\Delegate.h" />
     <ClInclude Include="Source\Core\Delegates\DelegateCombination.h" />
+    <ClInclude Include="Source\Core\Rendering\FontAtlas.h" />
     <ClInclude Include="Source\Debug\DebugDrawManager.h" />
     <ClInclude Include="Source\Object\Actor\WorldGrid.h" />
     <ClInclude Include="Source\Object\PrimitiveComponent\GizmoComponent.h" />
@@ -431,7 +432,6 @@
     <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imstb_textedit.h" />
     <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imstb_truetype.h" />
     <ClInclude Include="Source\ThirdParty\SimpleJSON\include\SimpleJSON\Json.hpp" />
-    <ClInclude Include="Source\FontAtlas.h" />
     <ClCompile Include="Source\Object\SubUVComponent\UParticleSubUVComponent.cpp" />
     <FxCompile Include="Shaders\SubUV_PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
@@ -439,6 +439,9 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <ClInclude Include="Source\Core\Interfaces\GizmoInterface.h" />
     <ClInclude Include="Source\Object\Actor\SubUVParticle.h" />
