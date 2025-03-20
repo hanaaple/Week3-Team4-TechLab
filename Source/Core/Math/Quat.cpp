@@ -246,3 +246,5 @@ FQuat FQuat::Normalized() const
 	// 크기가 0에 가까우면 항등 쿼터니언 반환 (회전 없음)
 	return FQuat(0.0f, 0.0f, 0.0f, 1.0f);
 }
+
+const FQuat FQuat::Identity = FQuat(0.0f, 0.0f, 0.0f, 1.0f);

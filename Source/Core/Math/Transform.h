@@ -34,6 +34,8 @@ public:
 	{
 	}
 
+	static const FTransform Identity;
+
 	inline bool Equal(const FTransform& Other) const
 	{
 		return Position == Other.Position && Rotation == Other.Rotation && Scale == Other.Scale;

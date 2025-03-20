@@ -25,7 +25,7 @@ void USceneComponent::Tick(float DeltaTime)
 }
 
 // 내 월드 트랜스폼 반환
-const FTransform USceneComponent::GetWorldTransform()
+const FTransform& USceneComponent::GetWorldTransform()
 {
 	return WorldTransform;
 }

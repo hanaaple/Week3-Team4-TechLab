@@ -74,13 +74,13 @@ public:
 	FVector GetRightVector() const;
 	FVector GetUpVector() const;
 
-	FTransform GetComponentTransform() const { return WorldTransform; }
+	const FTransform& GetComponentTransform() const { return WorldTransform; }
 	FVector GetComponentLocation() const { return GetComponentTransform().GetPosition(); }
 	FQuat GetComponentRotation() const { return GetComponentTransform().GetRotation(); }
 	FVector GetComponentScale() const { return GetComponentTransform().GetScale(); }
 
 	/* 월드 트랜스폼을 반환, 이걸로 렌더링한다*/
-	const FTransform GetWorldTransform();
+	const FTransform& GetWorldTransform();
 
 	FMatrix GetWorldMatrix() const;
 	const FMatrix GetLocalMatrix() const { return RelativeTransform.GetMatrix(); }

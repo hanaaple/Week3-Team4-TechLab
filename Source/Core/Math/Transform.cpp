@@ -146,3 +146,5 @@ FMatrix FTransform::ToMatrixWithScale() const
 
 	return OutMatrix;
 }
+
+const FTransform FTransform::Identity = {};

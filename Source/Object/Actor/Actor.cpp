@@ -78,13 +78,13 @@ const FTransform& AActor::GetActorTransform() const
 	}
 	else
 	{
-		return FTransform();
+		return FTransform::Identity;
 	}
 }
 
 const FTransform& AActor::ActorToWorld() const
 {
-	return (RootComponent != nullptr) ? RootComponent->GetWorldTransform() : FTransform();
+	return (RootComponent != nullptr) ? RootComponent->GetWorldTransform() : FTransform::Identity;
 }
 
 FVector AActor::GetActorForwardVector() const
@@ -108,7 +108,7 @@ FVector AActor::GetActorPosition() const
 	{
 		return RootComponent->GetComponentTransform().GetPosition();
 	}
-	return FVector();
+	return FVector::ZeroVector;
 }
 
 FVector AActor::GetActorRotation() const
@@ -117,7 +117,7 @@ FVector AActor::GetActorRotation() const
 	{
 		return RootComponent->GetComponentTransform().GetRotation().GetEuler();
 	}
-	return FVector();
+	return FVector::ZeroVector;
 }
 
 FQuat AActor::GetActorRotationQuat() const
@@ -126,7 +126,7 @@ FQuat AActor::GetActorRotationQuat() const
 	{
 		return RootComponent->GetComponentTransform().GetRotation();
 	}
-	return FQuat();
+	return FQuat::Identity;
 }
 
 void AActor::Pick()
@@ -173,8 +173,8 @@ FBox AActor::GetComponentsBoundingBox(bool bNonColliding, bool bIncludeFromChild
 FBox AActor::CalculateComponentsBoundingBoxInLocalSpace(bool bNonColliding, bool bIncludeFromChildActors) const
 {
 	FBox Box = FBox();
-	const FTransform& ActorToWorld = GetActorTransform();
-	const FTransform WorldToActor = ActorToWorld.Inverse();
+	// const FTransform& ActorToWorld = GetActorTransform();
+	// const FTransform WorldToActor = ActorToWorld.Inverse();
 
 	for (auto& Component : Components)
 	{
