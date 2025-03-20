@@ -25,8 +25,8 @@ public:
 
 	AGizmoActor* GetGizmo() const {return Gizmo;}
 
-	static FVector4 EncodeUUID(unsigned int UUID);
-	static int DecodeUUID(FVector4 color);
+	static FVector4 EncodeUUID(uint32 UUID);
+	static uint32 DecodeUUID(FVector4 color);
 
 	void LateTick(float DeltaTime);
 

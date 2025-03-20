@@ -12,11 +12,8 @@
 
 void FEditorManager::Init()
 {
-	RECT Rect;
-	int Width , Height;
-
-	Width =  FDevice::Get().GetViewPortInfo().Width;
-	Height =  FDevice::Get().GetViewPortInfo().Height;
+	const int Width = static_cast<int>(FDevice::Get().GetViewPortInfo().Width);
+	const int Height = static_cast<int>(FDevice::Get().GetViewPortInfo().Height);
 
 	D3D11_TEXTURE2D_DESC textureDesc = {};
 	textureDesc.Width = Width;
@@ -70,7 +67,7 @@ void FEditorManager::SelectActor(AActor* NewActor)
     if (SelectedActor != nullptr)
     {
         SelectedActor->Pick();
-		    FTransform newActorTransform = NewActor->GetActorTransform();
+		    const FTransform newActorTransform = NewActor->GetActorTransform();
 		    Gizmo->SetActorTransform(newActorTransform);
 	   }
 }
@@ -80,24 +77,34 @@ void FEditorManager::SetCamera(ACamera* NewCamera)
     Camera = NewCamera;
 }
 
-FVector4 FEditorManager::EncodeUUID(unsigned int UUID)
+FVector4 FEditorManager::EncodeUUID(uint32 UUID)
 {
-	float a = (UUID >> 24) & 0xff;
-	float b = (UUID >> 16) & 0xff;
-	float g = (UUID >> 8) & 0xff;
-	float r = UUID & 0xff;
-	
-	FVector4 color = {r, g, b, a};
+	const uint32 a = (UUID >> 24) & 0xff;
+	const uint32 b = (UUID >> 16) & 0xff;
+	const uint32 g = (UUID >> 8) & 0xff;
+	const uint32 r = UUID & 0xff;
+
+	const FVector4 color = {
+		static_cast<float>(r),
+		static_cast<float>(g),
+		static_cast<float>(b),
+		static_cast<float>(a)
+	};
     
 	return color;
 }
 
-int FEditorManager::DecodeUUID(FVector4 color)
+uint32 FEditorManager::DecodeUUID(FVector4 color)
 {
-	return (static_cast<unsigned int>(color.W)<<24) | (static_cast<unsigned int>(color.Z)<<16) | (static_cast<unsigned int>(color.Y)<<8) | (static_cast<unsigned int>(color.X));
+	return (
+		static_cast<uint32>(color.W) << 24
+		| (static_cast<uint32>(color.Z) << 16)
+		| (static_cast<uint32>(color.Y) << 8)
+		| (static_cast<uint32>(color.X))
+	);
 }
 
-void FEditorManager::LateTick(float DeltaTime)
+void FEditorManager::LateTick([[maybe_unused]] float DeltaTime)
 {
 	if (APlayerInput::Get().GetKeyDown(EKeyCode::LButton))
 	{
@@ -113,8 +120,8 @@ void FEditorManager::LateTick(float DeltaTime)
 		//      pt.x = pt.x * ratioX;
 		//      pt.y = pt.y * ratioY;
 
-		FVector4 color = GetPixel(FVector(pt.x, pt.y, 0));
-		uint32_t UUID = DecodeUUID(color);
+		const FVector4 color = GetPixel(FVector(pt.x, pt.y, 0));
+		const uint32_t UUID = DecodeUUID(color);
 
 		UActorComponent* PickedComponent = UEngine::Get().GetObjectByUUID<UActorComponent>(UUID);
 
@@ -134,7 +141,7 @@ void FEditorManager::LateTick(float DeltaTime)
 			
 			UE_LOG("Pick - UUID: %d", UUID);
 
-			if (UGizmoComponent* GizmoCom = Cast<UGizmoComponent>(PickedComponent))
+			if (const UGizmoComponent* GizmoCom = Cast<UGizmoComponent>(PickedComponent))
 			{
 				Gizmo->SetSelectedAxis(GizmoCom->GetSelectedAxis());
 			}
@@ -214,11 +221,8 @@ void FEditorManager::OnUpdateWindowSize(uint32 Width, uint32 Height)
 
 void FEditorManager::OnResizeComplete()
 {
-	RECT Rect;
-	int Width, Height;
-
-	Width = FDevice::Get().GetViewPortInfo().Width;
-	Height = FDevice::Get().GetViewPortInfo().Height;
+	const int Width = static_cast<int>(FDevice::Get().GetViewPortInfo().Width);
+	const int Height = static_cast<int>(FDevice::Get().GetViewPortInfo().Height);
 
 	D3D11_TEXTURE2D_DESC textureDesc = {};
 	textureDesc.Width = Width;

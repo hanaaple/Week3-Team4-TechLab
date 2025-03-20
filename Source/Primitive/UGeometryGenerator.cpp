@@ -42,7 +42,7 @@ void UGeometryGenerator::CreateCube(float Size, TArray<FVertexSimple>& OutVertic
     OutIndices.Add(1); OutIndices.Add(4); OutIndices.Add(5);
 }
 
-void UGeometryGenerator::CreateSphere(int32 Radius, uint32 SliceCount, uint32 StackCount, TArray<FVertexSimple>& OutVertices, TArray<uint32>& OutIndices)
+void UGeometryGenerator::CreateSphere(float Radius, uint32 SliceCount, uint32 StackCount, TArray<FVertexSimple>& OutVertices, TArray<uint32>& OutIndices)
 {
     OutVertices.Emplace(0.0f, 0.0f, Radius, 1.0f, 1.0f, 1.0f, 1.0f);
 

@@ -41,9 +41,21 @@ std::unique_ptr<UWorldInfo> JsonSaveHelper::LoadScene(const std::string& SceneNa
         JSON Location = ActorInfo["Location"];
         JSON Rotation = ActorInfo["Rotation"];
         JSON Scale = ActorInfo["Scale"];
-        ObjectInfo->Location = FVector(Location[0].ToFloat(), Location[1].ToFloat(), Location[2].ToFloat());
-        ObjectInfo->Rotation = FVector(Rotation[0].ToFloat(), Rotation[1].ToFloat(), Rotation[2].ToFloat());
-        ObjectInfo->Scale = FVector(Scale[0].ToFloat(), Scale[1].ToFloat(), Scale[2].ToFloat());
+        ObjectInfo->Location = FVector(
+			static_cast<float>(Location[0].ToFloat()), 
+			static_cast<float>(Location[1].ToFloat()),
+			static_cast<float>(Location[2].ToFloat())
+		);
+        ObjectInfo->Rotation = FVector(
+			static_cast<float>(Rotation[0].ToFloat()), 
+			static_cast<float>(Rotation[1].ToFloat()),
+			static_cast<float>(Rotation[2].ToFloat())
+		);
+        ObjectInfo->Scale = FVector(
+			static_cast<float>(Scale[0].ToFloat()), 
+			static_cast<float>(Scale[1].ToFloat()),
+			static_cast<float>(Scale[2].ToFloat())
+		);
 
         ObjectInfo->ObjectType = ActorInfo["Type"].ToString();
 		WorldInfo->ObjectInfos.push(std::move(ObjectInfo));
@@ -65,7 +77,7 @@ void JsonSaveHelper::SaveScene(UWorldInfo WorldInfo)
     // for (uint32 i = 0; i < WorldInfo.ActorCount; i++)
 	while (!WorldInfo.ObjectInfos.empty())
     {
-        std::unique_ptr<UObjectInfo> ObjectInfo = std::move(WorldInfo.ObjectInfos.front());
+        const std::unique_ptr<UObjectInfo> ObjectInfo = std::move(WorldInfo.ObjectInfos.front());
 		WorldInfo.ObjectInfos.pop();
 
         std::string Uuid = std::to_string(ObjectInfo->UUID);
