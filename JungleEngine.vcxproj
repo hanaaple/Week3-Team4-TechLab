@@ -471,7 +471,7 @@
     <Text Include="Pretendard_Kor.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Natvis Include="t0.natvis" />
+    <Natvis Include="JungleEngine.natvis" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
