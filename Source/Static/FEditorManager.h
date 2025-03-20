@@ -1,6 +1,11 @@
 #pragma once
-#include "Object/Actor/Actor.h"
+#include <memory>
 
+#include "Core/AbstractClass/Singleton.h"
+#include "Core/Math/Vector.h"
+
+class ACamera;
+class AActor;
 class AGizmoActor;
 
 class FEditorManager : public TSingleton<FEditorManager>
@@ -20,8 +25,8 @@ public:
 
 	AGizmoActor* GetGizmo() const {return Gizmo;}
 
-	static FVector4 EncodeUUID(unsigned int UUID);
-	static int DecodeUUID(FVector4 color);
+	static FVector4 EncodeUUID(uint32 UUID);
+	static uint32 DecodeUUID(FVector4 color);
 
 	void LateTick(float DeltaTime);
 
@@ -29,7 +34,7 @@ public:
 
 	void OnResizeComplete();
 
-	FVector4 GetPixel(FVector MPos);
+	FVector4 GetPixel(FVector MPos) const;
     
 private:
     ACamera* Camera = nullptr;

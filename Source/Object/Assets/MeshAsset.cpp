@@ -1,8 +1,5 @@
 #include "MeshAsset.h"
 
-UMeshAsset::UMeshAsset()
-{
-}
 
 bool UMeshAsset::RegisterAsset()
 {

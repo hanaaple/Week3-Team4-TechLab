@@ -5,15 +5,14 @@
 
 #include "Resource/Resource.h"
 #include "Core/Container/String.h"
-#include "Core/Math/Vector.h"
 
-class FBlendState:
-public FResource<FBlendState> 
+
+class FBlendState: public FResource<FBlendState> 
 {
 public:
 
 	FBlendState();
-	~FBlendState();
+	virtual ~FBlendState() override;
 	
 	static std::shared_ptr<FBlendState> Create(const FString& _Name, const D3D11_BLEND_DESC& _Desc)
 	{

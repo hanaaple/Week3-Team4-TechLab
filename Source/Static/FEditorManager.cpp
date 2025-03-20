@@ -1,7 +1,6 @@
 #include "FEditorManager.h"
 #include "Core/Engine.h"
 #include "Object/World/World.h"
-#include "Object/Gizmo/GizmoHandle.h"
 #include "Core/Math/Vector.h"
 #include "Core/Math/Transform.h"
 #include <Object/Gizmo/GizmoActor.h>
@@ -13,11 +12,8 @@
 
 void FEditorManager::Init()
 {
-	RECT Rect;
-	int Width , Height;
-
-	Width =  FDevice::Get().GetViewPortInfo().Width;
-	Height =  FDevice::Get().GetViewPortInfo().Height;
+	const int Width = static_cast<int>(FDevice::Get().GetViewPortInfo().Width);
+	const int Height = static_cast<int>(FDevice::Get().GetViewPortInfo().Height);
 
 	D3D11_TEXTURE2D_DESC textureDesc = {};
 	textureDesc.Width = Width;
@@ -71,7 +67,7 @@ void FEditorManager::SelectActor(AActor* NewActor)
     if (SelectedActor != nullptr)
     {
         SelectedActor->Pick();
-		    FTransform newActorTransform = NewActor->GetActorTransform();
+		    const FTransform newActorTransform = NewActor->GetActorTransform();
 		    Gizmo->SetActorTransform(newActorTransform);
 	   }
 }
@@ -81,24 +77,34 @@ void FEditorManager::SetCamera(ACamera* NewCamera)
     Camera = NewCamera;
 }
 
-FVector4 FEditorManager::EncodeUUID(unsigned int UUID)
+FVector4 FEditorManager::EncodeUUID(uint32 UUID)
 {
-	float a = (UUID >> 24) & 0xff;
-	float b = (UUID >> 16) & 0xff;
-	float g = (UUID >> 8) & 0xff;
-	float r = UUID & 0xff;
-	
-	FVector4 color = {r, g, b, a};
+	const uint32 a = (UUID >> 24) & 0xff;
+	const uint32 b = (UUID >> 16) & 0xff;
+	const uint32 g = (UUID >> 8) & 0xff;
+	const uint32 r = UUID & 0xff;
+
+	const FVector4 color = {
+		static_cast<float>(r),
+		static_cast<float>(g),
+		static_cast<float>(b),
+		static_cast<float>(a)
+	};
     
 	return color;
 }
 
-int FEditorManager::DecodeUUID(FVector4 color)
+uint32 FEditorManager::DecodeUUID(FVector4 color)
 {
-	return (static_cast<unsigned int>(color.W)<<24) | (static_cast<unsigned int>(color.Z)<<16) | (static_cast<unsigned int>(color.Y)<<8) | (static_cast<unsigned int>(color.X));
+	return (
+		static_cast<uint32>(color.W) << 24
+		| (static_cast<uint32>(color.Z) << 16)
+		| (static_cast<uint32>(color.Y) << 8)
+		| (static_cast<uint32>(color.X))
+	);
 }
 
-void FEditorManager::LateTick(float DeltaTime)
+void FEditorManager::LateTick([[maybe_unused]] float DeltaTime)
 {
 	if (APlayerInput::Get().GetKeyDown(EKeyCode::LButton))
 	{
@@ -114,8 +120,8 @@ void FEditorManager::LateTick(float DeltaTime)
 		//      pt.x = pt.x * ratioX;
 		//      pt.y = pt.y * ratioY;
 
-		FVector4 color = GetPixel(FVector(pt.x, pt.y, 0));
-		uint32_t UUID = DecodeUUID(color);
+		const FVector4 color = GetPixel(FVector(pt.x, pt.y, 0));
+		const uint32_t UUID = DecodeUUID(color);
 
 		UActorComponent* PickedComponent = UEngine::Get().GetObjectByUUID<UActorComponent>(UUID);
 
@@ -135,7 +141,7 @@ void FEditorManager::LateTick(float DeltaTime)
 			
 			UE_LOG("Pick - UUID: %d", UUID);
 
-			if (UGizmoComponent* GizmoCom = Cast<UGizmoComponent>(PickedComponent))
+			if (const UGizmoComponent* GizmoCom = Cast<UGizmoComponent>(PickedComponent))
 			{
 				Gizmo->SetSelectedAxis(GizmoCom->GetSelectedAxis());
 			}
@@ -215,11 +221,8 @@ void FEditorManager::OnUpdateWindowSize(uint32 Width, uint32 Height)
 
 void FEditorManager::OnResizeComplete()
 {
-	RECT Rect;
-	int Width, Height;
-
-	Width = FDevice::Get().GetViewPortInfo().Width;
-	Height = FDevice::Get().GetViewPortInfo().Height;
+	const int Width = static_cast<int>(FDevice::Get().GetViewPortInfo().Width);
+	const int Height = static_cast<int>(FDevice::Get().GetViewPortInfo().Height);
 
 	D3D11_TEXTURE2D_DESC textureDesc = {};
 	textureDesc.Width = Width;
@@ -235,13 +238,13 @@ void FEditorManager::OnResizeComplete()
 	UUIDTexture->CreateRenderTargetView();
 }
 
-FVector4 FEditorManager::GetPixel(FVector MPos)
+FVector4 FEditorManager::GetPixel(FVector MPos) const
 {
 
-	float Width = FDevice::Get().GetViewPortInfo().Width;
-	float Height = FDevice::Get().GetViewPortInfo().Height;
-    MPos.X = FMath::Clamp(MPos.X, 0.0f, FDevice::Get().GetViewPortInfo().Width);
-    MPos.Y = FMath::Clamp(MPos.Y, 0.0f, FDevice::Get().GetViewPortInfo().Height);
+	const float Width = FDevice::Get().GetViewPortInfo().Width;
+	const float Height = FDevice::Get().GetViewPortInfo().Height;
+    MPos.X = FMath::Clamp(MPos.X, 0.0f, Width);
+    MPos.Y = FMath::Clamp(MPos.Y, 0.0f, Height);
     // 1. Staging 텍스처 생성 (1x1 픽셀)
     D3D11_TEXTURE2D_DESC stagingDesc = {};
     stagingDesc.Width = 1; // 픽셀 1개만 복사
@@ -258,13 +261,13 @@ FVector4 FEditorManager::GetPixel(FVector MPos)
     FDevice::Get().GetDevice()->CreateTexture2D(&stagingDesc, nullptr, &stagingTexture);
 
     // 2. 복사할 영역 정의 (D3D11_BOX)
-    D3D11_BOX srcBox = {};
-    srcBox.left = static_cast<UINT>(MPos.X);
-    srcBox.right = srcBox.left + 1; // 1픽셀 너비
-    srcBox.top = static_cast<UINT>(MPos.Y);
-    srcBox.bottom = srcBox.top + 1; // 1픽셀 높이
-    srcBox.front = 0;
-    srcBox.back = 1;
+    D3D11_BOX SrcBox;
+    SrcBox.left = static_cast<UINT>(MPos.X);
+    SrcBox.right = SrcBox.left + 1; // 1픽셀 너비
+    SrcBox.top = static_cast<UINT>(MPos.Y);
+    SrcBox.bottom = SrcBox.top + 1; // 1픽셀 높이
+    SrcBox.front = 0;
+    SrcBox.back = 1;
     FVector4 color {1, 1, 1, 1};
 
     if (stagingTexture == nullptr)
@@ -277,7 +280,7 @@ FVector4 FEditorManager::GetPixel(FVector MPos)
         0, 0, 0,        // 대상 좌표 (x, y, z)
         UUIDTexture->GetTexture2D(), // 원본 텍스처
         0,              // 원본 서브리소스
-        &srcBox         // 복사 영역
+        &SrcBox         // 복사 영역
     );
 
     // 4. 데이터 매핑

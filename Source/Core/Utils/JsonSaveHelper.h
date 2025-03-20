@@ -6,29 +6,29 @@
 #include "Core/HAL/PlatformType.h"
 #include "Core/Math/Vector.h"
 
+
 struct UObjectInfo
 {
-    FVector Location; 
-    FVector Rotation;
-    FVector Scale;
-    std::string ObjectType;
+	FVector Location;
+	FVector Rotation;
+	FVector Scale;
+	std::string ObjectType;
 
-    uint32 UUID;
+	uint32 UUID;
 };
 
 struct UWorldInfo
 {
-    // UObjectInfo** ObjctInfos;
-	std::queue<std::unique_ptr<UObjectInfo>> ObjectInfos;
-    uint32 ActorCount;
-    uint32 Version;
-    std::string SceneName;
+	//UObjectInfo** ObjctInfos;
+	std::queue<std::unique_ptr<UObjectInfo>> ObjectInfos;uint32 ActorCount;
+	uint32 Version;
+	std::string SceneName;
 };
 
 class JsonSaveHelper
 {
 public:
-    // SceneName - 확장자 제외
-    static std::unique_ptr<UWorldInfo> LoadScene(const std::string& SceneName);
-    static void SaveScene(UWorldInfo WorldInfo);
+	// SceneName - 확장자 제외
+	static std::unique_ptr<UWorldInfo> LoadScene(const std::string& SceneName);
+	static void SaveScene(UWorldInfo WorldInfo);
 };

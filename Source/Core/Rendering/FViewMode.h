@@ -24,7 +24,7 @@ public:
 		return Instance;
 	}
 
-	void Initialize(ID3D11Device* Device);
+	void Initialize(ID3D11Device* InDevice);
 	void SetViewMode(EViewModeIndex ViewMode);
 	void ApplyViewMode();
 

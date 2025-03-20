@@ -1,8 +1,6 @@
 #pragma once
 #include "Core/Container/Array.h"
-#include "Core/Container/Map.h"
 #include "Core/Container/String.h"
-#include "Core/HAL/PlatformType.h"
 #include "ImGui/imgui.h"
 
 
@@ -17,20 +15,20 @@ public:
     
     void Initialize(HWND hWnd, const class FDevice& Device, UINT ScreenWidth, UINT ScreenHeight);
     void Update();
-    void Shutdown();
+    void Shutdown() const;
 
 	void OnUpdateWindowSize(UINT InScreenWidth, UINT InScreenHeight);
 
 public:// UIWindows
     void RenderControlPanel();
-	void RenderMemoryUsage();
+	void RenderMemoryUsage() const;
     void RenderPrimitiveSelection();
-    void RenderCameraSettings();
-    void RenderPropertyWindow();
+    void RenderCameraSettings() const;
+    void RenderPropertyWindow() const;
     void RenderSceneManager();
-	void RenderShowFlagsPanel();
-	void RenderViewModePanel();
-	void RenderGridSettings();
+	void RenderShowFlagsPanel() const;
+	void RenderViewModePanel() const;
+	void RenderGridSettings() const;
 
 private:
 	// Mouse 전용
@@ -86,5 +84,5 @@ private:
 	TArray<const char*> cUUIDNames;
 	TArray<uint32> UUIDs;
 	uint32 PrevSize = 0;
-	class AActor* CurActor;
+	AActor* CurActor = nullptr;
 };

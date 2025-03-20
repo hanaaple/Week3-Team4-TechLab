@@ -45,7 +45,7 @@ FRay FRay::TransformRayToLocal(const FRay& worldRay, const FMatrix& primWorldMat
 		FVector(localDir.X, localDir.Y, localDir.Z));
 }
 
-bool FRayCast::InserSectRaySphere(const FRay& Ray, const FVector& SphereCenter, float SphereRadius, OUT float& OutT)
+bool FRayCast::InsertSectRaySphere(const FRay& Ray, const FVector& SphereCenter, float SphereRadius, OUT float& OutT)
 {
 	// Ray : Origin + tD
 	// Sphere : (X - Center) · (X - Center) = r^2

@@ -1,6 +1,6 @@
 #include "Transform.h"
 
-FTransform FTransform::ConstructTransformFromMatrixWithDesiredScale(const FMatrix& InMatrix, const FVector& DesiredScale)
+FTransform FTransform::ConstructTransformFromMatrixWithDesiredScale(const FMatrix& InMatrix, const FVector& DesiredScale) const
 {
 	// 1. Translation 추출  
 //    Translation은 4번째 행의 앞 세 개 요소에 저장되어 있다고 가정합니다.
@@ -146,3 +146,5 @@ FMatrix FTransform::ToMatrixWithScale() const
 
 	return OutMatrix;
 }
+
+const FTransform FTransform::Identity = {};

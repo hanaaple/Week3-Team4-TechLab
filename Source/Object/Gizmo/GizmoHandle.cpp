@@ -4,7 +4,7 @@
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
 #include "Object/World/World.h"
 #include "Static/FEditorManager.h"
-#include <Core/Input/PlayerInput.h>
+
 
 AGizmoHandle::AGizmoHandle()
 {
@@ -17,14 +17,14 @@ AGizmoHandle::AGizmoHandle()
 
 	UCylinderComp* ZArrow = AddComponent<UCylinderComp>();
 	ZArrow->SetupAttachment(RootComponent);
-	ZArrow->SetRelativeTransform(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(0.1, 0.1, 1)));
+	ZArrow->SetRelativeTransform(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(0.1f, 0.1f, 1.0f)));
 	ZArrow->SetCustomColor(FVector4(0.0f, 0.0f, 1.0f, 1.0f));
 	//CylinderComponents.Add(ZArrow);
 
 	// x
 	UCylinderComp* XArrow = AddComponent<UCylinderComp>();
 	XArrow->SetupAttachment(RootComponent);
-	XArrow->SetRelativeTransform(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 90, 0.0f), FVector(1, 0.1, 0.1)));
+	XArrow->SetRelativeTransform(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(0.0f, 90, 0.0f), FVector(1.0f, 0.1f, 0.1f)));
 	XArrow->SetCustomColor(FVector4(1.0f, 0.0f, 0.0f, 1.0f));
 	//CylinderComponents.Add(XArrow);
 
@@ -32,7 +32,7 @@ AGizmoHandle::AGizmoHandle()
 	// y
 	UCylinderComp* YArrow = AddComponent<UCylinderComp>();
 	YArrow->SetupAttachment(RootComponent);
-	YArrow->SetRelativeTransform(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(90, 0.0f, 0.0f), FVector(0.1, 1, 0.1)));
+	YArrow->SetRelativeTransform(FTransform(FVector(0.0f, 0.0f, 0.0f), FVector(90, 0.0f, 0.0f), FVector(0.1f, 1.0f, 0.1f)));
 	YArrow->SetCustomColor(FVector4(0.0f, 1.0f, 0.0f, 1.0f));
 	//CylinderComponents.Add(YArrow);
 
@@ -140,6 +140,7 @@ void AGizmoHandle::SetScaleByDistance()
 	// float scaleFactor = clamp(1.0f / distance, minScale, maxScale);
 
 	MyTransform.SetScale(scaleFactor, scaleFactor, scaleFactor);
+	// SetActorTransform(MyTransform);
 }
 
 void AGizmoHandle::SetActive(bool bActive)

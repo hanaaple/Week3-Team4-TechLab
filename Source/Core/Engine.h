@@ -1,13 +1,11 @@
 #pragma once
-
 #include <memory>
 
-#include "HAL/PlatformType.h"
-#include "Rendering/URenderer.h"
-#include "Rendering/UI.h"
 #include "AbstractClass/Singleton.h"
 #include "Container/Map.h"
-#include "Core/Container/Array.h"
+#include "HAL/PlatformType.h"
+#include "Rendering/UI.h"
+#include "Rendering/URenderer.h"
 #include "UObject/Casts.h"
 
 class UObject;
@@ -47,7 +45,7 @@ public:
      */
     void Shutdown();
 
-	class URenderer* GetRenderer() const { return Renderer.get(); }
+	URenderer* GetRenderer() const { return Renderer.get(); }
 	float GetScreenRatio() const { return static_cast<float>(ScreenWidth) / static_cast<float>(ScreenHeight); }
     int GetScreenWidth() const { return ScreenWidth; }
     int GetScreenHeight() const { return ScreenHeight; }

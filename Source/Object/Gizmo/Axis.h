@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "Core/Interfaces/GizmoInterface.h"
 #include "Object/Actor/Actor.h"
-#include "Object/PrimitiveComponent/UPrimitiveComponent.h"
+
 
 
 class AAxis : public AActor, public IGizmoInterface

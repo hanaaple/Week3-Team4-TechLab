@@ -79,7 +79,7 @@ public:
 	/// <param name="sphereRadius">구의 반지름</param>
 	/// <param name="outT">교차 시 Ray 상의 t 값</param>
 	/// <returns>교차가 있으면 true, 없으면 false</returns>
-	static bool InserSectRaySphere(const FRay& Ray, const FVector& SphereCenter, float SphereRadius, OUT float& OutT);
+	static bool InsertSectRaySphere(const FRay& Ray, const FVector& SphereCenter, float SphereRadius, OUT float& OutT);
 
 	/// <summary>
 	/// Ray와 축에 정렬된 경계 상자(AABB)와의 교차를 슬랩(Slab) 기법을 이용해 검사

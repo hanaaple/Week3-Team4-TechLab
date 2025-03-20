@@ -20,7 +20,7 @@ FInputLayout::~FInputLayout()
 	}
 }
 
-void FInputLayout::ResCreate(std::shared_ptr<class FVertexShader> _Shader)
+void FInputLayout::ResCreate(std::shared_ptr<FVertexShader> _Shader)
 {
 	
 	//const std::vector<D3D11_INPUT_ELEMENT_DESC>& Infos = _Buffer->VertexInfoPtr->Infos;

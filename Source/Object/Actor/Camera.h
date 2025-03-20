@@ -1,10 +1,6 @@
 #pragma once
-
 #include "Core/HAL/PlatformType.h"
 #include "Core/Interfaces/GizmoInterface.h"
-#include "Core/Math/Matrix.h"
-#include "Core/Math/Transform.h"
-#include "Core/Math/Vector.h"
 #include "Object/Actor/Actor.h"
 
 namespace ECameraProjectionMode

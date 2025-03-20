@@ -28,7 +28,7 @@ public:
 	}
 
 	void ResCreate(
-	std::shared_ptr<class FVertexShader> _Shader
+	std::shared_ptr<FVertexShader> _Shader
 );
 
 	void Setting();

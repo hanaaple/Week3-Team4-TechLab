@@ -1,7 +1,8 @@
 #include "GizmoComponent.h"
-#include <Object/Gizmo/GizmoActor.h>
+#include "Object/Gizmo/GizmoActor.h"
 
-UGizmoComponent::UGizmoComponent() : Super()
+
+UGizmoComponent::UGizmoComponent()
 {
 	//SetMaterial(TEXT("AlwaysVisibleMaterial"));
 	SetMesh(TEXT("GizmoArrow"));

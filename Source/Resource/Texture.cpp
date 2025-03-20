@@ -36,36 +36,36 @@ FTexture::~FTexture()
 	}
 }
 
-void FTexture::VSSetting(UINT _Slot)
+void FTexture::VSSetting(UINT InSlot)
 {
-	FDevice::Get().GetDeviceContext()->VSSetShaderResources(_Slot, 1, &SRV);
+	FDevice::Get().GetDeviceContext()->VSSetShaderResources(InSlot, 1, &SRV);
 }
 
-void FTexture::PSSetting(UINT _Slot)
+void FTexture::PSSetting(UINT InSlot)
 {
-	FDevice::Get().GetDeviceContext()->PSSetShaderResources(_Slot, 1, &SRV);
+	FDevice::Get().GetDeviceContext()->PSSetShaderResources(InSlot, 1, &SRV);
 }
 
-void FTexture::CSSetting(UINT _Slot)
+void FTexture::CSSetting(UINT InSlot)
 {
-	FDevice::Get().GetDeviceContext()->CSSetShaderResources(_Slot, 1, &SRV);
+	FDevice::Get().GetDeviceContext()->CSSetShaderResources(InSlot, 1, &SRV);
 }
 
-void FTexture::VSReset(UINT _Slot)
+void FTexture::VSReset(UINT InSlot)
 {
 	ID3D11ShaderResourceView* ResetRes = nullptr;
-	FDevice::Get().GetDeviceContext()->VSSetShaderResources(_Slot, 1, &ResetRes);
+	FDevice::Get().GetDeviceContext()->VSSetShaderResources(InSlot, 1, &ResetRes);
 }
-void FTexture::PSReset(UINT _Slot)
+void FTexture::PSReset(UINT InSlot)
 {
 	ID3D11ShaderResourceView* ResetRes = nullptr;
-	FDevice::Get().GetDeviceContext()->PSSetShaderResources(_Slot, 1, &ResetRes);
+	FDevice::Get().GetDeviceContext()->PSSetShaderResources(InSlot, 1, &ResetRes);
 }
 
-void FTexture::CSReset(UINT _Slot)
+void FTexture::CSReset(UINT InSlot)
 {
 	ID3D11ShaderResourceView* ResetRes = nullptr;
-	FDevice::Get().GetDeviceContext()->CSSetShaderResources(_Slot, 1, &ResetRes);
+	FDevice::Get().GetDeviceContext()->CSSetShaderResources(InSlot, 1, &ResetRes);
 }
 
 
@@ -158,10 +158,10 @@ void FTexture::CreateDepthStencilView()
 	}
 }
 
-void FTexture::ResLoad(const FString& _Path)
+void FTexture::ResLoad(const FString& InPath)
 
 {
-	std::string str = *_Path;
+	std::string str = *InPath;
 
 	std::wstring wstr(str.begin(), str.end());
 
@@ -174,9 +174,9 @@ void FTexture::ResLoad(const FString& _Path)
 	Resource->QueryInterface(__uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&Texture2D));
 }
 
-void FTexture::ResCreate(ID3D11Texture2D* _Res)
+void FTexture::ResCreate(ID3D11Texture2D* InRes)
 {
-	Texture2D = _Res;
+	Texture2D = InRes;
 
 	Texture2D->GetDesc(&Desc);
 
@@ -192,7 +192,7 @@ void FTexture::ResCreate(const D3D11_TEXTURE2D_DESC& _Desc)
 
 	if (S_OK != result)
 	{
-		MsgBoxAssert("텍스쳐가 생성되지 못했습니다.")
+		MsgBoxAssert("텍스쳐가 생성되지 못했습니다.");
 	}
 
 	if (D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET & Desc.BindFlags)

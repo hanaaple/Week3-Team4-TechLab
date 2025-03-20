@@ -7,7 +7,7 @@
 #include "Object/Actor/Camera.h"
 #include "Core/Input/PlayerInput.h"
 
-AGizmoActor::AGizmoActor() : AActor()
+AGizmoActor::AGizmoActor()
 {
 	bCanEverTick = true;
 

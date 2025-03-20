@@ -1,7 +1,7 @@
 #include "Cylinder.h"
 
-#include <Object/PrimitiveComponent/UPrimitiveComponent.h>
 #include "Core/Input/PlayerInput.h"
+#include "Object/PrimitiveComponent/UPrimitiveComponent.h"
 
 ACylinder::ACylinder()
 {
@@ -37,37 +37,37 @@ void ACylinder::Tick(float DeltaTime)
 	
 	FTransform NewTransform = GetActorTransform();
 	FVector NewPosition = NewTransform.GetPosition();
-	FVector NewRotation = NewTransform.GetRotation().GetEuler();
+    [[maybe_unused]] FVector NewRotation = NewTransform.GetRotation().GetEuler();
 	FVector NewScale = NewTransform.GetScale();
 
 	if (APlayerInput::Get().GetKeyDown(EKeyCode::Up))
 	{
-		NewPosition += FVector(0, 0, 1);
+		NewPosition += FVector(0.0f, 0.0f, 1.0f);
 	}
 	if (APlayerInput::Get().GetKeyDown(EKeyCode::Down))
 	{
-		NewPosition += FVector(0, 0, -1);
+		NewPosition += FVector(0.0f, 0.0f, -1.0f);
 	}
 	if (APlayerInput::Get().GetKeyDown(EKeyCode::Left))
 	{
-		NewPosition += FVector(0, 1, 0);
+		NewPosition += FVector(0.0f, 1.0f, 0.0f);
 	}    
 	if (APlayerInput::Get().GetKeyDown(EKeyCode::Right))
 	{
-		NewPosition += FVector(0, -1, 0);
+		NewPosition += FVector(0.0f, -1.0f, 0.0f);
 	}
 
 	if (APlayerInput::Get().GetKeyDown(EKeyCode::J))
 	{
-		NewScale += FVector(0.1, 0, 0);
+		NewScale += FVector(0.1f, 0.0f, 0.0f);
 	}
 	if (APlayerInput::Get().GetKeyDown(EKeyCode::K))
 	{
-		NewScale += FVector(0, 0.1, 0);
+		NewScale += FVector(0.0f, 0.1f, 0.0f);
 	}
 	if (APlayerInput::Get().GetKeyDown(EKeyCode::L))
 	{
-		NewScale += FVector(0, 0, 0.1);
+		NewScale += FVector(0.0f, 0.0f, 0.1f);
 	}
 
 

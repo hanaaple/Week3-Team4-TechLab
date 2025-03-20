@@ -1,9 +1,13 @@
 #pragma once
 
-#include "Object/Actor/Actor.h"
+#define _TCHAR_DEFINED
+#include <d3d11.h>
+
+#include "Core/AbstractClass/Singleton.h"
 #include "Primitive/PrimitiveVertices.h"
 #include "Core/Container/Array.h"
 #include "Resource/RenderResourceCollection.h"
+#include "Core/Math/Matrix.h"
 
 struct FLineConstantInfo
 {
@@ -22,8 +26,6 @@ public:
 
 	void DrawWorldGrid(float GridSize, float GridSpacing, const FVector4& GridColor = FVector4{1.0f,1.0f,1.0f,1.0f }, bool bCenterGrid = true);
 
-
-	
 	FRenderResourceCollection& GetRenderResourceCollection() { return RenderResourceCollection; }
 private:
 	TArray<FLineVertexSimple> VertexBuffer;

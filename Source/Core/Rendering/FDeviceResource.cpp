@@ -1,4 +1,5 @@
 #include "FDevice.h"
+#include "Core/Rendering/URenderer.h"
 #include "Resource/DirectResource/Vertexbuffer.h"
 #include "Resource/DirectResource/IndexBuffer.h"
 #include "Resource/DirectResource/PixelShader.h"
@@ -18,13 +19,13 @@
 
 void FDevice::InitResource()
 {
-	std::shared_ptr<FVertexShader> VS = FVertexShader::Load(L"Shaders/ShaderW0.hlsl","Simple_VS","mainVS");
+	const std::shared_ptr<FVertexShader> VS = FVertexShader::Load(L"Shaders/ShaderW0.hlsl","Simple_VS","mainVS");
 	FInputLayout::Create("Simple_VS" , VS);
 	FPixelShader::Load(L"Shaders/ShaderW0.hlsl","Simple_PS","mainPS");
 
 	{
 		
-		std::shared_ptr<FVertexShader> VS = FVertexShader::Load(L"Shaders/Font_VS.hlsl","Font_VS","Font_VS");
+		std::shared_ptr<FVertexShader> TempVS = FVertexShader::Load(L"Shaders/Font_VS.hlsl","Font_VS","Font_VS");
 		//FInputLayout::Create("Font_VS" , VS);
 	}
 	FPixelShader::Load(L"Shaders/Font_PS.hlsl", "Font_PS", "Font_PS");
@@ -202,7 +203,7 @@ void FDevice::InitResource()
 		TArray<uint32> indices;
 		float size = 1.f;
 
-		UGeometryGenerator::CreateCube(size, &vertices, &indices);
+		UGeometryGenerator::CreateCube(size, vertices, indices);
 		
 		FVertexBuffer::Create(FString("Cube"), vertices);
 		FIndexBuffer::Create(FString("Cube"), indices);
@@ -214,10 +215,10 @@ void FDevice::InitResource()
 		TArray<uint32> indices;
 		int slices = 16;
 		int stacks = 16;
-		int32 radius = 1.f;
-		float height = 1.f;
+		float radius = 1.f;
+		[[maybe_unused]] float height = 1.f;
 
-		UGeometryGenerator::CreateSphere(radius, slices, stacks, &vertices, &indices);
+		UGeometryGenerator::CreateSphere(radius, slices, stacks, vertices, indices);
 		
 		FVertexBuffer::Create(FString("Sphere"), vertices);
 		FIndexBuffer::Create(FString("Sphere"), indices);
@@ -321,11 +322,11 @@ void FDevice::InitResource()
 		TArray<uint32> indices;
 		int slices = 36;
 		int stacks = 36;
-		float bRadius = .2f;
-		float tRdius = .2f;
+		float BottomRadius = .2f;
+		float TopRadius = .2f;
 		float height = 1.f;
 
-		UGeometryGenerator::CreateCylinder(bRadius, tRdius, height, slices, stacks, &vertices , &indices);
+		UGeometryGenerator::CreateCylinder(BottomRadius, TopRadius, height, slices, stacks, vertices , indices);
 		
 		FVertexBuffer::Create(FString("Cylinder"), vertices);
 		FIndexBuffer::Create(FString("Cylinder"), indices);
@@ -341,7 +342,7 @@ void FDevice::InitResource()
 		float radius = 1.f;
 		float height = 1.f;
 
-		UGeometryGenerator::CreateCone(radius, height, slices, stacks, &vertices, &indices);
+		UGeometryGenerator::CreateCone(radius, height, slices, stacks, vertices, indices);
 		FVertexBuffer::Create(FString("Cone"), vertices);
 		FIndexBuffer::Create(FString("Cone"), indices);
 

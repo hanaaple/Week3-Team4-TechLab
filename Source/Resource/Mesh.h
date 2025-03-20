@@ -14,21 +14,21 @@
 class FMesh : public FResource<FMesh>
 {
 public:
+	FMesh() = default;
 
-	FMesh();
-	~FMesh();
-
-	static std::shared_ptr<FMesh> Create(const FString& _Name, D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST)
+	static std::shared_ptr<FMesh> Create(const FString& InName, D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST)
 	{
-		return Create(_Name, _Name, _Name, Topology);
+		return Create(InName, InName, InName, Topology);
 	}
 
-	static std::shared_ptr<FMesh> Create(const FString& _Name, const FString& _VtxName, const FString& _IdxName
-		, D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST)
+	static std::shared_ptr<FMesh> Create(
+		const FString& InName, const FString& VertexName, const FString& IndexName
+		, D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST
+	)
 	{
-		std::shared_ptr<FMesh> Res = CreateRes(_Name);
-		Res->VertexBuffer = FVertexBuffer::Find(_VtxName);
-		Res->IndexBuffer = FIndexBuffer::Find(_IdxName);
+		std::shared_ptr<FMesh> Res = CreateRes(InName);
+		Res->VertexBuffer = FVertexBuffer::Find(VertexName);
+		Res->IndexBuffer = FIndexBuffer::Find(IndexName);
 		Res->Topology = Topology;
 
 		if (nullptr == Res->VertexBuffer
@@ -40,12 +40,14 @@ public:
 		return Res;
 	}
 
-	static std::shared_ptr<FMesh> Create(const FString& _Name, std::shared_ptr<class FVertexBuffer> _Vtx, std::shared_ptr<FIndexBuffer> _Idx,
-		D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST)
+	static std::shared_ptr<FMesh> Create(
+		const FString& InName, const std::shared_ptr<FVertexBuffer>& InVertex, const std::shared_ptr<FIndexBuffer>& InIndex,
+		D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST
+	)
 	{
-		std::shared_ptr<FMesh> Res = CreateRes(_Name);
-		Res->VertexBuffer = _Vtx;
-		Res->IndexBuffer = _Idx;
+		std::shared_ptr<FMesh> Res = CreateRes(InName);
+		Res->VertexBuffer = InVertex;
+		Res->IndexBuffer = InIndex;
 		Res->Topology = Topology;
 
 		if (nullptr == Res->VertexBuffer
@@ -57,26 +59,26 @@ public:
 		return Res;
 	}
 
-	void SetTOPOLOGY(D3D11_PRIMITIVE_TOPOLOGY _TOPOLOGY)
+	void SetTopology(D3D11_PRIMITIVE_TOPOLOGY InTopology)
 	{
-		Topology = _TOPOLOGY;
+		Topology = InTopology;
 	}
 
 	void Setting();
 	void Draw();
 
-	std::shared_ptr<class FVertexBuffer> GetVertexBuffer()
+	std::shared_ptr<FVertexBuffer> GetVertexBuffer()
 	{
 		return VertexBuffer;
 	}
 
-	std::shared_ptr<class FIndexBuffer> GetIndexBuffer()
+	std::shared_ptr<FIndexBuffer> GetIndexBuffer()
 	{
 		return IndexBuffer;
 	}
 	
 private:
-	std::shared_ptr<class FVertexBuffer> VertexBuffer = nullptr;
-	std::shared_ptr<class FIndexBuffer> IndexBuffer = nullptr;
+	std::shared_ptr<FVertexBuffer> VertexBuffer = nullptr;
+	std::shared_ptr<FIndexBuffer> IndexBuffer = nullptr;
 	D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 };

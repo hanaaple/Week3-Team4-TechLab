@@ -1,34 +1,46 @@
 #include "UI.h"
 
-#include <algorithm>
-
-#include "Object/Actor/Camera.h"
 #include "FDevice.h"
-#include "Core/HAL/PlatformMemory.h"
+#include "FViewMode.h"
+#include "Core/Engine.h"
+#include "Core/Input/PlayerInput.h"
+#include "Debug/DebugConsole.h"
 #include "ImGui/imgui_impl_dx11.h"
 #include "ImGui/imgui_impl_win32.h"
-#include "Debug/DebugConsole.h"
-#include "Debug/EngineShowFlags.h"
-#include "Core/Rendering/FViewMode.h"
 #include "ImGui/imgui_internal.h"
-#include "Object/Actor/Actor.h"
-#include "Object/PrimitiveComponent/UPrimitiveComponent.h"
-#include "Object/Actor/Sphere.h"
-#include "Object/Actor/Cube.h"
-#include "Object/Actor/Arrow.h"
+#include "Object/Actor/Camera.h"
 #include "Object/Actor/Cone.h"
+#include "Object/Actor/Cube.h"
 #include "Object/Actor/Cylinder.h"
-#include "Static/FEditorManager.h"
-#include "Static/FUUIDBillBoard.h"
-#include "Object/World/World.h"
-#include "Object/Gizmo/GizmoHandle.h"
+#include "Object/Actor/Sphere.h"
 #include "Object/Actor/SpotLight.h"
 #include "Object/Light/SpotLightComponent.h"
-#include <Core/Input/PlayerInput.h>
+#include "Object/World/World.h"
+#include "Static/FEditorManager.h"
+#include "Static/FUUIDBillBoard.h"
+// #include "FDevice.h"
+// #include "FViewMode.h"
+// #include "Core/Engine.h"
+// #include "Core/Input/PlayerInput.h"
+// #include "Debug/DebugConsole.h"
+// #include "Debug/EngineShowFlags.h"
+// #include "ImGui/imgui_impl_dx11.h"
+// #include "ImGui/imgui_impl_win32.h"
+// #include "ImGui/imgui_internal.h"
+// #include "Object/Actor/Camera.h"
+// #include "Object/Actor/Cone.h"
+// #include "Object/Actor/Cube.h"
+// #include "Object/Actor/Cylinder.h"
+// #include "Object/Actor/Sphere.h"
+// #include "Object/Actor/Sphere.h"
+// #include "Object/Actor/SpotLight.h"
+// #include "Object/Light/SpotLightComponent.h"
+// #include "Object/World/World.h"
+// #include "Static/FEditorManager.h"
+// #include "Static/FUUIDBillBoard.h"
 
 
-
-void UI::Initialize(HWND hWnd, const class FDevice& Device, UINT ScreenWidth, UINT ScreenHeight)
+void UI::Initialize(HWND hWnd, const FDevice& Device, UINT ScreenWidth, UINT ScreenHeight)
 {
     // ImGui 초기화
     IMGUI_CHECKVERSION();
@@ -96,7 +108,7 @@ void UI::Update()
 }
 
 
-void UI::Shutdown()
+void UI::Shutdown() const
 {
     ImGui_ImplDX11_Shutdown();
     ImGui_ImplWin32_Shutdown();
@@ -140,7 +152,7 @@ void UI::RenderControlPanel()
     ImGui::End();
 }
 
-void UI::RenderMemoryUsage()
+void UI::RenderMemoryUsage() const
 {
     const uint64 ContainerAllocByte = FPlatformMemory::GetAllocationBytes<EAT_Container>();
     const uint64 ContainerAllocCount = FPlatformMemory::GetAllocationCount<EAT_Container>();
@@ -234,7 +246,7 @@ void UI::RenderPrimitiveSelection()
     ImGui::Separator();
 }
 
-void UI::RenderCameraSettings()
+void UI::RenderCameraSettings() const
 {
     ImGui::Text("Camera");
 
@@ -330,7 +342,7 @@ void UI::RenderCameraSettings()
 	ImGui::Separator();
 }
 
-void UI::RenderPropertyWindow()
+void UI::RenderPropertyWindow() const
 {
 
     ImGui::Begin("Properties");
@@ -547,7 +559,7 @@ void UI::RenderSceneManager()
 	ImGui::End();
 }
 
-void UI::RenderShowFlagsPanel()
+void UI::RenderShowFlagsPanel() const
 {
 	if (ImGui::Begin("Show Flags"))
 	{
@@ -566,7 +578,7 @@ void UI::RenderShowFlagsPanel()
 	ImGui::End();
 }
 
-void UI::RenderViewModePanel()
+void UI::RenderViewModePanel() const
 {
 	if (ImGui::Begin("View Mode"))
 	{													
@@ -581,7 +593,7 @@ void UI::RenderViewModePanel()
 	ImGui::End();
 }
 
-void UI::RenderGridSettings()
+void UI::RenderGridSettings() const
 {
 	UEngine* Engine = &UEngine::Get();
 	UWorld* World = Engine->GetWorld();

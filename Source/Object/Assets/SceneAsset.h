@@ -3,23 +3,19 @@
 #include "Core/Container/Array.h"
 #include "Core/Container/Map.h"
 
+
 struct Primitive 
 {
-	Primitive(TArray<float> InLocation, TArray<float> InRotation, TArray<float> InScale, FString InType)
-		: Location(InLocation), Rotation(InRotation), Scale(InScale), Type(InType)
+	Primitive()	= default;
+	Primitive(
+		const TArray<float>& InLocation, const TArray<float>& InRotation, const TArray<float>& InScale,
+		FString InType
+	)
+		: Location(InLocation)
+		, Rotation(InRotation)
+		, Scale(InScale)
+		, Type(std::move(InType))
 	{
-	}
-
-	Primitive()
-	{
-	}
-
-	Primitive(const Primitive& Other)
-	{
-		Location = Other.Location;
-		Rotation = Other.Rotation;
-		Scale = Other.Scale;
-		Type = Other.Type;
 	}
 
 	// 3D 좌표 정보: 위치, 회전, 스케일
@@ -32,7 +28,7 @@ struct Primitive
 
 struct FSceneData
 {
-	explicit FSceneData(uint64 InVersion, uint64 InNextUUID, TMap<FString, Primitive> InPrimitives)
+	explicit FSceneData(uint64 InVersion, uint64 InNextUUID, const TMap<FString, Primitive>& InPrimitives)
 		: Version(InVersion), NextUUID(InNextUUID), Primitives(InPrimitives)
 	{
 	}
@@ -53,8 +49,7 @@ class USceneAsset : public UAsset
 	DECLARE_CLASS(USceneAsset, UAsset)
 
 public:
-	USceneAsset() : UAsset() {}
-	virtual ~USceneAsset() = default;
+	USceneAsset() = default;	
 	virtual bool RegisterAsset() override;
 	virtual bool Load() override;
 	virtual bool Save(FString path = "") override;

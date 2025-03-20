@@ -7,6 +7,7 @@
 #include <dbghelp.h>
 
 #include "Core/Engine.h"
+#include "Core/Rendering/URenderer.h"
 #include "Core/Config/ConfigManager.h"
 
 

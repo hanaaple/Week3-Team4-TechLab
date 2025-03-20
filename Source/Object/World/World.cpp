@@ -17,6 +17,7 @@
 #include "Static/FUUIDBillBoard.h"
 #include <Core/Math/Ray.h>
 
+#include "Core/Rendering/URenderer.h"
 #include "Object/Actor/Arrow.h"
 #include "Object/Actor/Picker.h"
 #include "Core/Config/ConfigManager.h"
@@ -117,13 +118,13 @@ void UWorld::Render()
 	AActor* SelectedActor = FEditorManager::Get().GetSelectedActor();
 	if (SelectedActor != nullptr)
 	{
-		FVector localMax = SelectedActor->GetActorLocalBoundsMax();
-		FVector localMin = SelectedActor->GetActorLocalBoundsMin();
+		const FVector LocalMax = SelectedActor->GetActorLocalBoundsMax();
+		const FVector LocalMin = SelectedActor->GetActorLocalBoundsMin();
 
-		FVector WorldMax = SelectedActor->GetActorWorldBoundsMax();
-		FVector WorldMin = SelectedActor->GetActorWorldBoundsMin();
+		[[maybe_unused]] FVector WorldMax = SelectedActor->GetActorWorldBoundsMax();
+		[[maybe_unused]] FVector WorldMin = SelectedActor->GetActorWorldBoundsMin();
 
-		UDebugDrawManager::Get().DrawBoundingBox(localMax, localMin, SelectedActor->GetActorTransform(), FVector4::RED);
+		UDebugDrawManager::Get().DrawBoundingBox(LocalMin, LocalMax, SelectedActor->GetActorTransform(), FVector4::RED);
 	}
 	UDebugDrawManager::Get().Render();
 
@@ -348,7 +349,7 @@ void UWorld::RayCasting(const FVector& MouseNDCPos)
 		}
 		case EPrimitiveType::EPT_Sphere:
 		{
-			bHit = FRayCast::InserSectRaySphere(localRay, PrimitiveComponent->GetActorPosition(), 0.5f, outT);
+			bHit = FRayCast::InsertSectRaySphere(localRay, PrimitiveComponent->GetActorPosition(), 0.5f, outT);
 			if (bHit)
 			{
 				UE_LOG("Sphere Hit");

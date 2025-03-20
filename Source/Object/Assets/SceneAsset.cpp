@@ -1,9 +1,10 @@
 #include "SceneAsset.h"
-#include "SimpleJSON/Json.hpp"
-#include "filesystem"
-#include <fstream>
+
 #include <iostream>
-#include <sstream>
+#include <filesystem>
+#include <fstream>
+
+#include "SimpleJSON/Json.hpp"
 
 using namespace std;
 
@@ -16,21 +17,21 @@ bool USceneAsset::Load()
 {
 	if (IsLoaded())
 	{
-		cout << "Asset already loaded: " << MetaData.GetAssetPath().GetData() << endl;
+		cout << "Asset already loaded: " << MetaData.GetAssetPath().GetData() << '\n';
 		return true;
 	}
 
 	filesystem::path filePath = MetaData.GetAssetPath().GetData();
 	if (filesystem::exists(filePath) == false)
 	{
-		cout << "File not found: " << filePath << endl;
+		cout << "File not found: " << filePath << '\n';
 		return false;
 	}
 
 	ifstream file(filePath);
 	if (file.is_open() == false)
 	{
-		cout << "File open failed: " << filePath << endl;
+		cout << "File open failed: " << filePath << '\n';
 		return false;
 	}
 
@@ -58,21 +59,21 @@ bool USceneAsset::Load()
 		auto locationArr = primitive["Location"].ArrayRange();
 		for (const auto& location : locationArr)
 		{
-			float value = location.ToFloat();
+			float value = static_cast<float>(location.ToFloat());
 			loadedPrimitive.Location.Add(value);
 		}
 
 		auto rotationArr = primitive["Rotation"].ArrayRange();
 		for (const auto& rotation : rotationArr)
 		{
-			float value = rotation.ToFloat();
+			float value = static_cast<float>(rotation.ToFloat());
 			loadedPrimitive.Rotation.Add(value);
 		}
 
 		auto scaleArr = primitive["Scale"].ArrayRange();
 		for (const auto& scale : scaleArr)
 		{
-			float value = scale.ToFloat();
+			float value = static_cast<float>(scale.ToFloat());
 			loadedPrimitive.Scale.Add(value);
 		}
 
@@ -136,7 +137,7 @@ bool USceneAsset::Save(FString path)
 	ofstream file(path.GetData());
 	if (!file.is_open())
 	{
-		cout << "File open failed: " << path.GetData() << endl;
+		cout << "File open failed: " << path.GetData() << '\n';
 		return false;
 	}
 

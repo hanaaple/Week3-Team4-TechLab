@@ -1,10 +1,10 @@
-﻿
-#include "Debug/DebugConsole.h"
+﻿#include "Debug/DebugConsole.h"
+
 #include <cstdarg>
 #include <algorithm>
+#include "ImGui/imgui_internal.h"
 #include "Core/Container/String.h"
 
-#include "ImGui/imgui_internal.h"
 
 std::vector<FString> Debug::items;
 

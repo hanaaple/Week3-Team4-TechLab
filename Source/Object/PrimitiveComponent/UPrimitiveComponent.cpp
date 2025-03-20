@@ -1,25 +1,17 @@
 #include "UPrimitiveComponent.h"
-#include "Object/World/World.h"
-#include "Object/Actor/Actor.h"
-#include "Core/Engine.h"
-#include "Object/Actor/Camera.h"
-#include "Primitive/UGeometryGenerator.h"
-#include "Resource/DirectResource/Vertexbuffer.h"
-#include "Resource/DirectResource/VertexShader.h"
-#include "Resource/DirectResource/PixelShader.h"
-#include "Resource/DirectResource/InputLayout.h"
-#include "Resource/DirectResource/ConstantBuffer.h"
+
+#include "Core/Rendering/URenderer.h"
 #include "Debug/EngineShowFlags.h"
-#include "Object/Gizmo/GizmoActor.h"
-#include "Resource/DirectResource/BlendState.h"
-#include "Resource/DirectResource/DepthStencilState.h"
-#include "Resource/DirectResource/Rasterizer.h"
-#include "Resource/DirectResource/ShaderResourceBinding.h"
-#include "Resource/RenderResourceCollection.h"
+#include "Object/Actor/Actor.h"
+#include "Object/Actor/Camera.h"
+#include "Object/World/World.h"
 #include "Resource/Mesh.h"
+#include "Resource/DirectResource/BlendState.h"
+#include "Resource/DirectResource/Vertexbuffer.h"
 #include "Static/FEditorManager.h"
 
-UPrimitiveComponent::UPrimitiveComponent() : Super()
+
+UPrimitiveComponent::UPrimitiveComponent()
 {
 	bCanBeRendered = true;
 
@@ -91,11 +83,11 @@ void UPrimitiveComponent::Render()
 
 	FConstantsComponentData& Data = GetConstantsComponentData();
 
-	Data  = {
-		MVP,
-		GetCustomColor(),
-		UUIDCOlor,
-		IsUseVertexColor()
+	Data = {
+		.MVP = MVP,
+		.Color = GetCustomColor(),
+		.UUIDColor = UUIDCOlor,
+		.bUseVertexColor = IsUseVertexColor()
 	};
 	
 
@@ -174,7 +166,7 @@ FBoxSphereBounds UPrimitiveComponent::CalcBounds(const FTransform& LocalToWorld)
 	return FBoxSphereBounds(FBox(-BoxExtent, BoxExtent)).TransformBy(LocalToWorld);
 }
 
-UCubeComp::UCubeComp() : Super()
+UCubeComp::UCubeComp()
 {
 	SetMesh("Cube");
 	bCanBeRendered = true;
@@ -185,7 +177,7 @@ UCubeComp::UCubeComp() : Super()
 	SetBoxExtent(extent);
 }
 
-USphereComp::USphereComp() : Super()
+USphereComp::USphereComp()
 {
 	SetMesh("Sphere");
 	bCanBeRendered = true;
@@ -230,7 +222,7 @@ float USphereComp::GetShapeScale() const
 	return scaleAbsMin;
 }
 
-UTriangleComp::UTriangleComp() : Super()
+UTriangleComp::UTriangleComp()
 {
 	SetMesh("Triangle");
 	bCanBeRendered = true;
@@ -241,17 +233,17 @@ UQuadComp::UQuadComp()
 	SetMesh("Quad");
 }
 
-ULineComp::ULineComp() : Super()
+ULineComp::ULineComp()
 {
 	SetMesh("Line");
 }
 
-UCylinderComp::UCylinderComp() : Super()
+UCylinderComp::UCylinderComp()
 {
 	SetMesh("Cylinder");
 }
 
-UConeComp::UConeComp() : Super()
+UConeComp::UConeComp()
 {
 	SetMesh("Cone");
 }

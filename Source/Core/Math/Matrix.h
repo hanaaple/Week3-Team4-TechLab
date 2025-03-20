@@ -35,7 +35,16 @@ struct alignas(16) FMatrix
 	static FMatrix GetScaleMatrix(const FVector& InScale);
 	static FMatrix GetRotateMatrix(const FQuat& Q);
 	static FMatrix GetQuatToRotationMatrixScaleMatrix(const FQuat& Q, const FVector& Scale);
-	static FMatrix LookAtLH(const FVector& EyePosition, const FVector& FocusPoint, const FVector& cameraUp);
+
+	/**
+	 * 뷰 변환 행렬을 생성합니다.
+	 *
+	 * @param EyePosition 카메라의 포지션입니다.
+	 * @param FocusPoint 카메라가 바라보는 곳의 포지션입니다.
+	 * @param WorldUp 카메라의 위쪽 방향입니다.
+	 * @return 뷰 변환 행렬을 반환합니다.
+	 */
+	static FMatrix LookAtLH(const FVector& EyePosition, const FVector& FocusPoint, const FVector& WorldUp);
 	static FMatrix PerspectiveFovLH(float FieldOfView, float AspectRatio, float NearPlane, float FarPlane);
 	static FMatrix OrthographicLH(float ViewWidth, float ViewHeight, float NearPlane, float FarPlane);
 	static FMatrix OrthoForLH(float ViewWidth, float VeiwHeight, float NearPlane, float FarPlane);
@@ -79,7 +88,7 @@ struct alignas(16) FMatrix
 
 	void RemoveScaling(float Tolerance = 1e-8f);
 
-	FTransform ConstructTransformFromMatrixWithDesiredScale(FMatrix& AMatrix, FMatrix& BMatrix, FVector DesiredScale);
+	FTransform ConstructTransformFromMatrixWithDesiredScale(const FMatrix& AMatrix, const FMatrix& BMatrix, FVector DesiredScale) const;
 
 	void SetAxis(int32 i, const FVector& Axis);
 

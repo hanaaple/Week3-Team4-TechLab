@@ -1,4 +1,6 @@
 #include "Axis.h"
+#include "Object/PrimitiveComponent/UPrimitiveComponent.h"
+
 
 AAxis::AAxis()
 {

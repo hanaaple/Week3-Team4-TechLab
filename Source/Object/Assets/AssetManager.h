@@ -1,11 +1,15 @@
 #pragma once
-#include "Core/AbstractClass/Singleton.h"
-#include "Core/Container/Map.h"
-#include "Asset.h"
-#include "Object/ObjectFactory.h"
-#include <iostream>
-#include "Core/Container/String.h"
+#include <concepts>
 
+#include "Asset.h"
+#include "Core/AbstractClass/Singleton.h"
+#include "Core/HAL/PlatformType.h"
+#include "Core/Container/String.h"
+#include "Debug/DebugConsole.h"
+#include "Object/ObjectFactory.h"
+
+
+class UAsset;
 
 class UAssetManager : public TSingleton<UAssetManager>
 {

@@ -1,17 +1,13 @@
 #include "PlayerController.h"
 
-#include <unordered_map>
-#include "Object//Actor/Camera.h"
 #include "PlayerInput.h"
-#include "Static/FEditorManager.h"
 #include "Core/Math/Quat.h"
+#include "Object/Actor/Camera.h"
+#include "Static/FEditorManager.h"
 
-APlayerController::APlayerController() {
 
-}
-
-void APlayerController::HandleCameraMovement(float DeltaTime) {
-
+void APlayerController::HandleCameraMovement(float DeltaTime) const
+{
     FVector NewVelocity(0, 0, 0);
 
     if (APlayerInput::Get().GetKeyPress(EKeyCode::RButton) == false)
@@ -44,7 +40,7 @@ void APlayerController::HandleCameraMovement(float DeltaTime) {
     // FCamera::Get().SetVelocity(NewVelocity);
 }
 
-void APlayerController::HandleGizmoMovement(float DeltaTime)
+void APlayerController::HandleGizmoMovement(float DeltaTime) const
 {
     if (APlayerInput::Get().GetKeyDown(EKeyCode::LButton) == false)
     {
@@ -61,8 +57,8 @@ void APlayerController::HandleGizmoMovement(float DeltaTime)
     
 }
 
-void APlayerController::ProcessPlayerInput(float DeltaTime) {
-
+void APlayerController::ProcessPlayerInput(float DeltaTime) const
+{
     HandleGizmoMovement(DeltaTime);
     // HandleCameraMovement(DeltaTime);
 }

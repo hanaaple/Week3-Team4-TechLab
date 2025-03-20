@@ -1,6 +1,6 @@
 #pragma once
 #include "Core/Interfaces/GizmoInterface.h"
-#include "object/actor/actor.h"
+#include "Object/Actor/Actor.h"
 #include "Object/PrimitiveComponent/GizmoComponent.h"
 
 
@@ -10,7 +10,6 @@ class AGizmoActor : public AActor, public IGizmoInterface
 
 public:
 	AGizmoActor();
-	virtual ~AGizmoActor() = default;
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 

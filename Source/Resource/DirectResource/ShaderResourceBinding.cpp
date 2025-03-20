@@ -6,7 +6,7 @@ void FConstantBufferBinding::Setting()
 
 	if (nullptr == CPUDataPtr)
 	{
-		MsgBoxAssert("상수버퍼를 세팅해주지 않았습니다.")
+		MsgBoxAssert("상수버퍼를 세팅해주지 않았습니다.");
 	}
 
 	//ShaderType Type = ParentShader->GetShaderType();

@@ -10,6 +10,9 @@ struct alignas(16) FQuat : public FVector4{
     using FVector::Z;
     using FVector4::W;
 
+	static const FQuat Identity;
+
+
     FQuat() : FVector4(0.0f, 0.0f, 0.0f, 1.0f) {}
 	explicit FQuat(float InX, float InY, float InZ, float InW) : FVector4(InX, InY, InZ, InW) {}
     explicit FQuat(FVector Rotation) : FVector4(EulerToQuaternion(Rotation)) {}
@@ -24,7 +27,7 @@ struct alignas(16) FQuat : public FVector4{
     static FQuat MultiplyQuaternions(const FQuat& q1, const FQuat& q2);
     static FQuat SubtractQuaternions(const FQuat& q1, const FQuat& q2);
 
-    static FQuat MakeFromRotationMatrix(const struct FMatrix& M);
+    static FQuat MakeFromRotationMatrix(const FMatrix& M);
 
 	FQuat GetInverse() const { return FQuat (-X, -Y, -Z, W); }
 	FVector RotateVector(const FVector& V) const;

@@ -1,21 +1,22 @@
 #pragma once
-#define _TCHAR_DEFINED
-
-#include <d3d11.h>
 #include "Resource/Resource.h"
 #include "Core/Container/String.h"
 #include "Resource/DirectResource/Vertexbuffer.h"
-#include "Debug/DebugConsole.h"
+
+
+class FDepthStencilState;
+class FRasterizer;
+class FBlendState;
 
 class FMaterial : public FResource<FMaterial>
 {
 public:
 	FMaterial();
-	~FMaterial();
+	virtual ~FMaterial() override;
 
-	static std::shared_ptr<class FMaterial> Create(FString _Name)
+	static std::shared_ptr<FMaterial> Create(const FString& InName)
 	{
-		std::shared_ptr<class FMaterial> NewRes = CreateRes(_Name);
+		std::shared_ptr<FMaterial> NewRes = CreateRes(InName);
 		return NewRes;
 	}
 
@@ -26,11 +27,11 @@ public:
 	void DepthStencil();
 
 
-	void SetVertexShader(const FString& _Value);
-	void SetRasterizer(const FString& _Value);
-	void SetPixelShader(const FString& _Value);
-	void SetBlendState(const FString& _Value);
-	void SetDepthState(const FString& _Value);
+	void SetVertexShader(const FString& InValue);
+	void SetRasterizer(const FString& InValue);
+	void SetPixelShader(const FString& InValue);
+	void SetBlendState(const FString& InValue);
+	void SetDepthState(const FString& InValue);
 
 	std::shared_ptr<class FVertexShader> GetVertexShader()
 	{
@@ -45,14 +46,11 @@ public:
 	void Setting();
 	
 private:
-
-
-
-	class std::shared_ptr<class FVertexShader> VertexShaderPtr = nullptr;
-	class std::shared_ptr<class FPixelShader> PixelShaderPtr = nullptr;
-	class std::shared_ptr<class FRasterizer> RasterizerPtr = nullptr;
-	class std::shared_ptr<class FBlendState> BlendStatePtr = nullptr;
-	class std::shared_ptr<class FDepthStencilState> DepthStencilPtr = nullptr;
+	std::shared_ptr<FVertexShader> VertexShaderPtr = nullptr;
+	std::shared_ptr<FPixelShader> PixelShaderPtr = nullptr;
+	std::shared_ptr<FRasterizer> RasterizerPtr = nullptr;
+	std::shared_ptr<FBlendState> BlendStatePtr = nullptr;
+	std::shared_ptr<FDepthStencilState> DepthStencilPtr = nullptr;
 
 };
 
