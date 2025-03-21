@@ -50,8 +50,8 @@ void UI::Initialize(HWND hWnd, const FDevice& Device, UINT ScreenWidth, UINT Scr
 void UI::Update()
 {
     POINT mousePos;
+    HWND hwnd = GetActiveWindow();
     if (GetCursorPos(&mousePos)) {
-        HWND hwnd = GetActiveWindow();
         ScreenToClient(hwnd, &mousePos);
 
         ImVec2 CalculatedMousePos = ResizeToScreenByCurrentRatio(ImVec2(mousePos.x, mousePos.y));
@@ -79,6 +79,16 @@ void UI::Update()
 	RenderViewModePanel();
 
     Debug::ShowConsole(bWasWindowSizeUpdated, PreRatio, CurRatio);
+
+	if (bEnableOverlay)
+	{
+		RenderOverlayStat();
+		SetWindowLong(hwnd, GWL_EXSTYLE, WS_EX_TOPMOST);
+	}
+	else
+	{
+		SetWindowLong(hwnd, GWL_EXSTYLE, WS_EX_TOPMOST | WS_EX_TRANSPARENT | WS_EX_LAYERED);
+	}
 
     // ImGui 렌더링
     ImGui::Render();
@@ -577,4 +587,19 @@ void UI::RenderGridSettings() const
 	{
 		World->OnChangedGridSize();
 	}
+}
+
+void UI::RenderOverlayStat() const
+{
+	ImGui::SetNextWindowSize(ImVec2(300, 200));
+	ImGui::SetNextWindowBgAlpha(0.0f);
+
+	// 윈도우 테두리 제거
+	//ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+	ImGui::Begin("Overlay Stat", nullptr, ImGuiWindowFlags_NoDecoration);
+	{
+		ImGui::Text("Overlay Stat");
+	}
+	ImGui::End();
+	//ImGui::PopStyleVar();
 }

@@ -29,6 +29,7 @@ public:// UIWindows
 	void RenderShowFlagsPanel() const;
 	void RenderViewModePanel() const;
 	void RenderGridSettings() const;
+	void RenderOverlayStat() const;
 
 private:
 	// Mouse 전용
@@ -84,4 +85,6 @@ private:
 	TArray<uint32> UUIDs;
 	uint32 PrevSize = 0;
 	AActor* CurActor = nullptr;
+
+	bool bEnableOverlay = true;
 };
