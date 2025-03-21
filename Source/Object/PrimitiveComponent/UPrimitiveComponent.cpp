@@ -104,8 +104,8 @@ void UPrimitiveComponent::CalculateModelMatrix(FMatrix& OutMatrix)
 		FVector cameraPosition = cam->GetActorTransform().GetPosition();
 
 
-		FVector objectPosition = GetWorldTransform().GetPosition();	
-		FVector objectScale = GetWorldTransform().GetScale();
+		FVector objectPosition = WorldTransform.GetPosition();	
+		FVector objectScale = WorldTransform.GetScale();
 
 		FVector lookDir = (cameraPosition - objectPosition).GetSafeNormal();
 
@@ -134,7 +134,7 @@ void UPrimitiveComponent::CalculateModelMatrix(FMatrix& OutMatrix)
 
 		return;
 	}
-	OutMatrix = GetWorldTransform().GetMatrix();
+	OutMatrix = WorldTransform.GetMatrix();
 	return;
 }
 

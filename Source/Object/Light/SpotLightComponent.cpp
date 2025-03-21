@@ -73,7 +73,7 @@ void USpotLightComponent::Render()
 		// 스포트라이트 데이터를 상수 버퍼에 업데이트
 		// 이 부분은 렌더러 구현에 따라 달라질 수 있음
 		FMatrix ModelMatrix;
-		ModelMatrix = GetWorldTransform().GetMatrix();
+		ModelMatrix = WorldTransform.GetMatrix();
 
 		const FMatrix& ViewProjectionMatrix = UEngine::Get().GetWorld()->GetCamera()->GetViewProjectionMatrix();
 

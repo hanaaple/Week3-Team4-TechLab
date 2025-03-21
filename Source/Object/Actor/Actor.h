@@ -100,7 +100,6 @@ public:
 public:
 	/** @return Actor's World Transform */
 	const FTransform& GetActorTransform() const;
-	const FTransform& ActorToWorld() const;
 
 	FVector GetActorForwardVector() const;
 	FVector GetActorRightVector() const;
@@ -126,6 +125,13 @@ public:
 	void SetActorTransform(const FTransform& NewTransform);
 
 public:
+	FVector GetActorRelativeScale() const;
+
+	FVector GetActorRelativeForwardVector() const;
+	FVector GetActorRelativeRightVector() const;
+	FVector GetActorRelativeUpVector() const;
+	
+public:
 	void SetActorRelativePosition(const FVector& InPosition);
 
 	void SetActorRelativeRotation(const FVector& InRotation);
@@ -134,7 +140,6 @@ public:
 	void SetActorRelativeTransform(const FTransform& NewRelativeTransform);
 
 	void SetActorRelativeScale(const FVector& InScale);
-	FVector GetActorRelativeScale() const;
 
 public:
 	void AddWorldOffset(const FVector& Delta);

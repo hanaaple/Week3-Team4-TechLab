@@ -82,11 +82,6 @@ const FTransform& AActor::GetActorTransform() const
 	}
 }
 
-const FTransform& AActor::ActorToWorld() const
-{
-	return (RootComponent != nullptr) ? RootComponent->GetWorldTransform() : FTransform::Identity;
-}
-
 FVector AActor::GetActorForwardVector() const
 {
 	return (RootComponent != nullptr) ? RootComponent->GetForwardVector() : FVector::ForwardVector;
@@ -451,6 +446,22 @@ FVector AActor::GetActorRelativeScale() const
 		return RootComponent->GetRelativeScale();
 	}
 	return FVector::OneVector;
+}
+
+
+FVector AActor::GetActorRelativeForwardVector() const
+{
+	return (RootComponent != nullptr) ? RootComponent->GetRelativeForwardVector() : FVector::ForwardVector;
+}
+
+FVector AActor::GetActorRelativeRightVector() const
+{
+	return (RootComponent != nullptr) ? RootComponent->GetRelativeRightVector() : FVector::ForwardVector;
+}
+
+FVector AActor::GetActorRelativeUpVector() const
+{
+	return (RootComponent != nullptr) ? RootComponent->GetRelativeUpVector() : FVector::ForwardVector;
 }
 
 const FString AActor::GetTypeName()

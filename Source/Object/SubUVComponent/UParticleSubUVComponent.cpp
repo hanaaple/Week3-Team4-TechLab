@@ -90,8 +90,8 @@ void UParticleSubUVComponent::CalculateModelMatrix(FMatrix& OutMatrix)
 	FVector cameraPosition = cam->GetActorTransform().GetPosition();
 
 
-	FVector objectPosition = GetWorldTransform().GetPosition();
-	FVector objectScale = GetWorldTransform().GetScale();
+	FVector objectPosition = WorldTransform.GetPosition();
+	FVector objectScale = WorldTransform.GetScale();
 
 	FVector lookDir = (cameraPosition - objectPosition).GetSafeNormal();
 	FVector right = FVector(0, 0, 1).Cross(lookDir).GetSafeNormal();

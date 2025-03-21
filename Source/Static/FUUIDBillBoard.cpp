@@ -243,7 +243,7 @@ void FUUIDBillBoard::CalculateModelMatrix(FMatrix& OutMatrix)
 
 	FVector cameraPosition = cam->GetActorTransform().GetPosition();
 
-	FVector objectPosition = TargetObject->GetWorldTransform().GetPosition() + FVector(0.0f, 0.0f, 1.0f);
+	FVector objectPosition = TargetObject->GetComponentTransform().GetPosition() + FVector(0.0f, 0.0f, 1.0f);
 	FVector objectScale(0.2f, 0.2f, 0.2f);
 
 	FVector lookDir = (objectPosition - cameraPosition).GetSafeNormal();
