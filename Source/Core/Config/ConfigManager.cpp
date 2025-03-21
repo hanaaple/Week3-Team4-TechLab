@@ -11,17 +11,17 @@ bool UConfigManager::LoadConfig(const FString& InConfigName)
 	// if (IsDebuggerPresent())
 	{
 		filesystem::path curPath = filesystem::current_path();
-		filesystem::path configPath = curPath / "Config" / InConfigName.GetData();
+		filesystem::path configPath = curPath / "Config" / InConfigName.c_char();
 		if (filesystem::exists(configPath) == false)
 		{
-			std::cout << "Config file not found!" << std::endl;
+			std::cout << "Config file not found!" << '\n';
 			return false;
 		}
 
 		ifstream configFile(configPath);
 		if (configFile.is_open() == false)
 		{
-			std::cout << "File open failed: " << configPath << std::endl;
+			std::cout << "File open failed: " << configPath << '\n';
 			return false;
 		}
 
@@ -72,13 +72,13 @@ bool UConfigManager::SaveConfig(const FString& InConfigName)
 	if (IsDebuggerPresent())
 	{
 		filesystem::path curPath = filesystem::current_path();
-		filesystem::path configPath = curPath / "Config" / InConfigName.GetData();
+		filesystem::path configPath = curPath / "Config" / InConfigName.c_char();
 		filesystem::path parentPath = configPath.parent_path();
 		if (parentPath.empty() == false && filesystem::exists(parentPath) == false)
 		{
 			if (filesystem::create_directories(parentPath) == false)
 			{
-				std::cout << "Failed to create directory: " << parentPath << std::endl;
+				std::cout << "Failed to create directory: " << parentPath << '\n';
 				return false;
 			}
 		}
@@ -86,19 +86,19 @@ bool UConfigManager::SaveConfig(const FString& InConfigName)
 		ofstream configFile(configPath);
 		if (configFile.is_open() == false)
 		{
-			std::cout << "File open failed: " << configPath << std::endl;
+			std::cout << "File open failed: " << configPath << '\n';
 			return false;
 		}
 
 		for (const auto& [section, keyValues] : Configs)
 		{
 			if (section.IsEmpty() == false)
-				configFile << "[" << section.GetData() << "]" << std::endl;
+				configFile << "[" << section.c_char() << "]" << '\n';
 			for (const auto& [key, value] : keyValues)
 			{
-				configFile << key.GetData() << " = " << value.GetData() << std::endl;
+				configFile << key.c_char() << " = " << value.c_char() << '\n';
 			}
-			configFile << std::endl;
+			configFile << '\n';
 		}
 
 		return true;

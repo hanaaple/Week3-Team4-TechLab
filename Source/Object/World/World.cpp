@@ -30,7 +30,6 @@
 
 void UWorld::InitWorld()
 {
-	//TODO : 
 	GridSize = FString::ToFloat(UConfigManager::Get().GetValue(TEXT("World"), TEXT("GridSize")));
 }
 
@@ -410,7 +409,7 @@ UWorldInfo UWorld::GetWorldInfo() const
 {
 	UWorldInfo WorldInfo;
 	WorldInfo.ActorCount = Actors.Num();
-	WorldInfo.SceneName = *SceneName;
+	WorldInfo.SceneName = std::string(SceneName.c_char());
 	WorldInfo.Version = 1;
 	uint32 i = 0;
 	for (auto& actor : Actors)
@@ -426,7 +425,7 @@ UWorldInfo UWorld::GetWorldInfo() const
 				.Location = actor->GetActorPosition(),
 				.Rotation = actor->GetActorRotation(),
 				.Scale = actor->GetActorScale(),
-				.ObjectType = actor->GetTypeName(),
+				.ObjectType = actor->GetTypeName().c_char(),
 				.UUID = actor->GetUUID()
 			}
 		));

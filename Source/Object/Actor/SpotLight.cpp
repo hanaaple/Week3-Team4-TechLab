@@ -21,7 +21,7 @@ void ASpotLight::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-const char* ASpotLight::GetTypeName()
+const FString ASpotLight::GetTypeName()
 {
-	return "SpotLight";
+	return TEXT("SpotLight");
 }

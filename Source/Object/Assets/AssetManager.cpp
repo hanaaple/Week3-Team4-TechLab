@@ -62,7 +62,7 @@ void UAssetManager::LoadAssets()
 			}
 			else
 			{
-				cout << "Scene Asset Load Failed: " << asset.Value.GetAssetName().GetData() << endl;
+				cout << "Scene Asset Load Failed: " << asset.Value.GetAssetName().c_char() << endl;
 			}
 			break;
 		}

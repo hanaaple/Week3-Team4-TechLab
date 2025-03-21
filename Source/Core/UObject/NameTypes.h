@@ -1,8 +1,7 @@
-﻿#pragma once
+#pragma once
 #include "Core/HAL/PlatformType.h"
 
 class FString;
-
 
 class FName
 {

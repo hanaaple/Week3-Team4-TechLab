@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <concepts>
 #include "Object.h"
 
@@ -9,7 +9,7 @@
 class UClass : public UObject
 {
 public:
-	UClass(const char* InClassName, uint32 InClassSize, uint32 InAlignment, UClass* InSuperClass);
+	UClass(const FString& InClassName, uint32 InClassSize, uint32 InAlignment, UClass* InSuperClass);
 	virtual ~UClass() override = default;
 
 	// 복사 & 이동 생성자 제거

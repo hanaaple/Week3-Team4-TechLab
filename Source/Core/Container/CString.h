@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <cstring>
 #include <cwchar>
 #include <cctype>
@@ -14,11 +14,11 @@ public:
     {
         if constexpr (std::is_same_v<CharType, char>)
         {
-            return std::strcpy(dest, src);
+            return strcpy_s(dest, src);
         }
         else if constexpr (std::is_same_v<CharType, wchar_t>)
         {
-            return std::wcscpy(dest, src);
+            return wcscpy_s(dest, src);
         }
         else
         {
@@ -31,11 +31,11 @@ public:
     {
         if constexpr (std::is_same_v<CharType, char>)
         {
-            return std::strncpy(dest, src, count);
+            return strcpy_s(dest, src, count);
         }
         else if constexpr (std::is_same_v<CharType, wchar_t>)
         {
-            return std::wcsncpy(dest, src, count);
+            return wcscpy_s(dest, src, count);
         }
         else
         {
@@ -48,11 +48,11 @@ public:
     {
         if constexpr (std::is_same_v<CharType, char>)
         {
-            return std::strcat(dest, src);
+            return strcat_s(dest, src);
         }
         else if constexpr (std::is_same_v<CharType, wchar_t>)
         {
-            return std::wcscat(dest, src);
+            return wcscat_s(dest, src);
         }
         else
         {

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Object/Actor/Actor.h"
 
 
@@ -10,6 +10,6 @@ public:
 	ASphere();
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
-	virtual const char* GetTypeName() override;
+	virtual const FString GetTypeName() override;
 };
 

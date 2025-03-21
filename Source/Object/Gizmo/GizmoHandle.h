@@ -32,7 +32,7 @@ public:
 	ESelectedAxis SelectedAxis = ESelectedAxis::None;
 	EGizmoType GizmoType = EGizmoType::Translate;
 
-	virtual const char* GetTypeName() override;
+	virtual const FString GetTypeName() override;
 
 private:
 	void DoTransform(FTransform& AT, FVector Result, AActor* Actor);

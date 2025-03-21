@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <cstdint>
 
 //~ Windows.h
@@ -22,7 +22,7 @@
 #define FORCENOINLINE __declspec(noinline)
 
 
-#define USE_WIDECHAR 0
+#define USE_WIDECHAR 1
 
 #if USE_WIDECHAR 
     #define TEXT(x) L##x

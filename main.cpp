@@ -95,17 +95,17 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	UConfigManager::Get().LoadConfig("editor.ini");
 
 	FString AppName = UConfigManager::Get().GetValue(TEXT("General"), TEXT("AppName"));
-	uint32 ScreenWidth = std::stoi((UConfigManager::Get().GetValue(TEXT("Display"), TEXT("Width"))).GetData());
-	uint32 ScreenHeight = std::stoi((UConfigManager::Get().GetValue(TEXT("Display"), TEXT("Height"))).GetData());
+	uint32 ScreenWidth = std::stoi((UConfigManager::Get().GetValue(TEXT("Display"), TEXT("Width"))).c_char());
+	uint32 ScreenHeight = std::stoi((UConfigManager::Get().GetValue(TEXT("Display"), TEXT("Height"))).c_char());
 
 	UEngine& Engine = UEngine::Get();
 	if (UConfigManager::Get().GetValue(TEXT("Display"), TEXT("Fullscreen")) == "true")
 	{
-		Engine.Initialize(hInstance, AppName.ToWideString().c_str(), L"JungleWindow", 1920, 1080, EScreenMode::Fullscreen);
+		Engine.Initialize(hInstance, AppName.c_wchar(), TEXT("JungleWindow"), 1920, 1080, EScreenMode::Fullscreen);
 	}
 	else
 	{
-		Engine.Initialize(hInstance, AppName.ToWideString().c_str(), L"JungleWindow", 1920, 1080);
+		Engine.Initialize(hInstance, AppName.c_wchar(), TEXT("JungleWindow"), 1920, 1080);
 	}
 
 	Engine.Run();

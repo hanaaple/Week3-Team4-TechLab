@@ -81,7 +81,6 @@ private:
 	ImVec2 CurRatio;
 
 	TArray<FString> UUIDNames;
-	TArray<const char*> cUUIDNames;
 	TArray<uint32> UUIDs;
 	uint32 PrevSize = 0;
 	AActor* CurActor = nullptr;

@@ -1,4 +1,4 @@
-﻿#include "Cube.h"
+#include "Cube.h"
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
 
 
@@ -22,7 +22,7 @@ void ACube::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-const char* ACube::GetTypeName()
+const FString ACube::GetTypeName()
 {
-	return "Cube";
+	return TEXT("Cube");
 }

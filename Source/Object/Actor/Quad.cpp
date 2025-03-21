@@ -21,7 +21,7 @@ void AQuad::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-const char* AQuad::GetTypeName()
+const FString AQuad::GetTypeName()
 {
-	return "Cube";
+	return TEXT("Cube");
 }

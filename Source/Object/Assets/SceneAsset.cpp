@@ -17,11 +17,11 @@ bool USceneAsset::Load()
 {
 	if (IsLoaded())
 	{
-		cout << "Asset already loaded: " << MetaData.GetAssetPath().GetData() << '\n';
+		cout << "Asset already loaded: " << MetaData.GetAssetPath().c_char() << '\n';
 		return true;
 	}
 
-	filesystem::path filePath = MetaData.GetAssetPath().GetData();
+	filesystem::path filePath = MetaData.GetAssetPath().c_char();
 	if (filesystem::exists(filePath) == false)
 	{
 		cout << "File not found: " << filePath << '\n';
@@ -119,9 +119,9 @@ bool USceneAsset::Save(FString path)
 		}
 		primitiveData["Scale"] = scale;
 
-		primitives.append(primitive.Key.GetData(), primitiveData);
+		primitives.append(primitive.Key.c_char(), primitiveData);
 
-		primitiveData["Type"] = primitive.Value.Type.GetData();
+		primitiveData["Type"] = primitive.Value.Type.c_char();
 	}
 
 	sceneData["Primitives"] = primitives;
@@ -134,10 +134,10 @@ bool USceneAsset::Save(FString path)
 		path = MetaData.GetAssetPath();
 	}
 
-	ofstream file(path.GetData());
+	ofstream file(path.c_char());
 	if (!file.is_open())
 	{
-		cout << "File open failed: " << path.GetData() << '\n';
+		cout << "File open failed: " << path.c_char() << '\n';
 		return false;
 	}
 

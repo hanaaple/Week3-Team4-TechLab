@@ -62,7 +62,7 @@ void AAxis::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-const char* AAxis::GetTypeName()
+const FString AAxis::GetTypeName()
 {
-	return "Axis";
+	return TEXT("Axis");
 }
