@@ -158,10 +158,7 @@ void AGizmoActor::Tick(float DeltaTime)
 			// 액터의 월드 위
 			FTransform AT = Actor->GetActorTransform();
 
-			DoTransform(AT, Result, Actor);
-
-
-			SetActorTransform(Actor->GetActorTransform());
+			DoTransform(AT, Result, Actor); 
 		}
 	}
 	
@@ -196,52 +193,58 @@ void AGizmoActor::DoTransform(FTransform& AT, FVector Result, AActor* Actor)
 {
 	const FVector& AP = AT.GetPosition();
 
- 	if (SelectedAxis == ESelectedAxis::X)
- 	{
- 		switch (GizmoType)
- 		{
- 		case EGizmoType::Translate:
- 			AT.SetPosition({ Result.X, AP.Y, AP.Z });
- 			break;
- 		case EGizmoType::Rotate:
- 			AT.RotatePitch(Result.X);
- 			break;
- 		case EGizmoType::Scale:
- 			AT.AddScale({ Result.X * .01f, 0, 0 });
- 			break;
- 		}
- 	}
- 	else if (SelectedAxis == ESelectedAxis::Y)
- 	{
- 		switch (GizmoType)
- 		{
- 		case EGizmoType::Translate:
- 			AT.SetPosition({ AP.X, Result.Y, AP.Z });
- 			break;
- 		case EGizmoType::Rotate:
- 			AT.RotateRoll(Result.Y);
- 			break;
- 		case EGizmoType::Scale:
- 			AT.AddScale({ 0, Result.Y * .01f, 0 });
- 			break;
- 		}
- 	}
- 	else if (SelectedAxis == ESelectedAxis::Z)
- 	{
- 		switch (GizmoType)
- 		{
- 		case EGizmoType::Translate:
- 			AT.SetPosition({ AP.X, AP.Y, Result.Z });
- 			break;
- 		case EGizmoType::Rotate:
- 			AT.RotatePitch(-Result.Z);
- 			break;
- 		case EGizmoType::Scale:
- 			AT.AddScale({0, 0, Result.Z * .01f });
- 			break;
- 		}
- 	}
- 	Actor->SetActorTransform(AT);
+	switch (GizmoType)
+	{
+	case EGizmoType::Translate:
+	{
+		switch (SelectedAxis)
+		{
+		case ESelectedAxis::X:
+			AT.SetPosition({ Result.X, AP.Y, AP.Z });
+			break;
+		case ESelectedAxis::Y:
+			AT.SetPosition({ AP.X, Result.Y, AP.Z });
+			break;
+		case ESelectedAxis::Z:
+			AT.SetPosition({ AP.X, AP.Y, Result.Z });
+			break;
+		}
+		break;
+	}
+	case EGizmoType::Rotate:
+	{
+		switch (SelectedAxis)
+		{
+		case ESelectedAxis::X:
+			AT.RotatePitch(Result.X);
+			break;
+		case ESelectedAxis::Y:
+			AT.RotateRoll(Result.Y);
+			break;
+		case ESelectedAxis::Z:
+			AT.RotatePitch(-Result.Z);
+			break;
+		}
+		break;
+	}
+	case EGizmoType::Scale:
+	{
+		switch (SelectedAxis)
+		{
+		case ESelectedAxis::X:
+			AT.AddScale({ Result.X * .01f , 0, 0 });
+			break;
+		case ESelectedAxis::Y:
+			AT.AddScale({ 0, Result.Y * .01f, 0 });
+			break;
+		case ESelectedAxis::Z:
+			AT.AddScale({ 0, 0, Result.Z * .01f });
+			break;
+		}
+		break;
+	}
+	}
 
+ 	Actor->SetActorTransform(AT);
 }
 
