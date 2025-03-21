@@ -467,52 +467,60 @@ void UI::RenderSceneManager()
 		UUIDNames.Reserve(Actors.Num());
 		UUIDs.Reserve(Actors.Num());
 
-
-		int Cnt = 0;
-		for (int i = 0; i < Actors.Num(); i++) {
-
-			FString UUIDName = Actors[i]->GetClass()->GetName();
-			UUIDName += FString::FromInt(Actors[i]->GetUUID());
+		for (AActor* Actor : Actors)
+		{
+			if (dynamic_cast<IGizmoInterface*>(Actor))
+				continue;
+			FString UUIDName = Actor->GetClass()->GetName();
+			UUIDName += FString::FromInt(Actor->GetUUID());
 			UUIDNames.Add(UUIDName);
-
-			UUIDs.Add(Actors[i]->GetUUID());
+			UUIDs.Add(Actor->GetUUID());
 		}
 	}
 
 	PrevSize = Actors.Num();
 
-	static int SelectUUIDIndex = 0; // Here we store our selected data as an index.
+	static int SelectUUIDIndex = -1; // Here we store our selected data as an index.
 
-	int item_highlighted_idx = -1; // Here we store our highlighted data as an index.
-
+	//int item_highlighted_idx = -1; // Here we store our highlighted data as an index.
+		
 	if (ImGui::BeginListBox("ActorList"))
 	{
-		for (int n = 0; n < UUIDNames.Len(); n++)
+		for (const FString& Name : UUIDNames)
 		{
-			const bool is_selected = (SelectUUIDIndex == n);
-			if (ImGui::Selectable(UUIDNames[n].c_char(), is_selected))
-				SelectUUIDIndex = n;
+			const bool bIsSelected = (UUIDNames.Find(Name) == SelectUUIDIndex);
 
-			if (ImGui::IsItemHovered())
-				item_highlighted_idx = n;
+			if (ImGui::Selectable(Name.c_char(), bIsSelected))
+				SelectUUIDIndex = UUIDNames.Find(Name);
+
+			//if (ImGui::IsItemHovered())
+			//	item_highlighted_idx = UUIDNames.Find(Name);
 
 			// ImGui가 활성화 된 경우, 특히 Item을 더블클릭하여 활성화 한 경우에만 UI를 통한 SelectActor 호출이 이루어짐
-			if (is_selected && ImGui::IsItemActive())
+			if (bIsSelected)
 			{
-				ImGui::SetItemDefaultFocus();
-				uint32 UUID = UUIDs[SelectUUIDIndex];
-
-				for (int i = 0; i < Actors.Num(); i++)
+				if (ImGui::IsItemHovered())
 				{
-					AActor* Actor = Actors[i];
-					if (Actor->GetUUID() == UUID)
+					//ImGui::SetItemDefaultFocus();
+					uint32 UUID = UUIDs[SelectUUIDIndex];
+
+					for (auto Actor : Actors)
 					{
-						//if (CurActor != nullptr)
-							//CurActor->IsHighlightValue = false;
-						CurActor = Actor;
-						FEditorManager::Get().SelectActor(CurActor);
-						FUUIDBillBoard::Get().SetTarget(CurActor);
+						if (dynamic_cast<IGizmoInterface*>(Actor))
+							continue;
+						if (Actor->GetUUID() == UUID)
+						{
+							CurActor = Actor;
+							FEditorManager::Get().SelectActor(CurActor);
+							FUUIDBillBoard::Get().SetTarget(CurActor);
+							break;
+						}
 					}
+				}
+				if (ImGui::IsMouseDoubleClicked(0))
+				{
+					//TODO: Focus on the selected Actor (카메라 중앙으로 패닝)
+					UE_LOG("DoubleClicked Item: %d", SelectUUIDIndex);
 				}
 			}
 		}

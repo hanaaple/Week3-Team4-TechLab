@@ -6,6 +6,7 @@
 #include "Math/Vector.h"
 #include "Object/Actor/Camera.h"
 #include "Object/Assets/AssetManager.h"
+#include "Object/Gizmo/GizmoActor.h"
 #include "Object/World/World.h"
 #include "Rendering/FDevice.h"
 #include "Static/FEditorManager.h"
