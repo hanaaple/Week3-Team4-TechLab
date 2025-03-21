@@ -17,7 +17,7 @@ ACamera::ACamera()
     RootComponent = AddComponent<USceneComponent>();
     
     FTransform StartPos = GetActorTransform();
-    StartPos.SetPosition(FVector(-5, 0, 0));
+    StartPos.SetPosition(FVector(-50, 10, 50));
     SetActorTransform(StartPos);
 }
 
