@@ -11,13 +11,13 @@ ACamera::ACamera()
     Far = 1000.f;
     FieldOfView = 45.f;
     ProjectionMode = ECameraProjectionMode::Perspective;
-	CameraSpeed = 1.0f;
+	CameraSpeed = 50.f;
 	Sensitivity = std::stof(UConfigManager::Get().GetValue("Camera", "Sensitivity").GetData());
 
     RootComponent = AddComponent<USceneComponent>();
     
     FTransform StartPos = GetActorTransform();
-    StartPos.SetPosition(FVector(-5, 0, 0));
+    StartPos.SetPosition(FVector(-50, 10, 50));
     SetActorTransform(StartPos);
 }
 

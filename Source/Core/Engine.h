@@ -47,8 +47,8 @@ public:
 
 	URenderer* GetRenderer() const { return Renderer.get(); }
 	float GetScreenRatio() const { return static_cast<float>(ScreenWidth) / static_cast<float>(ScreenHeight); }
-    int GetScreenWidth() const { return ScreenWidth; }
-    int GetScreenHeight() const { return ScreenHeight; }
+    uint32 GetScreenWidth() const { return ScreenWidth; }
+    uint32 GetScreenHeight() const { return ScreenHeight; }
     int GetInitializedScreenWidth() const { return InitializedScreenWidth; }
     int GetInitializedScreenHeight() const { return InitializedScreenHeight; }
 
@@ -85,8 +85,8 @@ private:
     int InitializedScreenWidth = 0;
     int InitializedScreenHeight = 0;
 
-    int ScreenWidth = 0;
-    int ScreenHeight = 0;
+    uint32 ScreenWidth = 0;
+    uint32 ScreenHeight = 0;
 
 	float EngineDeltaTime = 0.0f;
 
