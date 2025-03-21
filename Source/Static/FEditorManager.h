@@ -25,6 +25,8 @@ public:
 
 	AGizmoActor* GetGizmo() const {return Gizmo;}
 
+	void SetGizmo(AGizmoActor* NewGizmo) { Gizmo = NewGizmo; }
+
 	static FVector4 EncodeUUID(uint32 UUID);
 	static uint32 DecodeUUID(FVector4 color);
 

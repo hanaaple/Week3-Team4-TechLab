@@ -97,10 +97,6 @@ void UWorld::Render()
 {
 	URenderer* Renderer = UEngine::Get().GetRenderer();
 
-	//라인 렌더링 임시
-
-
-
 	if (Renderer == nullptr)
 	{
 		return;
@@ -108,7 +104,6 @@ void UWorld::Render()
 
 	ACamera* cam = FEditorManager::Get().GetCamera();
 	cam->UpdateCameraMatrix();
-
 
 	//if (APlayerInput::Get().GetKeyDown(EKeyCode::LButton))
 	//{
@@ -132,14 +127,11 @@ void UWorld::Render()
 	}
 	UDebugDrawManager::Get().Render();
 
-
 	FLineBatchManager::Get().Render();
 
 	FUUIDBillBoard::Get().Render();
 
-
 	//DisplayPickingTexture(*Renderer);
-
 }
 
 void UWorld::RenderPickingTexture(URenderer& Renderer)
@@ -221,7 +213,6 @@ void UWorld::ClearWorld()
 	UE_LOG("Clear World");
 }
 
-
 bool UWorld::DestroyActor(AActor* InActor)
 {
 	// 나중에 Destroy가 실패할 일이 있다면 return false; 하기
@@ -248,7 +239,7 @@ bool UWorld::DestroyActor(AActor* InActor)
 	return true;
 }
 
-void UWorld::SaveWorld()
+void UWorld::SaveWorld() const
 {
 	JsonSaveHelper::SaveScene(GetWorldInfo());
 }
@@ -265,10 +256,29 @@ void UWorld::LoadWorld(const char* InSceneName)
 		return;
 	}
 
-	const std::unique_ptr<UWorldInfo> WorldInfo = JsonSaveHelper::LoadScene(InSceneName);
-	if (WorldInfo == nullptr) return;
-
 	ClearWorld();
+
+	std::unique_ptr<UWorldInfo> WorldInfo = JsonSaveHelper::LoadScene(InSceneName);
+	if (WorldInfo == nullptr)
+	{
+		if (InSceneName == "Default")
+		{
+			// Create New WorldInfo
+			WorldInfo = std::make_unique<UWorldInfo>();
+			WorldInfo->Version = 1.0;
+			WorldInfo->SceneName = "Default";
+			WorldInfo->CameraInfo.Location = FVector(-10.0f, 3.0f, 10.0f);
+			WorldInfo->CameraInfo.Rotation = FVector(0.0f, 30.0f, 0.0f);
+			WorldInfo->CameraInfo.FieldOfView = 60.0f;
+			WorldInfo->CameraInfo.NearClip = 0.1f;
+			WorldInfo->CameraInfo.FarClip = 1000.0f;
+		}
+		else
+		{
+			return;
+		}
+	}
+
 
 	Version = WorldInfo->Version;
 	this->SceneName = WorldInfo->SceneName;
@@ -308,9 +318,15 @@ void UWorld::LoadWorld(const char* InSceneName)
 		{
 			Actor = SpawnActor<ACone>();
 		}
-		
-		Actor->SetActorTransform(Transform);
+
+		if (Actor)
+			Actor->SetActorTransform(Transform);
 	}
+
+	Camera->SetActorTransform(FTransform(WorldInfo->CameraInfo.Location, FQuat(WorldInfo->CameraInfo.Rotation), FVector(1.0f)));
+	Camera->SetFieldOfVew(WorldInfo->CameraInfo.FieldOfView);
+	Camera->SetNear(WorldInfo->CameraInfo.NearClip);
+	Camera->SetFar(WorldInfo->CameraInfo.FarClip);
 }
 
 void UWorld::RayCasting(const FVector& MouseNDCPos)
@@ -404,7 +420,7 @@ void UWorld::PickByPixel(const FVector& MousePos)
 
 }
 
-void UWorld::OnChangedGridSize()
+void UWorld::OnChangedGridSize() const
 {
 	UConfigManager::Get().SetValue(TEXT("World"), TEXT("GridSize"), FString::SanitizeFloat(GridSize));
 	FLineBatchManager::Get().DrawWorldGrid(GridSize, GridSize/100.f);
@@ -416,6 +432,7 @@ UWorldInfo UWorld::GetWorldInfo() const
 	WorldInfo.ActorCount = Actors.Num();
 	WorldInfo.SceneName = std::string(SceneName.c_char());
 	WorldInfo.Version = 1;
+
 	uint32 i = 0;
 	for (auto& actor : Actors)
 	{
@@ -436,5 +453,12 @@ UWorldInfo UWorld::GetWorldInfo() const
 		));
 		i++;
 	}
+
+	WorldInfo.CameraInfo.Location = Camera->GetActorPosition();
+	WorldInfo.CameraInfo.Rotation = Camera->GetActorRotation();
+	WorldInfo.CameraInfo.FieldOfView = Camera->GetFieldOfView();
+	WorldInfo.CameraInfo.NearClip = Camera->GetNear();
+	WorldInfo.CameraInfo.FarClip = Camera->GetFar();
+
 	return WorldInfo;
 }

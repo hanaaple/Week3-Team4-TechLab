@@ -21,7 +21,6 @@ AGizmoActor::AGizmoActor()
 	});
 	ZGizmo->SetCustomColor(FVector4::BLUE * 0.75f);
 	ZGizmo->Axis = ESelectedAxis::Z;
-
 	GizmoComponents.Add(ESelectedAxis::Z, ZGizmo);
 
 	UGizmoComponent* YGizmo = AddComponent<UGizmoComponent>();
@@ -30,23 +29,20 @@ AGizmoActor::AGizmoActor()
 		FVector(90.0f, 0.0f, 0.0f),
 		FVector(0.5f)
 	});
-
 	YGizmo->SetCustomColor(FVector4::GREEN * 0.75f);
-
 	YGizmo->Axis = ESelectedAxis::Y;
-
 	GizmoComponents.Add(ESelectedAxis::Y, YGizmo);
 
 
 	UGizmoComponent* XGizmo = AddComponent<UGizmoComponent>();
 	XGizmo->SetRelativeTransform({
 		FVector(0.0f, 0.0f, 0.0f),
-		FVector(0, 90, 0),
+		FVector(0, -90, 0),
 		FVector(0.5f)
 	});
 	XGizmo->SetCustomColor(FVector4::RED * 0.757f);
-	GizmoComponents.Add(ESelectedAxis::X, XGizmo);
 	XGizmo->Axis = ESelectedAxis::X;
+	GizmoComponents.Add(ESelectedAxis::X, XGizmo);
 
 	USphereComp* Comp = AddComponent<USphereComp>();
 
@@ -61,7 +57,6 @@ AGizmoActor::AGizmoActor()
 	FVector4 Color = FVector4::WHITE * 0.8f;
 	Color.W = 1.0f;
 	Comp->SetCustomColor(Color);
-
 
 	UEngine::Get().GetWorld()->AddZIgnoreComponent(XGizmo);
 	UEngine::Get().GetWorld()->AddZIgnoreComponent(YGizmo);
@@ -106,7 +101,6 @@ void AGizmoActor::SetScaleByDistance()
 void AGizmoActor::Tick(float DeltaTime)
 {
 	AActor::Tick(DeltaTime);
-
 
 	if (SelectedAxis != ESelectedAxis::None and APlayerInput::Get().GetKeyPress(EKeyCode::LButton))
 	{

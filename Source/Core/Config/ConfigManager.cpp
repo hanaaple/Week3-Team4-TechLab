@@ -122,6 +122,82 @@ FString UConfigManager::GetValue(const FString& InSection, const FString& InKey)
 		}
 	}
 
+	// 값이 없는 경우 기본값 설정
+	if (data == nullptr || data->Find(InKey) == nullptr)
+	{
+		//TODO: Add New Key to Config And Return Default Value
+		if (InSection.Equals(TEXT("General")))
+		{
+			if (InKey.Equals(TEXT("AppName")))
+			{
+				SetValue(InSection, InKey, TEXT("Jungle Engine"));
+			}
+			else if (InKey.Equals(TEXT("Version")))
+			{
+				SetValue(InSection, InKey, TEXT("1.0"));
+			}
+			else
+			{
+				//Invalid Key
+				return "";
+			}
+		}
+		else if (InSection.Equals(TEXT("Display")))
+		{
+			if (InKey.Equals(TEXT("Width")))
+			{
+				SetValue(InSection, InKey, TEXT("1920"));
+			}
+			else if (InKey.Equals(TEXT("Height")))
+			{
+				SetValue(InSection, InKey, TEXT("1280"));
+			}
+			else if (InKey.Equals(TEXT("Fullscreen")))
+			{
+				SetValue(InSection, InKey, TEXT("false"));
+			}
+			else
+			{
+				//Invalid Key
+				return "";
+			}
+		}
+		else if (InSection.Equals(TEXT("World")))
+		{
+			if (InKey.Equals(TEXT("GridSize")))
+			{
+				SetValue(InSection, InKey, TEXT("100.0"));
+			}
+			else
+			{
+				//Invalid Key
+				return "";
+			}
+		}
+		else if (InSection.Equals(TEXT("Camera")))
+		{
+			if (InKey.Equals(TEXT("CameraSpeed")))
+			{
+				SetValue(InSection, InKey, TEXT("10.0"));
+			}
+			else if (InKey.Equals(TEXT("Sensitivity")))
+			{
+				SetValue(InSection, InKey, TEXT("60.0"));
+			}
+			else
+			{
+				//Invalid Key
+				return "";
+			}
+		}
+		else
+		{
+			//Invalid Section
+			return "";
+		}
+		return Configs[InSection][InKey];
+	}
+
 	return "";
 }
 

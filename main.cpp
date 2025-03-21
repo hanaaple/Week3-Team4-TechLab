@@ -92,7 +92,19 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	SetUnhandledExceptionFilter(ExceptionCallBack);
 
 
-	UConfigManager::Get().LoadConfig("editor.ini");
+	if (!UConfigManager::Get().LoadConfig("editor.ini"))
+	{
+		//TODO: Create Default Config
+		UConfigManager::Get().SetValue(TEXT("General"), TEXT("AppName"), TEXT("Jungle Engine"));
+		UConfigManager::Get().SetValue(TEXT("General"), TEXT("Version"), TEXT("1.0"));
+		UConfigManager::Get().SetValue(TEXT("Display"), TEXT("Width"), TEXT("1920"));
+		UConfigManager::Get().SetValue(TEXT("Display"), TEXT("Height"), TEXT("1280"));
+		UConfigManager::Get().SetValue(TEXT("Display"), TEXT("Fullscreen"), TEXT("false"));
+		UConfigManager::Get().SetValue(TEXT("World"), TEXT("GridSize"), TEXT("100.0"));
+		UConfigManager::Get().SetValue(TEXT("Camera"), TEXT("CameraSpeed"), TEXT("10.0"));
+		UConfigManager::Get().SetValue(TEXT("Camera"), TEXT("Sensitivity"), TEXT("60.0"));
+		UConfigManager::Get().SaveConfig("editor.ini");
+	}
 
 	FString AppName = UConfigManager::Get().GetValue(TEXT("General"), TEXT("AppName"));
 	uint32 ScreenWidth = std::stoi((UConfigManager::Get().GetValue(TEXT("Display"), TEXT("Width"))).c_char());
@@ -112,7 +124,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	Engine.Shutdown();
 
-	UConfigManager::Get().SaveConfig("editor.ini");
+	UConfigManager::Get().SaveConfig("editor.ini");	//TODO: Already saved in UEngine::Shutdown()>World->OnDestroy(), Needed?
 
 	
 	//{

@@ -15,9 +15,8 @@ UPrimitiveComponent::UPrimitiveComponent()
 {
 	bCanBeRendered = true;
 
-
 	// 기본으로 바인딩되는 데이타
-	GetRenderResourceCollection().SetConstantBufferBinding("FConstantsComponentData", &ConstantsComponentData, 0, true, true);
+	GetRenderResourceCollection().SetConstantBufferBinding(TEXT("FConstantsComponentData"), &ConstantsComponentData, 0, true, true);
 	SetMaterial("DefaultMaterial");
 }
 

@@ -19,17 +19,17 @@
 
 void FDevice::InitResource()
 {
-	const std::shared_ptr<FVertexShader> VS = FVertexShader::Load(L"Shaders/ShaderW0.hlsl","Simple_VS","mainVS");
+	const std::shared_ptr<FVertexShader> VS = FVertexShader::Load(TEXT("Shaders/ShaderW0.hlsl"),"Simple_VS","mainVS");
 	FInputLayout::Create("Simple_VS" , VS);
-	FPixelShader::Load(L"Shaders/ShaderW0.hlsl","Simple_PS","mainPS");
+	FPixelShader::Load(TEXT("Shaders/ShaderW0.hlsl"),"Simple_PS","mainPS");
 
 	{
 		
-		std::shared_ptr<FVertexShader> TempVS = FVertexShader::Load(L"Shaders/Font_VS.hlsl","Font_VS","Font_VS");
+		std::shared_ptr<FVertexShader> TempVS = FVertexShader::Load(TEXT("Shaders/Font_VS.hlsl"),"Font_VS","Font_VS");
 		//FInputLayout::Create("Font_VS" , VS);
 	}
-	FPixelShader::Load(L"Shaders/Font_PS.hlsl", "Font_PS", "Font_PS");
-	FPixelShader::Load(L"Shaders/SubUV_PS.hlsl", "SubUV_PS", "SubUV_PS");
+	FPixelShader::Load(TEXT("Shaders/Font_PS.hlsl"), "Font_PS", "Font_PS");
+	FPixelShader::Load(TEXT("Shaders/SubUV_PS.hlsl"), "SubUV_PS", "SubUV_PS");
 	FConstantBuffer::Create("DefaultConstantBuffer", sizeof(FConstantsComponentData));
 
 	

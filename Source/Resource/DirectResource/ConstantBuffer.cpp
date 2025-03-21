@@ -97,9 +97,7 @@ void FConstantBuffer::ResCreate(int _ByteSize)
 	BufferInfo.CPUAccessFlags = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE;
 	BufferInfo.Usage = D3D11_USAGE_DYNAMIC;
 
-
-	
-	//                                                                 초기화
+	// 초기화
 	if (S_OK != FDevice::Get().GetDevice()->CreateBuffer(&BufferInfo, nullptr, &Buffer))
 	{
 		MsgBoxAssert("Error: FConstantBuffer Create Failed") ;
