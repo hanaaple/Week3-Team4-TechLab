@@ -137,9 +137,6 @@ void UEngine::Run()
 
 
 		// Renderer Update -> World Render에서
-
-
-
 		// World Update
 		if (World)
 		{
@@ -235,23 +232,13 @@ void UEngine::InitRenderer()
 void UEngine::InitWorld()
 {
     World = FObjectFactory::ConstructObject<UWorld>();
+
 	World->InitWorld();
 
 	World->SetCamera(World->SpawnActor<ACamera>());
-
     FEditorManager::Get().SetCamera(World->GetCamera());
 
-	////Test
-	//FLineBatchManager::Get().AddLine(FVector{ 3.0f,3.0f,0.0f }, { -3.f,-3.f,0.0f });
-	//FLineBatchManager::Get().AddLine(FVector{ 6.0f,6.0f,6.0f }, { -6.f,-6.f,-6.0f });
-	//FLineBatchManager::Get().AddLine(FVector{ 6.0f,6.0f,7.0f }, { -6.f,-6.f,-7.0f });
-	//FLineBatchManager::Get().AddLine(FVector{ 6.0f,6.0f,8.0f }, { -6.f,-6.f,-8.0f });
-
 	FLineBatchManager::Get().DrawWorldGrid(World->GetGridSize(), World->GetGridSize() / 100.f);
-
-    //// Test
-    //AArrow* Arrow = World->SpawnActor<AArrow>();
-    //World->SpawnActor<ASphere>();
 
 	World->BeginPlay();
 }
