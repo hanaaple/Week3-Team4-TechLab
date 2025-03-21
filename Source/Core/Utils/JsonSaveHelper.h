@@ -18,10 +18,21 @@ struct UObjectInfo
 	uint32 UUID;
 };
 
+struct ACameraInfo
+{
+	FVector Location;
+	FVector Rotation;
+	float FieldOfView;
+	float NearClip;
+	float FarClip;
+};
+
 struct UWorldInfo
 {
 	//UObjectInfo** ObjctInfos;
-	std::queue<std::unique_ptr<UObjectInfo>> ObjectInfos;uint32 ActorCount;
+	std::queue<std::unique_ptr<UObjectInfo>> ObjectInfos;
+	uint32 ActorCount;
+	ACameraInfo CameraInfo;
 	uint32 Version;
 	std::string SceneName;
 };

@@ -256,10 +256,29 @@ void UWorld::LoadWorld(const char* InSceneName)
 		return;
 	}
 
-	const std::unique_ptr<UWorldInfo> WorldInfo = JsonSaveHelper::LoadScene(InSceneName);
-	if (WorldInfo == nullptr) return;
-
 	ClearWorld();
+
+	std::unique_ptr<UWorldInfo> WorldInfo = JsonSaveHelper::LoadScene(InSceneName);
+	if (WorldInfo == nullptr)
+	{
+		if (InSceneName == "Default")
+		{
+			// Create New WorldInfo
+			WorldInfo = std::make_unique<UWorldInfo>();
+			WorldInfo->Version = 1.0;
+			WorldInfo->SceneName = "Default";
+			WorldInfo->CameraInfo.Location = FVector(-10.0f, 3.0f, 10.0f);
+			WorldInfo->CameraInfo.Rotation = FVector(0.0f, 30.0f, 0.0f);
+			WorldInfo->CameraInfo.FieldOfView = 60.0f;
+			WorldInfo->CameraInfo.NearClip = 0.1f;
+			WorldInfo->CameraInfo.FarClip = 1000.0f;
+		}
+		else
+		{
+			return;
+		}
+	}
+
 
 	Version = WorldInfo->Version;
 	this->SceneName = WorldInfo->SceneName;
@@ -303,6 +322,11 @@ void UWorld::LoadWorld(const char* InSceneName)
 		if (Actor)
 			Actor->SetActorTransform(Transform);
 	}
+
+	Camera->SetActorTransform(FTransform(WorldInfo->CameraInfo.Location, FQuat(WorldInfo->CameraInfo.Rotation), FVector(1.0f)));
+	Camera->SetFieldOfVew(WorldInfo->CameraInfo.FieldOfView);
+	Camera->SetNear(WorldInfo->CameraInfo.NearClip);
+	Camera->SetFar(WorldInfo->CameraInfo.FarClip);
 }
 
 void UWorld::RayCasting(const FVector& MouseNDCPos)
@@ -408,6 +432,7 @@ UWorldInfo UWorld::GetWorldInfo() const
 	WorldInfo.ActorCount = Actors.Num();
 	WorldInfo.SceneName = std::string(SceneName.c_char());
 	WorldInfo.Version = 1;
+
 	uint32 i = 0;
 	for (auto& actor : Actors)
 	{
@@ -428,5 +453,12 @@ UWorldInfo UWorld::GetWorldInfo() const
 		));
 		i++;
 	}
+
+	WorldInfo.CameraInfo.Location = Camera->GetActorPosition();
+	WorldInfo.CameraInfo.Rotation = Camera->GetActorRotation();
+	WorldInfo.CameraInfo.FieldOfView = Camera->GetFieldOfView();
+	WorldInfo.CameraInfo.NearClip = Camera->GetNear();
+	WorldInfo.CameraInfo.FarClip = Camera->GetFar();
+
 	return WorldInfo;
 }

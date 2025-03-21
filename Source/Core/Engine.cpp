@@ -81,6 +81,10 @@ void UEngine::Initialize(
 	UAssetManager::Get().RegisterAssetMetaDatas(); // 나중에 멀티쓰레드로?
 	FEditorManager::Get().Init(); // 나중에 멀티쓰레드로?
 	UE_LOG("Engine Initialized!");
+	World->LoadWorld("Default");
+	UE_LOG("Loaded Default Scene!");
+	World->SaveWorld();
+	UE_LOG("Saved Default Scene!");
 }
 
 void UEngine::Run()
