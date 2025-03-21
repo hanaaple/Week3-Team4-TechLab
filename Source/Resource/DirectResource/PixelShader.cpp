@@ -37,6 +37,6 @@ void FPixelShader::ShaderLoad(const LPCWSTR& _Path, const FString& _EntryPoint, 
 	
 	SetShaderType(ShaderType::Pixel);
 	
-	HRESULT hr = D3DCompileFromFile(_Path, nullptr, nullptr, *_EntryPoint, "ps_5_0", shaderFlags, 0, &BinaryCode, &Error);
+	HRESULT hr = D3DCompileFromFile(_Path, nullptr, nullptr, _EntryPoint.c_char(), "ps_5_0", shaderFlags, 0, &BinaryCode, &Error);
 	FDevice::Get().GetDevice()->CreatePixelShader(BinaryCode->GetBufferPointer(), BinaryCode->GetBufferSize(), nullptr, &ShaderPtr);
 }

@@ -179,7 +179,7 @@ public:
 
 public:
 	bool CanEverTick() const { return bCanEverTick; }
-	virtual const char* GetTypeName();
+	virtual const FString GetTypeName();
 
 	bool Destroy();
 

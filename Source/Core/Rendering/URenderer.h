@@ -3,6 +3,7 @@
 #define _TCHAR_DEFINED  // TCHAR 재정의 에러 때문
 #include <d3d11.h>
 
+#include "Core/Container/String.h"
 #include "Core/Math/Vector.h"
 
 struct FVertexSimple;
@@ -60,7 +61,7 @@ public:
     /** PrimitiveComponent를 초기화 합니다. */
     // void RenderPrimitiveInternal(UPrimitiveComponent& PrimitiveComp) const;
 
-	void LoadTexture(const wchar_t* texturePath);
+	void LoadTexture(const FString& texturePath);
 	ID3D11ShaderResourceView* FontTextureSRV = nullptr;
 	ID3D11SamplerState* FontSamplerState = nullptr;
 

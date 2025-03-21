@@ -152,9 +152,9 @@ void AGizmoHandle::SetActive(bool bActive)
 	}*/
 }
 
-const char* AGizmoHandle::GetTypeName()
+const FString AGizmoHandle::GetTypeName()
 {
-	return "GizmoHandle";
+	return TEXT("GizmoHandle");
 }
 
 void AGizmoHandle::DoTransform(FTransform& AT, FVector Result, AActor* Actor )

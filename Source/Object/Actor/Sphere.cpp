@@ -1,4 +1,4 @@
-﻿#include "Sphere.h"
+#include "Sphere.h"
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
 
 
@@ -22,7 +22,7 @@ void ASphere::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-const char* ASphere::GetTypeName()
+const FString ASphere::GetTypeName()
 {
-	return "Sphere";
+	return TEXT("Sphere");
 }

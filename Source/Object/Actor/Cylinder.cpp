@@ -89,7 +89,7 @@ void ACylinder::Tick(float DeltaTime)
 	SetActorTransform(NewTransform);
 }
 
-const char* ACylinder::GetTypeName()
+const FString ACylinder::GetTypeName()
 {
-    return "Cylinder";
+    return TEXT("Cylinder");
 }

@@ -16,6 +16,14 @@ std::wstring FString::ConvertToWideChar(const ANSICHAR* NarrowStr)
 }
 #endif
 
+std::string FString::ConvertToMultibyte(const WIDECHAR* WideStr)
+{
+	const int Size = WideCharToMultiByte(CP_UTF8, 0, WideStr, -1, nullptr, 0, nullptr, nullptr);
+	std::string Str;
+	Str.resize(Size - 1);
+	WideCharToMultiByte(CP_UTF8, 0, WideStr, -1, Str.data(), Size, nullptr, nullptr);
+	return Str;
+}
 
 FString FString::SanitizeFloat(float InFloat)
 {
@@ -29,9 +37,9 @@ FString FString::SanitizeFloat(float InFloat)
 float FString::ToFloat(const FString& InString)
 {
 #if USE_WIDECHAR
-	return std::stof(InString.GetData());
+	return std::stof(InString.c_char());
 #else
-	return std::stof(InString.GetData());
+	return std::stof(InString.c_wchar());
 #endif
 }
 
@@ -58,6 +66,7 @@ bool FString::Equals(const FString& Other, ESearchCase::Type SearchCase) const
         }
         else
         {
+			/** a.k.a Stricmp */
         	return std::ranges::equal(
 		        PrivateString, Other.PrivateString, [](char a, char b)
 	        {
@@ -123,4 +132,35 @@ int32 FString::Find(
         StartPosition = (StartPosition == INDEX_NONE) ? StrLen - SubStrLen : FMath::Min(StartPosition, StrLen - SubStrLen);
         return FindSubString(StartPosition, -1, -1);
     }
+}
+
+int FString::Strnicmp(const FString& Other, const size_t Count) const
+{
+	return TCString<ElementType>::Strnicmp(**this, *Other, Count);
+}
+
+FString FString::Substr(const size_t Pos, const size_t Count) const
+{
+	if (Pos > PrivateString.length())
+	{
+		return {};
+	}
+	return {PrivateString.substr(Pos, Count)};
+}
+
+void FString::RemoveAt(const size_t Pos, const size_t Count)
+{
+	PrivateString.erase(Pos, Count);
+}
+
+void FString::RemoveAt(BaseStringType::iterator It, const size_t Count)
+{
+	PrivateString.erase(It, It + Count);
+}
+
+FString FString::ToUpper() const
+{
+	FString UpperString = *this;
+	TCString<ElementType>::Strupr(UpperString.PrivateString.data());
+	return UpperString;
 }

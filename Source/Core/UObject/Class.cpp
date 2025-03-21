@@ -1,11 +1,11 @@
-﻿#include "Class.h"
+#include "Class.h"
 #include <cassert>
 
 #include "Object/ObjectFactory.h"
 #include "Core/Rendering/URenderer.h"
 
 
-UClass::UClass(const char* InClassName, uint32 InClassSize, uint32 InAlignment, UClass* InSuperClass)
+UClass::UClass(const FString& InClassName, uint32 InClassSize, uint32 InAlignment, UClass* InSuperClass)
 	: ClassSize(InClassSize)
 	, ClassAlignment(InAlignment)
 	, SuperClass(InSuperClass)

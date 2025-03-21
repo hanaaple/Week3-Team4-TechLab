@@ -1,4 +1,4 @@
-﻿#include "Arrow.h"
+#include "Arrow.h"
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
 
 AArrow::AArrow()
@@ -26,7 +26,7 @@ void AArrow::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-const char* AArrow::GetTypeName()
+const FString AArrow::GetTypeName()
 {
-	return "Arrow";
+	return TEXT("Arrow");
 }

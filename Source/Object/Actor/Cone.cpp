@@ -1,4 +1,4 @@
-﻿#include "Cone.h"
+#include "Cone.h"
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
 
 
@@ -22,7 +22,7 @@ void ACone::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
 }
 
-const char* ACone::GetTypeName()
+const FString ACone::GetTypeName()
 {
-    return "Cone";
+    return TEXT("Cone");
 }

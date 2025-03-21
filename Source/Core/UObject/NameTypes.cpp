@@ -1,4 +1,4 @@
-﻿#include "NameTypes.h"
+#include "NameTypes.h"
 
 #include <atomic>
 #include <cwchar>
@@ -6,7 +6,6 @@
 #include "Core/AbstractClass/Singleton.h"
 #include "Core/Container/Map.h"
 #include "Core/Container/String.h"
-
 
 enum ENameCase : uint8
 {
@@ -50,7 +49,7 @@ struct FNameEntryId
 
 	bool operator!=(const FNameEntryId& Other) const
 	{
-		return !(*this == Other);
+		return Value != Other.Value;
 	}
 
 	explicit operator bool() const noexcept
@@ -426,11 +425,13 @@ FString FName::ToString() const
 		return {TEXT("None")};
 	}
 
-	// TODO: WIDECHAR에 대응 해야함
 	FNameEntry Entry = FNamePool::Get().Resolve(DisplayIndex);
 	return {
-		// Entry.Header.IsWide ? Entry.WideName : Entry.AnsiName
+#if USE_WIDECHAR
+		Entry.WideName
+#else
 		Entry.AnsiName
+#endif
 	};
 }
 

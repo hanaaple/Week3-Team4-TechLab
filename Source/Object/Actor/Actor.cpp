@@ -453,9 +453,9 @@ FVector AActor::GetActorRelativeScale() const
 	return FVector::OneVector;
 }
 
-const char* AActor::GetTypeName()
+const FString AActor::GetTypeName()
 {
-	return "Actor";
+	return TEXT("Actor");
 }
 
 bool AActor::Destroy()

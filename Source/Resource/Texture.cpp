@@ -161,7 +161,7 @@ void FTexture::CreateDepthStencilView()
 void FTexture::ResLoad(const FString& InPath)
 
 {
-	std::string str = *InPath;
+	std::string str = InPath.c_char();
 
 	std::wstring wstr(str.begin(), str.end());
 

@@ -1,4 +1,4 @@
-﻿#include "Core/UObject/Object.h"
+#include "Core/UObject/Object.h"
 #include "Class.h"
 
 
@@ -16,7 +16,7 @@ UClass* UObject::StaticClass()
 }
 
 UObject::UObject()
-	: NamePrivate("None")
+	: NamePrivate(FString("None"))
 	, ClassPrivate(nullptr)
 {
 }

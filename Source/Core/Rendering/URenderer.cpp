@@ -33,7 +33,7 @@ void URenderer::Create(HWND hWindow)
 	FUUIDBillBoard::Get().Create();
 
 	//LoadTexture(L"font_atlas.png");
-	LoadTexture(L"Pretendard_Kor.png");
+	LoadTexture(TEXT("Pretendard_Kor.png"));
 }
 
 void URenderer::Release()
@@ -120,9 +120,9 @@ void URenderer::Render(FRenderResourceCollection& InRenderResourceCollection)
 }
 
 
-void URenderer::LoadTexture(const wchar_t* texturePath)
+void URenderer::LoadTexture(const FString& texturePath)
 {
-	DirectX::CreateWICTextureFromFile(FDevice::Get().GetDevice(), FDevice::Get().GetDeviceContext(), texturePath, nullptr, &FontTextureSRV);
+	DirectX::CreateWICTextureFromFile(FDevice::Get().GetDevice(), FDevice::Get().GetDeviceContext(), texturePath.c_wchar(), nullptr, &FontTextureSRV);
 
 	
 	D3D11_SAMPLER_DESC samplerDesc = {};
