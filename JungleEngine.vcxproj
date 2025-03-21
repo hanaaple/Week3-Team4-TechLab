@@ -330,6 +330,7 @@
     <ClInclude Include="Source\Resource\Mesh.h" />
     <ClInclude Include="Source\Resource\RenderResourceCollection.h" />
     <ClInclude Include="Source\Resource\Texture.h" />
+    <ClInclude Include="Source\Resource\Util\FObjectIterator.h" />
     <ClInclude Include="Source\Static\FUUIDBillBoard.h" />
     <ClInclude Include="Source\Core\Math\Rotator.h" />
     <ClInclude Include="Source\Core\Config\ConfigManager.h" />

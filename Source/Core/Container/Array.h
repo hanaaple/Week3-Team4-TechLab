@@ -98,6 +98,8 @@ public:
     template <typename Compare>
         requires std::is_invocable_r_v<bool, Compare, const T&, const T&>
     void Sort(const Compare& CompFn);
+
+	bool IsValidIndex(SizeType Index) const;
 };
 
 
@@ -291,6 +293,12 @@ template <typename Compare>
 void TArray<T, Allocator>::Sort(const Compare& CompFn)
 {
     std::sort(PrivateVector.begin(), PrivateVector.end(), CompFn);
+}
+
+template <typename T, typename Allocator>
+bool TArray<T, Allocator>::IsValidIndex(SizeType Index) const
+{
+	return Index >= 0 && Index < Num();
 }
 
 template <typename T, typename Allocator = FDefaultAllocator<T>> class TArray;
