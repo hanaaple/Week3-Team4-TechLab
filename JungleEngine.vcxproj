@@ -18,6 +18,248 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Core\AbstractClass\Singleton.h" />
+    <ClInclude Include="Source\Core\Config\ConfigManager.h" />
+    <ClInclude Include="Source\Core\Container\Array.h" />
+    <ClInclude Include="Source\Core\Container\ContainerAllocator.h" />
+    <ClInclude Include="Source\Core\Container\CString.h" />
+    <ClInclude Include="Source\Core\Container\Map.h" />
+    <ClInclude Include="Source\Core\Container\Pair.h" />
+    <ClInclude Include="Source\Core\Container\Set.h" />
+    <ClInclude Include="Source\Core\Container\String.h" />
+    <ClInclude Include="Source\Core\Delegates\Delegate.h" />
+    <ClInclude Include="Source\Core\Delegates\DelegateCombination.h" />
+    <ClInclude Include="Source\Core\Engine.h" />
+    <ClInclude Include="Source\Core\EngineStatics.h" />
+    <ClInclude Include="Source\Core\EngineTypes.h" />
+    <ClInclude Include="Source\Core\HAL\PlatformMemory.h" />
+    <ClInclude Include="Source\Core\HAL\PlatformType.h" />
+    <ClInclude Include="Source\Core\Input\PlayerController.h" />
+    <ClInclude Include="Source\Core\Input\PlayerInput.h" />
+    <ClInclude Include="Source\Core\Interfaces\GizmoInterface.h" />
+    <ClInclude Include="Source\Core\Math\BoxSphereBounds.h" />
+    <ClInclude Include="Source\Core\Math\MathUtility.h" />
+    <ClInclude Include="Source\Core\Math\Matrix.h" />
+    <ClInclude Include="Source\Core\Math\Quat.h" />
+    <ClInclude Include="Source\Core\Math\Ray.h" />
+    <ClInclude Include="Source\Core\Math\Rotator.h" />
+    <ClInclude Include="Source\Core\Math\Transform.h" />
+    <ClInclude Include="Source\Core\Math\Vector.h" />
+    <ClInclude Include="Source\Core\Rendering\FDevice.h" />
+    <ClInclude Include="Source\Core\Rendering\FontAtlas.h" />
+    <ClInclude Include="Source\Core\Rendering\FViewMode.h" />
+    <ClInclude Include="Source\Core\Rendering\UI.h" />
+    <ClInclude Include="Source\Core\Rendering\URenderer.h" />
+    <ClInclude Include="Source\Core\UObject\Casts.h" />
+    <ClInclude Include="Source\Core\UObject\Class.h" />
+    <ClInclude Include="Source\Core\UObject\NameTypes.h" />
+    <ClInclude Include="Source\Core\UObject\Object.h" />
+    <ClInclude Include="Source\Core\UObject\ObjectMacros.h" />
+    <ClInclude Include="Source\Core\Utils\JsonSaveHelper.h" />
+    <ClInclude Include="Source\Debug\DebugConsole.h" />
+    <ClInclude Include="Source\Debug\DebugDrawManager.h" />
+    <ClInclude Include="Source\Debug\EngineShowFlags.h" />
+    <ClInclude Include="Source\Object\ActorComponent\ActorComponent.h" />
+    <ClInclude Include="Source\Object\Actor\Actor.h" />
+    <ClInclude Include="Source\Object\Actor\Arrow.h" />
+    <ClInclude Include="Source\Object\Actor\Camera.h" />
+    <ClInclude Include="Source\Object\Actor\Cone.h" />
+    <ClInclude Include="Source\Object\Actor\Cube.h" />
+    <ClInclude Include="Source\Object\Actor\Cylinder.h" />
+    <ClInclude Include="Source\Object\Actor\Picker.h" />
+    <ClInclude Include="Source\Object\Actor\Quad.h" />
+    <ClInclude Include="Source\Object\Actor\Sphere.h" />
+    <ClInclude Include="Source\Object\Actor\SpotLight.h" />
+    <ClInclude Include="Source\Object\Actor\SubUVParticle.h" />
+    <ClInclude Include="Source\Object\Actor\WorldGrid.h" />
+    <ClInclude Include="Source\Object\Assets\Asset.h" />
+    <ClInclude Include="Source\Object\Assets\AssetManager.h" />
+    <ClInclude Include="Source\Object\Assets\MeshAsset.h" />
+    <ClInclude Include="Source\Object\Assets\SceneAsset.h" />
+    <ClInclude Include="Source\Object\Gizmo\Axis.h" />
+    <ClInclude Include="Source\Object\Gizmo\GizmoActor.h" />
+    <ClInclude Include="Source\Object\Gizmo\GizmoHandle.h" />
+    <ClInclude Include="Source\Object\Light\LightComponent.h" />
+    <ClInclude Include="Source\Object\Light\LightComponentBase.h" />
+    <ClInclude Include="Source\Object\Light\SpotLightComponent.h" />
+    <ClInclude Include="Source\Object\ObjectFactory.h" />
+    <ClInclude Include="Source\Object\PrimitiveComponent\GizmoComponent.h" />
+    <ClInclude Include="Source\Object\PrimitiveComponent\UPrimitiveComponent.h" />
+    <ClInclude Include="Source\Object\SubUVComponent\UParticleSubUVComponent.h" />
+    <ClInclude Include="Source\Object\USceneComponent.h" />
+    <ClInclude Include="Source\Object\World\World.h" />
+    <ClInclude Include="Source\Primitive\PrimitiveVertices.h" />
+    <ClInclude Include="Source\Primitive\UGeometryGenerator.h" />
+    <ClInclude Include="Source\Resource\DirectResource\BlendState.h" />
+    <ClInclude Include="Source\Resource\DirectResource\ConstantBuffer.h" />
+    <ClInclude Include="Source\Resource\DirectResource\DepthStencilState.h" />
+    <ClInclude Include="Source\Resource\DirectResource\DirectBuffer.h" />
+    <ClInclude Include="Source\Resource\DirectResource\IndexBuffer.h" />
+    <ClInclude Include="Source\Resource\DirectResource\InputLayout.h" />
+    <ClInclude Include="Source\Resource\DirectResource\PixelShader.h" />
+    <ClInclude Include="Source\Resource\DirectResource\Rasterizer.h" />
+    <ClInclude Include="Source\Resource\DirectResource\Sampler.h" />
+    <ClInclude Include="Source\Resource\DirectResource\Shader.h" />
+    <ClInclude Include="Source\Resource\DirectResource\ShaderResourceBinding.h" />
+    <ClInclude Include="Source\Resource\DirectResource\Vertexbuffer.h" />
+    <ClInclude Include="Source\Resource\DirectResource\VertexShader.h" />
+    <ClInclude Include="Source\Resource\Material.h" />
+    <ClInclude Include="Source\Resource\Mesh.h" />
+    <ClInclude Include="Source\Resource\RenderResourceCollection.h" />
+    <ClInclude Include="Source\Resource\RenderResourceManager.h" />
+    <ClInclude Include="Source\Resource\Resource.h" />
+    <ClInclude Include="Source\Resource\Texture.h" />
+    <ClInclude Include="Source\Static\FEditorManager.h" />
+    <ClInclude Include="Source\Static\FLineBatchManager.h" />
+    <ClInclude Include="Source\Static\FUUIDBillBoard.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\Audio.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\BufferHelpers.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\CommonStates.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\DDSTextureLoader.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\DirectXHelpers.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\Effects.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\GamePad.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\GeometricPrimitive.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\GraphicsMemory.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\Keyboard.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\Model.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\Mouse.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\PostProcess.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\PrimitiveBatch.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\ScreenGrab.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\SimpleMath.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\SpriteBatch.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\SpriteFont.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\VertexTypes.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\WICTextureLoader.h" />
+    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\XboxDDSTextureLoader.h" />
+    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imconfig.h" />
+    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imgui.h" />
+    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imgui_impl_dx11.h" />
+    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imgui_impl_win32.h" />
+    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imgui_internal.h" />
+    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imstb_textedit.h" />
+    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imstb_truetype.h" />
+    <ClInclude Include="Source\ThirdParty\SimpleJSON\include\SimpleJSON\Json.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Core\Config\ConfigManager.cpp" />
+    <ClCompile Include="Source\Core\Container\String.cpp" />
+    <ClCompile Include="Source\Core\Engine.cpp" />
+    <ClCompile Include="Source\Core\EngineStatics.cpp" />
+    <ClCompile Include="Source\Core\HAL\PlatformMemory.cpp" />
+    <ClCompile Include="Source\Core\Input\PlayerController.cpp" />
+    <ClCompile Include="Source\Core\Input\PlayerInput.cpp" />
+    <ClCompile Include="Source\Core\Math\BoxSphereBounds.cpp" />
+    <ClCompile Include="Source\Core\Math\Matrix.cpp" />
+    <ClCompile Include="Source\Core\Math\Quat.cpp" />
+    <ClCompile Include="Source\Core\Math\Ray.cpp" />
+    <ClCompile Include="Source\Core\Math\Rotator.cpp" />
+    <ClCompile Include="Source\Core\Math\Transform.cpp" />
+    <ClCompile Include="Source\Core\Math\Vector.cpp" />
+    <ClCompile Include="Source\Core\Rendering\FDevice.cpp" />
+    <ClCompile Include="Source\Core\Rendering\FDeviceResource.cpp" />
+    <ClCompile Include="Source\Core\Rendering\FontAtlas.cpp" />
+    <ClCompile Include="Source\Core\Rendering\FViewMode.cpp" />
+    <ClCompile Include="Source\Core\Rendering\UI.cpp" />
+    <ClCompile Include="Source\Core\Rendering\URenderer.cpp" />
+    <ClCompile Include="Source\Core\UObject\Casts.cpp" />
+    <ClCompile Include="Source\Core\UObject\Class.cpp" />
+    <ClCompile Include="Source\Core\UObject\NameTypes.cpp" />
+    <ClCompile Include="Source\Core\UObject\Object.cpp" />
+    <ClCompile Include="Source\Core\Utils\JsonSaveHelper.cpp" />
+    <ClCompile Include="Source\Debug\DebugConsole.cpp" />
+    <ClCompile Include="Source\Debug\DebugDrawManager.cpp" />
+    <ClCompile Include="Source\Debug\EngineShowFlags.cpp" />
+    <ClCompile Include="Source\Object\ActorComponent\ActorComponent.cpp" />
+    <ClCompile Include="Source\Object\Actor\Actor.cpp" />
+    <ClCompile Include="Source\Object\Actor\Arrow.cpp" />
+    <ClCompile Include="Source\Object\Actor\Camera.cpp" />
+    <ClCompile Include="Source\Object\Actor\Cone.cpp" />
+    <ClCompile Include="Source\Object\Actor\Cube.cpp" />
+    <ClCompile Include="Source\Object\Actor\Cylinder.cpp" />
+    <ClCompile Include="Source\Object\Actor\Picker.cpp" />
+    <ClCompile Include="Source\Object\Actor\Quad.cpp" />
+    <ClCompile Include="Source\Object\Actor\Sphere.cpp" />
+    <ClCompile Include="Source\Object\Actor\SpotLight.cpp" />
+    <ClCompile Include="Source\Object\Actor\SubUVParticle.cpp" />
+    <ClCompile Include="Source\Object\Actor\WorldGrid.cpp" />
+    <ClCompile Include="Source\Object\Assets\Asset.cpp" />
+    <ClCompile Include="Source\Object\Assets\AssetManager.cpp" />
+    <ClCompile Include="Source\Object\Assets\MeshAsset.cpp" />
+    <ClCompile Include="Source\Object\Assets\SceneAsset.cpp" />
+    <ClCompile Include="Source\Object\Gizmo\Axis.cpp" />
+    <ClCompile Include="Source\Object\Gizmo\GizmoActor.cpp" />
+    <ClCompile Include="Source\Object\Gizmo\GizmoHandle.cpp" />
+    <ClCompile Include="Source\Object\Light\LightComponent.cpp" />
+    <ClCompile Include="Source\Object\Light\LightComponentBase.cpp" />
+    <ClCompile Include="Source\Object\Light\SpotLightComponent.cpp" />
+    <ClCompile Include="Source\Object\ObjectFactory.cpp" />
+    <ClCompile Include="Source\Object\PrimitiveComponent\GizmoComponent.cpp" />
+    <ClCompile Include="Source\Object\PrimitiveComponent\UPrimitiveComponent.cpp" />
+    <ClCompile Include="Source\Object\SubUVComponent\UParticleSubUVComponent.cpp" />
+    <ClCompile Include="Source\Object\USceneComponent.cpp" />
+    <ClCompile Include="Source\Object\World\World.cpp" />
+    <ClCompile Include="Source\Primitive\PrimitiveVertices.cpp" />
+    <ClCompile Include="Source\Primitive\UGeometryGenerator.cpp" />
+    <ClCompile Include="Source\Resource\DirectResource\BlendState.cpp" />
+    <ClCompile Include="Source\Resource\DirectResource\ConstantBuffer.cpp" />
+    <ClCompile Include="Source\Resource\DirectResource\DepthStencilState.cpp" />
+    <ClCompile Include="Source\Resource\DirectResource\DirectBuffer.cpp" />
+    <ClCompile Include="Source\Resource\DirectResource\IndexBuffer.cpp" />
+    <ClCompile Include="Source\Resource\DirectResource\InputLayout.cpp" />
+    <ClCompile Include="Source\Resource\DirectResource\PixelShader.cpp" />
+    <ClCompile Include="Source\Resource\DirectResource\Rasterizer.cpp" />
+    <ClCompile Include="Source\Resource\DirectResource\Sampler.cpp" />
+    <ClCompile Include="Source\Resource\DirectResource\Shader.cpp" />
+    <ClCompile Include="Source\Resource\DirectResource\ShaderResourceBinding.cpp" />
+    <ClCompile Include="Source\Resource\DirectResource\Vertexbuffer.cpp" />
+    <ClCompile Include="Source\Resource\DirectResource\VertexShader.cpp" />
+    <ClCompile Include="Source\Resource\Material.cpp" />
+    <ClCompile Include="Source\Resource\Mesh.cpp" />
+    <ClCompile Include="Source\Resource\RenderResourceCollection.cpp" />
+    <ClCompile Include="Source\Resource\RenderResourceManager.cpp" />
+    <ClCompile Include="Source\Resource\Resource.cpp" />
+    <ClCompile Include="Source\Resource\Texture.cpp" />
+    <ClCompile Include="Source\Static\FEditorManager.cpp" />
+    <ClCompile Include="Source\Static\FLineBatchManager.cpp" />
+    <ClCompile Include="Source\Static\FUUIDBillBoard.cpp" />
+    <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui.cpp" />
+    <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_widgets.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Source\ThirdParty\DirectXTK\include\DirectXTK\SimpleMath.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\Font_PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Shaders\Font_VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Shaders\Shader.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Shaders\ShaderLine_PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Shaders\ShaderLine_VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Shaders\ShaderW0.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Shaders\SubUV_PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -179,300 +421,6 @@
       <AdditionalDependencies>DirectXTK.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="Source\Core\Math\Transform.cpp" />
-    <ClCompile Include="Source\Core\Rendering\FontAtlas.cpp" />
-    <ClCompile Include="Source\Debug\DebugDrawManager.cpp" />
-    <ClCompile Include="Source\Object\Actor\SubUVParticle.cpp" />
-    <ClCompile Include="Source\Object\Actor\WorldGrid.cpp" />
-    <ClCompile Include="Source\Object\Assets\MeshAsset.cpp" />
-    <ClCompile Include="Source\Object\PrimitiveComponent\GizmoComponent.cpp" />
-    <ClCompile Include="Source\Core\Rendering\FViewMode.cpp" />
-    <ClCompile Include="Source\Debug\EngineShowFlags.cpp" />
-    <ClCompile Include="Source\Core\Math\BoxSphereBounds.cpp" />
-    <ClCompile Include="Source\Object\Gizmo\GizmoActor.cpp" />
-    <ClCompile Include="Source\Resource\DirectResource\ConstantBuffer.cpp" />
-    <ClCompile Include="Source\Resource\DirectResource\Sampler.cpp" />
-    <ClCompile Include="Source\Resource\DirectResource\ShaderResourceBinding.cpp" />
-    <ClCompile Include="Source\Resource\Material.cpp" />
-    <ClCompile Include="Source\Resource\Mesh.cpp" />
-    <ClCompile Include="Source\Resource\RenderResourceCollection.cpp" />
-    <ClCompile Include="Source\Resource\Texture.cpp" />
-    <ClCompile Include="Source\Static\FUUIDBillBoard.cpp" />
-    <ClCompile Include="Source\Core\Math\Rotator.cpp" />
-    <ClCompile Include="Source\Core\Config\ConfigManager.cpp" />
-    <ClCompile Include="Source\Core\UObject\Casts.cpp" />
-    <ClCompile Include="Source\Core\UObject\Class.cpp" />
-    <ClCompile Include="Source\Core\Math\Ray.cpp" />
-    <ClCompile Include="Source\Core\Rendering\FDevice.cpp" />
-    <ClCompile Include="Source\Core\Rendering\FDeviceResource.cpp" />
-    <ClCompile Include="Source\Core\Utils\JsonSaveHelper.cpp" />
-    <ClCompile Include="Source\Object\Assets\AssetManager.cpp" />
-    <ClCompile Include="Source\Object\Assets\SceneAsset.cpp" />
-    <ClCompile Include="Source\Object\Assets\Asset.cpp" />
-    <ClCompile Include="Source\Core\Math\Quat.cpp" />
-    <ClCompile Include="Source\Core\UObject\NameTypes.cpp" />
-    <ClCompile Include="Source\Core\UObject\Object.cpp" />
-    <ClCompile Include="Source\Object\Actor\Camera.cpp" />
-    <ClCompile Include="Source\Object\Actor\Cone.cpp" />
-    <ClCompile Include="Source\Object\Actor\Cylinder.cpp" />
-    <ClCompile Include="Source\Object\Actor\Quad.cpp" />
-    <ClCompile Include="Source\Object\Gizmo\GizmoHandle.cpp" />
-    <ClCompile Include="Source\Object\Actor\Arrow.cpp" />
-    <ClCompile Include="Source\Core\Input\PlayerController.cpp" />
-    <ClCompile Include="Source\Core\Input\PlayerInput.cpp" />
-    <ClCompile Include="Source\Object\Actor\Cube.cpp" />
-    <ClCompile Include="Source\Object\Gizmo\Axis.cpp" />
-    <ClCompile Include="Source\Object\ActorComponent\ActorComponent.cpp" />
-    <ClCompile Include="Source\Debug\DebugConsole.cpp" />
-    <ClCompile Include="Source\Object\Actor\Actor.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Source\Core\Engine.cpp" />
-    <ClCompile Include="Source\Core\Container\String.cpp" />
-    <ClCompile Include="Source\Core\EngineStatics.cpp" />
-    <ClCompile Include="Source\Core\HAL\PlatformMemory.cpp" />
-    <ClCompile Include="Source\Core\Math\Matrix.cpp" />
-    <ClCompile Include="Source\Core\Math\Vector.cpp" />
-    <ClCompile Include="Source\Object\ObjectFactory.cpp" />
-    <ClCompile Include="Source\Primitive\UGeometryGenerator.cpp" />
-    <ClCompile Include="Source\Resource\DirectResource\BlendState.cpp" />
-    <ClCompile Include="Source\Resource\DirectResource\DepthStencilState.cpp" />
-    <ClCompile Include="Source\Resource\DirectResource\DirectBuffer.cpp" />
-    <ClCompile Include="Source\Resource\DirectResource\IndexBuffer.cpp" />
-    <ClCompile Include="Source\Resource\DirectResource\InputLayout.cpp" />
-    <ClCompile Include="Source\Resource\DirectResource\PixelShader.cpp" />
-    <ClCompile Include="Source\Resource\DirectResource\Rasterizer.cpp" />
-    <ClCompile Include="Source\Resource\DirectResource\Shader.cpp" />
-    <ClCompile Include="Source\Resource\DirectResource\Vertexbuffer.cpp" />
-    <ClCompile Include="Source\Resource\DirectResource\VertexShader.cpp" />
-    <ClCompile Include="Source\Resource\RenderResourceManager.cpp" />
-    <ClCompile Include="Source\Resource\Resource.cpp" />
-    <ClCompile Include="Source\Static\FLineBatchManager.cpp" />
-    <ClCompile Include="Source\Object\USceneComponent.cpp" />
-    <ClCompile Include="Source\Object\PrimitiveComponent\UPrimitiveComponent.cpp" />
-    <ClCompile Include="Source\Object\World\World.cpp" />
-    <ClCompile Include="Source\Object\Actor\Sphere.cpp" />
-    <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui.cpp" />
-    <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_demo.cpp" />
-    <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_draw.cpp" />
-    <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_impl_dx11.cpp" />
-    <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_impl_win32.cpp" />
-    <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_tables.cpp" />
-    <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="Source\Object\Light\LightComponentBase.cpp" />
-    <ClCompile Include="Source\Object\Light\LightComponent.cpp" />
-    <ClCompile Include="Source\Object\Light\SpotLightComponent.cpp" />
-    <ClCompile Include="Source\Object\Actor\SpotLight.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Shaders\Font_VS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Shaders\Font_PS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Shaders\ShaderLine_PS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Shaders\ShaderLine_VS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Shaders\ShaderW0.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Source\Core\Delegates\Delegate.h" />
-    <ClInclude Include="Source\Core\Delegates\DelegateCombination.h" />
-    <ClInclude Include="Source\Core\Rendering\FontAtlas.h" />
-    <ClInclude Include="Source\Debug\DebugDrawManager.h" />
-    <ClInclude Include="Source\Object\Actor\WorldGrid.h" />
-    <ClInclude Include="Source\Object\PrimitiveComponent\GizmoComponent.h" />
-    <ClInclude Include="Source\Core\Rendering\FViewMode.h" />
-    <ClInclude Include="Source\Debug\EngineShowFlags.h" />
-    <ClInclude Include="Source\Core\Math\BoxSphereBounds.h" />
-    <ClInclude Include="Source\Object\Gizmo\GizmoActor.h" />
-    <ClInclude Include="Source\Resource\DirectResource\ConstantBuffer.h" />
-    <ClInclude Include="Source\Resource\DirectResource\Sampler.h" />
-    <ClInclude Include="Source\Resource\DirectResource\ShaderResourceBinding.h" />
-    <ClInclude Include="Source\Resource\Material.h" />
-    <ClInclude Include="Source\Resource\Mesh.h" />
-    <ClInclude Include="Source\Resource\RenderResourceCollection.h" />
-    <ClInclude Include="Source\Resource\Texture.h" />
-    <ClInclude Include="Source\Static\FUUIDBillBoard.h" />
-    <ClInclude Include="Source\Core\Math\Rotator.h" />
-    <ClInclude Include="Source\Core\Config\ConfigManager.h" />
-    <ClInclude Include="Source\Core\UObject\Casts.h" />
-    <ClInclude Include="Source\Core\UObject\Class.h" />
-    <ClInclude Include="Source\Core\UObject\ObjectMacros.h" />
-    <ClInclude Include="Source\Core\Math\Ray.h" />
-    <ClInclude Include="Source\Core\Rendering\FDevice.h" />
-    <ClInclude Include="Source\Core\Utils\JsonSaveHelper.h" />
-    <ClInclude Include="Source\Object\Assets\AssetManager.h" />
-    <ClInclude Include="Source\Object\Assets\SceneAsset.h" />
-    <ClInclude Include="Source\Object\Assets\Asset.h" />
-    <ClInclude Include="Source\Core\UObject\NameTypes.h" />
-    <ClInclude Include="Source\Core\UObject\Object.h" />
-    <ClInclude Include="Source\Object\Actor\Camera.h" />
-    <ClInclude Include="Source\Object\Actor\Cone.h" />
-    <ClInclude Include="Source\Object\Actor\Cube.h" />
-    <ClInclude Include="Source\Object\ActorComponent\ActorComponent.h" />
-    <ClInclude Include="Source\Object\Actor\Actor.h" />
-    <ClInclude Include="Source\Core\Container\Map.h" />
-    <ClInclude Include="Source\Core\Container\Pair.h" />
-    <ClInclude Include="Source\Debug\DebugConsole.h" />
-    <ClInclude Include="Source\Core\Container\Set.h" />
-    <ClInclude Include="Source\Core\AbstractClass\Singleton.h" />
-    <ClInclude Include="Source\Core\Container\Array.h" />
-    <ClInclude Include="Source\Core\Container\ContainerAllocator.h" />
-    <ClInclude Include="Source\Core\Container\String.h" />
-    <ClInclude Include="Source\Core\EngineStatics.h" />
-    <ClInclude Include="Source\Core\HAL\PlatformMemory.h" />
-    <ClInclude Include="Source\Core\HAL\PlatformType.h" />
-    <ClInclude Include="Source\Core\Math\MathUtility.h" />
-    <ClInclude Include="Source\Core\Math\Matrix.h" />
-    <ClInclude Include="Source\Core\Math\Quat.h" />
-    <ClInclude Include="Source\Core\Math\Vector.h" />
-    <ClInclude Include="Source\Core\Math\Transform.h" />
-    <ClInclude Include="Source\Object\Actor\Cylinder.h" />
-    <ClInclude Include="Source\Object\Actor\Quad.h" />
-    <ClInclude Include="Source\Object\Gizmo\Axis.h" />
-    <ClInclude Include="Source\Object\ObjectFactory.h" />
-    <ClInclude Include="Source\Object\PrimitiveComponent\UPrimitiveComponent.h" />
-    <ClInclude Include="Source\Object\World\World.h" />
-    <ClInclude Include="Source\Primitive\PrimitiveVertices.h" />
-    <ClInclude Include="Source\Primitive\UGeometryGenerator.h" />
-    <ClInclude Include="Source\Resource\DirectResource\BlendState.h" />
-    <ClInclude Include="Source\Resource\DirectResource\DepthStencilState.h" />
-    <ClInclude Include="Source\Resource\DirectResource\DirectBuffer.h" />
-    <ClInclude Include="Source\Resource\DirectResource\IndexBuffer.h" />
-    <ClInclude Include="Source\Resource\DirectResource\InputLayout.h" />
-    <ClInclude Include="Source\Resource\DirectResource\PixelShader.h" />
-    <ClInclude Include="Source\Resource\DirectResource\Rasterizer.h" />
-    <ClInclude Include="Source\Resource\DirectResource\Shader.h" />
-    <ClInclude Include="Source\Resource\DirectResource\Vertexbuffer.h" />
-    <ClInclude Include="Source\Resource\DirectResource\VertexShader.h" />
-    <ClInclude Include="Source\Resource\RenderResourceManager.h" />
-    <ClInclude Include="Source\Resource\Resource.h" />
-    <ClInclude Include="Source\Static\FLineBatchManager.h" />
-    <ClCompile Include="Source\Core\Rendering\UI.cpp" />
-    <ClCompile Include="Source\Core\Rendering\URenderer.cpp" />
-    <ClCompile Include="Source\Primitive\PrimitiveVertices.cpp" />
-    <ClInclude Include="Source\Core\Engine.h" />
-    <ClInclude Include="Source\Core\Rendering\UI.h" />
-    <ClInclude Include="Source\Core\Rendering\URenderer.h" />
-    <ClCompile Include="Source\Object\Actor\Picker.cpp" />
-    <ClInclude Include="Source\Object\Gizmo\GizmoHandle.h" />
-    <ClInclude Include="Source\Core\Container\CString.h" />
-    <ClInclude Include="Source\Object\Actor\Picker.h" />
-    <ClCompile Include="Source\Static\FEditorManager.cpp" />
-    <ClInclude Include="Source\Object\Actor\Arrow.h" />
-    <ClInclude Include="Source\Core\Input\PlayerController.h" />
-    <ClInclude Include="Source\Core\Input\PlayerInput.h" />
-    <ClInclude Include="Source\Core\EngineTypes.h" />
-    <ClInclude Include="Source\Static\FEditorManager.h" />
-    <ClInclude Include="Source\Object\USceneComponent.h" />
-    <ClInclude Include="Source\Object\Actor\Sphere.h" />
-    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\Audio.h" />
-    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\BufferHelpers.h" />
-    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\CommonStates.h" />
-    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\DDSTextureLoader.h" />
-    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\DirectXHelpers.h" />
-    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\Effects.h" />
-    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\GamePad.h" />
-    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\GeometricPrimitive.h" />
-    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\GraphicsMemory.h" />
-    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\Keyboard.h" />
-    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\Model.h" />
-    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\Mouse.h" />
-    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\PostProcess.h" />
-    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\PrimitiveBatch.h" />
-    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\ScreenGrab.h" />
-    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\SimpleMath.h" />
-    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\SimpleMath.inl" />
-    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\SpriteBatch.h" />
-    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\SpriteFont.h" />
-    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\VertexTypes.h" />
-    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\WICTextureLoader.h" />
-    <ClInclude Include="Source\ThirdParty\DirectXTK\include\DirectXTK\XboxDDSTextureLoader.h" />
-    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imconfig.h" />
-    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imgui.h" />
-    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imgui_impl_dx11.h" />
-    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imgui_impl_win32.h" />
-    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imgui_internal.h" />
-    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imstb_rectpack.h" />
-    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imstb_textedit.h" />
-    <ClInclude Include="Source\ThirdParty\ImGui\include\ImGui\imstb_truetype.h" />
-    <ClInclude Include="Source\ThirdParty\SimpleJSON\include\SimpleJSON\Json.hpp" />
-    <ClCompile Include="Source\Object\SubUVComponent\UParticleSubUVComponent.cpp" />
-    <FxCompile Include="Shaders\SubUV_PS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <ClInclude Include="Source\Core\Interfaces\GizmoInterface.h" />
-    <ClInclude Include="Source\Object\Actor\SubUVParticle.h" />
-    <ClInclude Include="Source\Object\SubUVComponent\UParticleSubUVComponent.h" />
-    <ClInclude Include="Source\Debug\UDebugDrawManager.h" />
-    <ClInclude Include="Source\Object\Light\LightComponentBase.h" />
-    <ClInclude Include="Source\Object\Light\LightComponent.h" />
-    <ClInclude Include="Source\Object\Light\SpotLightComponent.h" />
-    <ClInclude Include="Source\Object\Actor\SpotLight.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include=".editorconfig" />
-    <None Include=".gitignore" />
-    <None Include="imgui.ini" />
-    <None Include="README.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="font_atlas.dds" />
-    <Image Include="font_atlas.png" />
-    <Image Include="Pretendard_Kor.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="font_atlas.txt" />
-    <Text Include="Pretendard_Kor.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Natvis Include="JungleEngine.natvis" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
