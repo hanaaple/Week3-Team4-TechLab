@@ -39,7 +39,7 @@ public:
 
 	UWorld* GetWorld() const { return World; }
 	void SetWorld(UWorld* InWorld) { World = InWorld; }
-
+	
 private:
 	virtual void Pick();
 	virtual void UnPick();

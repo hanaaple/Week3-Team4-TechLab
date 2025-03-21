@@ -62,6 +62,11 @@ void UWorld::Tick(float DeltaTime)
 			Actor->Tick(DeltaTime);
 		}
 	}
+
+	AActor* PickedActor = FEditorManager::Get().GetSelectedActor();
+	AGizmoActor* Gizmo = FEditorManager::Get().GetGizmo();
+	if (PickedActor && Gizmo)
+		Gizmo->SetActorPosition(PickedActor->GetActorPosition());
 }
 
 void UWorld::LateTick(float DeltaTime)

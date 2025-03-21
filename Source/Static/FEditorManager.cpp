@@ -48,28 +48,25 @@ void FEditorManager::Init()
 
 void FEditorManager::SelectActor(AActor* NewActor)
 {
-    if (Gizmo == nullptr)
-    {
+	if (Gizmo == nullptr)	//기즈모가 없다면 생성
+	{
 		Gizmo = UEngine::Get().GetWorld()->SpawnActor<AGizmoActor>();
 		Gizmo->SetDepth(1);
-    }
+	}
 
-	if (SelectedActor == NewActor)
+	if (NewActor == nullptr)	// 선택된 대상이 없다면 SelectedActor 삭제
+	{
+		if(SelectedActor)
+			SelectedActor->UnPick();
+		SelectedActor = nullptr;
 		return;
-	
-    if (SelectedActor != nullptr && SelectedActor != NewActor)
-    {
-        SelectedActor->UnPick();
-    }
+	}
+
+	if (SelectedActor == NewActor)	//같은 대상 선택시에 이벤트 없음
+		return;
 
 	SelectedActor = NewActor;
-	
-    if (SelectedActor != nullptr)
-    {
-        SelectedActor->Pick();
-		    const FTransform newActorTransform = NewActor->GetActorTransform();
-		    Gizmo->SetActorTransform(newActorTransform);
-	   }
+	SelectedActor->Pick();
 }
 
 void FEditorManager::SetCamera(ACamera* NewCamera)
@@ -145,6 +142,10 @@ void FEditorManager::LateTick([[maybe_unused]] float DeltaTime)
 			{
 				Gizmo->SetSelectedAxis(GizmoCom->GetSelectedAxis());
 			}
+		}
+		else
+		{
+			SelectActor(nullptr);
 		}
 	}
 
