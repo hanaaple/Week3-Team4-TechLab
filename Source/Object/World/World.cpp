@@ -97,10 +97,6 @@ void UWorld::Render()
 {
 	URenderer* Renderer = UEngine::Get().GetRenderer();
 
-	//라인 렌더링 임시
-
-
-
 	if (Renderer == nullptr)
 	{
 		return;
@@ -108,7 +104,6 @@ void UWorld::Render()
 
 	ACamera* cam = FEditorManager::Get().GetCamera();
 	cam->UpdateCameraMatrix();
-
 
 	//if (APlayerInput::Get().GetKeyDown(EKeyCode::LButton))
 	//{
@@ -132,14 +127,11 @@ void UWorld::Render()
 	}
 	UDebugDrawManager::Get().Render();
 
-
 	FLineBatchManager::Get().Render();
 
 	FUUIDBillBoard::Get().Render();
 
-
 	//DisplayPickingTexture(*Renderer);
-
 }
 
 void UWorld::RenderPickingTexture(URenderer& Renderer)
@@ -221,7 +213,6 @@ void UWorld::ClearWorld()
 	UE_LOG("Clear World");
 }
 
-
 bool UWorld::DestroyActor(AActor* InActor)
 {
 	// 나중에 Destroy가 실패할 일이 있다면 return false; 하기
@@ -248,7 +239,7 @@ bool UWorld::DestroyActor(AActor* InActor)
 	return true;
 }
 
-void UWorld::SaveWorld()
+void UWorld::SaveWorld() const
 {
 	JsonSaveHelper::SaveScene(GetWorldInfo());
 }
@@ -308,8 +299,9 @@ void UWorld::LoadWorld(const char* InSceneName)
 		{
 			Actor = SpawnActor<ACone>();
 		}
-		
-		Actor->SetActorTransform(Transform);
+
+		if (Actor)
+			Actor->SetActorTransform(Transform);
 	}
 }
 
@@ -404,7 +396,7 @@ void UWorld::PickByPixel(const FVector& MousePos)
 
 }
 
-void UWorld::OnChangedGridSize()
+void UWorld::OnChangedGridSize() const
 {
 	UConfigManager::Get().SetValue(TEXT("World"), TEXT("GridSize"), FString::SanitizeFloat(GridSize));
 	FLineBatchManager::Get().DrawWorldGrid(GridSize, GridSize/100.f);

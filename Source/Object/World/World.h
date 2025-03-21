@@ -43,7 +43,7 @@ public:
 
 	void ClearWorld();
 	void LoadWorld(const char* InSceneName);
-	void SaveWorld();
+	void SaveWorld() const;
 
 	void AddZIgnoreComponent(UPrimitiveComponent* InComponent);
 	void RemoveZIgnoreComponent(UPrimitiveComponent* InComponent) {ZIgnoreRenderComponents.Remove(InComponent); }
@@ -64,7 +64,7 @@ public:
 
 	float& GetGridSizePtr() { return GridSize; }
 
-	void OnChangedGridSize();
+	void OnChangedGridSize() const;
 
 	float GetGridSize() const { return GridSize; }
 private:
