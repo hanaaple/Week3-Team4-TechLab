@@ -13,3 +13,15 @@ enum Type : uint8
     Quit,
 };
 }
+
+enum class EAttachmentRule : uint8
+{
+	/** Keeps current relative transform as the relative transform to the new parent. */
+	KeepRelative,
+
+	/** Automatically calculates the relative transform such that the attached component maintains the same world transform. */
+	KeepWorld,
+
+	/** Snaps transform to the attach point */
+	SnapToTarget,
+};

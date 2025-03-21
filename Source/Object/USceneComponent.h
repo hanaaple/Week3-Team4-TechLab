@@ -20,7 +20,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	FTransform GetRelativeTransform() const;
+	FTransform GetRelativeTransform() const { return RelativeTransform; }
 
 	FVector GetRelativePosition() const { return RelativeTransform.GetPosition(); }
 	FQuat GetRelativeRotation() const { return RelativeTransform.GetRotation(); }
@@ -74,20 +74,18 @@ public:
 	FVector GetRightVector() const;
 	FVector GetUpVector() const;
 
+	FVector GetRelativeForwardVector() const;
+	FVector GetRelativeRightVector() const;
+	FVector GetRelativeUpVector() const;
+
 	const FTransform& GetComponentTransform() const { return WorldTransform; }
-	FVector GetComponentLocation() const { return GetComponentTransform().GetPosition(); }
-	FQuat GetComponentRotation() const { return GetComponentTransform().GetRotation(); }
-	FVector GetComponentScale() const { return GetComponentTransform().GetScale(); }
+	FVector GetComponentLocation() const { return WorldTransform.GetPosition(); }
+	FQuat GetComponentRotation() const { return WorldTransform.GetRotation(); }
+	FVector GetComponentScale() const { return WorldTransform.GetScale(); }
 
-	/* 월드 트랜스폼을 반환, 이걸로 렌더링한다*/
-	const FTransform& GetWorldTransform();
 
-	FMatrix GetWorldMatrix() const;
-	const FMatrix GetLocalMatrix() const { return RelativeTransform.GetMatrix(); }
-
-	FTransform GetWorldTransform() const;
-
-	USceneComponent* GetParent() const;
+	FMatrix GetWorldMatrix() const { return WorldTransform.GetMatrix(); }
+	FMatrix GetLocalMatrix() const { return RelativeTransform.GetMatrix(); }
 
 	bool MoveComponent(const FVector& Delta, const FQuat& NewRotation);
 	bool MoveComponent(const FVector& Delta, const FVector& NewRotation);
@@ -111,11 +109,11 @@ public:
 
 	void UpdateChildTransforms();
 protected:
-	FTransform CalcNewWorldTransform(const FTransform& NewTransform, const USceneComponent* Parent = nullptr) const;
+	FTransform CalcNewWorldTransform(const FTransform& NewTransform, const USceneComponent* InParent = nullptr) const;
 
 	bool InternalSetWorldPositionAndRotation(FVector& InPosition, const FQuat& InRotation);
 
-	void UpdateComponentToWorldWithParent(USceneComponent* Parent, const FQuat& RelativeRotationQuat);
+	void UpdateComponentToWorldWithParent(USceneComponent* InParent, const FQuat& RelativeRotationQuat);
 
 	void PropagateTransformUpdate(bool bTransformChanged);
 
@@ -127,7 +125,7 @@ public:
 
 
 public:
-	void SetupAttachment(USceneComponent* InParent, bool bUpdateChildTransform = false);
+	void SetupAttachment(USceneComponent* InParent, bool bUpdateChildTransform = false, EAttachmentRule AttachmentRule = EAttachmentRule::KeepWorld);
 
 	TArray<USceneComponent*> GetChildren() const { return Children.Array(); }
 	USceneComponent* GetParent() { return Parent; }
