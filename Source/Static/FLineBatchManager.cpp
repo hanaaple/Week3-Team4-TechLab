@@ -29,7 +29,7 @@ void FLineBatchManager::AddLine(const FVector& Start, const FVector& End, const 
 	uint32 Index = VertexBuffer.Num();
 
 
-	//TO DO 자유롭게 라인 크기 늘리게 하기
+	//TODO: 자유롭게 라인 크기 늘리게 하기
 	if (Index + 2 >= MaxVerticesPerBatch)
 	{
 		UE_LOG("Max Line");
