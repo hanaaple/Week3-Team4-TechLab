@@ -24,47 +24,6 @@ void USceneComponent::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-// 내 월드 트랜스폼 반환
-const FTransform& USceneComponent::GetWorldTransform()
-{
-	return WorldTransform;
-}
-
-FMatrix USceneComponent::GetWorldMatrix() const
-{
-	if (Parent != nullptr)
-	{
-		FMatrix ParentWorld = Parent->GetWorldMatrix();
-		FMatrix MyLocalWithoutScale = RelativeTransform.GetLocalMatrixWithOutScale();
-		FMatrix LocalMatrix = MyLocalWithoutScale * ParentWorld;
-
-		return LocalMatrix * RelativeTransform.GetScaleMatrix();
-	}
-	else
-	{
-		return RelativeTransform.GetMatrix();
-	}
-}
-
-FTransform USceneComponent::GetWorldTransform() const
-{
-	if (Parent != nullptr)
-	{
-		FTransform parnetTrans = Parent->GetComponentTransform();
-		return parnetTrans;
-	}
-	else
-	{
-		// 부모가 없을 경우 내 로컬
-		return RelativeTransform;
-	}
-}
-
-USceneComponent* USceneComponent::GetParent() const
-{
-	return Parent;
-}
-
 bool USceneComponent::MoveComponent(const FVector& Delta, const FQuat& NewRotation)
 {
 	return MoveComponentImpl(Delta, NewRotation);
@@ -95,12 +54,11 @@ void USceneComponent::UpdateComponentToWorld()
 	UpdateComponentToWorldWithParent(Parent, RelativeTransform.GetRotation());
 }
 
-FTransform USceneComponent::CalcNewWorldTransform(const FTransform& NewTransform, const USceneComponent* Parent) const
+FTransform USceneComponent::CalcNewWorldTransform(const FTransform& NewTransform, const USceneComponent* InParent) const
 {
-	Parent = Parent ? Parent : GetParent();
-	if (Parent != nullptr)
+	if (InParent != nullptr)
 	{
-		const FTransform ParentToWorld = Parent->GetWorldTransform();
+		FTransform ParentToWorld = InParent->WorldTransform;
 		FTransform NewWorldTransform = FTransform::MultiPly(NewTransform, ParentToWorld);
 		return NewWorldTransform;
 	}
@@ -115,7 +73,7 @@ bool USceneComponent::InternalSetWorldPositionAndRotation(FVector& InPosition, c
 	FQuat NewRotation = InRotation;
 	if (Parent != nullptr)
 	{
-		FTransform parentToWorld = Parent->GetWorldTransform();
+		FTransform parentToWorld = Parent->WorldTransform;
 
 		InPosition = parentToWorld.InverseTransformPosition(InPosition);
 		NewRotation = FQuat::MultiplyQuaternions(parentToWorld.GetRotation().GetInverse(), NewRotation);
@@ -140,11 +98,11 @@ bool USceneComponent::InternalSetWorldPositionAndRotation(FVector& InPosition, c
 	return false;
 }
 
-void USceneComponent::UpdateComponentToWorldWithParent(USceneComponent* Parent, const FQuat& RelativeRotationQuat)
+void USceneComponent::UpdateComponentToWorldWithParent(USceneComponent* InParent, const FQuat& RelativeRotationQuat)
 {
-	if (Parent != nullptr && Parent->bComponentToWorldUpdated == false)
+	if (InParent != nullptr && InParent->bComponentToWorldUpdated == false)
 	{
-		Parent->UpdateComponentToWorld();
+		InParent->UpdateComponentToWorld();
 		if (bComponentToWorldUpdated == true)
 		{
 			return;
@@ -157,11 +115,11 @@ void USceneComponent::UpdateComponentToWorldWithParent(USceneComponent* Parent, 
 
 	const FTransform RelativeTransform(GetRelativePosition(), RelativeRotationQuat, GetRelativeScale());
 
-	NewTransform = CalcNewWorldTransform(RelativeTransform, Parent);
+	NewTransform = CalcNewWorldTransform(RelativeTransform, InParent);
 
 	bool bHasChanged;
 	
-	if (GetWorldTransform().Equal(NewTransform) == false)
+	if (WorldTransform.Equal(NewTransform) == false)
 	{
 		bHasChanged = true;
 	}
@@ -192,7 +150,6 @@ void USceneComponent::PropagateTransformUpdate(bool bTransformChanged)
 	else
 	{
 		UpdateBounds();
-		// TODO: Update Bounds
 		UpdateChildTransforms();
 	}
 }
@@ -201,12 +158,12 @@ bool USceneComponent::MoveComponentImpl(const FVector& Delta, const FQuat& NewRo
 {
 	ConditionalUpdateComponentToWorld();
 
-	if (Delta.X == 0 && Delta.Y == 0 && Delta.Z == 0 && NewRotation.Equals(GetWorldTransform().GetRotation()))
+	if (Delta.X == 0 && Delta.Y == 0 && Delta.Z == 0 && NewRotation.Equals(WorldTransform.GetRotation()))
 	{
 		return true;
 	}
 
-	FVector NewPosition = GetWorldTransform().GetPosition() + Delta;
+	FVector NewPosition = WorldTransform.GetPosition() + Delta;
 	const bool bMoved = InternalSetWorldPositionAndRotation(NewPosition, NewRotation);
 
 	return true;
@@ -224,7 +181,7 @@ FQuat USceneComponent::GetRelativeRotationFromWorld(const FQuat& NewRotation) co
 
 	if (Parent != nullptr)
 	{
-		FTransform parentToWorld = Parent->GetWorldTransform();
+		FTransform parentToWorld = Parent->WorldTransform;
 		
 		const FQuat ParentToWorldQuat = parentToWorld.GetRotation();
 
@@ -316,15 +273,15 @@ void USceneComponent::AddLocalOffset(const FVector& DeltaPosition)
 
 void USceneComponent::AddLocalRotation(const FVector& DeltaRotation)
 {
-	const FQuat CurRelativeRotaion = RelativeTransform.GetRotation();
-	const FQuat NewRelativeRotation = FQuat::MultiplyQuaternions(CurRelativeRotaion, FQuat(DeltaRotation));
+	const FQuat CurRelativeRotation = RelativeTransform.GetRotation();
+	const FQuat NewRelativeRotation = FQuat::MultiplyQuaternions(CurRelativeRotation, FQuat(DeltaRotation));
 	SetRelativePositionAndRotation(GetRelativePosition(), NewRelativeRotation);
 }
 
 void USceneComponent::AddLocalRotation(const FQuat& DeltaRotation)
 {
-	const FQuat CurRelativeRotaion = RelativeTransform.GetRotation();
-	const FQuat NewRelativeRotation = FQuat::MultiplyQuaternions(CurRelativeRotaion, DeltaRotation);
+	const FQuat CurRelativeRotation = RelativeTransform.GetRotation();
+	const FQuat NewRelativeRotation = FQuat::MultiplyQuaternions(CurRelativeRotation, DeltaRotation);
 	SetRelativePositionAndRotation(GetRelativePosition(), NewRelativeRotation);
 }
 
@@ -341,7 +298,7 @@ void USceneComponent::SetWorldPosition(const FVector& InPosition)
 
 	if (Parent != nullptr)
 	{
-		FTransform parentToWorld = Parent->GetWorldTransform();
+		FTransform parentToWorld = Parent->WorldTransform;
 		NewPosition = parentToWorld.InverseTransformPosition(InPosition);
 	}
 
@@ -383,7 +340,7 @@ void USceneComponent::SetWorldPositionAndRotation(const FVector& InPosition, con
 	FQuat NewRotation = InRotation;
 	if (Parent != nullptr)
 	{
-		FTransform parentToWorld = Parent->GetWorldTransform();
+		FTransform parentToWorld = Parent->WorldTransform;
 		FVector NewRelPosition = parentToWorld.InverseTransformPosition(InPosition);
 		NewRotation = parentToWorld.InverseTransformRotation(InRotation);
 	}
@@ -397,7 +354,7 @@ void USceneComponent::SetWorldScale(const FVector& InScale)
 	
 	if (Parent != nullptr)
 	{
-		FTransform parentToWorld = Parent->GetWorldTransform();
+		FTransform parentToWorld = Parent->WorldTransform;
 		NewRelScale = parentToWorld.InverseTransformPosition(InScale);
 	}
 
@@ -406,9 +363,10 @@ void USceneComponent::SetWorldScale(const FVector& InScale)
 
 void USceneComponent::SetWorldTransform(const FTransform& InTransform)
 {
+	WorldTransform = InTransform;
 	if (Parent != nullptr)
 	{
-		const FTransform parentToWorld = Parent->GetWorldTransform();
+		const FTransform parentToWorld = Parent->WorldTransform;
 		FTransform RelativeTransform = InTransform.GetRelativeTransform(parentToWorld);
 
 		SetRelatvieTransform(RelativeTransform);
@@ -421,25 +379,25 @@ void USceneComponent::SetWorldTransform(const FTransform& InTransform)
 
 void USceneComponent::AddWorldOffset(const FVector& Delta)
 {
-	const FVector NewPosition = GetWorldTransform().GetPosition() + Delta;
+	const FVector NewPosition = WorldTransform.GetPosition() + Delta;
 	SetWorldPosition(NewPosition);
 }
 
 void USceneComponent::AddWorldRotation(const FVector& Delta)
 {
-	const FQuat NewRotation = FQuat::MultiplyQuaternions(FQuat(Delta), GetWorldTransform().GetRotation());
+	const FQuat NewRotation = FQuat::MultiplyQuaternions(FQuat(Delta), WorldTransform.GetRotation());
 	SetWorldRotation(NewRotation);
 }
 
 void USceneComponent::AddWorldRotation(const FQuat& Delta)
 {
-	const FQuat NewRotation = FQuat::MultiplyQuaternions(Delta, GetWorldTransform().GetRotation());
+	const FQuat NewRotation = FQuat::MultiplyQuaternions(Delta, WorldTransform.GetRotation());
 	SetWorldRotation(NewRotation);
 }
 
 void USceneComponent::AddWorldTransform(const FTransform& Delta)
 {
-	const FTransform& LocalTransform = GetWorldTransform();
+	const FTransform& LocalTransform = WorldTransform;
 	const FQuat NewRotation = FQuat::MultiplyQuaternions(Delta.GetRotation(), LocalTransform.GetRotation());
 	const FVector NewPosition = LocalTransform.GetPosition() + Delta.GetPosition();
 	SetWorldTransform(FTransform(NewPosition, NewRotation, FVector(1,1,1)));
@@ -447,7 +405,7 @@ void USceneComponent::AddWorldTransform(const FTransform& Delta)
 
 void USceneComponent::AddWorldTransformKeepScale(const FTransform& Delta)
 {
-	const FTransform& LocalTransform = GetWorldTransform();
+	const FTransform& LocalTransform = WorldTransform;
 	const FQuat NewRotation = FQuat::MultiplyQuaternions(Delta.GetRotation(), LocalTransform.GetRotation());
 	const FVector NewPosition = LocalTransform.GetPosition() + Delta.GetPosition();
 	SetWorldTransform(FTransform(NewPosition, NewRotation, LocalTransform.GetScale()));
@@ -455,23 +413,32 @@ void USceneComponent::AddWorldTransformKeepScale(const FTransform& Delta)
 
 FVector USceneComponent::GetForwardVector() const
 {
-	return GetWorldTransform().GetForward();
+	return WorldTransform.GetForward();
 }
 
 FVector USceneComponent::GetRightVector() const
 {
-	return GetWorldTransform().GetRight();
+	return WorldTransform.GetRight();
 }
 
 FVector USceneComponent::GetUpVector() const
 {
-	return GetWorldTransform().GetUp();
+	return WorldTransform.GetUp();
 }
 
-FTransform USceneComponent::GetRelativeTransform() const
+FVector USceneComponent::GetRelativeForwardVector() const
 {
-	const FTransform relativeTransform(GetRelativePosition(), GetRelativeRotation(), GetRelativeScale());
-	return relativeTransform;
+	return RelativeTransform.GetForward();
+}
+
+FVector USceneComponent::GetRelativeRightVector() const
+{
+	return RelativeTransform.GetRight();
+}
+
+FVector USceneComponent::GetRelativeUpVector() const
+{
+	return RelativeTransform.GetUp();
 }
 
 void USceneComponent::Pick(bool bPicked)
@@ -483,12 +450,32 @@ void USceneComponent::Pick(bool bPicked)
 	}
 }
 
-void USceneComponent::SetupAttachment(USceneComponent* InParent, bool bUpdateChildTransform)
+void USceneComponent::SetupAttachment(USceneComponent* InParent, bool bUpdateChildTransform, EAttachmentRule AttachmentRule)
 {
 	if (InParent)
 	{
+		if (Parent != nullptr)
+		{
+			Parent->Children.Remove(this);
+		}
 		Parent = InParent;
 		InParent->Children.Add(this);
+
+		if (AttachmentRule == EAttachmentRule::KeepRelative)
+		{
+			// RelativeTransform 유지
+			UpdateComponentToWorld();
+		}
+		else if (AttachmentRule == EAttachmentRule::KeepWorld)
+		{
+			// World 유지
+			SetWorldTransform(WorldTransform);
+		}
+		else if (AttachmentRule == EAttachmentRule::SnapToTarget)
+		{
+			RelativeTransform = FTransform();
+			UpdateComponentToWorld();
+		}
 	}
 	else
 	{
@@ -525,7 +512,7 @@ void USceneComponent::UpdateBounds()
 	}
 	else
 	{
-		Bounds = CalcBounds(GetComponentTransform());
+		Bounds = CalcBounds(WorldTransform);
 	}
 }
 

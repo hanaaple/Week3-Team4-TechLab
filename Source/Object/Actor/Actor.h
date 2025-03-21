@@ -98,6 +98,7 @@ public:
 	}
 
 public:
+	/** @return Actor's World Transform */
 	const FTransform& GetActorTransform() const;
 	const FTransform& ActorToWorld() const;
 
@@ -120,14 +121,17 @@ public:
 
 	bool SetActorScale(const FVector& InScale);
 
-	void SetActorTransform(const FTransform& InTransform);
+	/** @param
+	 * * Set Actor World Transform */
+	void SetActorTransform(const FTransform& NewTransform);
 
 public:
 	void SetActorRelativePosition(const FVector& InPosition);
 
 	void SetActorRelativeRotation(const FVector& InRotation);
 	void SetActorRelativeRotation(const FQuat& InRotation);
-	void SetActorRelativeTransform(const FTransform& InTransform);
+	/** @param NewRelativeTransform 새로운 상대 좌표 */
+	void SetActorRelativeTransform(const FTransform& NewRelativeTransform);
 
 	void SetActorRelativeScale(const FVector& InScale);
 	FVector GetActorRelativeScale() const;
