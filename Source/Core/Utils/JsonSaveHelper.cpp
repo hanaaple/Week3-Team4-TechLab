@@ -1,4 +1,4 @@
-﻿#include "JsonSaveHelper.h"
+#include "JsonSaveHelper.h"
 
 #include <fstream>
 #include <ranges>
@@ -85,7 +85,7 @@ void JsonSaveHelper::SaveScene(UWorldInfo WorldInfo)
         Json["Actors"][Uuid]["Location"].append(ObjectInfo->Location.X, ObjectInfo->Location.Y, ObjectInfo->Location.Z);
         Json["Actors"][Uuid]["Rotation"].append(ObjectInfo->Rotation.X, ObjectInfo->Rotation.Y, ObjectInfo->Rotation.Z);
         Json["Actors"][Uuid]["Scale"].append(ObjectInfo->Scale.X, ObjectInfo->Scale.Y, ObjectInfo->Scale.Z);
-        Json["Actors"][Uuid]["Type"] = ObjectInfo->ObjectType;
+        Json["Actors"][Uuid]["Type"] = ObjectInfo->ObjectType.c_char();
     }
      
     std::ofstream Output(WorldInfo.SceneName + ".scene");

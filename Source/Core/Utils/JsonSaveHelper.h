@@ -1,8 +1,9 @@
-﻿#pragma once
+#pragma once
 #include <memory>
 #include <string>
 #include <queue>
 
+#include "Core/Container/String.h"
 #include "Core/HAL/PlatformType.h"
 #include "Core/Math/Vector.h"
 
@@ -12,7 +13,7 @@ struct UObjectInfo
 	FVector Location;
 	FVector Rotation;
 	FVector Scale;
-	std::string ObjectType;
+	FString ObjectType;
 
 	uint32 UUID;
 };
