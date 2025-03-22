@@ -307,11 +307,10 @@ void UEngine::RenderSplitScreen()
 		{RB.Left, RB.Top, RB.Right - RB.Left, RB.Bottom - RB.Top}
 	};
 
-	float tempColor = 0.0f;
+	FDevice::Get().Clear();
+
 	for (D3D11_VIEWPORT Viewport : Viewports)
 	{
-		FDevice::Get().Clear(tempColor);
-		tempColor += 0.1f;
 		FDevice::Get().GetDeviceContext()->RSSetViewports(1, &Viewport);
 		FDevice::Get().SetRenderTargetOnly();
 
