@@ -101,10 +101,9 @@ void ObjReader::Clear()
 
 bool ObjReader::CheckFile(const FString& InFilePath) const
 {
-	char* ANSI = FString::TCHAR_TO_ANSI(InFilePath.c_wchar());
-	std::string path = ANSI;
+	std::string path = FString::TCHAR_TO_ANSI(InFilePath.c_wchar());
 	std::ifstream f(path);
-	free(ANSI);
+	free(&path);
 	return f.good();
 }
 

@@ -106,7 +106,7 @@ void FEditorManager::LateTick([[maybe_unused]] float DeltaTime)
 	if (APlayerInput::Get().GetKeyDown(EKeyCode::LButton))
 	{
 		POINT pt;
-		GetCursorPos(&pt);
+
 		ScreenToClient(UEngine::Get().GetWindowHandle(), &pt);
 
 		//float Width = FDevice::Get().GetViewPortInfo().Width;

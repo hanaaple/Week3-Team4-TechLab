@@ -46,8 +46,19 @@ private:
 
 	uint32 Depth;
 	bool bIsPicked = false;
+	ETickState TickState; // 현재 Tick 여부 상태
+	bool bHidden = false;
 public:
 	bool IsPicked() const { return bIsPicked; }
+	bool IsActorTickEnabled() const
+	{
+		return TickState != ETickState::Disabled;
+	}
+	
+	bool IsHidden() const
+	{
+		return bHidden;
+	}
 
 public:
 	template<typename T>

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Core/HAL/PlatformType.h"
 
 namespace EEndPlayReason
@@ -24,4 +24,11 @@ enum class EAttachmentRule : uint8
 
 	/** Snaps transform to the attach point */
 	SnapToTarget,
+};
+
+enum class ETickState : uint8
+{
+	Disabled,
+	Enabled,
+	CoolingDown
 };
