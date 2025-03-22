@@ -178,7 +178,7 @@ void UWorld::RenderMainTexture(URenderer& Renderer)
 		RenderComponent->Render();
 	}
 
-	FDevice::Get().SetRenderTarget();
+	FDevice::Get().SetRenderTargetOnly();
 }
 
 // void UWorld::DisplayPickingTexture(URenderer& Renderer)

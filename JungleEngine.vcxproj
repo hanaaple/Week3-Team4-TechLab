@@ -314,6 +314,8 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Slate\SSplitter.h" />
+    <ClInclude Include="Source\Slate\SWindow.h" />
     <ClInclude Include="Source\Core\Delegates\Delegate.h" />
     <ClInclude Include="Source\Core\Delegates\DelegateCombination.h" />
     <ClInclude Include="Source\Core\Rendering\FontAtlas.h" />

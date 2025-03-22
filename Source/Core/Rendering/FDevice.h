@@ -43,8 +43,12 @@ public:
 	void Prepare() const;
 
 	void Clear() const;
+
+	void Clear(FLOAT color) const;
 	
 	void SetRenderTarget() const;
+
+	void SetRenderTargetOnly() const;
 
 	/** 픽킹렌더링 파이프라인을 준비 합니다. */
 	void PickingPrepare() const;

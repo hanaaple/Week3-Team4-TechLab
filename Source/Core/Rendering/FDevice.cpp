@@ -90,7 +90,7 @@ void FDevice::CreateDeviceAndSwapChain(HWND hWindow)
 	
 	ViewportInfo = {
 				0.0f, 0.0f,
-		 (float)UEngine::Get().GetScreenWidth()/2.f, (float)UEngine::Get().GetScreenHeight()/2.f,
+		 (float)UEngine::Get().GetScreenWidth(), (float)UEngine::Get().GetScreenHeight(),
         0.0f, 1.0f
 	};
 }
@@ -148,6 +148,7 @@ void FDevice::OnUpdateWindowSize(int Width, int Height)
 
 		DXGI_SWAP_CHAIN_DESC SwapChainDesc;
 		SwapChain->GetDesc(&SwapChainDesc);
+		//TODO: Update Split Screen
 		// 뷰포트 정보 갱신
 		ViewportInfo = {
 			0.0f, 0.0f,
@@ -266,6 +267,20 @@ void FDevice::Clear() const
 	FDevice::Get().GetDeviceContext()->ClearDepthStencilView(PickingDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 
+void FDevice::Clear(float color) const
+{
+	FLOAT Color[4]  = { color, color, color, 1.f };
+	// 스왑버퍼랑 뎁스스텐실 화면 지우기
+	FDevice::Get().GetDeviceContext()->ClearRenderTargetView(FrameBufferRTV, Color);
+	FDevice::Get().GetDeviceContext()->ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+	//UUID 텍스쳐 초기화
+	FDevice::Get().GetDeviceContext()->ClearRenderTargetView(FEditorManager::Get().UUIDTexture->GetRTV(), PickingClearColor);
+
+	//후처리 뎁스텍스쳐 초기화
+	FDevice::Get().GetDeviceContext()->ClearDepthStencilView(PickingDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+}
+
 void FDevice::SetRenderTarget() const
 {
 	// Rasterization할 Viewport를 설정 
@@ -282,9 +297,16 @@ void FDevice::SetRenderTarget() const
 	// FDevice::Get().GetDeviceContext()->OMSetRenderTargets(2, &RTV, nullptr);
 }
 
+void FDevice::SetRenderTargetOnly() const
+{
+	ID3D11RenderTargetView* RTV = FEditorManager::Get().UUIDTexture->GetRTV();
+	// 렌더 타겟 바인딩
+	ID3D11RenderTargetView* RTVs[2] = { FrameBufferRTV, RTV };
+	FDevice::Get().GetDeviceContext()->OMSetRenderTargets(2, RTVs, DepthStencilView);
+}
+
 void FDevice::PickingPrepare() const
 {
-
 	ID3D11RenderTargetView* RTV = FEditorManager::Get().UUIDTexture->GetRTV();
 	// 렌더 타겟 바인딩
 	ID3D11RenderTargetView* RTVs[2] = { FrameBufferRTV, RTV };

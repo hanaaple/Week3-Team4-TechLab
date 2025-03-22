@@ -194,6 +194,12 @@ public:
 	float GetMouseMovementDistance() const { return GetMouseDeltaPos().Length(); }
 	FVector GetMouseScreenDeltaPos() const { return (MousePos - MousePrePos); }
 
+	// 드래그 상태 확인
+	bool IsDragging() const { return bIsDragging; }
+
+	// 드래그 시작 위치 반환
+	FVector GetDragStartPos() const { return DragStartPos; }
+
 	template <typename Fn>
 	void RegisterKeyDownCallback(EKeyCode KeyCode, const Fn& Callback, uint32 uuid);
 	template <typename Fn>
@@ -207,6 +213,9 @@ public:
 	void RegisterMousePressCallback(EKeyCode Button, const Fn& Callback, uint32 uuid);
 	template <typename Fn>
 	void RegisterMouseUpCallback(EKeyCode Button, const Fn& Callback, uint32 uuid);
+
+	template <typename Fn>
+	void RegisterDragCallback(const Fn& Callback, uint32 uuid);
 
 private:
 	void CreateKeys();
@@ -233,10 +242,15 @@ private:
 	TMap<EKeyCode, TArray<MouseCallbackWrapper>> MousePressCallbacks;
 	TMap<EKeyCode, TArray<MouseCallbackWrapper>> MouseUpCallbacks;
 
+	TMap<EKeyCode, TArray<MouseCallbackWrapper>> DragCallbacks;
+
 	TArray<FKey> Keys;
 
 	[[maybe_unused]]
     bool bIsBlockInput = false;
+
+	bool bIsDragging = false;
+	FVector DragStartPos;
 
     FVector MousePreNDCPos;
     FVector MousePos;
@@ -359,4 +373,23 @@ void APlayerInput::RegisterMouseUpCallback(EKeyCode Button, const Fn& Callback, 
 	}
 
 	MouseUpCallbacks[Button].Emplace(Callback, uuid);
+}
+
+template <typename Fn>
+void APlayerInput::RegisterDragCallback(const Fn& Callback, uint32 uuid)
+{
+	//if (Button != EKeyCode::LButton || Button != EKeyCode::MButton || Button != EKeyCode::RButton)
+	//{
+	//	return;
+	//}
+
+	if (DragCallbacks.Contains(EKeyCode::LButton)) {
+		for (const auto& Wrapper : DragCallbacks[EKeyCode::LButton]) {
+			if (Wrapper.GetID() == uuid) {
+				return;
+			}
+		}
+	}
+
+	DragCallbacks[EKeyCode::LButton].Emplace(Callback, uuid);
 }

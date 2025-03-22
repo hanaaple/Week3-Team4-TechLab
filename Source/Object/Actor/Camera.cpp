@@ -86,7 +86,8 @@ void ACamera::UpdateCameraMatrix()
 {
 	//뷰 매트릭스 업데이트
 	ViewMatrix = GetActorTransform().GetViewMatrix();
-	
+
+	//TODO: ScreenRatio는 뷰포트 마다 다를 수 있으므로 입력으로 받아야함.
 	// 프로젝션 매트릭스 업데이트
 	float AspectRatio = UEngine::Get().GetScreenRatio();
 

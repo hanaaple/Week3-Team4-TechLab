@@ -126,9 +126,26 @@ void APlayerInput::Update(HWND hWnd, uint32 FramaeBufferWidth, uint32 FramaeBuff
 	for (FKey& key : Keys)
 	{
 		UpdateKey(key);
-	}		
+	}
+
 	SetMousePos(hWnd, FramaeBufferWidth, FramaeBufferHeight);
 
+	//if (GetKeyDown(EKeyCode::LButton)) {
+	//	if (!bIsDragging) {
+	//		bIsDragging = true;
+	//		DragStartPos = MousePos; // 드래그 시작 위치 설정
+	//	}
+
+	//	// 드래그 중일 때 콜백 호출
+	//	for (const auto& Callback : DragCallbacks[EKeyCode::LButton]) {
+	//		Callback(MouseScreenDeltaPos());
+	//	}
+
+	//}
+	//else if (GetKeyUp(EKeyCode::LButton)) {
+	//	bIsDragging = false; // 드래그 종료
+	//	DragStartPos = FVector(); // 초기화
+	//}
 
 	for (const auto& [Key, Callbacks] : KeyDownCallbacks)
 	{

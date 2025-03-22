@@ -11,6 +11,7 @@
 #include "Rendering/FDevice.h"
 #include "Static/FEditorManager.h"
 #include "Static/FLineBatchManager.h"
+#include "Slate/SSplitter.h"
 
 
 class AArrow;
@@ -69,6 +70,14 @@ void UEngine::Initialize(
 	ScreenHeight = InScreenHeight;
 
     InitWindow(InScreenWidth, InScreenHeight);
+
+	/* Split Initial Window */
+	RootSplitter = std::make_unique<SSplitterH>(0, 0, ScreenWidth, ScreenHeight);
+	RootSplitter->SplitHorizontally(ScreenHeight / 2.f);
+	TopSplitter = std::make_unique<SSplitterV>(RootSplitter->GetSideLT()->GetRect());
+	TopSplitter->SplitVertically(ScreenWidth / 2.f);
+	BottomSplitter = std::make_unique<SSplitterV>(RootSplitter->GetSideRB()->GetRect());
+	BottomSplitter->SplitVertically(ScreenWidth / 2.f);
 
 	InitWorld();
 	FDevice::Get().Init(WindowHandle);
@@ -141,9 +150,11 @@ void UEngine::Run()
 		// World Update
 		if (World)
 		{
-			FDevice::Get().Prepare();
+			//FDevice::Get().Prepare();
 			World->Tick(EngineDeltaTime);
-			World->Render();
+
+			RenderSplitScreen();
+			//World->Render();
 
 			FEditorManager::Get().LateTick(EngineDeltaTime);
 		    World->LateTick(EngineDeltaTime);
@@ -280,6 +291,36 @@ void UEngine::UpdateWindowSize(uint32 InScreenWidth, uint32 InScreenHeight)
 	FDevice::Get().OnResizeComplete();
 	
 	FEditorManager::Get().OnResizeComplete();
+}
+
+void UEngine::RenderSplitScreen()
+{
+	FRect LT = TopSplitter->GetSideLT()->GetRect();
+	FRect RT = TopSplitter->GetSideRB()->GetRect();
+	FRect LB = BottomSplitter->GetSideLT()->GetRect();
+	FRect RB = BottomSplitter->GetSideRB()->GetRect();
+
+	D3D11_VIEWPORT Viewports[4] = {
+		{LT.Left, LT.Top, LT.Right - LT.Left, LT.Bottom - LT.Top},
+		{RT.Left, RT.Top, RT.Right - RT.Left, RT.Bottom - RT.Top},
+		{LB.Left, LB.Top, LB.Right - LB.Left, LB.Bottom - LB.Top},
+		{RB.Left, RB.Top, RB.Right - RB.Left, RB.Bottom - RB.Top}
+	};
+
+	float tempColor = 0.0f;
+	for (D3D11_VIEWPORT Viewport : Viewports)
+	{
+		FDevice::Get().Clear(tempColor);
+		tempColor += 0.1f;
+		FDevice::Get().GetDeviceContext()->RSSetViewports(1, &Viewport);
+		FDevice::Get().SetRenderTargetOnly();
+
+		//TODO: 원근/직교 설정에 따른 카메라 선택 로직 추가
+		World->SetCamera(FEditorManager::Get().GetCamera()); //TODO: World의 Camera를 설정하는 로직 추가
+		//camera->SetAspectRatio(Viewport.Width / Viewport.Height);
+
+		World->Render();
+	}
 }
 
 UObject* UEngine::GetObjectByUUID(uint32 InUUID) const
