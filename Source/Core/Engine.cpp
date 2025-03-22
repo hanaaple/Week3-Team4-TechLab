@@ -290,17 +290,17 @@ void UEngine::UpdateWindowSize(uint32 InScreenWidth, uint32 InScreenHeight)
 
 void UEngine::RenderSplitScreen()
 {
-	FViewport** Viewports = FDevice::Get().GetViewports();
+	TArray<FViewport*> Viewports = UEngine::Get().GetWorld()->GetViewport();
+
 	FDevice::Get().Clear();
 
-
-	for (int32 i=0; i< 4; ++i)
+	for(FViewport* vp : Viewports)
 	{
-		FViewport* vp = Viewports[i];
 		D3D11_VIEWPORT d3dvp = vp->GetViewport();
 		FDevice::Get().GetDeviceContext()->RSSetViewports(1, &d3dvp);
 		FDevice::Get().SetRenderTargetOnly();
-
+		World->SetCamera(vp->GetCamera());
+		FEditorManager::Get().SetCamera(vp->GetCamera());
 		World->Render();
 	}
 }

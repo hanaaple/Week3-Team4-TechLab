@@ -86,27 +86,6 @@ void FDevice::CreateDeviceAndSwapChain(HWND hWindow)
 	//    static_cast<float>(SwapChainDesc.BufferDesc.Width), static_cast<float>(SwapChainDesc.BufferDesc.Height),
 	//    0.0f, 1.0f
 	//};
-
-	ScreenWidth = UEngine::Get().GetScreenWidth();
-	ScreenHeight = UEngine::Get().GetScreenHeight();
-
-	/* Split Initial Window */
-	RootSplitter = std::make_unique<SSplitterH>(0, 0, ScreenWidth, ScreenHeight);
-	RootSplitter->SplitHorizontally(ScreenHeight / 2.f);
-	TopSplitter = std::make_unique<SSplitterV>(RootSplitter->GetSideLT()->GetRect());
-	TopSplitter->SplitVertically(ScreenWidth / 2.f);
-	BottomSplitter = std::make_unique<SSplitterV>(RootSplitter->GetSideRB()->GetRect());
-	BottomSplitter->SplitVertically(ScreenWidth / 2.f);
-
-	FRect LT = TopSplitter->GetSideLT()->GetRect();
-	FRect RT = TopSplitter->GetSideRB()->GetRect();
-	FRect LB = BottomSplitter->GetSideLT()->GetRect();
-	FRect RB = BottomSplitter->GetSideRB()->GetRect();
-
-	Viewports[0] = new FViewport(new FViewportClient(), LT);
-	Viewports[1] = new FViewport(new FViewportClient(), RT);
-	Viewports[2] = new FViewport(new FViewportClient(EViewType::Perspective), LB);
-	Viewports[3] = new FViewport(new FViewportClient(), RB);
 }
 
 void FDevice::ReleaseDeviceAndSwapChain()

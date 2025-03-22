@@ -8,6 +8,8 @@
 #include "Debug/DebugConsole.h"
 #include "Object/ObjectFactory.h"
 #include "Object/Actor/OrthographicCamera.h"
+#include "Core/Rendering/FViewport.h"
+#include "Core/Rendering/FViewportClient.h"
 
 class URenderer;
 class AActor;
@@ -71,12 +73,18 @@ public:
 
 	float GetGridSize() const { return GridSize; }
 	
+	TArray<FViewport*> GetViewport() { return Viewports; }
 private:
 	UWorldInfo GetWorldInfo() const;
 	ACamera* Camera = nullptr;
 	AOrthoGraphicCamera* OrthoGraphicCamera = nullptr;
 	float GridSize = 100.0f;
 
+	std::unique_ptr<SSplitterH> RootSplitter = nullptr;
+	std::unique_ptr<SSplitterV> TopSplitter = nullptr;
+	std::unique_ptr<SSplitterV> BottomSplitter = nullptr;
+
+	TArray<FViewport*> Viewports;
 public:
 	FString SceneName;
 	uint32 Version = 1;

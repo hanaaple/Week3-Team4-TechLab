@@ -20,6 +20,34 @@
 void UWorld::InitWorld()
 {
 	GridSize = FString::ToFloat(UConfigManager::Get().GetValue(TEXT("World"), TEXT("GridSize")));
+
+	/* Split Initial Window */
+	uint32 ScreenWidth = UEngine::Get().GetScreenWidth();
+	uint32 ScreenHeight = UEngine::Get().GetScreenHeight();
+	RootSplitter = std::make_unique<SSplitterH>(0, 0, ScreenWidth, ScreenHeight);
+	RootSplitter->SplitHorizontally(ScreenHeight / 2.f);
+	TopSplitter = std::make_unique<SSplitterV>(RootSplitter->GetSideLT()->GetRect());
+	TopSplitter->SplitVertically(ScreenWidth / 2.f);
+	BottomSplitter = std::make_unique<SSplitterV>(RootSplitter->GetSideRB()->GetRect());
+	BottomSplitter->SplitVertically(ScreenWidth / 2.f);
+
+	FRect LT = TopSplitter->GetSideLT()->GetRect();
+	FRect RT = TopSplitter->GetSideRB()->GetRect();
+	FRect LB = BottomSplitter->GetSideLT()->GetRect();
+	FRect RB = BottomSplitter->GetSideRB()->GetRect();
+
+	ACamera* c1 = SpawnActor<ACamera>();
+	ACamera* c2 = SpawnActor<ACamera>();
+	ACamera* c3 = SpawnActor<ACamera>();
+	ACamera* c4 = SpawnActor<ACamera>();
+
+	c1->SetActorPosition(FVector(0, 0, 10));
+	c2->SetActorPosition(FVector(0, 10, 0));
+	c4->SetActorPosition(FVector(10, 0, 0));
+	Viewports.Add(new FViewport(new FViewportClient(), LT, c1));
+	Viewports.Add(new FViewport(new FViewportClient(), RT, c2));
+	Viewports.Add(new FViewport(new FViewportClient(EViewType::Perspective), LB, c3));
+	Viewports.Add(new FViewport(new FViewportClient(), RB, c4));
 }
 
 void UWorld::BeginPlay()

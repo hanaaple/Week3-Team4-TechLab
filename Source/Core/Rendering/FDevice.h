@@ -2,8 +2,7 @@
 #define _TCHAR_DEFINED  // TCHAR 재정의 에러 때문
 #include <d3d11.h>
 #include "Core/AbstractClass/Singleton.h"
-#include "FViewport.h"
-#include "FViewportClient.h"
+
 //디바이스 스왑 체인 관리, 뷰포트도 일단 가지고 있음
 
 class FDevice : public TSingleton<FDevice>
@@ -63,8 +62,6 @@ public:
 
 	//렌더러에 필요한 기본 리소스 생성
 	void InitResource();
-
-	FViewport** GetViewports() { return Viewports; }
 private:
 	// Direct3D 11 장치(Device)와 장치 컨텍스트(Device Context) 및 스왑 체인(Swap Chain)을 관리하기 위한 포인터들
 	ID3D11Device* Device = nullptr;                         // GPU와 통신하기 위한 Direct3D 장치
@@ -88,13 +85,4 @@ private:
 	ID3D11DepthStencilView* PickingDepthStencilView = nullptr;     // DepthStencil버퍼를 렌더 타겟으로 사용하는 뷰
 
 	bool bIsInit = FALSE;
-
-	uint32 ScreenWidth;
-	uint32 ScreenHeight;
-
-	std::unique_ptr<SSplitterH> RootSplitter = nullptr;
-	std::unique_ptr<SSplitterV> TopSplitter = nullptr;
-	std::unique_ptr<SSplitterV> BottomSplitter = nullptr;
-
-	FViewport* Viewports[4];
 };
