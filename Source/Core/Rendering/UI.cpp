@@ -391,9 +391,8 @@ void UI::RenderPropertyWindow() const
     			FString MeshFString = It->FResource::GetName();
     			// 스코프를 돌면서 동일한 메모리 주소로 char*이 만들어지는 문제 발생
     			// 메모리 공간을 만들어 문제 해결 
-    			auto MeshString = FString::TCHAR_TO_ANSI(MeshFString.c_wchar());    			
+    			auto MeshString = FString::TCHAR_TO_ANSI(MeshFString.c_wchar());
     			
-    			UE_LOG("It %s", MeshString);
     			if (StaticMeshComponent->GetStaticMesh()->FResource::GetName() == MeshFString)
     			{
     				CurrentMeshItem = i;
@@ -403,7 +402,7 @@ void UI::RenderPropertyWindow() const
     			i++;
     		}
 
-    		if (ImGui::Combo("Primitive", &CurrentMeshItem, MeshItemList.GetData(), MeshItemList.Num()))
+    		if (ImGui::Combo("StaticMesh Asset", &CurrentMeshItem, MeshItemList.GetData(), MeshItemList.Num()))
     		{
     			StaticMeshComponent->SetStaticMesh(MeshItems[CurrentMeshItem]->FResource::GetName());
     		}
