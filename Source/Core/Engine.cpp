@@ -294,11 +294,50 @@ void UEngine::RenderSplitScreen()
 
 	FDevice::Get().Clear();
 
+	AOrthoGraphicCamera* OrthoCamera = UEngine::Get().GetWorld()->GetOrthoGraphicCamera();
+
 	for(FViewport* vp : Viewports)
 	{
 		D3D11_VIEWPORT d3dvp = vp->GetViewport();
 		FDevice::Get().GetDeviceContext()->RSSetViewports(1, &d3dvp);
 		FDevice::Get().SetRenderTargetOnly();
+		EViewType ViewType = vp->GetClient()->GetViewType();
+
+		switch (ViewType)
+		{
+		case EViewType::Top:
+			vp->GetCamera()->SetActorPosition(OrthoCamera->GetActorPosition() + FVector(0.f, 0.f, 10.f));
+			vp->GetCamera()->SetActorRotation(FVector(0.f, -90.f, 0.f));
+			vp->GetCamera()->ProjectionMode = ECameraProjectionMode::Orthographic;
+			break;
+		case EViewType::Bottom:
+			vp->GetCamera()->SetActorPosition(OrthoCamera->GetActorPosition() + FVector(0.f, 0.f, -10.f));
+			vp->GetCamera()->SetActorRotation(FVector(0.f, 90.f, 0.f));
+			vp->GetCamera()->ProjectionMode = ECameraProjectionMode::Orthographic;
+			break;
+		case EViewType::Left:
+			vp->GetCamera()->SetActorPosition(OrthoCamera->GetActorPosition());
+			vp->GetCamera()->SetActorRotation(OrthoCamera->GetActorRotation());
+			vp->GetCamera()->ProjectionMode = ECameraProjectionMode::Orthographic;
+			break;
+		case EViewType::Right:
+			vp->GetCamera()->SetActorPosition(OrthoCamera->GetActorPosition());
+			vp->GetCamera()->SetActorRotation(OrthoCamera->GetActorRotation());
+			vp->GetCamera()->ProjectionMode = ECameraProjectionMode::Orthographic;
+			break;
+		case EViewType::Front:
+			vp->GetCamera()->SetActorPosition(OrthoCamera->GetActorPosition());
+			vp->GetCamera()->SetActorRotation(OrthoCamera->GetActorRotation());
+			vp->GetCamera()->ProjectionMode = ECameraProjectionMode::Orthographic;
+			break;
+		case EViewType::Back:
+			vp->GetCamera()->SetActorPosition(OrthoCamera->GetActorPosition());
+			vp->GetCamera()->SetActorRotation(OrthoCamera->GetActorRotation());
+			vp->GetCamera()->ProjectionMode = ECameraProjectionMode::Orthographic;
+			break;
+		case EViewType::Perspective:
+			break;
+		}
 		World->SetCamera(vp->GetCamera());
 		FEditorManager::Get().SetCamera(vp->GetCamera());
 		World->Render();

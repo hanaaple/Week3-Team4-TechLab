@@ -8,8 +8,7 @@ enum class EViewType : uint8
 	Right,
 	Front,
 	Back,
-	Perspective,
-	None
+	Perspective
 };
 
 class FViewportClient
@@ -21,7 +20,8 @@ public:
 	{
 		ViewType = InViewType;
 	}
-
+	
+	EViewType GetViewType() { return ViewType; }
 private:
 	EViewType ViewType;
 };
