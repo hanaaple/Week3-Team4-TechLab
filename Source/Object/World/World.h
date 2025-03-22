@@ -7,7 +7,7 @@
 #include "Core/Utils/JsonSavehelper.h"
 #include "Debug/DebugConsole.h"
 #include "Object/ObjectFactory.h"
-#include "Object/Actor/OrthographicCamera.h"
+
 
 class URenderer;
 class AActor;
@@ -56,9 +56,6 @@ public:
 	inline ACamera* GetCamera() const { return Camera; }
 	void SetCamera(ACamera* NewCamera) { Camera = NewCamera; }
 
-	inline AOrthoGraphicCamera* GetOrthoGraphicCamera() const { return OrthoGraphicCamera; }
-	void SetOrthoGraphicCamera(AOrthoGraphicCamera* NewOrthoGraphicCamera) { OrthoGraphicCamera = NewOrthoGraphicCamera; }
-
 	void RayCasting(const FVector& MouseNDCPos);
 
 	void PickByPixel(const FVector& MousePos);
@@ -70,11 +67,10 @@ public:
 	void OnChangedGridSize() const;
 
 	float GetGridSize() const { return GridSize; }
-	
 private:
 	UWorldInfo GetWorldInfo() const;
 	ACamera* Camera = nullptr;
-	AOrthoGraphicCamera* OrthoGraphicCamera = nullptr;
+
 	float GridSize = 100.0f;
 
 public:

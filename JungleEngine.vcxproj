@@ -184,7 +184,6 @@
     <ClCompile Include="Source\Core\Rendering\FontAtlas.cpp" />
     <ClCompile Include="Source\Core\Utils\ObjParser.cpp" />
     <ClCompile Include="Source\Debug\DebugDrawManager.cpp" />
-    <ClCompile Include="Source\Object\Actor\OrthoGraphicCamera.cpp" />
     <ClCompile Include="Source\Object\Actor\SubUVParticle.cpp" />
     <ClCompile Include="Source\Object\Actor\WorldGrid.cpp" />
     <ClCompile Include="Source\Object\Assets\MeshAsset.cpp" />
@@ -316,9 +315,6 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Core\Rendering\FViewport.h" />
-    <ClInclude Include="Source\Core\Rendering\FViewportClient.h" />
-    <ClInclude Include="Source\Object\Actor\OrthoGraphicCamera.h" />
     <ClInclude Include="Source\Slate\SSplitter.h" />
     <ClInclude Include="Source\Slate\SWindow.h" />
     <ClInclude Include="Source\Core\Delegates\Delegate.h" />

@@ -6,7 +6,6 @@
 #include "Debug/DebugDrawManager.h"
 #include "Object/Actor/Arrow.h"
 #include "Object/Actor/Camera.h"
-#include "Object/Actor/OrthoGraphicCamera.h"
 #include "Object/Actor/Cone.h"
 #include "Object/Actor/Cube.h"
 #include "Object/Actor/Cylinder.h"
@@ -93,9 +92,6 @@ void UWorld::Render()
 
 	ACamera* cam = FEditorManager::Get().GetCamera();
 	cam->UpdateCameraMatrix();
-
-	AOrthoGraphicCamera* OrthoGraphicCam = FEditorManager::Get().GetOrthoGraphicCamera();
-	OrthoGraphicCam->UpdateCameraMatrix();
 
 	//if (APlayerInput::Get().GetKeyDown(EKeyCode::LButton))
 	//{

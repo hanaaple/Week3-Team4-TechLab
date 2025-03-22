@@ -302,9 +302,6 @@ void UEngine::InitWorld()
 	World->SetCamera(World->SpawnActor<ACamera>());
     FEditorManager::Get().SetCamera(World->GetCamera());
 
-	World->SetOrthoGraphicCamera(World->SpawnActor<AOrthoGraphicCamera>());
-	FEditorManager::Get().SetOrthoGraphicCamera(World->GetOrthoGraphicCamera());
-
 	FLineBatchManager::Get().DrawWorldGrid(World->GetGridSize(), World->GetGridSize() / 100.f);
 
 	World->BeginPlay();

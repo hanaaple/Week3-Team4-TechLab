@@ -9,7 +9,6 @@
 #include "Core/Input/PlayerInput.h"
 #include "Resource/Texture.h"
 #include "Core/Rendering/FDevice.h"
-#include "Object/Actor/OrthographicCamera.h"
 
 void FEditorManager::Init()
 {
@@ -73,11 +72,6 @@ void FEditorManager::SelectActor(AActor* NewActor)
 void FEditorManager::SetCamera(ACamera* NewCamera)
 {
     Camera = NewCamera;
-}
-
-void FEditorManager::SetOrthoGraphicCamera(AOrthoGraphicCamera* NewOrthoGraphicCamera)
-{
-	OrthoGraphicCamera = NewOrthoGraphicCamera;
 }
 
 FVector4 FEditorManager::EncodeUUID(uint32 UUID)
