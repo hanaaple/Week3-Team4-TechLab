@@ -3,6 +3,7 @@
 
 #include "Core/Container/String.h"
 #include "Core/Container/Map.h"
+#include "Object/ObjectFactory.h"
 
 
 template <typename ResourcesType>
@@ -70,6 +71,16 @@ protected:
 		return NewRes;
 	}
 
+	// 임시 코드입니다 막 쓰지 마세요!!
+	static std::shared_ptr<ResourcesType> CreateUObjectRes(const FString& InName)
+	{
+		std::shared_ptr<ResourcesType> NewRes = FObjectFactory::ConstructObjectSharedPtr<ResourcesType>();
+		std::lock_guard Lock(NameMutex);
+		NewRes->FResource::SetName(InName);
+		NameRes.Add(InName, NewRes);
+		return NewRes;
+	}
+	
 private:
 	static std::mutex NameMutex;
 	static TMap<FString, std::shared_ptr<ResourcesType>> NameRes;

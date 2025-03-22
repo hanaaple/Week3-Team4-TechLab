@@ -1,5 +1,7 @@
-#include "Arrow.h"
-#include "Object/PrimitiveComponent/UPrimitiveComponent.h"
+﻿#include "Arrow.h"
+
+#include "Object/PrimitiveComponent/StaticMeshComponent.h"
+
 
 AArrow::AArrow()
 {

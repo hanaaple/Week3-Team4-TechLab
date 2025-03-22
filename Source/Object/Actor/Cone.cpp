@@ -1,5 +1,6 @@
-#include "Cone.h"
-#include "Object/PrimitiveComponent/UPrimitiveComponent.h"
+﻿#include "Cone.h"
+
+#include "Object/PrimitiveComponent/StaticMeshComponent.h"
 
 
 ACone::ACone()
