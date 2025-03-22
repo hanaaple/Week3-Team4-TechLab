@@ -11,7 +11,7 @@
 #include "Resource/DirectResource/DepthStencilState.h"
 #include "Resource/DirectResource/ConstantBuffer.h"
 #include "Resource/Texture.h"
-#include "Resource/Mesh.h"
+#include "Resource/StaticMesh.h"
 #include "Resource/Material.h"
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
 #include "Primitive/UGeometryGenerator.h"
@@ -207,7 +207,7 @@ void FDevice::InitResource()
 		
 		FVertexBuffer::Create(FString("Cube"), vertices);
 		FIndexBuffer::Create(FString("Cube"), indices);
-		FMesh::Create("Cube");
+		UStaticMesh::Create("Cube");
 	}
 
 	{
@@ -222,7 +222,7 @@ void FDevice::InitResource()
 		
 		FVertexBuffer::Create(FString("Sphere"), vertices);
 		FIndexBuffer::Create(FString("Sphere"), indices);
-		FMesh::Create("Sphere");
+		UStaticMesh::Create("Sphere");
 
 		
 	}
@@ -252,7 +252,7 @@ void FDevice::InitResource()
 		
 		FVertexBuffer::Create(FString("Triangle"), vertices);
 		FIndexBuffer::Create(FString("Triangle"), indices);
-		FMesh::Create("Triangle");
+		UStaticMesh::Create("Triangle");
 		
 	}
 	
@@ -289,7 +289,7 @@ void FDevice::InitResource()
 		FVertexBuffer::Create(FString("Quad"), vertices);
 		FIndexBuffer::Create(FString("Quad"), indices);
 
-		FMesh::Create("Quad");
+		UStaticMesh::Create("Quad");
 	}
 
 	{
@@ -315,7 +315,7 @@ void FDevice::InitResource()
 		FVertexBuffer::Create(FString("Line"), vertices);
 		FIndexBuffer::Create(FString("Line"), indices);
 		
-		FMesh::Create(FString("Line"), D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+		UStaticMesh::Create(FString("Line"), D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 	}
 	{
 		TArray<FVertexSimple> vertices;
@@ -331,7 +331,7 @@ void FDevice::InitResource()
 		FVertexBuffer::Create(FString("Cylinder"), vertices);
 		FIndexBuffer::Create(FString("Cylinder"), indices);
 		 
-		FMesh::Create(FString("Cylinder"));
+		UStaticMesh::Create(FString("Cylinder"));
 	}
 
 	{
@@ -347,7 +347,7 @@ void FDevice::InitResource()
 		FIndexBuffer::Create(FString("Cone"), indices);
 
 
-		FMesh::Create(FString("Cone"));
+		UStaticMesh::Create(FString("Cone"));
 	}
 	
 	{
@@ -361,7 +361,7 @@ void FDevice::InitResource()
 		FVertexBuffer::Create(FString(TEXT("GizmoArrow")), vertices);
 		FIndexBuffer::Create(FString(TEXT("GizmoArrow")), indices);
 
-		FMesh::Create(TEXT("GizmoArrow"));
+		UStaticMesh::Create(TEXT("GizmoArrow"));
 	}
 
 	{
@@ -376,7 +376,7 @@ void FDevice::InitResource()
 		FVertexBuffer::Create(FString(TEXT("GizmoRotation")), vertices);
 		FIndexBuffer::Create(FString(TEXT("GizmoRotation")), indices);
 
-		FMesh::Create(TEXT("GizmoRotation"));
+		UStaticMesh::Create(TEXT("GizmoRotation"));
 	}
 
 	{
@@ -391,7 +391,7 @@ void FDevice::InitResource()
 		FVertexBuffer::Create(FString(TEXT("GizmoScale")), vertices);
 		FIndexBuffer::Create(FString(TEXT("GizmoScale")), indices);
 
-		FMesh::Create(TEXT("GizmoScale"));
+		UStaticMesh::Create(TEXT("GizmoScale"));
 	}
 
 }

@@ -1,8 +1,6 @@
 #pragma once
 #include "LightComponent.h"
-#include "Resource/RenderResourceCollection.h"
-#include "Object/PrimitiveComponent/UPrimitiveComponent.h"
-
+#include "Object/PrimitiveComponent/StaticMeshComponent.h"
 
 // 스포트라이트 컴포넌트
 class USpotLightComponent : public ULightComponent
@@ -33,7 +31,7 @@ public:
 	// 경계 계산
 	virtual FBoxSphereBounds CalcBounds(const FTransform& LocalToWorld) const override;
 
-	UPrimitiveComponent* GuideMesh;
+	UStaticMeshComponent* GuideMesh;
 	FRenderResourceCollection& GetRenderResourceCollection() { return RenderResourceCollection; }
 	FConstantsComponentData& GetConstantsComponentData() { return ConstantsComponentData; }
 protected:

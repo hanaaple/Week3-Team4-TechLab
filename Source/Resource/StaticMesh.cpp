@@ -1,9 +1,9 @@
-#include "Mesh.h"
+#include "StaticMesh.h"
 #include "Core/Engine.h"
 #include "Core/Rendering/FDevice.h"
 
 
-void FMesh::Setting()
+void UStaticMesh::Setting()
 {
 	if (nullptr == VertexBuffer)
 	{
@@ -22,7 +22,7 @@ void FMesh::Setting()
 	IndexBuffer->Setting();
 }
 
-void FMesh::Draw()
+void UStaticMesh::Draw()
 {
 	
 	FDevice::Get().GetDeviceContext()->DrawIndexed(IndexBuffer->GetIndexCount(), 0, 0);

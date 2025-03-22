@@ -14,20 +14,16 @@ enum class RenderMode
 class FRenderResourceCollection
 {
 public:
-
-
 	//테스트 임시 메쉬
-
-
 
 	void SetMesh(const FString& _Name);
 	void SetMaterial(const FString& _Name);
 
 	
-	void SetMesh(std::shared_ptr<class FMesh> _Mesh);
+	void SetMesh(std::shared_ptr<class UStaticMesh> _Mesh);
 	void SetMaterial(std::shared_ptr<class FMaterial> _Material);
 
-	std::shared_ptr<FMesh> GetMesh() const
+	std::shared_ptr<UStaticMesh> GetMesh() const
 	{
 		return Mesh;
 	}
@@ -64,12 +60,12 @@ public:
 private:
 	//class UPrimitiveComponent* ParentRenderer = nullptr;
 
-	RenderMode Mode = RenderMode::Indexed;
+	//RenderMode Mode = RenderMode::Indexed;
 
 	//원래는 메쉬와 메테리얼의 정보 둘다 필요함 일단 버텍스 쉐이더 정보만 받아서 자동화
 	std::shared_ptr<class FInputLayout> Layout = nullptr;
 	
-	std::shared_ptr<FMesh> Mesh = nullptr;
+	std::shared_ptr<UStaticMesh> Mesh = nullptr;
 	std::shared_ptr<FMaterial> Material = nullptr;
 
 	TMap<FString, std::shared_ptr<FConstantBufferBinding>> ConstantBufferBindings;

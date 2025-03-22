@@ -89,12 +89,28 @@ public:
 	{
 		for (UActorComponent* Component : Components)
 		{
-			if (T* CastedComponent = dynamic_cast<T*>(Component))
+			if (Component->IsA<T>())
 			{
+				T* CastedComponent = static_cast<T*>(Component);
 				return CastedComponent;
 			}
 		}
 		return nullptr;
+	}
+
+	template<typename T>
+	requires std::derived_from<T, UActorComponent>
+	bool TryGetComponentByClass(T& TComponent)
+	{
+		for (UActorComponent* Component : Components)
+		{
+			if (Component->IsA<T>())
+			{
+				TComponent = static_cast<T*>(Component);
+				return true;
+			}
+		}
+		return false;
 	}
 
 public:

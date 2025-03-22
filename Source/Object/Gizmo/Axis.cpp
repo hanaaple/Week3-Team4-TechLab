@@ -1,6 +1,6 @@
 #include "Axis.h"
-#include "Object/PrimitiveComponent/UPrimitiveComponent.h"
 
+#include "Object/PrimitiveComponent/StaticMeshComponent.h"
 
 AAxis::AAxis()
 {

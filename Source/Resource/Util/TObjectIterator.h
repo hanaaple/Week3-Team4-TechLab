@@ -1,9 +1,4 @@
 #pragma once
-#include <concepts>
-
-#include "Core/Engine.h"
-#include "Core/Container/Map.h"
-#include "Core/UObject/Object.h"
 
 // TArray용
 
@@ -22,7 +17,10 @@ public:
 			GObjects.Add(UObjectPair.Value);
 		}
 		Index = Idx;
-		Advance();
+		if (!GObjects[Index]->IsA<T>())
+		{
+			Advance();
+		}
 	}
 	~TObjectIterator() = default;
 
@@ -48,7 +46,7 @@ public:
 		return temp;
 	}
 	
-	TObjectIterator<T> begin() { return TObjectIterator<T>(-1); }
+	TObjectIterator<T> begin() { return TObjectIterator<T>(0); }
 	TObjectIterator<T> end() { return TObjectIterator<T>(GObjects.Num()); }
 private:
 	bool Advance()

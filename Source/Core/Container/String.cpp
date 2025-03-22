@@ -6,6 +6,36 @@
 
 
 #if USE_WIDECHAR
+char* FString::TCHAR_TO_ANSI(const TCHAR* InString)
+{
+	if (InString == nullptr)
+	{
+		return nullptr;
+	}
+
+	// 문자열 길이 계산
+	int32 StringLength = wcslen(InString);
+	if (StringLength == 0)
+	{
+		return nullptr;
+	}
+
+	// 필요한 ANSI 버퍼 크기 계산
+	int32 BufferSize = WideCharToMultiByte(CP_ACP, 0, InString, -1, nullptr, 0, nullptr, nullptr);
+	if (BufferSize <= 0)
+	{
+		return nullptr;
+	}
+
+	// 메모리 할당 (힙 메모리)
+	char* AnsiString = (char*)malloc(BufferSize);
+
+	// 변환 수행
+	WideCharToMultiByte(CP_ACP, 0, InString, -1, AnsiString, BufferSize, nullptr, nullptr);
+
+	return AnsiString;  // 반환된 문자열은 FMemory::Free()로 해제 필요
+}
+
 std::wstring FString::ConvertToWideChar(const ANSICHAR* NarrowStr)
 {
 	const int Size = MultiByteToWideChar(CP_UTF8, 0, NarrowStr, -1, nullptr, 0);

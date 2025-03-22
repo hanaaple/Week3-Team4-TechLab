@@ -1,6 +1,5 @@
-#pragma once
+﻿#pragma once
 #include "Actor.h"
-
 
 class ACube : public AActor
 {

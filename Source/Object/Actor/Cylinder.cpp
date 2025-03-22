@@ -1,7 +1,7 @@
 #include "Cylinder.h"
 
 #include "Core/Input/PlayerInput.h"
-#include "Object/PrimitiveComponent/UPrimitiveComponent.h"
+#include "Object/PrimitiveComponent/StaticMeshComponent.h"
 
 ACylinder::ACylinder()
 {
