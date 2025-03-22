@@ -1,5 +1,6 @@
 #include "Quad.h"
-#include "Object/PrimitiveComponent/UPrimitiveComponent.h"
+
+#include "Object/PrimitiveComponent/StaticMeshComponent.h"
 
 AQuad::AQuad()
 {

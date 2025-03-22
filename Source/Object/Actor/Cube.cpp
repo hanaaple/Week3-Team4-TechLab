@@ -1,6 +1,6 @@
-#include "Cube.h"
-#include "Object/PrimitiveComponent/UPrimitiveComponent.h"
+﻿#include "Cube.h"
 
+#include "Object/PrimitiveComponent/StaticMeshComponent.h"
 
 ACube::ACube()
 {

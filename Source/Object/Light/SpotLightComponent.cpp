@@ -4,7 +4,7 @@
 #include "Object/World/World.h"
 #include "Object/Actor/Camera.h"
 #include "Primitive/UGeometryGenerator.h"
-#include "Resource/Mesh.h"
+#include "Resource/StaticMesh.h"
 
 USpotLightComponent::USpotLightComponent()
 	: InnerConeAngle(PI / 6.0f)  // 30도
@@ -24,7 +24,7 @@ USpotLightComponent::USpotLightComponent()
 
 	FVertexBuffer::Create("SpotLightGuideVertexBuffer", VertexBuffer, true);
 	FIndexBuffer::Create("SpotLightGuideIndexBuffer", IndexBuffer, true);
-	std::shared_ptr<FMesh> Mesh = FMesh::Create("SpotLightGuideMesh", "SpotLightGuideVertexBuffer", "SpotLightGuideIndexBuffer", D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	std::shared_ptr<UStaticMesh> Mesh = UStaticMesh::Create("SpotLightGuideMesh", "SpotLightGuideVertexBuffer", "SpotLightGuideIndexBuffer", D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	
 	//GuideMesh->SetMesh("SpotLightGuideMesh");
 	//GuideMesh->SetMaterial("DebugMaterial");

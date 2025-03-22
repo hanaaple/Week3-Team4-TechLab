@@ -1,31 +1,19 @@
 #include "World.h"
-#include <cassert>
-#include "Core/Utils/JsonSavehelper.h"
 
-#include "Core/Container/Map.h"
+#include "Core/Config/ConfigManager.h"
 #include "Core/Input/PlayerInput.h"
+#include "Core/Math/Ray.h"
+#include "Debug/DebugDrawManager.h"
+#include "Object/Actor/Arrow.h"
 #include "Object/Actor/Camera.h"
-#include <Object/Gizmo/GizmoHandle.h>
-
 #include "Object/Actor/Cone.h"
 #include "Object/Actor/Cube.h"
 #include "Object/Actor/Cylinder.h"
 #include "Object/Actor/Sphere.h"
-#include "Object/PrimitiveComponent/UPrimitiveComponent.h"
+#include "Object/Gizmo/GizmoActor.h"
 #include "Static/FEditorManager.h"
 #include "Static/FLineBatchManager.h"
 #include "Static/FUUIDBillBoard.h"
-#include <Core/Math/Ray.h>
-
-#include "Core/Rendering/URenderer.h"
-#include "Object/Actor/Arrow.h"
-#include "Object/Actor/Picker.h"
-#include "Core/Config/ConfigManager.h"
-#include "Object/Gizmo/GizmoActor.h"
-
-#include "Resource/Mesh.h"
-
-#include "Debug/DebugDrawManager.h"
 
 
 void UWorld::InitWorld()
@@ -350,8 +338,8 @@ void UWorld::RayCasting(const FVector& MouseNDCPos)
 		FMatrix primWorldMat = PrimitiveComponent->GetComponentTransform().GetMatrix();
 		FRay localRay = FRay::TransformRayToLocal(worldRay, primWorldMat.Inverse());
 
-		std::shared_ptr<FMesh> CurMesh = PrimitiveComponent->GetMesh();
-		CurMesh->GetVertexBuffer();
+		//std::shared_ptr<UStaticMesh> CurMesh = PrimitiveComponent->GetMesh();
+		//CurMesh->GetVertexBuffer();
 
 		float outT = 0.0f;
 		bool bHit = false;

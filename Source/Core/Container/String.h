@@ -73,6 +73,8 @@ public:
 
     FString(BaseStringType InString) : PrivateString(std::move(InString)) {}
 
+public:
+	static char* TCHAR_TO_ANSI(const TCHAR*);
 private:
 	// WIDECHAR 사용처에서 사용할 수 있도록
 	static std::wstring ConvertToWideChar(const ANSICHAR* NarrowStr);

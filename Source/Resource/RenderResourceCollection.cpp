@@ -2,12 +2,12 @@
 #include "Debug/DebugConsole.h"
 #include "DirectResource/ShaderResourceBinding.h"
 #include "DirectResource/InputLayout.h"
-#include "Mesh.h"
+#include "StaticMesh.h"
 #include "Material.h"
 
 void FRenderResourceCollection::SetMesh(const FString& _Name)
 {
-	Mesh = FMesh::Find(_Name);
+	Mesh = UStaticMesh::Find(_Name);
 
 	SetMesh(Mesh);
 }
@@ -19,7 +19,7 @@ void FRenderResourceCollection::SetMaterial(const FString& _Name)
 	SetMaterial(Material);
 }
 
-void FRenderResourceCollection::SetMesh(std::shared_ptr<FMesh> _Mesh)
+void FRenderResourceCollection::SetMesh(std::shared_ptr<UStaticMesh> _Mesh)
 {
 	Mesh = _Mesh;
 

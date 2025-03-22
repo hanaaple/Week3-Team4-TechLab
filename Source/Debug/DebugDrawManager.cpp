@@ -11,7 +11,7 @@
 #include "Resource/DirectResource/Rasterizer.h"
 #include "Resource/DirectResource/DepthStencilState.h"
 #include "Resource/DirectResource/ConstantBuffer.h"
-#include "Resource/Mesh.h"
+#include "Resource/StaticMesh.h"
 #include "Resource/Material.h"
 #include "Core/Math/BoxSphereBounds.h"
 
@@ -34,7 +34,7 @@ void UDebugDrawManager::Initialize()
 	FIndexBuffer::Create(TEXT("DebugIndexBuffer"), IndexBuffer, true);
 	ClearDebug();
 
-	std::shared_ptr<FMesh> Mesh = FMesh::Create("DebugBatchMesh", "DebugVertexBuffer", "DebugIndexBuffer", D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+	std::shared_ptr<UStaticMesh> Mesh = UStaticMesh::Create("DebugBatchMesh", "DebugVertexBuffer", "DebugIndexBuffer", D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 
 	D3D11_RASTERIZER_DESC rasterizerDesc = {};
 	rasterizerDesc.FillMode = D3D11_FILL_SOLID;

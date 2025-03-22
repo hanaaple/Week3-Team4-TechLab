@@ -16,7 +16,7 @@
 #include "Resource/DirectResource/Rasterizer.h"
 #include "Resource/DirectResource/DepthStencilState.h"
 #include "Resource/DirectResource/ConstantBuffer.h"
-#include "Resource/Mesh.h"
+#include "Resource/StaticMesh.h"
 #include "Resource/Material.h"
 #include "Resource/RenderResourceCollection.h"
 
@@ -133,7 +133,7 @@ void FLineBatchManager::Create()
 	
 	FVertexBuffer::Create("LineVertexBuffer", VertexBuffer , true);
 	FIndexBuffer::Create("LineIndexBuffer", IndexBuffer , true);
-	std::shared_ptr<FMesh> Mesh =  FMesh::Create("LineBatchMesh" , "LineVertexBuffer", "LineIndexBuffer", D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+	std::shared_ptr<UStaticMesh> Mesh =  UStaticMesh::Create("LineBatchMesh" , "LineVertexBuffer", "LineIndexBuffer", D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 	
 	FVertexShader::Load(L"Shaders\\ShaderLine_VS.hlsl", "ShaderLine_VS", "ShaderLine_VS");
 	
