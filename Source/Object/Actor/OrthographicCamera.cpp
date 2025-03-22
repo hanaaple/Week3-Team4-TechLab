@@ -59,30 +59,30 @@ float AOrthoGraphicCamera::GetFar() const
 
 const FMatrix AOrthoGraphicCamera::GetTopViewMatrix() const
 {
-	return ViewMatrix * FMatrix::RotatePitch(90.f) * FMatrix::GetTranslateMatrix(FVector(0.f, 0.f, 10.f));
+	return ViewProjectionMatrix * FMatrix::RotatePitch(90.f) * FMatrix::GetTranslateMatrix(FVector(0.f, 0.f, 10.f));
 }
 
 const FMatrix AOrthoGraphicCamera::GetBottomViewMatrix() const
 {
-	return ViewMatrix * FMatrix::RotatePitch(-90.f) * FMatrix::GetTranslateMatrix(FVector(0.f, 0.f, -10.f));
+	return ViewProjectionMatrix * FMatrix::RotatePitch(-90.f) * FMatrix::GetTranslateMatrix(FVector(0.f, 0.f, -10.f));
 }
 
 const FMatrix AOrthoGraphicCamera::GetLeftViewMatrix() const
 {
-	return ViewMatrix * FMatrix::RotateYaw(90.f) * FMatrix::GetTranslateMatrix(FVector(0.f, -10.f, 0.f));
+	return ViewProjectionMatrix * FMatrix::RotateYaw(90.f) * FMatrix::GetTranslateMatrix(FVector(0.f, -10.f, 0.f));
 }
 
 const FMatrix AOrthoGraphicCamera::GetRightViewMatrix() const
 {
-	return ViewMatrix * FMatrix::RotateYaw(-90.f) * FMatrix::GetTranslateMatrix(FVector(0.f, 10.f, 0.f));
+	return ViewProjectionMatrix * FMatrix::RotateYaw(-90.f) * FMatrix::GetTranslateMatrix(FVector(0.f, 10.f, 0.f));
 }
 
 const FMatrix AOrthoGraphicCamera::GetFrontViewMatrix() const
 {
-	return ViewMatrix * FMatrix::RotateYaw(180.f) * FMatrix::GetTranslateMatrix(FVector(10.f, 0.f, 0.f));
+	return ViewProjectionMatrix * FMatrix::RotateYaw(180.f) * FMatrix::GetTranslateMatrix(FVector(10.f, 0.f, 0.f));
 }
 
 const FMatrix AOrthoGraphicCamera::GetBackViewMatrix() const
 {
-	return ViewMatrix * FMatrix::RotateYaw(0.f)* FMatrix::GetTranslateMatrix(FVector(-10.f, 0.f, 0.f));
+	return ViewProjectionMatrix * FMatrix::RotateYaw(0.f)* FMatrix::GetTranslateMatrix(FVector(-10.f, 0.f, 0.f));
 }

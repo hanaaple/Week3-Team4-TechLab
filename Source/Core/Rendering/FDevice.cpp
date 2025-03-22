@@ -13,7 +13,6 @@ void FDevice::Init(HWND _hwnd)
 	CreateDepthStencilBuffer();
 	
 	InitResource();
-
 	bIsInit = true;
 }
 
@@ -87,12 +86,27 @@ void FDevice::CreateDeviceAndSwapChain(HWND hWindow)
 	//    static_cast<float>(SwapChainDesc.BufferDesc.Width), static_cast<float>(SwapChainDesc.BufferDesc.Height),
 	//    0.0f, 1.0f
 	//};
-	
-	ViewportInfo = {
-				0.0f, 0.0f,
-		 (float)UEngine::Get().GetScreenWidth(), (float)UEngine::Get().GetScreenHeight(),
-        0.0f, 1.0f
-	};
+
+	ScreenWidth = UEngine::Get().GetScreenWidth();
+	ScreenHeight = UEngine::Get().GetScreenHeight();
+
+	/* Split Initial Window */
+	RootSplitter = std::make_unique<SSplitterH>(0, 0, ScreenWidth, ScreenHeight);
+	RootSplitter->SplitHorizontally(ScreenHeight / 2.f);
+	TopSplitter = std::make_unique<SSplitterV>(RootSplitter->GetSideLT()->GetRect());
+	TopSplitter->SplitVertically(ScreenWidth / 2.f);
+	BottomSplitter = std::make_unique<SSplitterV>(RootSplitter->GetSideRB()->GetRect());
+	BottomSplitter->SplitVertically(ScreenWidth / 2.f);
+
+	FRect LT = TopSplitter->GetSideLT()->GetRect();
+	FRect RT = TopSplitter->GetSideRB()->GetRect();
+	FRect LB = BottomSplitter->GetSideLT()->GetRect();
+	FRect RB = BottomSplitter->GetSideRB()->GetRect();
+
+	Viewports[0] = new FViewport(new FViewportClient(), LT);
+	Viewports[1] = new FViewport(new FViewportClient(), RT);
+	Viewports[2] = new FViewport(new FViewportClient(EViewType::Perspective), LB);
+	Viewports[3] = new FViewport(new FViewportClient(), RB);
 }
 
 void FDevice::ReleaseDeviceAndSwapChain()
@@ -150,11 +164,7 @@ void FDevice::OnUpdateWindowSize(int Width, int Height)
 		SwapChain->GetDesc(&SwapChainDesc);
 		//TODO: Update Split Screen
 		// 뷰포트 정보 갱신
-		ViewportInfo = {
-			0.0f, 0.0f,
-			(float)UEngine::Get().GetScreenWidth() / 2.f, (float)UEngine::Get().GetScreenHeight() / 2.f,
-			0.0f, 1.0f
-		};
+
 	}
 }
 
@@ -284,7 +294,7 @@ void FDevice::Clear(float color) const
 void FDevice::SetRenderTarget() const
 {
 	// Rasterization할 Viewport를 설정 
-	FDevice::Get().GetDeviceContext()->RSSetViewports(1, &ViewportInfo);  // DepthStencil 뷰 및 스왑버퍼 세팅
+	//FDevice::Get().GetDeviceContext()->RSSetViewports(1, &ViewportInfo);  // DepthStencil 뷰 및 스왑버퍼 세팅
 
 	///////////////////////
 	///일단 임시로 여기서 UUID 픽킹 텍스쳐 바인딩

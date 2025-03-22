@@ -2,7 +2,8 @@
 #define _TCHAR_DEFINED  // TCHAR 재정의 에러 때문
 #include <d3d11.h>
 #include "Core/AbstractClass/Singleton.h"
-
+#include "FViewport.h"
+#include "FViewportClient.h"
 //디바이스 스왑 체인 관리, 뷰포트도 일단 가지고 있음
 
 class FDevice : public TSingleton<FDevice>
@@ -17,7 +18,6 @@ public:
 
 	inline ID3D11Device* GetDevice() const { return Device; }
 	inline ID3D11DeviceContext* GetDeviceContext() const { return DeviceContext; }
-	inline D3D11_VIEWPORT GetViewPortInfo() const { return ViewportInfo; }
 	inline ID3D11DepthStencilView* GetDepthStencilView() const { return DepthStencilView; }
 	inline IDXGISwapChain* GetSwapChain() const { return SwapChain; }
 
@@ -44,7 +44,7 @@ public:
 
 	void Clear() const;
 
-	void Clear(FLOAT color) const;
+	void Clear(float color) const;
 	
 	void SetRenderTarget() const;
 
@@ -64,7 +64,7 @@ public:
 	//렌더러에 필요한 기본 리소스 생성
 	void InitResource();
 
-	
+	FViewport** GetViewports() { return Viewports; }
 private:
 	// Direct3D 11 장치(Device)와 장치 컨텍스트(Device Context) 및 스왑 체인(Swap Chain)을 관리하기 위한 포인터들
 	ID3D11Device* Device = nullptr;                         // GPU와 통신하기 위한 Direct3D 장치
@@ -75,8 +75,6 @@ private:
 	FLOAT ClearColor[4] = { 0.025f, 0.025f, 0.025f, 1.0f }; // 화면(스왑버퍼)을 초기화(clear)할 때 사용할 색상 (RGBA)
 
 	FLOAT PickingClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f }; //
-	
-    D3D11_VIEWPORT ViewportInfo;                       // 렌더링 영역을 정의하는 뷰포트 정보
 
 	// 렌더링에 필요한 리소스 및 상태를 관리하기 위한 변수들
 	ID3D11Texture2D* FrameBuffer = nullptr;                 // 화면 출력용 텍스처
@@ -91,8 +89,12 @@ private:
 
 	bool bIsInit = FALSE;
 
-	
+	uint32 ScreenWidth;
+	uint32 ScreenHeight;
+
+	std::unique_ptr<SSplitterH> RootSplitter = nullptr;
+	std::unique_ptr<SSplitterV> TopSplitter = nullptr;
+	std::unique_ptr<SSplitterV> BottomSplitter = nullptr;
+
+	FViewport* Viewports[4];
 };
-
-
-
