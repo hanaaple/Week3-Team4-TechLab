@@ -192,9 +192,6 @@
     <ClCompile Include="Source\Resource\DirectResource\Vertexbuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Resource\RenderResourceManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Resource\Resource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -217,9 +214,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\ThirdParty\ImGui\include\ImGui\imgui_widgets.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\FontAtlas.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\Math\Rotator.cpp">
@@ -321,13 +315,7 @@
     <ClCompile Include="Source\Resource\DirectResource\Rasterizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WorldGrid.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Resource\Material.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Resource\Mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Resource\RenderResourceCollection.cpp">
@@ -361,6 +349,24 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Object\Actor\SpotLight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Rendering\FontAtlas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Object\Actor\WorldGrid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Object\PrimitiveComponent\MeshComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Object\PrimitiveComponent\StaticMeshComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Resource\StaticMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Utils\ObjParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -588,9 +594,6 @@
     <ClInclude Include="Source\Resource\DirectResource\VertexShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Resource\RenderResourceManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Resource\Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -687,9 +690,6 @@
     <ClInclude Include="Source\ThirdParty\SimpleJSON\include\SimpleJSON\Json.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\FontAtlas.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Core\Math\Rotator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -738,9 +738,6 @@
     <ClInclude Include="Source\Resource\DirectResource\Rasterizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WorldGrid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Core\Delegates\Delegate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -748,9 +745,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Resource\Material.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Resource\Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Resource\RenderResourceCollection.h">
@@ -789,6 +783,27 @@
     <ClInclude Include="Source\Object\Actor\SpotLight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Rendering\FontAtlas.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Object\Actor\WorldGrid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Object\PrimitiveComponent\MeshComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Object\PrimitiveComponent\StaticMeshComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Resource\StaticMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Resource\Util\TObjectIterator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Utils\ObjParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
@@ -810,6 +825,6 @@
     <Text Include="Pretendard_Kor.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Natvis Include="t0.natvis" />
+    <Natvis Include="JungleEngine.natvis" />
   </ItemGroup>
 </Project>
