@@ -177,7 +177,6 @@ void UEngine::Run()
 
 			if (RootSplitter->GetIsBorderDragging())
 			{
-				UE_LOG("Horizontal %f", DeltaMousePos.Y);
 				RootSplitter->MoveBorder(DeltaMousePos.Y);
 				TopSplitter->MoveParentBorder(DeltaMousePos.Y, true);
 				BottomSplitter->MoveParentBorder(DeltaMousePos.Y, false);
@@ -185,7 +184,6 @@ void UEngine::Run()
 
 			if (TopSplitter->GetIsBorderDragging() || BottomSplitter->GetIsBorderDragging())
 			{
-				UE_LOG("Vertical %f", DeltaMousePos.X);
 				TopSplitter->MoveBorder(DeltaMousePos.X);
 				BottomSplitter->MoveBorder(DeltaMousePos.X);
 			}
