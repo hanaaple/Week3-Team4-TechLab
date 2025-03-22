@@ -44,4 +44,8 @@ public:
 	void SetRect(const float Left, const float Top, const float Right, const float Bottom) {
 		Rect = { .Left= Left, .Top= Top, .Right= Right, .Bottom= Bottom};
 	}
+
+	void SetRect(const FRect& NewRect) {
+		Rect = NewRect;
+	}
 };

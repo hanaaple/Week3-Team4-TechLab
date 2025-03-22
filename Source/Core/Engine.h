@@ -91,9 +91,9 @@ private:
     uint32 ScreenWidth = 0;
     uint32 ScreenHeight = 0;
 
-	std::unique_ptr<SSplitterH> RootSplitter = nullptr;
-	std::unique_ptr<SSplitterV> TopSplitter = nullptr;
-	std::unique_ptr<SSplitterV> BottomSplitter = nullptr;
+	SSplitterH* RootSplitter = nullptr;
+	SSplitterV* TopSplitter = nullptr;
+	SSplitterV* BottomSplitter = nullptr;
 
 	float EngineDeltaTime = 0.0f;
 

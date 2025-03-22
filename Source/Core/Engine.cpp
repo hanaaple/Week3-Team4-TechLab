@@ -72,11 +72,12 @@ void UEngine::Initialize(
     InitWindow(InScreenWidth, InScreenHeight);
 
 	/* Split Initial Window */
-	RootSplitter = std::make_unique<SSplitterH>(0, 0, ScreenWidth, ScreenHeight);
+	RootSplitter = new SSplitterH(0, 0, ScreenWidth, ScreenHeight);
 	RootSplitter->SplitHorizontally(ScreenHeight / 2.f);
-	TopSplitter = std::make_unique<SSplitterV>(RootSplitter->GetSideLT()->GetRect());
+
+	TopSplitter = new SSplitterV(RootSplitter->GetSideLT()->GetRect());
 	TopSplitter->SplitVertically(ScreenWidth / 2.f);
-	BottomSplitter = std::make_unique<SSplitterV>(RootSplitter->GetSideRB()->GetRect());
+	BottomSplitter = new SSplitterV(RootSplitter->GetSideRB()->GetRect());
 	BottomSplitter->SplitVertically(ScreenWidth / 2.f);
 
 	InitWorld();
@@ -135,8 +136,61 @@ void UEngine::Run()
 				IsRunning = false;
 				break;
 			}
-
 		}
+
+#pragma region BorderMouse
+		// 마우스 입력 통한 창 크기 조절 //
+		FPoint MousePos = FPoint(APlayerInput::Get().GetMousePos().X, APlayerInput::Get().GetMousePos().Y);
+
+		//TODO: 마우스 커서 플래그로 관리
+		if (RootSplitter->IsBorderHover(MousePos))
+			SetCursor(LoadCursor(nullptr, IDC_SIZEALL));
+		else if (TopSplitter->IsBorderHover(MousePos) || BottomSplitter->IsBorderHover(MousePos))
+			SetCursor(LoadCursor(nullptr, IDC_SIZEALL));
+		else
+			SetCursor(LoadCursor(nullptr, IDC_ARROW));
+
+		if (APlayerInput::Get().GetKeyDown(EKeyCode::LButton))
+		{
+			if (RootSplitter->IsBorderHover(MousePos))
+			{
+				RootSplitter->SetIsBorderDragging(true);
+			}
+
+			if (TopSplitter->IsBorderHover(MousePos) || BottomSplitter->IsBorderHover(MousePos))
+			{
+				TopSplitter->SetIsBorderDragging(true);
+				BottomSplitter->SetIsBorderDragging(true);
+			}
+		}
+
+		if (APlayerInput::Get().GetKeyUp(EKeyCode::LButton))
+		{
+			RootSplitter->SetIsBorderDragging(false);
+			TopSplitter->SetIsBorderDragging(false);
+			BottomSplitter->SetIsBorderDragging(false);
+		}
+
+		if (APlayerInput::Get().GetKeyPress(EKeyCode::LButton))
+		{
+			FPoint DeltaMousePos = FPoint(APlayerInput::Get().GetMouseScreenDeltaPos().X, APlayerInput::Get().GetMouseScreenDeltaPos().Y);
+
+			if (RootSplitter->GetIsBorderDragging())
+			{
+				UE_LOG("Horizontal %f", DeltaMousePos.Y);
+				RootSplitter->MoveBorder(DeltaMousePos.Y);
+				TopSplitter->MoveParentBorder(DeltaMousePos.Y, true);
+				BottomSplitter->MoveParentBorder(DeltaMousePos.Y, false);
+			}
+
+			if (TopSplitter->GetIsBorderDragging() || BottomSplitter->GetIsBorderDragging())
+			{
+				UE_LOG("Vertical %f", DeltaMousePos.X);
+				TopSplitter->MoveBorder(DeltaMousePos.X);
+				BottomSplitter->MoveBorder(DeltaMousePos.X);
+			}
+		}
+#pragma endregion BorderMouse
 
 		if (!ImGui::GetIO().WantCaptureMouse)
 		{		
@@ -157,7 +211,7 @@ void UEngine::Run()
 			//World->Render();
 
 			FEditorManager::Get().LateTick(EngineDeltaTime);
-		    World->LateTick(EngineDeltaTime);
+      World->LateTick(EngineDeltaTime);
 		}
 
         //각 Actor에서 TickActor() -> PlayerTick() -> TickPlayerInput() 호출하는데 지금은 Message에서 처리하고 있다
