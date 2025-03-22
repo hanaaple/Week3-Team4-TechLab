@@ -20,9 +20,9 @@ private:
 	FMatrix ProjectionMatrix;
 	FMatrix ViewProjectionMatrix;
 
-	float ZoomSize = 1000.f;
+	float ZoomSize = 100.f;
 public:
-
+	const float MaxYDegree = 89.8f;
 	float CameraSpeed = 1.0f;
 	float Sensitivity = 1.0f;
 
@@ -36,10 +36,34 @@ public:
 	float GetNear() const;
 	float GetFar() const;
 
-	const FMatrix GetTopViewMatrix() const;
-	const FMatrix GetBottomViewMatrix() const;
-	const FMatrix GetLeftViewMatrix() const;
-	const FMatrix GetRightViewMatrix() const;
-	const FMatrix GetFrontViewMatrix() const;
-	const FMatrix GetBackViewMatrix() const;
+	//const FMatrix GetTopViewMatrix() const;
+	//const FMatrix GetBottomViewMatrix() const;
+	//const FMatrix GetLeftViewMatrix() const;
+	//const FMatrix GetRightViewMatrix() const;
+	//const FMatrix GetFrontViewMatrix() const;
+	//const FMatrix GetBackViewMatrix() const;
+
+	FVector GetForward() const
+	{
+		return GetActorTransform().GetForward();
+	}
+
+	FVector GetRight() const
+	{
+		return GetActorTransform().GetRight();
+	}
+
+	FVector GetUp() const
+	{
+		return GetActorTransform().GetUp();
+	}
+
+	void MoveForward();
+	void MoveBackward();
+	void MoveLeft();
+	void MoveRight();
+	void MoveUp();
+	void MoveDown();
+
+	void Rotate(const FVector& mouseDelta);
 };

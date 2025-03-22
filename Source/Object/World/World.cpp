@@ -41,13 +41,13 @@ void UWorld::InitWorld()
 	ACamera* c3 = SpawnActor<ACamera>();
 	ACamera* c4 = SpawnActor<ACamera>();
 
-	c1->SetActorPosition(FVector(0, 0, 10));
-	c2->SetActorPosition(FVector(0, 10, 0));
-	c4->SetActorPosition(FVector(10, 0, 0));
+	c1->SetActorPosition(FVector(0, 0, 0));
+	c2->SetActorPosition(FVector(0, 0, 0));
+	c4->SetActorPosition(FVector(0, 0, 0));
 	Viewports.Add(new FViewport(new FViewportClient(), LT, c1));
-	Viewports.Add(new FViewport(new FViewportClient(), RT, c2));
+	Viewports.Add(new FViewport(new FViewportClient(EViewType::Left), RT, c2));
 	Viewports.Add(new FViewport(new FViewportClient(EViewType::Perspective), LB, c3));
-	Viewports.Add(new FViewport(new FViewportClient(), RB, c4));
+	Viewports.Add(new FViewport(new FViewportClient(EViewType::Right), RB, c4));
 }
 
 void UWorld::BeginPlay()
@@ -123,7 +123,7 @@ void UWorld::Render()
 	cam->UpdateCameraMatrix();
 
 	AOrthoGraphicCamera* OrthoGraphicCam = FEditorManager::Get().GetOrthoGraphicCamera();
-	OrthoGraphicCam->UpdateCameraMatrix();
+	/*OrthoGraphicCam->UpdateCameraMatrix();*/
 
 	//if (APlayerInput::Get().GetKeyDown(EKeyCode::LButton))
 	//{

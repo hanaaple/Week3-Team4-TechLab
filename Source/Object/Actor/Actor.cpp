@@ -89,12 +89,12 @@ FVector AActor::GetActorForwardVector() const
 
 FVector AActor::GetActorRightVector() const
 {
-	return (RootComponent != nullptr) ? RootComponent->GetRightVector() : FVector::ForwardVector;
+	return (RootComponent != nullptr) ? RootComponent->GetRightVector() : FVector::RightVector;
 }
 
 FVector AActor::GetActorUpVector() const
 {
-	return (RootComponent != nullptr) ? RootComponent->GetUpVector() : FVector::ForwardVector;
+	return (RootComponent != nullptr) ? RootComponent->GetUpVector() : FVector:: UpVector;
 }
 
 FVector AActor::GetActorPosition() const

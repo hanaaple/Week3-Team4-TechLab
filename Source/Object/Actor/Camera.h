@@ -34,7 +34,7 @@ private:
 	FMatrix ProjectionMatrix;
 	FMatrix ViewProjectionMatrix;
 
-	float ZoomSize = 1000.f;
+	float ZoomSize = 100.f;
 public:
     const float MaxYDegree = 89.8f;
     //카메라 스피드 IMGui용 나중에 Velocity로 관리하면 없어질애라 편하게 public에서 관리
