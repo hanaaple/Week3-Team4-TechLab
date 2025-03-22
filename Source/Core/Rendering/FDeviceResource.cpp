@@ -28,6 +28,11 @@ void FDevice::InitResource()
 		std::shared_ptr<FVertexShader> TempVS = FVertexShader::Load(TEXT("Shaders/Font_VS.hlsl"),"Font_VS","Font_VS");
 		//FInputLayout::Create("Font_VS" , VS);
 	}
+	
+	{
+		FVertexShader::Load(TEXT("Shaders/MeshShader.hlsl"),"StaticMesh_VS","mainVS");
+		FPixelShader::Load(TEXT("Shaders/MeshShader.hlsl"), "StaticMesh_PS", "mainPS");
+	}
 	FPixelShader::Load(TEXT("Shaders/Font_PS.hlsl"), "Font_PS", "Font_PS");
 	FPixelShader::Load(TEXT("Shaders/SubUV_PS.hlsl"), "SubUV_PS", "SubUV_PS");
 	FConstantBuffer::Create("DefaultConstantBuffer", sizeof(FConstantsComponentData));
@@ -124,9 +129,14 @@ void FDevice::InitResource()
 		FSampler::Create("LinearSamplerState", samplerDesc);
 	}
 	
-	{
 		// TextureSRV
+	{
 		std::shared_ptr<FTexture> TextureImage = FTexture::Load("font_atlas.dds", "SubUVTexture");
+		TextureImage->CreateShaderResourceView();
+	}
+
+	{
+		std::shared_ptr<FTexture> TextureImage = FTexture::Load("DefaultTexture.png", "DefaultTexture");
 		TextureImage->CreateShaderResourceView();
 	}
 
@@ -197,6 +207,15 @@ void FDevice::InitResource()
 		Mat->SetPixelShader("Simple_PS");
 	}
 
+	{
+		std::shared_ptr<FMaterial> Mat = FMaterial::Create("StaticMeshMaterial");
+		Mat->SetRasterizer("DefaultRasterizer");
+		Mat->SetBlendState("DefaultBlendState");
+		Mat->SetDepthState("DefaultDepthStencilState");
+		Mat->SetVertexShader("StaticMesh_VS");
+		Mat->SetPixelShader("StaticMesh_PS");
+	}
+	
 	/// Mesh
 	{
 		TArray<FVertexSimple> vertices;
@@ -222,9 +241,7 @@ void FDevice::InitResource()
 		
 		FVertexBuffer::Create(FString("Sphere"), vertices);
 		FIndexBuffer::Create(FString("Sphere"), indices);
-		UStaticMesh::Create("Sphere");
-
-		
+		UStaticMesh::Create("Sphere");		
 	}
 
 	{
@@ -393,5 +410,4 @@ void FDevice::InitResource()
 
 		UStaticMesh::Create(TEXT("GizmoScale"));
 	}
-
 }
