@@ -24,25 +24,15 @@ ACamera::ACamera()
 void ACamera::BeginPlay()
 {
 	Super::BeginPlay();
-	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::W, [this] { MoveForward(); }, GetUUID());
-	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::S, [this] { MoveBackward(); }, GetUUID());
-	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::A, [this] { MoveLeft(); }, GetUUID());
-	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::D, [this] { MoveRight(); }, GetUUID());
-	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::Q, [this] { MoveDown(); }, GetUUID());
-	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::E, [this] { MoveUp(); }, GetUUID());
-
-	APlayerInput::Get().RegisterKeyDownCallback(EKeyCode::F, [this]
-	{
-		if (const AActor* SelectedActor = FEditorManager::Get().GetSelectedActor())
-		{
-			if (SelectedActor == this) return;
-			SetActorPosition(SelectedActor->GetActorPosition() - (GetForward() * 10.0f));
-		}
-	}, GetUUID());
-
-	APlayerInput::Get().RegisterMousePressCallback(EKeyCode::RButton, std::bind(&ACamera::Rotate, this, std::placeholders::_1), GetUUID());
-
-	UConfigManager::Get().SetValue("Camera", "Sensitivity", std::to_string(Sensitivity));
+	//APlayerInput::Get().RegisterKeyDownCallback(EKeyCode::F, [this]
+	//{
+	//	if (const AActor* SelectedActor = FEditorManager::Get().GetSelectedActor())
+	//	{
+	//		if (SelectedActor == this) return;
+	//		SetActorPosition(SelectedActor->GetActorPosition() - (GetForward() * 10.0f));
+	//	}
+	//}, GetUUID());
+	//UConfigManager::Get().SetValue("Camera", "Sensitivity", std::to_string(Sensitivity));
 }
 
 void ACamera::SetFieldOfVew(float Fov)

@@ -5,7 +5,7 @@
 #include "Core/Math/Vector.h"
 
 class ACamera;
-class AOrthoGraphicCamera;
+class AOrthoGraphicActor;
 class AActor;
 class AGizmoActor;
 
@@ -40,12 +40,12 @@ public:
 
 	FVector4 GetPixel(FVector MPos) const;
     
-	inline AOrthoGraphicCamera* GetOrthoGraphicCamera() const { return OrthoGraphicCamera; }
+	inline AOrthoGraphicActor* GetOrthoGraphicCamera() const { return OrthoGraphicCamera; }
 
-	void SetOrthoGraphicCamera(AOrthoGraphicCamera* NewOrthoGraphicCamera);
+	void SetOrthoGraphicCamera(AOrthoGraphicActor* NewOrthoGraphicCamera);
 private:
     ACamera* Camera = nullptr;
-	AOrthoGraphicCamera* OrthoGraphicCamera = nullptr;
+	AOrthoGraphicActor* OrthoGraphicCamera = nullptr;
     AActor* SelectedActor = nullptr;
 	AGizmoActor* Gizmo = nullptr;
 

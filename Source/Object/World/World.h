@@ -7,9 +7,10 @@
 #include "Core/Utils/JsonSavehelper.h"
 #include "Debug/DebugConsole.h"
 #include "Object/ObjectFactory.h"
-#include "Object/Actor/OrthographicCamera.h"
+#include "Object/Actor/OrthographicActor.h"
 #include "Core/Rendering/FViewport.h"
 #include "Core/Rendering/FViewportClient.h"
+#include "Core/Rendering/ViewportManager.h"
 
 class URenderer;
 class AActor;
@@ -58,8 +59,8 @@ public:
 	inline ACamera* GetCamera() const { return Camera; }
 	void SetCamera(ACamera* NewCamera) { Camera = NewCamera; }
 
-	inline AOrthoGraphicCamera* GetOrthoGraphicCamera() const { return OrthoGraphicCamera; }
-	void SetOrthoGraphicCamera(AOrthoGraphicCamera* NewOrthoGraphicCamera) { OrthoGraphicCamera = NewOrthoGraphicCamera; }
+	inline AOrthoGraphicActor* GetOrthoGraphicActor() const { return OrthoGraphicActor; }
+	void SetOrthoGraphicCamera(AOrthoGraphicActor* NewOrthoGraphicActor) { OrthoGraphicActor = NewOrthoGraphicActor; }
 
 	void RayCasting(const FVector& MouseNDCPos);
 
@@ -73,18 +74,19 @@ public:
 
 	float GetGridSize() const { return GridSize; }
 	
-	TArray<FViewport*> GetViewport() { return Viewports; }
+	FViewportManager* GetViewportManager() const { return ViewportManager; }
 private:
 	UWorldInfo GetWorldInfo() const;
 	ACamera* Camera = nullptr;
-	AOrthoGraphicCamera* OrthoGraphicCamera = nullptr;
+	AOrthoGraphicActor* OrthoGraphicActor = nullptr;
 	float GridSize = 100.0f;
 
 	std::unique_ptr<SSplitterH> RootSplitter = nullptr;
 	std::unique_ptr<SSplitterV> TopSplitter = nullptr;
 	std::unique_ptr<SSplitterV> BottomSplitter = nullptr;
 
-	TArray<FViewport*> Viewports;
+	TMap<FString, FTransform> ViewTransformMap;
+	FViewportManager* ViewportManager;
 public:
 	FString SceneName;
 	uint32 Version = 1;

@@ -9,7 +9,7 @@
 #include "Core/Input/PlayerInput.h"
 #include "Resource/Texture.h"
 #include "Core/Rendering/FDevice.h"
-#include "Object/Actor/OrthographicCamera.h"
+#include "Object/Actor/OrthographicActor.h"
 
 void FEditorManager::Init()
 {
@@ -75,7 +75,7 @@ void FEditorManager::SetCamera(ACamera* NewCamera)
     Camera = NewCamera;
 }
 
-void FEditorManager::SetOrthoGraphicCamera(AOrthoGraphicCamera* NewOrthoGraphicCamera)
+void FEditorManager::SetOrthoGraphicCamera(AOrthoGraphicActor* NewOrthoGraphicCamera)
 {
 	OrthoGraphicCamera = NewOrthoGraphicCamera;
 }
