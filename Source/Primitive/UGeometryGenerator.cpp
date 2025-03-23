@@ -7,14 +7,14 @@ void UGeometryGenerator::CreateCube(float Size, TArray<FVertexSimple>& OutVertic
     float halfSize = Size / 2.0f;
 
     // 정육면체의 8개 정점 정의
-    OutVertices.Emplace(-halfSize, -halfSize, -halfSize, 0.0f, 0.0f, 0.0f, 1.0f); // 0
-    OutVertices.Emplace(-halfSize, -halfSize, halfSize, 0.0f, 1.0f, 0.0f, 1.0f); // 1
-    OutVertices.Emplace(-halfSize, halfSize, -halfSize, 1.0f, 0.0f, 0.0f, 1.0f); // 2
-    OutVertices.Emplace(-halfSize, halfSize, halfSize, 1.0f, 1.0f, 0.0f, 1.0f); // 3
-    OutVertices.Emplace(halfSize, -halfSize, -halfSize, 0.0f, 0.0f, 1.0f, 1.0f); // 4
-    OutVertices.Emplace(halfSize, -halfSize, halfSize, 0.0f, 1.0f, 1.0f, 1.0f); // 5
-    OutVertices.Emplace(halfSize, halfSize, -halfSize, 1.0f, 0.0f, 1.0f, 1.0f); // 6
-    OutVertices.Emplace(halfSize, halfSize, halfSize, 1.0f, 1.0f, 1.0f, 1.0f); // 7
+	OutVertices.Emplace(-halfSize, -halfSize, -halfSize, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f); // 0
+	OutVertices.Emplace(-halfSize, -halfSize, halfSize, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f); // 1
+	OutVertices.Emplace(-halfSize, halfSize, -halfSize, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f); // 2
+	OutVertices.Emplace(-halfSize, halfSize, halfSize, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f); // 3
+	OutVertices.Emplace(halfSize, -halfSize, -halfSize, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f); // 4
+	OutVertices.Emplace(halfSize, -halfSize, halfSize, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f); // 5
+	OutVertices.Emplace(halfSize, halfSize, -halfSize, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f); // 6
+	OutVertices.Emplace(halfSize, halfSize, halfSize, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f); // 7
 
     // 각 면의 인덱스 정의 (각 면은 2개의 삼각형으로 구성됨)
     // 앞면

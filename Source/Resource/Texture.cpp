@@ -5,6 +5,7 @@
 
 #include "Debug/DebugConsole.h"
 #include "DirectXTK/DDSTextureLoader.h"
+#include "DirectXTK/WICTextureLoader.h"
 
 FTexture::FTexture()
 {
@@ -163,14 +164,26 @@ void FTexture::ResLoad(const FString& InPath)
 {
 	std::string str = InPath.c_char();
 
-	std::wstring wstr(str.begin(), str.end());
+	std::string extension = str.substr(str.find('.') + 1, str.length() - 1);
 
 	ID3D11Resource* Resource = nullptr;
+	std::wstring wstr(str.begin(), str.end());
 	
-	if (S_OK != DirectX::CreateDDSTextureFromFile(FDevice::Get().GetDevice(), FDevice::Get().GetDeviceContext(), wstr.c_str(), &Resource, &SRV))
+	if (extension == "dds")
 	{
-		MsgBoxAssert("텍스처 로드에 실패했습니다.");
+		if (S_OK != DirectX::CreateDDSTextureFromFile(FDevice::Get().GetDevice(), FDevice::Get().GetDeviceContext(), wstr.c_str(), &Resource, &SRV))
+		{
+			MsgBoxAssert("텍스처 로드에 실패했습니다.");
+		}
 	}
+	else if (extension == "png")
+	{
+		 if (S_OK != DirectX::CreateWICTextureFromFile(FDevice::Get().GetDevice(), FDevice::Get().GetDeviceContext(), wstr.c_str(), &Resource, &SRV))
+		 {
+			MsgBoxAssert("텍스처 로드에 실패했습니다.");			 
+		 }
+	}
+	
 	Resource->QueryInterface(__uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&Texture2D));
 }
 
