@@ -340,81 +340,85 @@ void UWorld::RayCasting(const FVector& MouseNDCPos)
 		bool bHit = false;
 
 		TSet<UActorComponent*> components = Actor->GetComponents();
-		for (auto component : components) {
-			if (component->IsA<UPrimitiveComponent>()) {
-				auto PrimitiveComponent = dynamic_cast<UPrimitiveComponent*>(component);
-				if (UPrimitiveComponent != nullptr) {
-
-					FTransform primTransform = PrimitiveComponent->GetComponentTransform();
+		for (auto component : components)
+		{
+			if (component->IsA<UStaticMeshComponent>())
+			{
+				UStaticMeshComponent* StaticMeshComponent = dynamic_cast<UStaticMeshComponent*>(component);
+				if (StaticMeshComponent != nullptr)
+				{
+					FTransform primTransform = StaticMeshComponent->GetComponentTransform();
 					FMatrix primWorldMat = primTransform.GetMatrix();
 
-					std::shared_ptr<UStaticMesh> CurMesh = PrimitiveComponent->GetMesh();
-					FVector vertexMin = CurMesh->GetVertexBuffer().get()->GetMin();
-					FVector vertexMax = CurMesh->GetVertexBuffer().get()->GetMax();
+					std::shared_ptr<UStaticMesh> CurMesh = StaticMeshComponent->GetStaticMesh();
+					FVector vertexMin = CurMesh->GetVertexBuffer()->GetMin();
+					FVector vertexMax = CurMesh->GetVertexBuffer()->GetMax();
 
-					switch (PrimitiveComponent->GetType())
+					EPrimitiveType PrimitiveType = StaticMeshComponent->GetType();
+					switch (PrimitiveType)
 					{
 					case EPrimitiveType::EPT_Sphere:
-					}
-					if (ABS(primTransform.GetScale().X - primTransform.GetScale().Y)
-						+ ABS(primTransform.GetScale().Y - primTransform.GetScale().Z)
-						+ ABS(primTransform.GetScale().X - primTransform.GetScale().Z)
-						< 0.1f) {
-						bHit = FRayCast::InsertSectRaySphere(worldRay, primTransform.GetPosition(), 1.0f * primTransform.GetScale().X, outT);
-						if (bHit)
 						{
-							UE_LOG("%s : Sphere Hit", *Actor->GetFName().ToString());
-						}
-						break;
-					}
-					else {
-						bHit = FRayCast::IntersectRayAABB(worldRay,
-							primTransform.GetPosition() + primTransform.GetScale() * vertexMin,
-							primTransform.GetPosition() + primTransform.GetScale() * vertexMax,
-							outT);
+							if (ABS(primTransform.GetScale().X - primTransform.GetScale().Y)
+								+ ABS(primTransform.GetScale().Y - primTransform.GetScale().Z)
+								+ ABS(primTransform.GetScale().X - primTransform.GetScale().Z)
+								< 0.1f) {
+								bHit = FRayCast::InsertSectRaySphere(worldRay, primTransform.GetPosition(), 1.0f * primTransform.GetScale().X, outT);
+								if (bHit)
+								{
+									UE_LOG("%s : Sphere Hit", *Actor->GetFName().ToString());
+								}
+								break;
+								}
+							else {
+								bHit = FRayCast::IntersectRayAABB(worldRay,
+									primTransform.GetPosition() + primTransform.GetScale() * vertexMin,
+									primTransform.GetPosition() + primTransform.GetScale() * vertexMax,
+									outT);
 
-						if (bHit)
+								if (bHit)
+								{
+									UE_LOG("%s : AABB Hit form Vertex Min Max", *Actor->GetFName().ToString());
+								}
+								break;
+
+								break;
+							}
+
+						}
+
+					default:
 						{
-							UE_LOG("%s : AABB Hit form Vertex Min Max", *Actor->GetFName().ToString());
+							bHit = FRayCast::IntersectRayAABB(worldRay,
+								primTransform.GetPosition() + primTransform.GetScale() * vertexMin,
+								primTransform.GetPosition() + primTransform.GetScale() * vertexMax,
+								outT);
+
+							if (bHit)
+							{
+								UE_LOG("%s : AABB Hit form Vertex Min Max", *Actor->GetFName().ToString());
+							}
+							break;
 						}
-						break;
-
-						break;
 					}
-
 				}
 
-				default:
+				if (bHit)
 				{
-					bHit = FRayCast::IntersectRayAABB(worldRay,
-						primTransform.GetPosition() + primTransform.GetScale() * vertexMin,
-						primTransform.GetPosition() + primTransform.GetScale() * vertexMax,
-						outT);
-
-					if (bHit)
+					float distance = worldRay.GetPoint(outT).Length();
+					if (distance < minDistance)
 					{
-						UE_LOG("%s : AABB Hit form Vertex Min Max", *Actor->GetFName().ToString());
+						minDistance = distance;
+						SelectedActor = Actor;
 					}
-					break;
 				}
-
-			}
-		}
-
-		if (bHit)
-		{
-			float distance = worldRay.GetPoint(outT).Length();
-			if (distance < minDistance)
-			{
-				minDistance = distance;
-				SelectedActor = Actor;
-			}
-		}
 		
-		if (SelectedActor)
-		{
-			FEditorManager::Get().SelectActor(SelectedActor);
-			FUUIDBillBoard::Get().SetTarget(SelectedActor);
+				if (SelectedActor)
+				{
+					FEditorManager::Get().SelectActor(SelectedActor);
+					FUUIDBillBoard::Get().SetTarget(SelectedActor);
+				}
+			}
 		}
 	}
 }
