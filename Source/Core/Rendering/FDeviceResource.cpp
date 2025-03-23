@@ -1,5 +1,6 @@
 #include "FDevice.h"
 #include "Core/Rendering/URenderer.h"
+#include "Core/Utils/ObjReader.h"
 #include "Resource/DirectResource/Vertexbuffer.h"
 #include "Resource/DirectResource/IndexBuffer.h"
 #include "Resource/DirectResource/PixelShader.h"
@@ -137,6 +138,11 @@ void FDevice::InitResource()
 
 	{
 		std::shared_ptr<FTexture> TextureImage = FTexture::Load("DefaultTexture.png", "DefaultTexture");
+		TextureImage->CreateShaderResourceView();
+	}
+
+	{
+		std::shared_ptr<FTexture> TextureImage = FTexture::Load("texture.png", "CubeTexture");
 		TextureImage->CreateShaderResourceView();
 	}
 
@@ -409,5 +415,14 @@ void FDevice::InitResource()
 		FIndexBuffer::Create(FString(TEXT("GizmoScale")), indices);
 
 		UStaticMesh::Create(TEXT("GizmoScale"));
+	}
+	
+	{
+		auto a = ObjReader::Read("cube-tex.obj");
+
+		FVertexBuffer::Create(FString(TEXT("CubeCube")), a.Vertices);
+		FIndexBuffer::Create(FString(TEXT("CubeCube")), a.Indices);
+
+		UStaticMesh::Create(TEXT("CubeCube"));
 	}
 }

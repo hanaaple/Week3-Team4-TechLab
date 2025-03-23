@@ -413,7 +413,7 @@ void UI::RenderPropertyWindow() const
     			FString MeshName = MeshItems[CurrentMeshItem]->FResource::GetName();
     			StaticMeshComponent->SetStaticMesh(MeshName);
     			//StaticMeshComponent->GetRenderResourceCollection().SetTextureBinding(MeshName, 0, true, true);
-    			StaticMeshComponent->GetRenderResourceCollection().SetTextureBinding("DefaultTexture", 1, true, true);
+    			//StaticMeshComponent->GetRenderResourceCollection().SetTextureBinding("DefaultTexture", 1, true, true);
     		}
 
     		for (auto MeshString : MeshItemList)

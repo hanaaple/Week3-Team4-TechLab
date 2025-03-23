@@ -12,8 +12,8 @@ AStaticMeshObj::AStaticMeshObj()
 	Comp->SetMaterial("StaticMeshMaterial");
 	Comp->GetRenderResourceCollection().SetSamplerBinding("LinearSamplerState", 0, true, true);
 
-	Comp->GetRenderResourceCollection().SetTextureBinding("DefaultTexture", 1, true, true);
-
+	Comp->GetRenderResourceCollection().SetTextureBinding("CubeTexture", 1, true, true);
+	Comp->SetStaticMesh("CubeCube");
 	
 	// 신경 안써도 될듯?
 	//Comp->GetRenderResourceCollection().SetConstantBufferBinding("SubUVVertexConstants", &GetVertexConstantsData(), 0, true, false);
