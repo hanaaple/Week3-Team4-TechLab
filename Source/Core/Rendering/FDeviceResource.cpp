@@ -16,6 +16,7 @@
 #include "Resource/Material.h"
 #include "Object/PrimitiveComponent/UPrimitiveComponent.h"
 #include "Primitive/UGeometryGenerator.h"
+#include "Resource/Util/TObjectIterator.h"
 
 
 void FDevice::InitResource()
@@ -130,7 +131,7 @@ void FDevice::InitResource()
 		FSampler::Create("LinearSamplerState", samplerDesc);
 	}
 	
-		// TextureSRV
+	// TextureSRV
 	{
 		std::shared_ptr<FTexture> TextureImage = FTexture::Load("font_atlas.dds", "SubUVTexture");
 		TextureImage->CreateShaderResourceView();
@@ -167,262 +168,306 @@ void FDevice::InitResource()
 		FBlendState::Create("AddBlendState", blendDesc);
 	}
 
-	////Material
-	{
-		std::shared_ptr<FMaterial> Mat = FMaterial::Create("DefaultMaterial");
-		Mat->SetRasterizer("DefaultRasterizer");
-		Mat->SetBlendState("DefaultBlendState");
-		Mat->SetDepthState("DefaultDepthStencilState");
-		Mat->SetVertexShader("Simple_VS");
-		Mat->SetPixelShader("Simple_PS");
-	}
-	
-	{
-		std::shared_ptr<FMaterial> Mat = FMaterial::Create("AlwaysVisibleMaterial");
-		Mat->SetRasterizer("DefaultRasterizer");
-		Mat->SetBlendState("DefaultBlendState");
-		Mat->SetDepthState("AlwaysVisibleDepthStencilState");
-		Mat->SetVertexShader("Simple_VS");
-		Mat->SetPixelShader("Simple_PS");
-	}
-
-	{
-		std::shared_ptr<FMaterial> Mat = FMaterial::Create("FontMaterial");
-		Mat->SetRasterizer("DefaultRasterizer");
-		Mat->SetBlendState("DefaultBlendState");
-		Mat->SetDepthState("DefaultDepthStencilState");
-		Mat->SetVertexShader("Font_VS");
-		Mat->SetPixelShader("Font_PS");
-	}
-
-	{
-		std::shared_ptr<FMaterial> Mat = FMaterial::Create("SubUVMaterial");
-		Mat->SetRasterizer("DefaultRasterizer");
-		Mat->SetBlendState("DefaultBlendState");
-		Mat->SetDepthState("DefaultDepthStencilState");
-		Mat->SetVertexShader("Font_VS");
-		Mat->SetPixelShader("SubUV_PS");
-	}
-
-	{
-		std::shared_ptr<FMaterial> Mat = FMaterial::Create("DebugMaterial");
-		Mat->SetRasterizer("DebugRasterizer");
-		Mat->SetBlendState("DefaultBlendState");
-		Mat->SetDepthState("DefaultDepthStencilState");
-		Mat->SetVertexShader("Simple_VS");
-		Mat->SetPixelShader("Simple_PS");
-	}
-
-	{
-		std::shared_ptr<FMaterial> Mat = FMaterial::Create("StaticMeshMaterial");
-		Mat->SetRasterizer("DefaultRasterizer");
-		Mat->SetBlendState("DefaultBlendState");
-		Mat->SetDepthState("DefaultDepthStencilState");
-		Mat->SetVertexShader("StaticMesh_VS");
-		Mat->SetPixelShader("StaticMesh_PS");
-	}
-	
 	/// Mesh
 	{
-		TArray<FVertexSimple> vertices;
-		TArray<uint32> indices;
-		float size = 1.f;
-
-		UGeometryGenerator::CreateCube(size, vertices, indices);
-		
-		FVertexBuffer::Create(FString("Cube"), vertices);
-		FIndexBuffer::Create(FString("Cube"), indices);
-		UStaticMesh::Create("Cube");
-	}
-
-	{
-		TArray<FVertexSimple> vertices;
-		TArray<uint32> indices;
-		int slices = 16;
-		int stacks = 16;
-		float radius = 1.f;
-		[[maybe_unused]] float height = 1.f;
-
-		UGeometryGenerator::CreateSphere(radius, slices, stacks, vertices, indices);
-		
-		FVertexBuffer::Create(FString("Sphere"), vertices);
-		FIndexBuffer::Create(FString("Sphere"), indices);
-		UStaticMesh::Create("Sphere");		
-	}
-
-	{
-		FVertexSimple tempArray[] =
 		{
-			{  0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f },
-			{  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f },
-			{  0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f } 
-		};
-		TArray<FVertexSimple> vertices;
+			TArray<FVertexSimple> vertices;
+			TArray<uint32> indices;
+			float size = 1.f;
 
-		vertices.Add(tempArray[0]);
-		vertices.Add(tempArray[1]);
-		vertices.Add(tempArray[2]);
+			UGeometryGenerator::CreateCube(size, vertices, indices);
 		
-		uint32 TriangleIndices[3] =
+			FVertexBuffer::Create(FString("Cube"), vertices);
+			FIndexBuffer::Create(FString("Cube"), indices);
+			UStaticMesh::Create("Cube");
+		}
+
 		{
-			0, 1, 2
-		};
+			TArray<FVertexSimple> vertices;
+			TArray<uint32> indices;
+			int slices = 16;
+			int stacks = 16;
+			float radius = 1.f;
+			[[maybe_unused]] float height = 1.f;
+
+			UGeometryGenerator::CreateSphere(radius, slices, stacks, vertices, indices);
 		
-		TArray<uint32> indices;
-		indices.Add(TriangleIndices[0]);
-		indices.Add(TriangleIndices[1]);
-		indices.Add(TriangleIndices[2]);
+			FVertexBuffer::Create(FString("Sphere"), vertices);
+			FIndexBuffer::Create(FString("Sphere"), indices);
+			UStaticMesh::Create("Sphere");		
+		}
+
+		{
+			FVertexSimple tempArray[] =
+			{
+				{  0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f },
+				{  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f },
+				{  0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f } 
+			};
+			TArray<FVertexSimple> vertices;
+
+			vertices.Add(tempArray[0]);
+			vertices.Add(tempArray[1]);
+			vertices.Add(tempArray[2]);
 		
-		FVertexBuffer::Create(FString("Triangle"), vertices);
-		FIndexBuffer::Create(FString("Triangle"), indices);
-		UStaticMesh::Create("Triangle");
+			uint32 TriangleIndices[3] =
+			{
+				0, 1, 2
+			};
 		
-	}
+			TArray<uint32> indices;
+			indices.Add(TriangleIndices[0]);
+			indices.Add(TriangleIndices[1]);
+			indices.Add(TriangleIndices[2]);
+		
+			FVertexBuffer::Create(FString("Triangle"), vertices);
+			FIndexBuffer::Create(FString("Triangle"), indices);
+			UStaticMesh::Create("Triangle");
+		
+		}
 	
-	{
-		FVertexSimple tempArray[] =
 		{
-			{  0.0f, -1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f },
-			{  0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f },
-			{  0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f },
-			{  0.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f }
-		};
+			FVertexSimple tempArray[] =
+			{
+				{  0.0f, -1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f },
+				{  0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f },
+				{  0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f },
+				{  0.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f }
+			};
 
-		TArray<FVertexSimple> vertices;
+			TArray<FVertexSimple> vertices;
 
-		vertices.Add(tempArray[0]);
-		vertices.Add(tempArray[1]);
-		vertices.Add(tempArray[2]);
-		vertices.Add(tempArray[3]);
+			vertices.Add(tempArray[0]);
+			vertices.Add(tempArray[1]);
+			vertices.Add(tempArray[2]);
+			vertices.Add(tempArray[3]);
 
-		uint32 QuadIndices[6] =
+			uint32 QuadIndices[6] =
+			{
+				0, 1, 2,
+				0, 2, 3
+			};
+
+			TArray<uint32> indices;
+			indices.Add(QuadIndices[0]);
+			indices.Add(QuadIndices[1]);
+			indices.Add(QuadIndices[2]);
+			indices.Add(QuadIndices[3]);
+			indices.Add(QuadIndices[4]);
+			indices.Add(QuadIndices[5]);
+
+			FVertexBuffer::Create(FString("Quad"), vertices);
+			FIndexBuffer::Create(FString("Quad"), indices);
+
+			UStaticMesh::Create("Quad");
+		}
+
 		{
-			0, 1, 2,
-			0, 2, 3
-		};
+			FVertexSimple tempArray[2] =
+			{
+				{ -1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f },
+				{ 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f }
+			};
+			TArray<FVertexSimple> vertices;
 
-		TArray<uint32> indices;
-		indices.Add(QuadIndices[0]);
-		indices.Add(QuadIndices[1]);
-		indices.Add(QuadIndices[2]);
-		indices.Add(QuadIndices[3]);
-		indices.Add(QuadIndices[4]);
-		indices.Add(QuadIndices[5]);
-
-		FVertexBuffer::Create(FString("Quad"), vertices);
-		FIndexBuffer::Create(FString("Quad"), indices);
-
-		UStaticMesh::Create("Quad");
-	}
-
-	{
-		FVertexSimple tempArray[2] =
+			vertices.Add(tempArray[0]);
+			vertices.Add(tempArray[1]);
+		
+			uint32 tempIndices[2] =
+			{
+				0, 1
+			};
+		
+			TArray<uint32> indices;
+			indices.Add(tempIndices[0]);
+			indices.Add(tempIndices[1]);
+		
+			FVertexBuffer::Create(FString("Line"), vertices);
+			FIndexBuffer::Create(FString("Line"), indices);
+		
+			UStaticMesh::Create(FString("Line"), D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+		}
 		{
-			{ -1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f },
-			{ 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f }
-		};
-		TArray<FVertexSimple> vertices;
+			TArray<FVertexSimple> vertices;
+			TArray<uint32> indices;
+			int slices = 36;
+			int stacks = 36;
+			float BottomRadius = .2f;
+			float TopRadius = .2f;
+			float height = 1.f;
 
-		vertices.Add(tempArray[0]);
-		vertices.Add(tempArray[1]);
+			UGeometryGenerator::CreateCylinder(BottomRadius, TopRadius, height, slices, stacks, vertices , indices);
 		
-		uint32 tempIndices[2] =
-		{
-			0, 1
-		};
-		
-		TArray<uint32> indices;
-		indices.Add(tempIndices[0]);
-		indices.Add(tempIndices[1]);
-		
-		FVertexBuffer::Create(FString("Line"), vertices);
-		FIndexBuffer::Create(FString("Line"), indices);
-		
-		UStaticMesh::Create(FString("Line"), D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-	}
-	{
-		TArray<FVertexSimple> vertices;
-		TArray<uint32> indices;
-		int slices = 36;
-		int stacks = 36;
-		float BottomRadius = .2f;
-		float TopRadius = .2f;
-		float height = 1.f;
-
-		UGeometryGenerator::CreateCylinder(BottomRadius, TopRadius, height, slices, stacks, vertices , indices);
-		
-		FVertexBuffer::Create(FString("Cylinder"), vertices);
-		FIndexBuffer::Create(FString("Cylinder"), indices);
+			FVertexBuffer::Create(FString("Cylinder"), vertices);
+			FIndexBuffer::Create(FString("Cylinder"), indices);
 		 
-		UStaticMesh::Create(FString("Cylinder"));
-	}
+			UStaticMesh::Create(FString("Cylinder"));
+		}
 
-	{
-		TArray<FVertexSimple> vertices;
-		TArray<uint32> indices;
-		int slices = 36;
-		int stacks = 6;
-		float radius = 1.f;
-		float height = 1.f;
+		{
+			TArray<FVertexSimple> vertices;
+			TArray<uint32> indices;
+			int slices = 36;
+			int stacks = 6;
+			float radius = 1.f;
+			float height = 1.f;
 
-		UGeometryGenerator::CreateCone(radius, height, slices, stacks, vertices, indices);
-		FVertexBuffer::Create(FString("Cone"), vertices);
-		FIndexBuffer::Create(FString("Cone"), indices);
+			UGeometryGenerator::CreateCone(radius, height, slices, stacks, vertices, indices);
+			FVertexBuffer::Create(FString("Cone"), vertices);
+			FIndexBuffer::Create(FString("Cone"), indices);
 
 
-		UStaticMesh::Create(FString("Cone"));
+			UStaticMesh::Create(FString("Cone"));
+		}
+	
+		{
+			TArray<FVertexSimple> vertices;
+			TArray<uint32> indices;
+
+			vertices.SetNum(sizeof(GizmoArrowVertices)/sizeof(FVertexSimple));
+			memcpy(vertices.GetData(), GizmoArrowVertices, sizeof(GizmoArrowVertices));
+			indices.SetNum(sizeof(GizmoArrowIndices) / sizeof(uint32));
+			memcpy(indices.GetData(), GizmoArrowIndices, sizeof(GizmoArrowIndices));
+			FVertexBuffer::Create(FString(TEXT("GizmoArrow")), vertices);
+			FIndexBuffer::Create(FString(TEXT("GizmoArrow")), indices);
+
+			UStaticMesh::Create(TEXT("GizmoArrow"));
+		}
+
+		{
+			TArray<FVertexSimple> vertices;
+			TArray<uint32> indices;
+
+			vertices.SetNum(sizeof(GizmoRotationVertices) / sizeof(FVertexSimple));
+			memcpy(vertices.GetData(), GizmoRotationVertices, sizeof(GizmoRotationVertices));
+			indices.SetNum(sizeof(GizmoRotationIndices) / sizeof(uint32));
+			memcpy(indices.GetData(), GizmoRotationIndices, sizeof(GizmoRotationIndices));
+
+			FVertexBuffer::Create(FString(TEXT("GizmoRotation")), vertices);
+			FIndexBuffer::Create(FString(TEXT("GizmoRotation")), indices);
+
+			UStaticMesh::Create(TEXT("GizmoRotation"));
+		}
+
+		{
+			TArray<FVertexSimple> vertices;
+			TArray<uint32> indices;
+
+			vertices.SetNum(sizeof(GizmoScaleVertices) / sizeof(FVertexSimple));
+			memcpy(vertices.GetData(), GizmoScaleVertices, sizeof(GizmoScaleVertices));
+			indices.SetNum(sizeof(GizmoScaleIndices) / sizeof(uint32));
+			memcpy(indices.GetData(), GizmoScaleIndices, sizeof(GizmoScaleIndices));
+
+			FVertexBuffer::Create(FString(TEXT("GizmoScale")), vertices);
+			FIndexBuffer::Create(FString(TEXT("GizmoScale")), indices);
+
+			UStaticMesh::Create(TEXT("GizmoScale"));
+		}
 	}
 	
+	////Material
 	{
-		TArray<FVertexSimple> vertices;
-		TArray<uint32> indices;
-
-		vertices.SetNum(sizeof(GizmoArrowVertices)/sizeof(FVertexSimple));
-		memcpy(vertices.GetData(), GizmoArrowVertices, sizeof(GizmoArrowVertices));
-		indices.SetNum(sizeof(GizmoArrowIndices) / sizeof(uint32));
-		memcpy(indices.GetData(), GizmoArrowIndices, sizeof(GizmoArrowIndices));
-		FVertexBuffer::Create(FString(TEXT("GizmoArrow")), vertices);
-		FIndexBuffer::Create(FString(TEXT("GizmoArrow")), indices);
-
-		UStaticMesh::Create(TEXT("GizmoArrow"));
-	}
-
-	{
-		TArray<FVertexSimple> vertices;
-		TArray<uint32> indices;
-
-		vertices.SetNum(sizeof(GizmoRotationVertices) / sizeof(FVertexSimple));
-		memcpy(vertices.GetData(), GizmoRotationVertices, sizeof(GizmoRotationVertices));
-		indices.SetNum(sizeof(GizmoRotationIndices) / sizeof(uint32));
-		memcpy(indices.GetData(), GizmoRotationIndices, sizeof(GizmoRotationIndices));
-
-		FVertexBuffer::Create(FString(TEXT("GizmoRotation")), vertices);
-		FIndexBuffer::Create(FString(TEXT("GizmoRotation")), indices);
-
-		UStaticMesh::Create(TEXT("GizmoRotation"));
-	}
-
-	{
-		TArray<FVertexSimple> vertices;
-		TArray<uint32> indices;
-
-		vertices.SetNum(sizeof(GizmoScaleVertices) / sizeof(FVertexSimple));
-		memcpy(vertices.GetData(), GizmoScaleVertices, sizeof(GizmoScaleVertices));
-		indices.SetNum(sizeof(GizmoScaleIndices) / sizeof(uint32));
-		memcpy(indices.GetData(), GizmoScaleIndices, sizeof(GizmoScaleIndices));
-
-		FVertexBuffer::Create(FString(TEXT("GizmoScale")), vertices);
-		FIndexBuffer::Create(FString(TEXT("GizmoScale")), indices);
-
-		UStaticMesh::Create(TEXT("GizmoScale"));
-	}
+		{
+			std::shared_ptr<FMaterial> Mat = FMaterial::Create("DefaultMaterial");
+			Mat->SetRasterizer("DefaultRasterizer");
+			Mat->SetBlendState("DefaultBlendState");
+			Mat->SetDepthState("DefaultDepthStencilState");
+			Mat->SetVertexShader("Simple_VS");
+			Mat->SetPixelShader("Simple_PS");
+		}
 	
+		{
+			std::shared_ptr<FMaterial> Mat = FMaterial::Create("AlwaysVisibleMaterial");
+			Mat->SetRasterizer("DefaultRasterizer");
+			Mat->SetBlendState("DefaultBlendState");
+			Mat->SetDepthState("AlwaysVisibleDepthStencilState");
+			Mat->SetVertexShader("Simple_VS");
+			Mat->SetPixelShader("Simple_PS");
+		}
+
+		{
+			std::shared_ptr<FMaterial> Mat = FMaterial::Create("FontMaterial");
+			Mat->SetRasterizer("DefaultRasterizer");
+			Mat->SetBlendState("DefaultBlendState");
+			Mat->SetDepthState("DefaultDepthStencilState");
+			Mat->SetVertexShader("Font_VS");
+			Mat->SetPixelShader("Font_PS");
+		}
+
+		{
+			std::shared_ptr<FMaterial> Mat = FMaterial::Create("SubUVMaterial");
+			Mat->SetRasterizer("DefaultRasterizer");
+			Mat->SetBlendState("DefaultBlendState");
+			Mat->SetDepthState("DefaultDepthStencilState");
+			Mat->SetVertexShader("Font_VS");
+			Mat->SetPixelShader("SubUV_PS");
+		}
+
+		{
+			std::shared_ptr<FMaterial> Mat = FMaterial::Create("DebugMaterial");
+			Mat->SetRasterizer("DebugRasterizer");
+			Mat->SetBlendState("DefaultBlendState");
+			Mat->SetDepthState("DefaultDepthStencilState");
+			Mat->SetVertexShader("Simple_VS");
+			Mat->SetPixelShader("Simple_PS");
+		}
+		
+	}
+
 	{
-		auto a = ObjReader::Read("cube-tex.obj");
+		{
+			FStaticMesh* StaticMeshAsset = ObjReader::Read("cube-tex.obj");
+			FString MeshName = TEXT("CubeCube");
 
-		FVertexBuffer::Create(FString(TEXT("CubeCube")), a.Vertices);
-		FIndexBuffer::Create(FString(TEXT("CubeCube")), a.Indices);
+			UStaticMesh* StaticMesh = UStaticMesh::Create(MeshName).get();
+			StaticMesh->SetStaticMeshAsset(StaticMeshAsset);
+		
+			FVertexBuffer::Create(MeshName, StaticMeshAsset->Vertices);						
+			
+			for (FObjMaterialInfo& MaterialInfo : StaticMeshAsset->MaterialData)
+			{
+				FString MaterialName = MaterialInfo.MaterialName + std::to_string(StaticMesh->GetUUID());
+				FString IndexBufferName = MeshName + MaterialName;
 
-		UStaticMesh::Create(TEXT("CubeCube"));
+				
+				FIndexBuffer::Create(IndexBufferName, StaticMeshAsset->IndexDataList[MaterialInfo.MaterialName]);
+
+
+				std::shared_ptr<FMaterial> Mat = FMaterial::Create(MaterialName);
+				Mat->SetRasterizer("DefaultRasterizer");
+				Mat->SetBlendState("DefaultBlendState");
+				Mat->SetDepthState("DefaultDepthStencilState");
+				Mat->SetVertexShader("StaticMesh_VS");
+				Mat->SetPixelShader("StaticMesh_PS");
+				// Mat->GetRenderResourceCollection().SetConstantBufferBinding();
+				// Comp->GetRenderResourceCollection().SetSamplerBinding("LinearSamplerState", 0, true, true);
+				
+				// Create라는게 있다. 나중에 확인해봐라.
+				// FTexture::Create(MaterialInfo.DiffuseMap, textureDesc);
+				FTexture::Load(MaterialInfo.DiffuseMap, MaterialInfo.DiffuseMap);
+				FTexture::Load(MaterialInfo.SpecularMap, MaterialInfo.DiffuseMap);
+				FTexture::Load(MaterialInfo.BumpMap, MaterialInfo.DiffuseMap);
+				FTexture::Load(MaterialInfo.DissolveMap, MaterialInfo.DiffuseMap);
+				
+				Mat->SetTexture(MaterialInfo.DiffuseMap, 1);
+				Mat->SetTexture(MaterialInfo.SpecularMap, 2);
+				Mat->SetTexture(MaterialInfo.BumpMap, 3);
+				Mat->SetTexture(MaterialInfo.DissolveMap, 4);
+
+				// StaticMesh.SetMaterial(Mat);
+			}
+
+			// 그리고 다중 머터리얼을 넣어주려면
+
+
+			
+			// 1 ~ n개를 사용
+			// 쉐이더 고정..?
+			
+			// Texture는 메시에 있는 거로
+			// Mat->SetSamplerBinding("LinearSamplerState", 0, true, true);
+			//Mat->SetTexture("CubeTexture", 1, true, true);
+			//Mat->SetTexture("CubeTexture", 2, true, true);
+		}
 	}
 }

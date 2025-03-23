@@ -58,7 +58,7 @@ public:
 	void OnResizeComplete();
 
 	//렌더러에 필요한 기본 리소스 생성
-	void InitResource();
+	void InitResource();	
 
 	
 private:

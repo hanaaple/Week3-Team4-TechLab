@@ -55,26 +55,59 @@ void FRenderResourceCollection::SetMaterial(std::shared_ptr<FMaterial> _Material
 
 void FRenderResourceCollection::Render()
 {
+	// Mesh -> for -> SetMaterial(0, 1, 2...) -> Draw (0, 1, 2...)
+	// Mesh -> SetMaterial All, Draw
 	Mesh->Setting();
 	Layout->Setting();
-	Material->Setting(); 
+	if (Mesh->MaterialCount > 0)
+	{
+		for (auto MeshMaterial : Mesh->GetMaterials())
+		{
+			// Set IndexBuffer
+			// Bind Texture
+			MeshMaterial->Setting();
+			//Material->Setting(); 
 
-	for (auto& Binding : ConstantBufferBindings)
-	{
-		Binding.Value->Setting();
-	}
+			for (auto& Binding : ConstantBufferBindings)
+			{
+				Binding.Value->Setting();
+			}
   
-  for (auto& Binding : TextureBindings)
-	{
-		Binding.Value->Setting();
-	}
+			for (auto& Binding : TextureBindings)
+			{
+				Binding.Value->Setting();
+			}
 	
-	for (auto& Binding : SamplerBindings)
-	{
-		Binding.Value->Setting();
+			for (auto& Binding : SamplerBindings)
+			{
+				Binding.Value->Setting();
+			}
+
+			MeshMaterial->Draw();
+			//Mesh->Draw();
+		}
 	}
+	else
+	{
+		Material->Setting(); 
+
+		for (auto& Binding : ConstantBufferBindings)
+		{
+			Binding.Value->Setting();
+		}
+  
+		for (auto& Binding : TextureBindings)
+		{
+			Binding.Value->Setting();
+		}
 	
-	Mesh->Draw();
+		for (auto& Binding : SamplerBindings)
+		{
+			Binding.Value->Setting();
+		}
+	
+		Mesh->Draw();	
+	}
 }
 
 void FRenderResourceCollection::Reset()

@@ -83,7 +83,7 @@ public:
     bool Find(const T& Item, SizeType& Index);
 
     /** Array Size를 가져옵니다. */
-    SizeType Num() const;
+    unsigned Num() const;
 
     /** Array의 Capacity를 가져옵니다. */
     SizeType Len() const;
@@ -258,7 +258,7 @@ bool TArray<T, Allocator>::Find(const T& Item, SizeType& Index)
 }
 
 template <typename T, typename Allocator>
-typename TArray<T, Allocator>::SizeType TArray<T, Allocator>::Num() const
+unsigned TArray<T, Allocator>::Num() const
 {
     return PrivateVector.size();
 }

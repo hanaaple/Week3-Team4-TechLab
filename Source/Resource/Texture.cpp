@@ -160,7 +160,6 @@ void FTexture::CreateDepthStencilView()
 }
 
 void FTexture::ResLoad(const FString& InPath)
-
 {
 	std::string str = InPath.c_char();
 

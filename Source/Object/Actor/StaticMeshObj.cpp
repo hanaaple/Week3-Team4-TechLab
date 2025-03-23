@@ -10,10 +10,26 @@ AStaticMeshObj::AStaticMeshObj()
 	RootComponent = Comp;
 	Comp->SetRelativeTransform(FTransform());
 	Comp->SetMaterial("StaticMeshMaterial");
-	Comp->GetRenderResourceCollection().SetSamplerBinding("LinearSamplerState", 0, true, true);
 
-	Comp->GetRenderResourceCollection().SetTextureBinding("CubeTexture", 1, true, true);
-	Comp->SetStaticMesh("CubeCube");
+
+	// Material에 Texture, Shader를 합친다
+
+	// Mesh 변경 시 Mesh에 연결된 Material을 변경한다.
+	// 그렇지만 Material 변경이 가능은 하다.
+
+	
+	// SetStaticMesh("Cube") -> SetMaterial("")      이후 변경된 Material이 있다면 캐싱을 해두지 말자 일단. ㅇㅇ
+
+	// 따로 SetTE
+	
+		
+//	Comp->GetRenderResourceCollection().SetSamplerBinding("LinearSamplerState", 0, true, true);
+	//Comp->GetRenderResourceCollection().SetTextureBinding("CubeTexture", 1, true, true);
+	//Comp->SetStaticMesh("CubeCube");
+
+
+	
+	
 	
 	// 신경 안써도 될듯?
 	//Comp->GetRenderResourceCollection().SetConstantBufferBinding("SubUVVertexConstants", &GetVertexConstantsData(), 0, true, false);

@@ -4,15 +4,16 @@
 #include <sstream>
 
 #include "Core/Container/String.h"
+#include "Object/ObjectFactory.h"
 
-FStaticMesh ObjReader::Read(const FString& InFilePath)
+FStaticMesh* ObjReader::Read(const FString& InFilePath)
 {
 	if (CheckFile(InFilePath))
 	{
 		FObjInfo ObjInfo = ReadRawData(InFilePath);
-		FStaticMesh StaticMesh = CookRawData(ObjInfo);
-		StaticMesh.PathFileName = *InFilePath;
-		return StaticMesh;
+		FStaticMesh* StaticMeshAsset = CookRawData(ObjInfo);
+		StaticMeshAsset->PathFileName = *InFilePath;
+		return StaticMeshAsset;
 	}
 	return {};
 }
@@ -23,6 +24,124 @@ bool ObjReader::CheckFile(const FString& InFilePath)
 	return f.good();
 }
 
+TArray<FObjMaterialInfo> ObjReader::ReadMtl(const FString& InFilePath)
+{
+	std::ifstream File;
+	if (!File.is_open())
+	{
+		File.open(*InFilePath);
+	}
+	
+	TArray<FObjMaterialInfo> MaterialInfoList;
+	int32 Index = 0;
+
+	std::string MaterialName;
+	
+	std::string Line; // std::string을 참조해야하므로, FString 대신 std::string 사용
+	while (std::getline(File, Line))
+	{		
+		std::stringstream StringStream(Line);
+		std::string Prefix;
+		
+		StringStream >> Prefix;
+
+		if (Prefix == "newmtl")
+		{
+			if (!MaterialName.empty())
+			{
+				Index++;
+			}
+			
+			MaterialInfoList.Add(FObjMaterialInfo());
+
+			MaterialName = StringStream.str();
+			MaterialInfoList[Index].MaterialName = MaterialName;
+		}
+		else if (Prefix == "Ns")
+		{
+			float Value;
+			StringStream >> Value;
+			MaterialInfoList[Index].SpecularExponent = Value;
+		}
+		else if (Prefix == "Ni")
+		{
+			float Value;
+			StringStream >> Value;
+			MaterialInfoList[Index].OpticalDensity = Value;
+		}
+		else if (Prefix == "d")
+		{
+			float Value;
+			StringStream >> Value;
+			MaterialInfoList[Index].Dissolve = Value;
+		}
+		else if (Prefix == "illum")
+		{
+			uint32 Value;
+			StringStream >> Value;
+			MaterialInfoList[Index].Illumination = Value;
+		}
+		else if (Prefix == "Ka")
+		{
+			FVector Value;
+			StringStream >> Value.X >> Value.Y >> Value.Z;
+			MaterialInfoList[Index].Ambient = Value;
+		}
+		else if (Prefix == "Kd")
+		{
+			FVector Value;
+			StringStream >> Value.X >> Value.Y >> Value.Z;
+			MaterialInfoList[Index].Diffuse = Value;
+		}
+		else if (Prefix == "Ks")
+		{
+			FVector Value;
+			StringStream >> Value.X >> Value.Y >> Value.Z;
+			MaterialInfoList[Index].Specular = Value;
+		}
+		else if (Prefix == "Ke")
+		{
+			FVector Value;
+			StringStream >> Value.X >> Value.Y >> Value.Z;
+			MaterialInfoList[Index].Emissive = Value;
+		}
+		else if (Prefix == "map_Kd")
+		{
+			std::string Value = StringStream.str();
+			MaterialInfoList[Index].DiffuseMap = Value;
+		}
+		else if (Prefix == "map_Bump")
+		{
+			std::string Value = StringStream.str();
+			MaterialInfoList[Index].BumpMap = Value;
+		}
+		else if (Prefix == "map_Ks")
+		{
+			std::string Value = StringStream.str();
+			MaterialInfoList[Index].SpecularMap = Value;
+		}
+		else if (Prefix == "map_d")
+		{
+			std::string Value = StringStream.str();
+			MaterialInfoList[Index].DissolveMap = Value;
+		}
+		else if (Prefix == "map_Ns")
+		{
+			std::string Value = StringStream.str();
+			MaterialInfoList[Index].SpecularExponentMap = Value;
+		}
+		else if (Prefix == "map_Ka")
+		{
+			std::string Value = StringStream.str();
+			MaterialInfoList[Index].AmbientMap = Value;
+		}
+	}
+	
+	File.close();
+
+	return MaterialInfoList;
+}
+
 FObjInfo ObjReader::ReadRawData(const FString& InFilePath)
 {
 	std::ifstream File;
@@ -31,6 +150,7 @@ FObjInfo ObjReader::ReadRawData(const FString& InFilePath)
 		File.open(*InFilePath);
 	}
 	FObjInfo ObjInfo;
+	ObjInfo.PathFileName = *InFilePath;
 
 	std::string Line; // std::string을 참조해야하므로, FString 대신 std::string 사용
 	while (std::getline(File, Line))
@@ -40,144 +160,127 @@ FObjInfo ObjReader::ReadRawData(const FString& InFilePath)
 
 		TokenStream >> Prefix;
 
-		if (Prefix == "v")
+		if (Prefix == "o")
+		{
+			// FString ObjectName = TokenStream.str();
+			// ObjInfo.Add(ObjectName, FObjInfo());
+		}
+		else if (Prefix == "mtllib")
+		{
+			//mtllib Low-Poly Plant_.mtl
+			std::string MtlLibPath = TokenStream.str();
+			TArray<FObjMaterialInfo> MaterialInfoList = ReadMtl(MtlLibPath);
+			for (const auto& MaterialInfo : MaterialInfoList)
+			{
+				if (!ObjInfo.MaterialDataMap.Contains(MaterialInfo))
+				{
+					ObjInfo.MaterialDataMap.Add(MaterialInfo);
+				}
+			}
+		}
+		else if (Prefix == "usemtl")
+		{
+			// usemtl Blatt
+			// 여기서부터 Material 변경
+			std::string MaterialName;
+			TokenStream >> MaterialName;
+			ObjInfo.MaterialIndexData.Add({ MaterialName, ObjInfo.VertexIndexList.Num() });
+		}
+		else if (Prefix == "v")
 		{
 			FVector Pos;
 			TokenStream >> Pos.X >> Pos.Y >> Pos.Z;
-			ObjInfo.Vertices.Add(Pos);
+			ObjInfo.VertexList.Add(Pos);
 		}
 		else if (Prefix == "vt")
 		{
-			TArray<float> UV;
 			float u, v;
 			TokenStream >> u >> v;
-			UV.Add(u);
-			UV.Add(v);
 			
-			ObjInfo.UVs.Add(UV);
+			ObjInfo.UVList.Add({u, v});
 		}
 		else if (Prefix == "vn")
 		{
 			FVector Normal;
 			TokenStream >> Normal.X >> Normal.Y >> Normal.Z;
-			ObjInfo.Normals.Add(Normal);
+			ObjInfo.NormalList.Add(Normal);
 		}
 		else if (Prefix == "f")
 		{
-			TArray<TArray<uint32>> Face;
-			std::string VertexData;
-
 			for (int i = 0; i < 3; ++i)
 			{
-				TArray<uint32> VertexIndex;
+				std::string VertexData;
 				TokenStream >> VertexData;
 				std::replace(VertexData.begin(), VertexData.end(), '/', ' ');
 				std::stringstream vss(VertexData);
 
 				int posIdx, uvIdx, normIdx;
 				vss >> posIdx >> uvIdx >> normIdx;
-				VertexIndex.Add(posIdx);
-				VertexIndex.Add(uvIdx);
-				VertexIndex.Add(normIdx);
-				Face.Add(VertexIndex);
+				ObjInfo.VertexIndexList.Add(posIdx - 1);
+				ObjInfo.UvIndexList.Add(uvIdx - 1);
+				ObjInfo.NormalIndexList.Add(normIdx - 1);
 			}
-			ObjInfo.Faces.Add(Face);
 		}
-		//
-		// if (Tokens.Num() <= 0)
-		// 	continue;
-		//
-		// const std::string& Key = Tokens[0];
-		//
-		// if (Key == "v")
-		// {
-		// 	TArray<FVector> Vertex;
-		// 	TokenStream >> 
-		// 	Vertex.Add(std::stof(Tokens[1])); // Location X
-		// 	Vertex.Add(std::stof(Tokens[2])); // Location Y
-		// 	Vertex.Add(-std::stof(Tokens[3])); // Location Z
- 	//
-		// 	ObjInfo.Vertices.Add(Vertex);
-		// }
-		// else if (Key == "vn")
-		// {
-		// 	TArray<float> Normal;
-		// 	Normal.Add(std::stof(Tokens[1])); // Normal X
-		// 	Normal.Add(std::stof(Tokens[2])); // Normal Y
-		// 	Normal.Add(-std::stof(Tokens[3])); // Normal Z
-		// 	
-		// 	ObjInfo.Normals.Add(Normal);
-		// }
-		// else if (Key == "vt")
-		// {
-		// 	TArray<float> UV;
-		// 	UV.Add(std::stof(Tokens[1]));       // U
-		// 	UV.Add(1.f - std::stof(Tokens[2])); // V; Obj 파일은 오른손 좌표계 기준이므로, 왼손 좌표계의 UV맵 좌표로 변경
- 	//
-		// 	ObjInfo.UVs.Add(UV);
-		// }
-		// else if (Key == "f")
-		// {
-		// 	TArray<TArray<uint32>> Face;
-		// 	for (int i = 0; i < 3; ++i)
-		// 	{
-		// 		Face.Add(TArray<uint32>());
-		// 		std::stringstream ss(Tokens[i + 1]);
-		// 		std::string Val;
-		// 		int Cnt = 0;
-		// 		while (std::getline(ss, Val, '/'))
-		// 		{
-		// 			Face[i].Add(std::stoi(Val) - 1); // 인덱스는 1부터 시작하므로, 1 감소
-		// 			++Cnt;
-		// 		}
-		// 	}
-		// 	ObjInfo.Faces.Add(Face);
-		//}
 	}
 	File.close();
 
 	return ObjInfo;
 }
 
-FStaticMesh ObjReader::CookRawData(FObjInfo ObjInfo)
+FStaticMesh* ObjReader::CookRawData(FObjInfo InObjInfo)
 {
-	FStaticMesh OutMesh;
-
-	for (int Section = 0; Section < ObjInfo.Faces.Num(); ++Section)
+	// 언리얼에서는 UActorFactoryStaticMesh라는 팩토리를 따로 만들어서 사용 (FStaticMesh가 UObject 상속은 안함)
+	FStaticMesh* OutStaticMesh = new FStaticMesh();
+	OutStaticMesh->PathFileName = InObjInfo.PathFileName;
+	for (uint32 i = 0; i < InObjInfo.MaterialIndexData.Num(); i++)
 	{
-		for (int FaceVertexIndex = 0; FaceVertexIndex < ObjInfo.Faces[Section].Num(); ++FaceVertexIndex)
+		FString MaterialName = InObjInfo.MaterialIndexData[i].Key;
+		OutStaticMesh->IndexDataList.Add(MaterialName, TArray<uint32>());
+		
+		uint32 StartIndex = InObjInfo.MaterialIndexData[i].Value;
+		uint32 NextStartIndex;
+		if (i == InObjInfo.MaterialIndexData.Num() - 1)
+			NextStartIndex = InObjInfo.MaterialIndexData[i + 1].Value;
+		else
+			NextStartIndex = InObjInfo.VertexList.Num();
+		
+		for (uint32 Index = StartIndex; Index < NextStartIndex; Index++)
 		{
-			const TArray<uint32>& Indices = ObjInfo.Faces[Section][FaceVertexIndex];
+			int32 PosIdx = InObjInfo.VertexIndexList[Index];
+			int32 UVIdx = InObjInfo.UvIndexList[Index];
+			int32 NormalIdx = InObjInfo.NormalIndexList[Index];
+			// uint32 PosIdx = Indices[0];
+			// uint32 UVIdx = Indices[1];
+			// uint32 NormIdx = Indices[2];
+			FObjVertex Vertex;
+			Vertex.X = InObjInfo.VertexList[PosIdx].X;
+			Vertex.Y = InObjInfo.VertexList[PosIdx].Y;
+			Vertex.Z = InObjInfo.VertexList[PosIdx].Z;
+			Vertex.U = InObjInfo.UVList[UVIdx].Key;
+			Vertex.V = InObjInfo.UVList[UVIdx].Value;
+			Vertex.NX = InObjInfo.NormalList[NormalIdx].X;
+			Vertex.NY = InObjInfo.NormalList[NormalIdx].Y;
+			Vertex.NZ = InObjInfo.NormalList[NormalIdx].Z;
+			
 
-			uint32 PosIdx = Indices[0];
-			uint32 UVIdx = Indices[1];
-			uint32 NormIdx = Indices[2];
-			
-			FNormalVertex Vertex;
-			Vertex.X = ObjInfo.Vertices[PosIdx - 1].X;
-			Vertex.Y = ObjInfo.Vertices[PosIdx - 1].Y;
-			Vertex.Z = ObjInfo.Vertices[PosIdx - 1].Z;
-			
-			Vertex.U = ObjInfo.UVs[UVIdx - 1][0];
-			Vertex.V = ObjInfo.UVs[UVIdx - 1][1]; // Assuming UVs are 1D for now
-			Vertex.NX = ObjInfo.Normals[NormIdx - 1].X;
-			Vertex.NY = ObjInfo.Normals[NormIdx - 1].Y;
-			Vertex.NZ = ObjInfo.Normals[NormIdx - 1].Z;
-			
+			// 중복 체크하는 시간이 너무 김
 			//int32 findIndex = OutMesh.Vertices.Find(Vertex);
-			// 중복은?
 			//if (findIndex == -1)
-			{
-				OutMesh.Vertices.Add(Vertex);
-				OutMesh.Indices.Add(OutMesh.Vertices.Num() - 1);
-			}
+			//{
+			OutStaticMesh->Vertices.Add(Vertex);
+			OutStaticMesh->IndexDataList[MaterialName].Add(OutStaticMesh->Vertices.Num() - 1);
+			//}
 			// else
 			// {
 			// 	OutMesh.Indices.Add(findIndex);
 			// }
 		}
-		
 	}
 
-	return OutMesh;
+	for (const auto& MaterialData : InObjInfo.MaterialDataMap)
+	{		
+		OutStaticMesh->MaterialData.Add(MaterialData);
+	}
+
+	return OutStaticMesh;
 }

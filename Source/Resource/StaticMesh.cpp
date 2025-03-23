@@ -24,7 +24,6 @@ void UStaticMesh::Setting()
 
 void UStaticMesh::Draw()
 {
-	
 	FDevice::Get().GetDeviceContext()->DrawIndexed(IndexBuffer->GetIndexCount(), 0, 0);
 }
 

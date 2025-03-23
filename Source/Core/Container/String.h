@@ -66,7 +66,7 @@ public:
     FString() = default;
     ~FString() = default;
 
-    FString(const FString&) = default;
+	FString(const FString&) = default;
     FString& operator=(const FString&) = default;
     FString(FString&&) = default;
     FString& operator=(FString&&) = default;

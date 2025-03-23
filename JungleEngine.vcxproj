@@ -491,8 +491,13 @@
     <Content Include="cube-tex.obj" />
     <Content Include="DefaultTexture.png" />
     <Content Include="DefaultTexture.dds" />
+    <Content Include="Low-Poly Plant_.mtl" />
+    <Content Include="Low-Poly Plant_.obj" />
     <Content Include="texture.png" />
     <Content Include="Untitled.obj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resource\" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

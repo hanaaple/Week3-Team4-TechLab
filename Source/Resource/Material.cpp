@@ -1,5 +1,6 @@
 #include "Material.h"
 
+#include "Texture.h"
 #include "Debug/DebugConsole.h"
 #include "Resource/DirectResource/BlendState.h"
 #include "Resource/DirectResource/DepthStencilState.h"
@@ -74,6 +75,15 @@ void FMaterial::DepthStencil()
 	DepthStencilPtr->Setting();
 }
 
+void FMaterial::Texture()
+{
+	for (const auto& [Slot, TexturePtr] : TexturePtrMap)
+	{
+		TexturePtr->VSSetting(Slot);
+		TexturePtr->PSSetting(Slot);
+	}
+}
+
 void FMaterial::SetVertexShader(const FString& InValue)
 {
 	VertexShaderPtr = FVertexShader::Find(InValue);
@@ -128,12 +138,19 @@ void FMaterial::SetDepthState(const FString& InValue)
 	}
 }
 
- void FMaterial::Setting()
+void FMaterial::SetTexture(const FString& InValue, uint8 InSlot)
+{
+	auto TexturePtr = FTexture::Find(InValue);
+	TexturePtrMap.Add(InSlot, TexturePtr);
+}
+
+void FMaterial::Setting()
 {
 	VertexShader();
 	Rasterizer();
 	PixelShader();
 	Blend();
 	DepthStencil();
+	Texture();
 
 }

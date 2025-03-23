@@ -9,6 +9,7 @@
 #include "Core/Container/Array.h"
 #include "Core/UObject/Object.h"
 #include "Core/UObject/ObjectMacros.h"
+#include "Core/Utils/ObjReader.h"
 #include "DirectResource/Shader.h"
 #include "Resource/DirectResource/Vertexbuffer.h"
 #include "Resource/DirectResource/IndexBuffer.h"
@@ -85,9 +86,12 @@ public:
 	{
 		return IndexBuffer;
 	}
-	
+
+	void SetStaticMeshAsset(FStaticMesh* MeshAsset) { StaticMeshAsset = MeshAsset; }
+
 private:
 	std::shared_ptr<FVertexBuffer> VertexBuffer = nullptr;
 	std::shared_ptr<FIndexBuffer> IndexBuffer = nullptr;
 	D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	FStaticMesh* StaticMeshAsset;
 };
