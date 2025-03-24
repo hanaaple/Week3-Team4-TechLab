@@ -1,5 +1,6 @@
 #pragma once
 #include "FViewport.h"
+#include "FViewportClient.h"
 #include "Core/Container/Array.h"
 #include "Core/Math/Vector.h"
 
@@ -15,35 +16,28 @@ public:
 	}
 
 	// 뷰포트를 제거합니다.
-	void UnregisterViewport(FViewport* InViewport)
+	void UnregisterViewport()
 	{
-		Viewports.Remove(InViewport);
-		if (ActiveViewport == InViewport)
-		{
-			ActiveViewport = nullptr;
-		}
-	}
-
-	// 특정 뷰포트를 활성 뷰포트로 설정합니다.
-	void SetActiveViewport(FViewport* NewActiveViewport)
-	{
-		ActiveViewport = NewActiveViewport;
 		for (FViewport* vp : Viewports)
 		{
-			if (vp->GetClient())
-			{
-				vp->GetClient()->SetSelected(vp == ActiveViewport);
-			}
+			delete vp;
 		}
+		Viewports.Empty();
 	}
 
-	// 현재 활성 뷰포트를 반환합니다.
+	void SetActiveViewport(FViewport* InActiveViewport) { ActiveViewport = InActiveViewport; }
 	FViewport* GetActiveViewport() const { return ActiveViewport; }
 
+	void SetFullScreenViewport(FViewport* InFullScreenViewport) { FullScreenViewport = InFullScreenViewport; }
+
+	FViewport* GetFullScreenViewport() const { return FullScreenViewport; }
+	
 	// 등록된 모든 뷰포트의 배열을 반환합니다.
 	const TArray<FViewport*>& GetViewports() const { return Viewports; }
 
 private:
 	TArray<FViewport*> Viewports;
 	FViewport* ActiveViewport = nullptr;
+	FViewport* FullScreenViewport = nullptr;
+	bool blsFullscreen = true;
 };

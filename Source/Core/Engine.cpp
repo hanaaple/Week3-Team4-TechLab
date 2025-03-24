@@ -351,35 +351,35 @@ void UEngine::UpdateWindowSize(uint32 InScreenWidth, uint32 InScreenHeight)
 
 void UEngine::RenderSplitScreen()
 {
+	FViewportManager* ViewportManager = UEngine::Get().GetWorld()->GetViewportManager();
 
-	TArray<FViewport*> Viewports = UEngine::Get().GetWorld()->GetViewportManager()->GetViewports();
+	FViewport* FullScreenViewport = ViewportManager->GetFullScreenViewport();
+	TArray<FViewport*> Viewports = ViewportManager->GetViewports();
 
 	FDevice::Get().Clear();
 
-	AOrthoGraphicActor* OrthoCamera = UEngine::Get().GetWorld()->GetOrthoGraphicActor();
-
 	for(FViewport* vp : Viewports)
 	{
+		if (FullScreenViewport && FullScreenViewport != vp)
+			continue;
 		D3D11_VIEWPORT d3dvp = vp->GetViewport();
 		FDevice::Get().GetDeviceContext()->RSSetViewports(1, &d3dvp);
 		FDevice::Get().SetRenderTargetOnly();
 
-		FString ViewType = vp->GetClient()->GetViewType();
+		EViewModeIndex ViewType = vp->GetClient()->GetViewType();
 			
-		if (ViewType == (TEXT("Perspective")))
+		if (ViewType == EViewModeIndex::Perspective)
 		{
 			World->SetCamera(vp->GetClient()->GetPerspectiveCamera());
 			FEditorManager::Get().SetCamera(vp->GetClient()->GetPerspectiveCamera());
-			FViewMode::Get().SetViewMode(EViewModeIndex::VMI_Default);
-			FViewMode::Get().ApplyViewMode();
 		}
 		else
 		{
 			World->SetCamera(vp->GetClient()->GetOrthographicCamera());
 			FEditorManager::Get().SetCamera(vp->GetClient()->GetOrthographicCamera());
-			FViewMode::Get().SetViewMode(EViewModeIndex::VMI_Wireframe);
-			FViewMode::Get().ApplyViewMode();
 		}
+		FViewMode::Get().SetViewMode(vp->GetClient()->GetRenderType());
+		FViewMode::Get().ApplyViewMode();
 
 		World->Render();
 	}

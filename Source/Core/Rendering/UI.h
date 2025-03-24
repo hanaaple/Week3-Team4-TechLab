@@ -5,6 +5,7 @@
 
 
 class AActor;
+class FViewport;
 
 class UI
 {
@@ -27,9 +28,9 @@ public:// UIWindows
     void RenderPropertyWindow() const;
     void RenderSceneManager();
 	void RenderShowFlagsPanel() const;
-	void RenderViewModePanel() const;
+	//void RenderViewModePanel() const;
 	void RenderGridSettings() const;
-
+	void RenderViewportSettings(FViewport* InViewport, int32 num);
 private:
 	// Mouse 전용
 	ImVec2 ResizeToScreenByCurrentRatio(const ImVec2& vec2) const

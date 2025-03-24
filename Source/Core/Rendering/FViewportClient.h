@@ -1,33 +1,49 @@
 #pragma once
 #include "FViewMode.h"
+
+enum class EViewModeIndex : uint32
+{
+	Perspective,
+	Top,
+	Bottom,
+	Left,
+	Right,
+	Front,
+	Back
+};
+
 class FViewportClient
 {
 public:
 	FViewportClient(ACamera* InPerspectiveCamera, ACamera* InOrthographicCamera)
-		: ViewType(TEXT("Top")), PerspectiveCamera(InPerspectiveCamera), OrthographicCamera(InOrthographicCamera)
 	{
+		ViewType = EViewModeIndex::Top;
+		PerspectiveCamera = InPerspectiveCamera;
+		OrthographicCamera = InOrthographicCamera;
+		RenderType = ERenderModeIndex::VMI_Wireframe;
 	}
 
-	FViewportClient(const FString InViewType, ACamera* InPerspectiveCamera, ACamera* InOrthographicCamera)
+	FViewportClient(const EViewModeIndex InViewType, ACamera* InPerspectiveCamera, ACamera* InOrthographicCamera)
 		: ViewType(InViewType), PerspectiveCamera(InPerspectiveCamera), OrthographicCamera(InOrthographicCamera)
 	{
+		ViewType = InViewType;
+		PerspectiveCamera = InPerspectiveCamera;
+		OrthographicCamera = InOrthographicCamera;
+		RenderType = ERenderModeIndex::VMI_Wireframe;
 	}
 
-	FString GetViewType() const { return ViewType; }
-	EViewModeIndex GetRenderType() const { return RenderType; }
+	EViewModeIndex GetViewType() const { return ViewType; }
+	ERenderModeIndex GetRenderType() const { return RenderType; }
 
-	void SetViewType(const FString InViewType) { ViewType = InViewType; }
-	void SetRenderType(const EViewModeIndex InRenderType) { RenderType = InRenderType; }
+	void SetViewType(const EViewModeIndex InViewType) { ViewType = InViewType; }
+	void SetRenderType(const ERenderModeIndex InRenderType) { RenderType = InRenderType; }
 
 	ACamera* GetPerspectiveCamera() const { return PerspectiveCamera; }
 	ACamera* GetOrthographicCamera() const { return OrthographicCamera; }
 
-	bool GetSelected() const { return SelectedFlag; }
-	void SetSelected(bool InSelectedFlag) { SelectedFlag = InSelectedFlag; }
 private:
-	FString ViewType;
-	EViewModeIndex RenderType;
+	EViewModeIndex ViewType;
+	ERenderModeIndex RenderType;
 	ACamera* PerspectiveCamera;
 	ACamera* OrthographicCamera;
-	bool SelectedFlag;
 };

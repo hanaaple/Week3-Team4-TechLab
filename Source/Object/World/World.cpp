@@ -29,6 +29,7 @@ void UWorld::InitWorld()
 	Rects.Add(TopSplitter->GetSideRB()->GetRect());
 	Rects.Add(BottomSplitter->GetSideLT()->GetRect());
 	Rects.Add(BottomSplitter->GetSideRB()->GetRect());
+
 	for (FRect Rect : Rects)
 	{
 		ACamera* orthocamera = SpawnActor<ACamera>();
@@ -37,10 +38,14 @@ void UWorld::InitWorld()
 	}
 
 	TArray<FViewport*> Viewports = ViewportManager->GetViewports();
-	Viewports[0]->GetClient()->SetViewType((TEXT("Top")));
-	Viewports[1]->GetClient()->SetViewType(TEXT("Bottom"));
-	Viewports[2]->GetClient()->SetViewType(TEXT("Perspective"));
-	Viewports[3]->GetClient()->SetViewType(TEXT("Perspective"));
+	ViewportManager->SetFullScreenViewport(Viewports[2]);
+	Viewports[2]->SetRect(FRect(0, 0, UEngine::Get().GetScreenWidth(), UEngine::Get().GetScreenHeight()));
+
+	Viewports[0]->GetClient()->SetViewType(EViewModeIndex::Top);
+	Viewports[1]->GetClient()->SetViewType(EViewModeIndex::Top);
+	Viewports[2]->GetClient()->SetViewType(EViewModeIndex::Perspective);
+	Viewports[3]->GetClient()->SetViewType(EViewModeIndex::Top);
+
 }
 
 void UWorld::BeginPlay()
@@ -103,12 +108,20 @@ void UWorld::LateTick(float DeltaTime)
 
 	SSplitterV* TopSplitter = UEngine::Get().GetTopSplitter();
 	SSplitterV* BottomSplitter = UEngine::Get().GetBottomSplitter();
-	TArray<FRect> Rects;
-	Viewports[0]->SetRect(TopSplitter->GetSideLT()->GetRect());
-	Viewports[1]->SetRect(TopSplitter->GetSideRB()->GetRect());
-	Viewports[2]->SetRect(BottomSplitter->GetSideLT()->GetRect());
-	Viewports[3]->SetRect(BottomSplitter->GetSideRB()->GetRect());
 
+	FViewport* FullScreenViewport = ViewportManager->GetFullScreenViewport();
+	
+	if (!FullScreenViewport)
+	{
+		Viewports[0]->SetRect(TopSplitter->GetSideLT()->GetRect());
+		Viewports[1]->SetRect(TopSplitter->GetSideRB()->GetRect());
+		Viewports[2]->SetRect(BottomSplitter->GetSideLT()->GetRect());
+		Viewports[3]->SetRect(BottomSplitter->GetSideRB()->GetRect());
+	}
+	else
+	{
+		FullScreenViewport->SetRect(FRect(0, 0, UEngine::Get().GetScreenWidth(), UEngine::Get().GetScreenHeight()));
+	}
 	FVector OrthoCamPos = UEngine::Get().GetWorld()->GetOrthoGraphicActor()->GetActorPosition();
 
 	FTransform Top;
@@ -135,22 +148,24 @@ void UWorld::LateTick(float DeltaTime)
 	Back.SetPosition(OrthoCamPos + FVector(-0.f, 0.f, 0.f));
 	Back.SetRotation(FVector(0.f, 0.f, 0.f));
 
-	ViewTransformMap.Add(TEXT("Top"), Top);
-	ViewTransformMap.Add(TEXT("Bottom"), Bottom);
-	ViewTransformMap.Add(TEXT("Left"), Left);
-	ViewTransformMap.Add(TEXT("Right"), Right);
-	ViewTransformMap.Add(TEXT("Front"), Front);
-	ViewTransformMap.Add(TEXT("Back"), Back);
-
-	FViewport* ActiveViewport = nullptr;
+	ViewTransformMap.Add(EViewModeIndex::Top, Top);
+	ViewTransformMap.Add(EViewModeIndex::Bottom, Bottom);
+	ViewTransformMap.Add(EViewModeIndex::Left, Left);
+	ViewTransformMap.Add(EViewModeIndex::Right, Right);
+	ViewTransformMap.Add(EViewModeIndex::Front, Front);
+	ViewTransformMap.Add(EViewModeIndex::Back, Back);
 
 	FPoint MousePos = FPoint(APlayerInput::Get().GetMousePos().X, APlayerInput::Get().GetMousePos().Y);
 	FVector MouseDeltaPos = APlayerInput::Get().GetMouseDeltaPos();
+
 	for (FViewport* vp : Viewports)
 	{
-		FString ViewTypeName = vp->GetClient()->GetViewType();
+		if (FullScreenViewport && FullScreenViewport != vp)
+			continue;
 
-		if (FTransform* Transform = ViewTransformMap.Find(ViewTypeName))
+		EViewModeIndex ViewType = vp->GetClient()->GetViewType();
+
+		if (FTransform* Transform = ViewTransformMap.Find(ViewType))
 		{
 			vp->GetClient()->GetOrthographicCamera()->SetActorTransform(*Transform);
 		}
@@ -161,12 +176,12 @@ void UWorld::LateTick(float DeltaTime)
 			ViewportManager->SetActiveViewport(vp);
 		}
 
-		if (vp==ViewportManager->GetActiveViewport())
+		if (vp == ViewportManager->GetActiveViewport())
 		{
 			FEditorManager::Get().SetCamera(vp->GetClient()->GetOrthographicCamera());
-			ACamera* PerspectiveCam = vp->GetClient()->GetPerspectiveCamera();
-			if (ViewTypeName == TEXT("Perspective"))
+			if (ViewType == EViewModeIndex::Perspective)
 			{
+				ACamera* PerspectiveCam = vp->GetClient()->GetPerspectiveCamera();
 				if (APlayerInput::Get().GetKeyPress(EKeyCode::W)) { PerspectiveCam->MoveForward(); }
 				if (APlayerInput::Get().GetKeyPress(EKeyCode::S)) { PerspectiveCam->MoveBackward(); }
 				if (APlayerInput::Get().GetKeyPress(EKeyCode::A)) { PerspectiveCam->MoveLeft(); }
@@ -180,27 +195,27 @@ void UWorld::LateTick(float DeltaTime)
 				if (APlayerInput::Get().GetKeyPress(EKeyCode::RButton))
 				{
 					AOrthoGraphicActor* Actor = UEngine::Get().GetWorld()->GetOrthoGraphicActor();
-					if (ViewTypeName == FName(TEXT("Top")))
+					if (ViewType == EViewModeIndex::Top)
 					{
 						Actor->MoveTop(MouseDeltaPos);
 					}
-					else if (ViewTypeName == FName(TEXT("Bottom")))
+					else if (ViewType == EViewModeIndex::Bottom)
 					{
 						Actor->MoveBottom(MouseDeltaPos);
 					}
-					else if (ViewTypeName == FName(TEXT("Left")))
+					else if (ViewType == EViewModeIndex::Left)
 					{
 						Actor->MoveLeft(MouseDeltaPos);
 					}
-					else if (ViewTypeName == FName(TEXT("Right")))
+					else if (ViewType == EViewModeIndex::Right)
 					{
 						Actor->MoveRight(MouseDeltaPos);
 					}
-					else if (ViewTypeName == FName(TEXT("Front")))
+					else if (ViewType == EViewModeIndex::Front)
 					{
 						Actor->MoveFront(MouseDeltaPos);
 					}
-					else if (ViewTypeName == FName(TEXT("Back")))
+					else if (ViewType == EViewModeIndex::Back)
 					{
 						Actor->MoveBack(MouseDeltaPos);
 					}
@@ -208,6 +223,7 @@ void UWorld::LateTick(float DeltaTime)
 			}
 		}
 	}
+
 }
 
 void UWorld::OnDestroy()

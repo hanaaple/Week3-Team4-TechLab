@@ -77,8 +77,7 @@ void UI::Update()
     RenderControlPanel();
     RenderPropertyWindow();
 	RenderShowFlagsPanel();
-	RenderViewModePanel();
-
+	//RenderViewModePanel()
     Debug::ShowConsole(bWasWindowSizeUpdated, PreRatio, CurRatio);
 
     // ImGui 렌더링
@@ -130,6 +129,17 @@ void UI::RenderControlPanel()
     RenderCameraSettings();
 	RenderGridSettings();
     
+	FViewportManager* ViewportManager = UEngine::Get().GetWorld()->GetViewportManager();
+	TArray<FViewport*> Viewports = ViewportManager->GetViewports();
+	FViewport* FullScreenViewport = ViewportManager->GetFullScreenViewport();
+	int32 index = 0;
+	for (FViewport* vp : Viewports)
+	{
+		if (FullScreenViewport && FullScreenViewport != vp)
+			continue;
+		RenderViewportSettings(vp, ++index);
+	}
+
     ImGui::End();
 }
 
@@ -583,20 +593,20 @@ void UI::RenderShowFlagsPanel() const
 	ImGui::End();
 }
 
-void UI::RenderViewModePanel() const
-{
-	if (ImGui::Begin("View Mode"))
-	{													
-		static const char* viewModeNames[] = { "Default", "Solid", "Wireframe" };
-		int currentViewMode = static_cast<int>(FViewMode::Get().GetViewMode());
-
-		if (ImGui::Combo("View Mode", &currentViewMode, viewModeNames, IM_ARRAYSIZE(viewModeNames)))
-		{
-			FViewMode::Get().SetViewMode((static_cast<EViewModeIndex>(currentViewMode)));
-		}
-	}
-	ImGui::End();
-}
+//void UI::RenderViewModePanel() const
+//{
+//	if (ImGui::Begin("View Mode"))
+//	{													
+//		static const char* viewModeNames[] = { "Default", "Solid", "Wireframe" };
+//		int currentViewMode = static_cast<int>(FViewMode::Get().GetViewMode());
+//
+//		if (ImGui::Combo("View Mode", &currentViewMode, viewModeNames, IM_ARRAYSIZE(viewModeNames)))
+//		{
+//			FViewMode::Get().SetViewMode((static_cast<ERenderModeIndex>(currentViewMode)));
+//		}
+//	}
+//	ImGui::End();
+//}
 
 void UI::RenderGridSettings() const
 {
@@ -612,4 +622,59 @@ void UI::RenderGridSettings() const
 	{
 		World->OnChangedGridSize();
 	}
+}
+
+void UI::RenderViewportSettings(FViewport* InViewport, int32 index)
+{
+	// 뷰포트의 Rect를 이용해 창 위치 설정
+	FRect rect = InViewport->GetRect();
+	ImGui::SetNextWindowPos(ImVec2(rect.Left + 10, rect.Top + 10), ImGuiCond_Always);
+	ImGui::SetNextWindowSize(ImVec2(310, 35), ImGuiCond_Always);
+
+	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize;
+
+	FString WindowName = FString("Viewport Settings #") + FString::FromInt(index);
+	ImGui::Begin(WindowName.c_char(), nullptr, windowFlags);
+
+	// Render Mode Combo (레이블 변경)
+	static const char* RenderTypeNames[] = { "Default", "Solid", "Wireframe" };
+	int CurrentRenderType = static_cast<int>(InViewport->GetClient()->GetRenderType());
+	ImGui::PushItemWidth(100.0f);	//콤보박스 길이 수정
+	if (ImGui::Combo("##Render Mode", &CurrentRenderType, RenderTypeNames, IM_ARRAYSIZE(RenderTypeNames)))
+	{
+		InViewport->GetClient()->SetRenderType(static_cast<ERenderModeIndex>(CurrentRenderType));
+	}
+
+	ImGui::SameLine();
+
+	// View Type Combo (레이블 변경 및 enum 타입 확인)
+	static const char* ViewTypeNames[] = { "Perspective", "Top", "Bottom", "Left", "Right", "Front", "Back" };
+	int CurrentViewType = static_cast<int>(InViewport->GetClient()->GetViewType());
+	ImGui::PushItemWidth(100.0f);	//콤보박스 길이 수정
+	if (ImGui::Combo("##View Type", &CurrentViewType, ViewTypeNames, IM_ARRAYSIZE(ViewTypeNames)))
+	{
+		// 만약 뷰 타입이 EViewType으로 관리된다면, 이곳에서 static_cast<EViewType>(CurrentViewType)를 사용해야 합니다.
+		InViewport->GetClient()->SetViewType(static_cast<EViewModeIndex>(CurrentViewType));
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("FullScreen"))
+	{
+		FViewportManager* ViewportManager = UEngine::Get().GetWorld()->GetViewportManager();
+		FViewport* FullScreenViewport = ViewportManager->GetFullScreenViewport();
+
+		if (FullScreenViewport)
+		{
+			ViewportManager->SetFullScreenViewport(nullptr);
+		}
+		else
+		{
+			ViewportManager->SetFullScreenViewport(InViewport);
+			ViewportManager->SetActiveViewport(InViewport);
+			InViewport->SetRect(FRect(0, 0, UEngine::Get().GetScreenWidth(), UEngine::Get().GetScreenHeight()));
+		}
+	}
+
+	ImGui::End();
 }
