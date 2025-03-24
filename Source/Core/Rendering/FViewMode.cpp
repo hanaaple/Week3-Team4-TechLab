@@ -5,7 +5,7 @@ void FViewMode::Initialize(ID3D11Device* InDevice)
 {
 	Device = InDevice;
 	CreateRasterizerStates();
-	CurrentViewMode = EViewModeIndex::VMI_Default;
+	CurrentViewMode = ERenderModeIndex::VMI_Default;
 }
 
 FViewMode::~FViewMode()
@@ -40,11 +40,11 @@ void FViewMode::CreateRasterizerStates()
 	D3D11_RASTERIZER_DESC wireframeDesc = solidDesc;
 	wireframeDesc.FillMode = D3D11_FILL_WIREFRAME;
 
-	Device->CreateRasterizerState(&solidDesc, &RasterizerStates[EViewModeIndex::VMI_Solid]);
-	Device->CreateRasterizerState(&wireframeDesc, &RasterizerStates[EViewModeIndex::VMI_Wireframe]);
+	Device->CreateRasterizerState(&solidDesc, &RasterizerStates[ERenderModeIndex::VMI_Solid]);
+	Device->CreateRasterizerState(&wireframeDesc, &RasterizerStates[ERenderModeIndex::VMI_Wireframe]);
 }
 
-void FViewMode::SetViewMode(EViewModeIndex ViewMode)
+void FViewMode::SetViewMode(ERenderModeIndex ViewMode)
 {
 	CurrentViewMode = ViewMode;
 }

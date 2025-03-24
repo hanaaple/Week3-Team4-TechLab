@@ -238,10 +238,10 @@ private:
 	[[maybe_unused]]
     bool bIsBlockInput = false;
 
+    FVector MouseNDCPos;
     FVector MousePreNDCPos;
     FVector MousePos;
     FVector MousePrePos;
-    FVector MouseNDCPos;
 };
 
 template <typename Fn>
