@@ -646,23 +646,23 @@ void UI::RenderViewportSettings(FViewport* InViewport, int32 index)
 	ImGui::Begin(WindowName.c_char(), nullptr, windowFlags);
 
 	// Render Mode Combo (레이블 변경)
-	static const char* RenderTypeNames[] = { "Default", "Solid", "Wireframe" };
-	int CurrentRenderType = static_cast<int>(InViewport->GetClient()->GetRenderType());
+	static const char* ViewModeIndex[] = { "Default", "Solid", "Wireframe" };
+	int CurrentViewMode = static_cast<int>(InViewport->GetClient()->GetRenderType());
 	ImGui::PushItemWidth(100.0f);	//콤보박스 길이 수정
-	if (ImGui::Combo("##Render Mode", &CurrentRenderType, RenderTypeNames, IM_ARRAYSIZE(RenderTypeNames)))
+	if (ImGui::Combo("##Render Mode", &CurrentViewMode, ViewModeIndex, IM_ARRAYSIZE(ViewModeIndex)))
 	{
-		InViewport->GetClient()->SetRenderType(static_cast<ERenderModeIndex>(CurrentRenderType));
+		InViewport->GetClient()->SetRenderType(static_cast<ERenderModeIndex>(CurrentViewMode));
 	}
 
 	ImGui::SameLine();
 
 	// View Type Combo (레이블 변경 및 enum 타입 확인)
-	static const char* ViewTypeNames[] = { "Perspective", "Top", "Bottom", "Left", "Right", "Front", "Back" };
-	int CurrentViewType = static_cast<int>(InViewport->GetClient()->GetViewType());
+	static const char* LevelViewportIndex[] = { "Perspective", "Top", "Bottom", "Left", "Right", "Front", "Back" };
+	int CurrentLevelViewportMode = static_cast<int>(InViewport->GetClient()->GetViewType());
 	ImGui::PushItemWidth(100.0f);	//콤보박스 길이 수정
-	if (ImGui::Combo("##View Type", &CurrentViewType, ViewTypeNames, IM_ARRAYSIZE(ViewTypeNames)))
+	if (ImGui::Combo("##View Type", &CurrentLevelViewportMode, LevelViewportIndex, IM_ARRAYSIZE(LevelViewportIndex)))
 	{
-		InViewport->GetClient()->SetViewType(static_cast<EViewModeIndex>(CurrentViewType));
+		InViewport->GetClient()->SetViewType(static_cast<ELevelViewportType>(CurrentLevelViewportMode));
 	}
 
 	ImGui::SameLine();

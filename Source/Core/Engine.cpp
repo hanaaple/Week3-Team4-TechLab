@@ -368,11 +368,11 @@ void UEngine::RenderSplitScreen()
 		FDevice::Get().GetDeviceContext()->RSSetViewports(1, &d3dvp);
 		FDevice::Get().SetRenderTargetOnly();
 
-		EViewModeIndex ViewType = vp->GetClient()->GetViewType();
+		ELevelViewportType LevelViewportType = vp->GetClient()->GetViewType();
 		
 		float Width = vp->GetRect().Right - vp->GetRect().Left;
 		float Height = vp->GetRect().Bottom - vp->GetRect().Top;
-		if (ViewType == EViewModeIndex::Perspective)
+		if (LevelViewportType == ELevelViewportType::Perspective)
 		{
 			vp->GetClient()->GetPerspectiveCamera()->SetWidthHeight(Width, Height);
 			vp->GetClient()->GetPerspectiveCamera()->UpdateCameraMatrix();
