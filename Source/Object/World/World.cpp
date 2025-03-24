@@ -15,6 +15,7 @@
 #include "Static/FEditorManager.h"
 #include "Static/FLineBatchManager.h"
 #include "Static/FUUIDBillBoard.h"
+#include "Core/Rendering/FViewport.h"
 
 
 void UWorld::InitWorld()
@@ -42,9 +43,10 @@ void UWorld::InitWorld()
 	Viewports[2]->SetRect(FRect(0, 0, UEngine::Get().GetScreenWidth(), UEngine::Get().GetScreenHeight()));
 
 	Viewports[0]->GetClient()->SetViewType(EViewModeIndex::Top);
-	Viewports[1]->GetClient()->SetViewType(EViewModeIndex::Top);
+	Viewports[1]->GetClient()->SetViewType(EViewModeIndex::Front);
 	Viewports[2]->GetClient()->SetViewType(EViewModeIndex::Perspective);
-	Viewports[3]->GetClient()->SetViewType(EViewModeIndex::Top);
+	Viewports[2]->GetClient()->SetRenderType(ERenderModeIndex::VMI_Default);
+	Viewports[3]->GetClient()->SetViewType(EViewModeIndex::Right);
 
 }
 
@@ -239,9 +241,6 @@ void UWorld::Render()
 	{
 		return;
 	}
-
-	ACamera* cam = FEditorManager::Get().GetCamera();
-	cam->UpdateCameraMatrix();
 
 	//if (APlayerInput::Get().GetKeyDown(EKeyCode::LButton))
 	//{

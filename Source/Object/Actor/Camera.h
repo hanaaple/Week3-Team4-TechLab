@@ -28,8 +28,9 @@ private:
     float Far;
     // 화면각
     float FieldOfView;
+	float Width;
+	float Height;
 
-	
 	FMatrix ViewMatrix;
 	FMatrix ProjectionMatrix;
 	FMatrix ViewProjectionMatrix;
@@ -50,11 +51,12 @@ public:
     void SetFieldOfVew(float Fov);
     void SetFar(float Far);
     void SetNear(float Near);
-    
+	void SetWidthHeight(float Width, float Height);
+
     float GetFieldOfView() const;
     float GetNear() const;
     float GetFar() const;
-
+	
 	void SetZoomSize(float InZoomSize) { ZoomSize = FMath::Clamp(InZoomSize, 100.f, 1000.f); }
 	float GetZoomSize() const { return ZoomSize; }
 

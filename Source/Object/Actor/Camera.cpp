@@ -50,6 +50,12 @@ void ACamera::SetNear(float Near)
     this->Near = Near;
 }
 
+void ACamera::SetWidthHeight(float Width, float Height)
+{
+	this->Width = Width;
+	this->Height = Height;
+}
+
 float ACamera::GetFieldOfView() const
 {
     return  FieldOfView;
@@ -79,8 +85,8 @@ void ACamera::UpdateCameraMatrix()
 
 	//TODO: ScreenRatio는 뷰포트 마다 다를 수 있으므로 입력으로 받아야함.
 	// 프로젝션 매트릭스 업데이트
-	float AspectRatio = UEngine::Get().GetScreenRatio();
 
+	float AspectRatio = Width / Height;
 	float FOV = FMath::DegreesToRadians(GetFieldOfView());
 	float Near = GetNear();
 	float Far = GetFar();
@@ -91,7 +97,7 @@ void ACamera::UpdateCameraMatrix()
 	}
 	else if (ProjectionMode == ECameraProjectionMode::Orthographic)
 	{
-		ProjectionMatrix = FMatrix::OrthoForLH(UEngine::Get().GetScreenWidth() / ZoomSize, UEngine::Get().GetScreenHeight() / ZoomSize, Near, Far);
+		ProjectionMatrix = FMatrix::OrthoForLH(Width / ZoomSize, Height / ZoomSize, Near, Far);
 
 		// TODO: 추가 필요.
 		// ProjectionMatrix = FMatrix::OrthoForLH(FOV, AspectRatio, Near, Far);

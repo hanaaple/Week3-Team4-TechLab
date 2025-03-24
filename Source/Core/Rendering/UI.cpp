@@ -653,7 +653,6 @@ void UI::RenderViewportSettings(FViewport* InViewport, int32 index)
 	ImGui::PushItemWidth(100.0f);	//콤보박스 길이 수정
 	if (ImGui::Combo("##View Type", &CurrentViewType, ViewTypeNames, IM_ARRAYSIZE(ViewTypeNames)))
 	{
-		// 만약 뷰 타입이 EViewType으로 관리된다면, 이곳에서 static_cast<EViewType>(CurrentViewType)를 사용해야 합니다.
 		InViewport->GetClient()->SetViewType(static_cast<EViewModeIndex>(CurrentViewType));
 	}
 

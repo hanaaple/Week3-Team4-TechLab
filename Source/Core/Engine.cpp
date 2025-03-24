@@ -34,7 +34,6 @@ LRESULT UEngine::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_DESTROY:
 		PostQuitMessage(0); // 프로그램 종료
 		break;
-		break;
 	case WM_CAPTURECHANGED://현재 마우스 입력을 독점(capture)하고 있던 창이 마우스 캡처를 잃었을 때
 		break;
 	case WM_SIZE:
@@ -139,57 +138,60 @@ void UEngine::Run()
 			}
 		}
 
+		if (!UEngine::Get().GetWorld()->GetViewportManager()->GetFullScreenViewport())
+		{
 #pragma region BorderMouse
-		// 마우스 입력 통한 창 크기 조절 //
-		FPoint MousePos = FPoint(APlayerInput::Get().GetMousePos().X, APlayerInput::Get().GetMousePos().Y);
+			// 마우스 입력 통한 창 크기 조절 //
+			FPoint MousePos = FPoint(APlayerInput::Get().GetMousePos().X, APlayerInput::Get().GetMousePos().Y);
 
-		//TODO: 마우스 커서 플래그로 관리
-		if (RootSplitter->IsBorderHover(MousePos))
-			SetCursor(LoadCursor(nullptr, IDC_SIZEALL));
-		else if (TopSplitter->IsBorderHover(MousePos) || BottomSplitter->IsBorderHover(MousePos))
-			SetCursor(LoadCursor(nullptr, IDC_SIZEALL));
-		else
-			SetCursor(LoadCursor(nullptr, IDC_ARROW));
-
-		if (APlayerInput::Get().GetKeyDown(EKeyCode::LButton))
-		{
+			//TODO: 마우스 커서 플래그로 관리
 			if (RootSplitter->IsBorderHover(MousePos))
+				SetCursor(LoadCursor(nullptr, IDC_SIZEALL));
+			else if (TopSplitter->IsBorderHover(MousePos) || BottomSplitter->IsBorderHover(MousePos))
+				SetCursor(LoadCursor(nullptr, IDC_SIZEALL));
+			else
+				SetCursor(LoadCursor(nullptr, IDC_ARROW));
+
+			if (APlayerInput::Get().GetKeyDown(EKeyCode::LButton))
 			{
-				RootSplitter->SetIsBorderDragging(true);
+				if (RootSplitter->IsBorderHover(MousePos))
+				{
+					RootSplitter->SetIsBorderDragging(true);
+				}
+
+				if (TopSplitter->IsBorderHover(MousePos) || BottomSplitter->IsBorderHover(MousePos))
+				{
+					TopSplitter->SetIsBorderDragging(true);
+					BottomSplitter->SetIsBorderDragging(true);
+				}
 			}
 
-			if (TopSplitter->IsBorderHover(MousePos) || BottomSplitter->IsBorderHover(MousePos))
+			if (APlayerInput::Get().GetKeyUp(EKeyCode::LButton))
 			{
-				TopSplitter->SetIsBorderDragging(true);
-				BottomSplitter->SetIsBorderDragging(true);
-			}
-		}
-
-		if (APlayerInput::Get().GetKeyUp(EKeyCode::LButton))
-		{
-			RootSplitter->SetIsBorderDragging(false);
-			TopSplitter->SetIsBorderDragging(false);
-			BottomSplitter->SetIsBorderDragging(false);
-		}
-
-		if (APlayerInput::Get().GetKeyPress(EKeyCode::LButton))
-		{
-			FPoint DeltaMousePos = FPoint(APlayerInput::Get().GetMouseScreenDeltaPos().X, APlayerInput::Get().GetMouseScreenDeltaPos().Y);
-
-			if (RootSplitter->GetIsBorderDragging())
-			{
-				RootSplitter->MoveBorder(DeltaMousePos.Y);
-				TopSplitter->MoveParentBorder(DeltaMousePos.Y, true);
-				BottomSplitter->MoveParentBorder(DeltaMousePos.Y, false);
+				RootSplitter->SetIsBorderDragging(false);
+				TopSplitter->SetIsBorderDragging(false);
+				BottomSplitter->SetIsBorderDragging(false);
 			}
 
-			if (TopSplitter->GetIsBorderDragging() || BottomSplitter->GetIsBorderDragging())
+			if (APlayerInput::Get().GetKeyPress(EKeyCode::LButton))
 			{
-				TopSplitter->MoveBorder(DeltaMousePos.X);
-				BottomSplitter->MoveBorder(DeltaMousePos.X);
+				FPoint DeltaMousePos = FPoint(APlayerInput::Get().GetMouseScreenDeltaPos().X, APlayerInput::Get().GetMouseScreenDeltaPos().Y);
+
+				if (RootSplitter->GetIsBorderDragging())
+				{
+					RootSplitter->MoveBorder(DeltaMousePos.Y);
+					TopSplitter->MoveParentBorder(DeltaMousePos.Y, true);
+					BottomSplitter->MoveParentBorder(DeltaMousePos.Y, false);
+				}
+
+				if (TopSplitter->GetIsBorderDragging() || BottomSplitter->GetIsBorderDragging())
+				{
+					TopSplitter->MoveBorder(DeltaMousePos.X);
+					BottomSplitter->MoveBorder(DeltaMousePos.X);
+				}
 			}
-		}
 #pragma endregion BorderMouse
+		}
 
 		if (!ImGui::GetIO().WantCaptureMouse)
 		{		
@@ -367,14 +369,20 @@ void UEngine::RenderSplitScreen()
 		FDevice::Get().SetRenderTargetOnly();
 
 		EViewModeIndex ViewType = vp->GetClient()->GetViewType();
-			
+		
+		float Width = vp->GetRect().Right - vp->GetRect().Left;
+		float Height = vp->GetRect().Bottom - vp->GetRect().Top;
 		if (ViewType == EViewModeIndex::Perspective)
 		{
+			vp->GetClient()->GetPerspectiveCamera()->SetWidthHeight(Width, Height);
+			vp->GetClient()->GetPerspectiveCamera()->UpdateCameraMatrix();
 			World->SetCamera(vp->GetClient()->GetPerspectiveCamera());
 			FEditorManager::Get().SetCamera(vp->GetClient()->GetPerspectiveCamera());
 		}
 		else
 		{
+			vp->GetClient()->GetOrthographicCamera()->SetWidthHeight(Width, Height);
+			vp->GetClient()->GetOrthographicCamera()->UpdateCameraMatrix();
 			World->SetCamera(vp->GetClient()->GetOrthographicCamera());
 			FEditorManager::Get().SetCamera(vp->GetClient()->GetOrthographicCamera());
 		}

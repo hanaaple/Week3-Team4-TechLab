@@ -23,15 +23,6 @@ public:
 		RenderType = ERenderModeIndex::VMI_Wireframe;
 	}
 
-	FViewportClient(const EViewModeIndex InViewType, ACamera* InPerspectiveCamera, ACamera* InOrthographicCamera)
-		: ViewType(InViewType), PerspectiveCamera(InPerspectiveCamera), OrthographicCamera(InOrthographicCamera)
-	{
-		ViewType = InViewType;
-		PerspectiveCamera = InPerspectiveCamera;
-		OrthographicCamera = InOrthographicCamera;
-		RenderType = ERenderModeIndex::VMI_Wireframe;
-	}
-
 	EViewModeIndex GetViewType() const { return ViewType; }
 	ERenderModeIndex GetRenderType() const { return RenderType; }
 

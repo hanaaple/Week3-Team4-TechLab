@@ -78,7 +78,7 @@ void FDevice::CreateDeviceAndSwapChain(HWND hWindow)
 	);
 
 	// 생성된 SwapChain의 정보 가져오기
-	SwapChain->GetDesc(&SwapChainDesc);
+	//SwapChain->GetDesc(&SwapChainDesc);
 
 	// 뷰포트 정보 설정
 	//ViewportInfo = {
@@ -139,10 +139,10 @@ void FDevice::OnUpdateWindowSize(int Width, int Height)
 	{
 		SwapChain->ResizeBuffers(0, Width, Height, DXGI_FORMAT_UNKNOWN, 0);
 
-		DXGI_SWAP_CHAIN_DESC SwapChainDesc;
-		SwapChain->GetDesc(&SwapChainDesc);
-		//TODO: Update Split Screen
-		// 뷰포트 정보 갱신
+		//DXGI_SWAP_CHAIN_DESC SwapChainDesc;
+		//SwapChain->GetDesc(&SwapChainDesc);
+		////TODO: Update Split Screen
+		//// 뷰포트 정보 갱신
 
 	}
 }

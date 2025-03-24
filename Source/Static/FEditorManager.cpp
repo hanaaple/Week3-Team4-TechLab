@@ -213,17 +213,17 @@ void FEditorManager::OnUpdateWindowSize(uint32 Width, uint32 Height)
 		UUIDTexture = nullptr;
 	}
 
-	D3D11_TEXTURE2D_DESC textureDesc = {};
-	textureDesc.Width = Width;
-	textureDesc.Height = Height;
-	textureDesc.MipLevels = 1;
-	textureDesc.ArraySize = 1;
-	textureDesc.Format = DXGI_FORMAT_R32G32B32A32_UINT; // 32비트 UINT로 변경
-	textureDesc.SampleDesc.Count = 1;
-	textureDesc.Usage = D3D11_USAGE_DEFAULT;
-	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-	UUIDTexture = FTexture::Create("UUIDTexture", textureDesc);
-	UUIDTexture->CreateRenderTargetView();
+	//D3D11_TEXTURE2D_DESC textureDesc = {};
+	//textureDesc.Width = Width;
+	//textureDesc.Height = Height;
+	//textureDesc.MipLevels = 1;
+	//textureDesc.ArraySize = 1;
+	//textureDesc.Format = DXGI_FORMAT_R32G32B32A32_UINT; // 32비트 UINT로 변경
+	//textureDesc.SampleDesc.Count = 1;
+	//textureDesc.Usage = D3D11_USAGE_DEFAULT;
+	//textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	//UUIDTexture = FTexture::Create("UUIDTexture", textureDesc);
+	//UUIDTexture->CreateRenderTargetView();
 }
 
 void FEditorManager::OnResizeComplete()
