@@ -75,7 +75,9 @@ public:
     ObjectType* GetObjectByUUID(uint32 InUUID) const;
     UObject* GetObjectByUUID(uint32 InUUID) const;
 
-
+	SSplitterH* GetRootSplitter() const { return RootSplitter.get(); }
+	SSplitterV* GetTopSplitter() const { return TopSplitter.get(); }
+	SSplitterV* GetBottomSplitter() const { return BottomSplitter.get(); }
 private:
     bool IsRunning = false;
     EScreenMode ScreenMode = EScreenMode::Windowed;
@@ -90,6 +92,10 @@ private:
 
     uint32 ScreenWidth = 0;
     uint32 ScreenHeight = 0;
+
+	std::unique_ptr<SSplitterH> RootSplitter = nullptr;
+	std::unique_ptr<SSplitterV> TopSplitter = nullptr;
+	std::unique_ptr<SSplitterV> BottomSplitter = nullptr;
 
 	float EngineDeltaTime = 0.0f;
 

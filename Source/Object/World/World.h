@@ -81,10 +81,6 @@ private:
 	AOrthoGraphicActor* OrthoGraphicActor = nullptr;
 	float GridSize = 100.0f;
 
-	std::unique_ptr<SSplitterH> RootSplitter = nullptr;
-	std::unique_ptr<SSplitterV> TopSplitter = nullptr;
-	std::unique_ptr<SSplitterV> BottomSplitter = nullptr;
-
 	TMap<FString, FTransform> ViewTransformMap;
 	FViewportManager* ViewportManager;
 public:

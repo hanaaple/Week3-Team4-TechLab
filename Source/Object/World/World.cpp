@@ -21,16 +21,9 @@ void UWorld::InitWorld()
 {
 	GridSize = FString::ToFloat(UConfigManager::Get().GetValue(TEXT("World"), TEXT("GridSize")));
 	ViewportManager = new FViewportManager();
-	/* Split Initial Window */
-	uint32 ScreenWidth = UEngine::Get().GetScreenWidth();
-	uint32 ScreenHeight = UEngine::Get().GetScreenHeight();
-	RootSplitter = std::make_unique<SSplitterH>(0, 0, ScreenWidth, ScreenHeight);
-	RootSplitter->SplitHorizontally(ScreenHeight / 2.f);
-	TopSplitter = std::make_unique<SSplitterV>(RootSplitter->GetSideLT()->GetRect());
-	TopSplitter->SplitVertically(ScreenWidth / 2.f);
-	BottomSplitter = std::make_unique<SSplitterV>(RootSplitter->GetSideRB()->GetRect());
-	BottomSplitter->SplitVertically(ScreenWidth / 2.f);
 
+	SSplitterV* TopSplitter = UEngine::Get().GetTopSplitter();
+	SSplitterV* BottomSplitter = UEngine::Get().GetBottomSplitter();
 	TArray<FRect> Rects;
 	Rects.Add(TopSplitter->GetSideLT()->GetRect());
 	Rects.Add(TopSplitter->GetSideRB()->GetRect());
@@ -104,6 +97,18 @@ void UWorld::LateTick(float DeltaTime)
 	}
 	PendingDestroyActors.Empty();
 
+
+	FViewportManager* ViewportManager = UEngine::Get().GetWorld()->GetViewportManager();
+	TArray<FViewport*> Viewports = ViewportManager->GetViewports();
+
+	SSplitterV* TopSplitter = UEngine::Get().GetTopSplitter();
+	SSplitterV* BottomSplitter = UEngine::Get().GetBottomSplitter();
+	TArray<FRect> Rects;
+	Viewports[0]->SetRect(TopSplitter->GetSideLT()->GetRect());
+	Viewports[1]->SetRect(TopSplitter->GetSideRB()->GetRect());
+	Viewports[2]->SetRect(BottomSplitter->GetSideLT()->GetRect());
+	Viewports[3]->SetRect(BottomSplitter->GetSideRB()->GetRect());
+
 	FVector OrthoCamPos = UEngine::Get().GetWorld()->GetOrthoGraphicActor()->GetActorPosition();
 
 	FTransform Top;
@@ -137,9 +142,10 @@ void UWorld::LateTick(float DeltaTime)
 	ViewTransformMap.Add(TEXT("Front"), Front);
 	ViewTransformMap.Add(TEXT("Back"), Back);
 
-	FViewportManager* ViewportManager = UEngine::Get().GetWorld()->GetViewportManager();
 	FViewport* ActiveViewport = nullptr;
-	TArray<FViewport*> Viewports = ViewportManager->GetViewports();
+
+	FPoint MousePos = FPoint(APlayerInput::Get().GetMousePos().X, APlayerInput::Get().GetMousePos().Y);
+	FVector MouseDeltaPos = APlayerInput::Get().GetMouseDeltaPos();
 	for (FViewport* vp : Viewports)
 	{
 		FString ViewTypeName = vp->GetClient()->GetViewType();
@@ -149,7 +155,7 @@ void UWorld::LateTick(float DeltaTime)
 			vp->GetClient()->GetOrthographicCamera()->SetActorTransform(*Transform);
 		}
 
-		if (vp->IsMouseInside(APlayerInput::Get().GetMousePos().X, APlayerInput::Get().GetMousePos().Y) &&
+		if (vp->GetRect().Contains(MousePos) &&
 			(APlayerInput::Get().GetKeyDown(EKeyCode::LButton) || APlayerInput::Get().GetKeyDown(EKeyCode::RButton)))
 		{
 			ViewportManager->SetActiveViewport(vp);
@@ -157,8 +163,8 @@ void UWorld::LateTick(float DeltaTime)
 
 		if (vp==ViewportManager->GetActiveViewport())
 		{
+			FEditorManager::Get().SetCamera(vp->GetClient()->GetOrthographicCamera());
 			ACamera* PerspectiveCam = vp->GetClient()->GetPerspectiveCamera();
-			FVector MouseDeltaPos = APlayerInput::Get().GetMouseDeltaPos();
 			if (ViewTypeName == TEXT("Perspective"))
 			{
 				if (APlayerInput::Get().GetKeyPress(EKeyCode::W)) { PerspectiveCam->MoveForward(); }

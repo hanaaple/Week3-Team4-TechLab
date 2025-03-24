@@ -71,6 +71,16 @@ void UEngine::Initialize(
 
     InitWindow(InScreenWidth, InScreenHeight);
 
+	/* Split Initial Window */
+	uint32 ScreenWidth = UEngine::Get().GetScreenWidth();
+	uint32 ScreenHeight = UEngine::Get().GetScreenHeight();
+	RootSplitter = std::make_unique<SSplitterH>(0, 0, ScreenWidth, ScreenHeight);
+	RootSplitter->SplitHorizontally(ScreenHeight / 2.f);
+	TopSplitter = std::make_unique<SSplitterV>(RootSplitter->GetSideLT()->GetRect());
+	TopSplitter->SplitVertically(ScreenWidth / 2.f);
+	BottomSplitter = std::make_unique<SSplitterV>(RootSplitter->GetSideRB()->GetRect());
+	BottomSplitter->SplitVertically(ScreenWidth / 2.f);
+
 	InitWorld();
 	FDevice::Get().Init(WindowHandle);
     InitRenderer();
@@ -127,8 +137,59 @@ void UEngine::Run()
 				IsRunning = false;
 				break;
 			}
-
 		}
+
+#pragma region BorderMouse
+		// 마우스 입력 통한 창 크기 조절 //
+		FPoint MousePos = FPoint(APlayerInput::Get().GetMousePos().X, APlayerInput::Get().GetMousePos().Y);
+
+		//TODO: 마우스 커서 플래그로 관리
+		if (RootSplitter->IsBorderHover(MousePos))
+			SetCursor(LoadCursor(nullptr, IDC_SIZEALL));
+		else if (TopSplitter->IsBorderHover(MousePos) || BottomSplitter->IsBorderHover(MousePos))
+			SetCursor(LoadCursor(nullptr, IDC_SIZEALL));
+		else
+			SetCursor(LoadCursor(nullptr, IDC_ARROW));
+
+		if (APlayerInput::Get().GetKeyDown(EKeyCode::LButton))
+		{
+			if (RootSplitter->IsBorderHover(MousePos))
+			{
+				RootSplitter->SetIsBorderDragging(true);
+			}
+
+			if (TopSplitter->IsBorderHover(MousePos) || BottomSplitter->IsBorderHover(MousePos))
+			{
+				TopSplitter->SetIsBorderDragging(true);
+				BottomSplitter->SetIsBorderDragging(true);
+			}
+		}
+
+		if (APlayerInput::Get().GetKeyUp(EKeyCode::LButton))
+		{
+			RootSplitter->SetIsBorderDragging(false);
+			TopSplitter->SetIsBorderDragging(false);
+			BottomSplitter->SetIsBorderDragging(false);
+		}
+
+		if (APlayerInput::Get().GetKeyPress(EKeyCode::LButton))
+		{
+			FPoint DeltaMousePos = FPoint(APlayerInput::Get().GetMouseScreenDeltaPos().X, APlayerInput::Get().GetMouseScreenDeltaPos().Y);
+
+			if (RootSplitter->GetIsBorderDragging())
+			{
+				RootSplitter->MoveBorder(DeltaMousePos.Y);
+				TopSplitter->MoveParentBorder(DeltaMousePos.Y, true);
+				BottomSplitter->MoveParentBorder(DeltaMousePos.Y, false);
+			}
+
+			if (TopSplitter->GetIsBorderDragging() || BottomSplitter->GetIsBorderDragging())
+			{
+				TopSplitter->MoveBorder(DeltaMousePos.X);
+				BottomSplitter->MoveBorder(DeltaMousePos.X);
+			}
+		}
+#pragma endregion BorderMouse
 
 		if (!ImGui::GetIO().WantCaptureMouse)
 		{		
