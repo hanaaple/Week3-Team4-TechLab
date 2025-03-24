@@ -184,6 +184,7 @@
     <ClCompile Include="Source\Core\Rendering\FontAtlas.cpp" />
     <ClCompile Include="Source\Core\Utils\ObjParser.cpp" />
     <ClCompile Include="Source\Debug\DebugDrawManager.cpp" />
+    <ClCompile Include="Source\Object\Actor\StaticMeshObj.cpp" />
     <ClCompile Include="Source\Object\Actor\OrthoGraphicActor.cpp" />
     <ClCompile Include="Source\Object\Actor\SubUVParticle.cpp" />
     <ClCompile Include="Source\Object\Actor\WorldGrid.cpp" />
@@ -268,6 +269,12 @@
     <ClCompile Include="Source\Object\Actor\SpotLight.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Shaders\MeshShader.hlsl">
+		<ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+		<ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+		<ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+		<ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="Shaders\Font_VS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
@@ -327,6 +334,7 @@
     <ClInclude Include="Source\Core\Rendering\FontAtlas.h" />
     <ClInclude Include="Source\Core\Utils\ObjParser.h" />
     <ClInclude Include="Source\Debug\DebugDrawManager.h" />
+    <ClInclude Include="Source\Object\Actor\StaticMeshObj.h" />
     <ClInclude Include="Source\Object\Actor\WorldGrid.h" />
     <ClInclude Include="Source\Object\PrimitiveComponent\GizmoComponent.h" />
     <ClInclude Include="Source\Core\Rendering\FViewMode.h" />
@@ -484,6 +492,10 @@
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="JungleEngine.natvis" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DefaultTexture.png" />
+    <Content Include="DefaultTexture.dds" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

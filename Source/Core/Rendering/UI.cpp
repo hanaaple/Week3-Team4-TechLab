@@ -14,6 +14,7 @@
 #include "Object/Actor/Cylinder.h"
 #include "Object/Actor/Sphere.h"
 #include "Object/Actor/SpotLight.h"
+#include "Object/Actor/StaticMeshObj.h"
 #include "Object/Light/SpotLightComponent.h"
 #include "Object/World/World.h"
 #include "Resource/Util/TObjectIterator.h"
@@ -170,7 +171,7 @@ void UI::RenderMemoryUsage() const
 
 void UI::RenderPrimitiveSelection()
 {
-    const char* items[] = { "Sphere", "Cube", "Cylinder", "Cone", "SpotLight"};
+    const char* items[] = { "StaticMesh", "Sphere", "Cube", "Cylinder", "Cone", "SpotLight"};
 
     ImGui::Combo("Primitive", &currentItem, items, IM_ARRAYSIZE(items));
 
@@ -198,6 +199,10 @@ void UI::RenderPrimitiveSelection()
 			else if (strcmp(items[currentItem], "SpotLight") == 0)
 			{
 				World->SpawnActor<ASpotLight>();
+			}
+			else if (strcmp(items[currentItem], "StaticMesh") == 0)
+			{
+				World->SpawnActor<AStaticMeshObj>();
 			}
             //else if (strcmp(items[currentItem], "Triangle") == 0)
             //{
@@ -390,8 +395,9 @@ void UI::RenderPropertyWindow() const
 				ImGui::Text("GizmoType: Scale");
 			}
 		}*/
-    	if (UStaticMeshComponent* StaticMeshComponent = selectedActor->GetComponentByClass<UStaticMeshComponent>())
+    	if (selectedActor->IsA<AStaticMeshObj>())
     	{
+    		UStaticMeshComponent* StaticMeshComponent = selectedActor->GetComponentByClass<UStaticMeshComponent>();
     		TArray<char*> MeshItemList;
     		TArray<UStaticMesh*> MeshItems;
     		int i = 0;
@@ -414,13 +420,16 @@ void UI::RenderPropertyWindow() const
 
     		if (ImGui::Combo("StaticMesh Asset", &CurrentMeshItem, MeshItemList.GetData(), MeshItemList.Num()))
     		{
-    			StaticMeshComponent->SetStaticMesh(MeshItems[CurrentMeshItem]->FResource::GetName());
+    			FString MeshName = MeshItems[CurrentMeshItem]->FResource::GetName();
+    			StaticMeshComponent->SetStaticMesh(MeshName);
+    			//StaticMeshComponent->GetRenderResourceCollection().SetTextureBinding(MeshName, 0, true, true);
+    			StaticMeshComponent->GetRenderResourceCollection().SetTextureBinding("DefaultTexture", 1, true, true);
     		}
 
     		for (auto MeshString : MeshItemList)
     		{
     			free(MeshString);
-    		} 
+    		}
     	}
     	if (selectedActor->IsA<ASpotLight>())
     	{
