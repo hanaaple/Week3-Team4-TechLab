@@ -88,6 +88,7 @@ public:
 	}
 
 	void SetStaticMeshAsset(FStaticMesh* MeshAsset) { StaticMeshAsset = MeshAsset; }
+	FStaticMesh* GetStaticMeshAsset() const { return StaticMeshAsset; }
 
 	void AddMaterial(const std::shared_ptr<FMaterial>& InMaterial) { Materials.Add(InMaterial); }
 	TArray<std::shared_ptr<FMaterial>> GetMaterials() { return Materials; }

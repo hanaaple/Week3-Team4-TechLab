@@ -13,6 +13,8 @@ struct UObjectInfo
 	FVector Location;
 	FVector Rotation;
 	FVector Scale;
+	FString ObjStaticMeshName;
+	//FString ObjStaticMeshAssetPath;
 	FString ObjectType;
 
 	uint32 UUID;

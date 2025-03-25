@@ -16,6 +16,7 @@
 #include "Static/FLineBatchManager.h"
 #include "Static/FUUIDBillBoard.h"
 #include "Core/Rendering/FViewport.h"
+#include "Object/Actor/StaticMeshObj.h"
 
 
 void UWorld::InitWorld()
@@ -454,6 +455,11 @@ void UWorld::LoadWorld(const char* InSceneName)
 		{
 			Actor = SpawnActor<ACone>();
 		}
+		else if (ObjectInfo->ObjectType == "StaticMeshObj")
+		{
+			Actor = SpawnActor<AStaticMeshObj>();
+			dynamic_cast<UStaticMeshComponent*>(Actor->GetRootComponent())->SetStaticMesh(ObjectInfo->ObjStaticMeshName);
+		}
 
 		if (Actor)
 			Actor->SetActorTransform(Transform);
@@ -583,6 +589,8 @@ UWorldInfo UWorld::GetWorldInfo() const
 				.Location = actor->GetActorPosition(),
 				.Rotation = actor->GetActorRotation(),
 				.Scale = actor->GetActorScale(),
+				.ObjStaticMeshName = dynamic_cast<AStaticMeshObj*>(actor) ? dynamic_cast<UStaticMeshComponent*>(dynamic_cast<AStaticMeshObj*>(actor)->GetRootComponent())->GetStaticMesh()->GetStaticMeshAsset()->Name : "",
+				//.ObjStaticMeshAssetPath = dynamic_cast<AStaticMeshObj*>(actor) ? dynamic_cast<UStaticMeshComponent*>(dynamic_cast<AStaticMeshObj*>(actor)->GetRootComponent())->GetStaticMesh()->GetStaticMeshAsset()->PathFileName : "",
 				.ObjectType = actor->GetTypeName().c_char(),
 				.UUID = actor->GetUUID()
 			}

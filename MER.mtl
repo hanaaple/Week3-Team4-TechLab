@@ -1,0 +1,97 @@
+# Blender 4.4.0 MTL File: 'MER.blend'
+# www.blender.org
+
+newmtl Silver
+Ns 490.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.964686 0.964686 0.964686
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 3
+
+newmtl foil_silver
+Ns 490.000000
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 0.999999 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 3
+map_Bump Resource\\Texture\\foil_n.png
+
+newmtl tex_arm
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 3
+map_Kd Resource\\Texture\\tex_arm.png
+
+newmtl tex_body_n
+Ns 302.500000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 3
+map_Kd Resource\\Texture\\tex_body.png
+map_Bump Resource\\Texture\\tex_body_n.png
+
+newmtl tex_instruments
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 3
+map_Kd Resource\\Texture\\tex_instruments.png
+
+newmtl tex_mast
+Ns 62.500000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 3
+map_Kd Resource\\Texture\\tex_mast.png
+
+newmtl tex_panels2_n
+Ns 810.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 3
+map_Kd Resource\\Texture\\tex_panels2.png
+map_Bump Resource\\Texture\\tex_panels2_n.png
+
+newmtl tex_panels_n
+Ns 810.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 3
+map_Kd Resource\\Texture\\tex_panels.png
+map_Bump Resource\\Texture\\tex_panels_n.png
+
+newmtl tex_suspension_n
+Ns 360.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 3
+map_Kd Resource\\Texture\\tex_suspension.png
+map_Bump Resource\\Texture\\tex_suspension_n.png
