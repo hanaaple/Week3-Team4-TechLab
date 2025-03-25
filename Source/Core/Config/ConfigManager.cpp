@@ -190,6 +190,30 @@ FString UConfigManager::GetValue(const FString& InSection, const FString& InKey)
 				return "";
 			}
 		}
+		else if (InSection.Equals(TEXT("Viewports")))
+		{
+			if (InKey.Equals(TEXT("RB Left")))
+			{
+				SetValue(InSection, InKey, TEXT("960"));
+			}
+			else if (InKey.Equals(TEXT("RB Top")))
+			{
+				SetValue(InSection, InKey, TEXT("540"));	// 전체 화면이 아닌 이상 TitleBar 높이만큼 빼야함
+			}
+			else if (InKey.Equals(TEXT("RB Right")))
+			{
+				SetValue(InSection, InKey, TEXT("1920"));
+			}
+			else if (InKey.Equals(TEXT("RB Bottom")))
+			{
+				SetValue(InSection, InKey, TEXT("1280"));
+			}
+			else
+			{
+				//Invalid Key
+				return "";
+			}
+		}
 		else
 		{
 			//Invalid Section

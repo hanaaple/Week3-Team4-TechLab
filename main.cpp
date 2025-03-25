@@ -16,6 +16,9 @@
 #include <crtdbg.h>
 #include <Core/Container/String.h>
 
+#include "Object/Actor/Camera.h"
+#include "Object/World/World.h"
+
 // 그 다음 질문에 있는 코드 블록 추가
 #ifdef _DEBUG
 #ifndef DBG_NEW
@@ -103,6 +106,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		UConfigManager::Get().SetValue(TEXT("World"), TEXT("GridSize"), TEXT("100.0"));
 		UConfigManager::Get().SetValue(TEXT("Camera"), TEXT("CameraSpeed"), TEXT("10.0"));
 		UConfigManager::Get().SetValue(TEXT("Camera"), TEXT("Sensitivity"), TEXT("60.0"));
+		UConfigManager::Get().SetValue(TEXT("ViewPorts"), TEXT("RB Left"), TEXT("960"));
+		UConfigManager::Get().SetValue(TEXT("ViewPorts"), TEXT("RB Top"), TEXT("540"));
+		UConfigManager::Get().SetValue(TEXT("ViewPorts"), TEXT("RB Right"), TEXT("1920"));
+		UConfigManager::Get().SetValue(TEXT("ViewPorts"), TEXT("RB Bottom"), TEXT("1280"));
 		UConfigManager::Get().SaveConfig("editor.ini");
 	}
 
@@ -113,16 +120,23 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	UEngine& Engine = UEngine::Get();
 	if (UConfigManager::Get().GetValue(TEXT("Display"), TEXT("Fullscreen")) == "true")
 	{
-		Engine.Initialize(hInstance, AppName.c_wchar(), TEXT("JungleWindow"), 1920, 1080, EScreenMode::Fullscreen);
+		Engine.Initialize(hInstance, AppName.c_wchar(), TEXT("JungleWindow"), ScreenWidth, ScreenHeight, EScreenMode::Fullscreen);
 	}
 	else
 	{
-		Engine.Initialize(hInstance, AppName.c_wchar(), TEXT("JungleWindow"), 1920, 1080);
+		Engine.Initialize(hInstance, AppName.c_wchar(), TEXT("JungleWindow"), ScreenWidth, ScreenHeight);
 	}
 
 	Engine.Run();
 
 	Engine.Shutdown();
+
+	UConfigManager::Get().SetValue(TEXT("Camera"), TEXT("Sensitivity"), FString::SanitizeFloat(UEngine::Get().GetWorld()->GetCamera()->Sensitivity));
+	UConfigManager::Get().SetValue(TEXT("Camera"), TEXT("CameraSpeed"), FString::SanitizeFloat(UEngine::Get().GetWorld()->GetCamera()->CameraSpeed));
+	UConfigManager::Get().SetValue(TEXT("Viewports"), TEXT("RB Left"), FString::FromInt(UEngine::Get().GetWorld()->GetViewportManager()->GetViewports()[3]->GetRect().Left));
+	UConfigManager::Get().SetValue(TEXT("Viewports"), TEXT("RB Top"), FString::FromInt(UEngine::Get().GetWorld()->GetViewportManager()->GetViewports()[3]->GetRect().Top));
+	UConfigManager::Get().SetValue(TEXT("Viewports"), TEXT("RB Right"), FString::FromInt(UEngine::Get().GetWorld()->GetViewportManager()->GetViewports()[3]->GetRect().Right));
+	UConfigManager::Get().SetValue(TEXT("Viewports"), TEXT("RB Bottom"), FString::FromInt(UEngine::Get().GetWorld()->GetViewportManager()->GetViewports()[3]->GetRect().Bottom));
 
 	UConfigManager::Get().SaveConfig("editor.ini");	//TODO: Already saved in UEngine::Shutdown()>World->OnDestroy(), Needed?
 

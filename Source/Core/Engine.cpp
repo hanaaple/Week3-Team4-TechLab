@@ -1,5 +1,6 @@
 #include "Engine.h"
 
+#include "Config/ConfigManager.h"
 #include "Debug/DebugDrawManager.h"
 #include "Input/PlayerController.h"
 #include "Input/PlayerInput.h"
@@ -71,15 +72,24 @@ void UEngine::Initialize(
 
     InitWindow(InScreenWidth, InScreenHeight);
 
+	UConfigManager::Get().SetValue(TEXT("Display"), TEXT("Width"), FString::FromInt(InScreenWidth));
+	UConfigManager::Get().SetValue(TEXT("Display"), TEXT("Height"), FString::FromInt(InScreenHeight));
+
 	/* Split Initial Window */
 	uint32 ScreenWidth = UEngine::Get().GetScreenWidth();
 	uint32 ScreenHeight = UEngine::Get().GetScreenHeight();
-	RootSplitter = std::make_unique<SSplitterH>(0, 0, ScreenWidth, ScreenHeight);
-	RootSplitter->SplitHorizontally(ScreenHeight / 2.f);
+	//TODO: Remove Hard Coding
+	FRect TempRect;
+	TempRect.Left = std::stoi((UConfigManager::Get().GetValue(TEXT("Viewports"), TEXT("RB Left"))).c_char());
+	TempRect.Top = std::stoi((UConfigManager::Get().GetValue(TEXT("Viewports"), TEXT("RB Top"))).c_char());
+	TempRect.Right = std::stoi((UConfigManager::Get().GetValue(TEXT("Viewports"), TEXT("RB Right"))).c_char());
+	TempRect.Bottom = std::stoi((UConfigManager::Get().GetValue(TEXT("Viewports"), TEXT("RB Bottom"))).c_char());
+	RootSplitter = std::make_unique<SSplitterH>(0, 0, TempRect.Right, TempRect.Bottom);
+	RootSplitter->SplitHorizontally(TempRect.Top);
 	TopSplitter = std::make_unique<SSplitterV>(RootSplitter->GetSideLT()->GetRect());
-	TopSplitter->SplitVertically(ScreenWidth / 2.f);
+	TopSplitter->SplitVertically(TempRect.Left);
 	BottomSplitter = std::make_unique<SSplitterV>(RootSplitter->GetSideRB()->GetRect());
-	BottomSplitter->SplitVertically(ScreenWidth / 2.f);
+	BottomSplitter->SplitVertically(TempRect.Left);
 
 	InitWorld();
 	FDevice::Get().Init(WindowHandle);
