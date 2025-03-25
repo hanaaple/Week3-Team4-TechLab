@@ -32,8 +32,8 @@ void FDevice::InitResource()
 	}
 	
 	{
-		FVertexShader::Load(TEXT("Shaders/MeshShader.hlsl"),"StaticMesh_VS","mainVS");
-		FPixelShader::Load(TEXT("Shaders/MeshShader.hlsl"), "StaticMesh_PS", "mainPS");
+		FVertexShader::Load(TEXT("Shaders/StaticMeshShader.hlsl"),"StaticMesh_VS","mainVS");
+		FPixelShader::Load(TEXT("Shaders/StaticMeshShader.hlsl"), "StaticMesh_PS", "mainPS");
 	}
 	FPixelShader::Load(TEXT("Shaders/Font_PS.hlsl"), "Font_PS", "Font_PS");
 	FPixelShader::Load(TEXT("Shaders/SubUV_PS.hlsl"), "SubUV_PS", "SubUV_PS");
