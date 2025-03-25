@@ -25,8 +25,10 @@ public:
 	void ToggleSingleFlag(EEngineShowFlags Flag);
 
 	bool SetFlagByName(const FString& FlagName, bool bEnabled);
-
 	static int32 FindIndexByName(const FString& FlagName);
+
+	uint64 GetAllFlag() const { return ShowFlagBits; }
+	void SetAllFlag(uint64  InShowFlagBits) { ShowFlagBits = InShowFlagBits; }
 private:
 	FEngineShowFlags() { Initialize(); }
 	~FEngineShowFlags() = default;

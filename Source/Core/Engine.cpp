@@ -13,6 +13,7 @@
 #include "Static/FLineBatchManager.h"
 #include "Slate/SSplitter.h"
 #include "Rendering/FViewMode.h"
+#include "Debug/EngineShowFlags.h"
 
 class AArrow;
 class APicker;
@@ -372,6 +373,7 @@ void UEngine::RenderSplitScreen()
 		
 		float Width = vp->GetRect().Right - vp->GetRect().Left;
 		float Height = vp->GetRect().Bottom - vp->GetRect().Top;
+
 		if (LevelViewportType == ELevelViewportType::Perspective)
 		{
 			vp->GetClient()->GetPerspectiveCamera()->SetWidthHeight(Width, Height);
@@ -388,6 +390,7 @@ void UEngine::RenderSplitScreen()
 		}
 		FViewMode::Get().SetViewMode(vp->GetClient()->GetViewMode());
 		FViewMode::Get().ApplyViewMode();
+		FEngineShowFlags::Get().SetAllFlag(vp->GetClient()->GetEngineShowFlags());
 
 		World->Render();
 	}

@@ -93,7 +93,7 @@ void UPrimitiveComponent::Render()
 void UPrimitiveComponent::RenderGizmo()
 {
 	URenderer* Renderer = UEngine::Get().GetRenderer();
-	if (Renderer == nullptr || !FEngineShowFlags::Get().GetSingleFlag(EEngineShowFlags::SF_Primitives) || !bCanBeRendered)
+	if (Renderer == nullptr || !bCanBeRendered)
 	{
 		return;
 	}
