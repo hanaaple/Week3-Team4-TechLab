@@ -248,7 +248,7 @@ void FEditorManager::OnResizeComplete()
 FVector4 FEditorManager::GetPixel(FVector MPos) const
 {
 
-	const float Width = UEngine::Get().GetScreenHeight();
+	const float Width = UEngine::Get().GetScreenWidth();
 	const float Height = UEngine::Get().GetScreenHeight();
     MPos.X = FMath::Clamp(MPos.X, 0.0f, Width);
     MPos.Y = FMath::Clamp(MPos.Y, 0.0f, Height);
