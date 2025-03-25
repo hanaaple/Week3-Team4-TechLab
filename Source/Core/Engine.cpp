@@ -13,6 +13,7 @@
 #include "Static/FLineBatchManager.h"
 #include "Slate/SSplitter.h"
 #include "Rendering/FViewMode.h"
+#include "Debug/EngineShowFlags.h"
 
 class AArrow;
 class APicker;
@@ -39,15 +40,15 @@ LRESULT UEngine::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_SIZE:
 		UEngine::Get().UpdateWindowSize(LOWORD(lParam), HIWORD(lParam));
 		break;
-	case WM_MOUSEWHEEL:
-	{
-		// 마우스 휠 이벤트 처리
-		short zDelta = GET_WHEEL_DELTA_WPARAM(wParam);
-		float curZoomSize = UEngine::Get().GetWorld()->GetCamera()->GetZoomSize();
-		UEngine::Get().GetWorld()->GetCamera()->SetZoomSize(curZoomSize + zDelta);
-		break;
+	//case WM_MOUSEWHEEL:
+	//{
+	//	// 마우스 휠 이벤트 처리
+	//	short zDelta = GET_WHEEL_DELTA_WPARAM(wParam);
+	//	float curZoomSize = UEngine::Get().GetWorld()->GetCamera()->GetZoomSize();
+	//	UEngine::Get().GetWorld()->GetCamera()->SetZoomSize(curZoomSize + zDelta);
+	//	break;
 
-	}
+	//}
 	default:
 		return DefWindowProc(hWnd, uMsg, wParam, lParam);
 	}
@@ -372,6 +373,7 @@ void UEngine::RenderSplitScreen()
 		
 		float Width = vp->GetRect().Right - vp->GetRect().Left;
 		float Height = vp->GetRect().Bottom - vp->GetRect().Top;
+
 		if (LevelViewportType == ELevelViewportType::Perspective)
 		{
 			vp->GetClient()->GetPerspectiveCamera()->SetWidthHeight(Width, Height);
@@ -388,6 +390,7 @@ void UEngine::RenderSplitScreen()
 		}
 		FViewMode::Get().SetViewMode(vp->GetClient()->GetViewMode());
 		FViewMode::Get().ApplyViewMode();
+		FEngineShowFlags::Get().SetAllFlag(vp->GetClient()->GetEngineShowFlags());
 
 		World->Render();
 	}

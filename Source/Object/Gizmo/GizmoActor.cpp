@@ -20,6 +20,7 @@ AGizmoActor::AGizmoActor()
 		FVector(0.5f)
 	});
 	ZGizmo->SetCustomColor(FVector4::BLUE * 0.75f);
+	ZGizmo->SetRelativeScale(FVector(2.0f, 2.0f, 2.0f));
 	ZGizmo->Axis = ESelectedAxis::Z;
 	GizmoComponents.Add(ESelectedAxis::Z, ZGizmo);
 
@@ -30,6 +31,7 @@ AGizmoActor::AGizmoActor()
 		FVector(0.5f)
 	});
 	YGizmo->SetCustomColor(FVector4::GREEN * 0.75f);
+	YGizmo->SetRelativeScale(FVector(2.0f, 2.0f, 2.0f));
 	YGizmo->Axis = ESelectedAxis::Y;
 	GizmoComponents.Add(ESelectedAxis::Y, YGizmo);
 
@@ -41,6 +43,7 @@ AGizmoActor::AGizmoActor()
 		FVector(0.5f)
 	});
 	XGizmo->SetCustomColor(FVector4::RED * 0.757f);
+	XGizmo->SetRelativeScale(FVector(2.0f, 2.0f, 2.0f));
 	XGizmo->Axis = ESelectedAxis::X;
 	GizmoComponents.Add(ESelectedAxis::X, XGizmo);
 
@@ -180,7 +183,7 @@ void AGizmoActor::Tick(float DeltaTime)
 	}
 
 
-	SetScaleByDistance();
+	//SetScaleByDistance();
 }
 
 void AGizmoActor::DoTransform(FTransform& AT, FVector Result, AActor* Actor)

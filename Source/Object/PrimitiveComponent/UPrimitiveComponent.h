@@ -48,6 +48,7 @@ public:
 	//void UpdateConstantPicking(const URenderer& Renderer, FVector4 UUIDColor) const;
 	//void UpdateConstantDepth(const URenderer& Renderer, int Depth) const;
 	virtual void Render();
+	void RenderGizmo();
 	virtual void CalculateModelMatrix(FMatrix& OutMatrix);
 
 	virtual EPrimitiveType GetType() { return EPrimitiveType::EPT_None; }

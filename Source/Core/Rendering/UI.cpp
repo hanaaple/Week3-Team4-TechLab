@@ -77,9 +77,20 @@ void UI::Update()
 	RenderSceneManager();
     RenderControlPanel();
     RenderPropertyWindow();
-	RenderShowFlagsPanel();
+	//RenderShowFlagsPanel();
 	//RenderViewModePanel()
     Debug::ShowConsole(bWasWindowSizeUpdated, PreRatio, CurRatio);
+
+	FViewportManager* ViewportManager = UEngine::Get().GetWorld()->GetViewportManager();
+	TArray<FViewport*> Viewports = ViewportManager->GetViewports();
+	FViewport* FullScreenViewport = ViewportManager->GetFullScreenViewport();
+	int32 index = 0;
+	for (FViewport* vp : Viewports)
+	{
+		if (FullScreenViewport && FullScreenViewport != vp)
+			continue;
+		RenderViewportSettings(vp, ++index);
+	}
 
     // ImGui 렌더링
     ImGui::Render();
@@ -129,17 +140,6 @@ void UI::RenderControlPanel()
     RenderPrimitiveSelection();
     RenderCameraSettings();
 	RenderGridSettings();
-    
-	FViewportManager* ViewportManager = UEngine::Get().GetWorld()->GetViewportManager();
-	TArray<FViewport*> Viewports = ViewportManager->GetViewports();
-	FViewport* FullScreenViewport = ViewportManager->GetFullScreenViewport();
-	int32 index = 0;
-	for (FViewport* vp : Viewports)
-	{
-		if (FullScreenViewport && FullScreenViewport != vp)
-			continue;
-		RenderViewportSettings(vp, ++index);
-	}
 
     ImGui::End();
 }
@@ -258,17 +258,17 @@ void UI::RenderCameraSettings() const
         IsOrthogonal = false;
     }
 
-    if (ImGui::Checkbox("Orthogonal", &IsOrthogonal))
-    {
-        if (IsOrthogonal)
-        {
-            Camera->ProjectionMode = ECameraProjectionMode::Orthographic;
-        }
-        else
-        {
-            Camera->ProjectionMode = ECameraProjectionMode::Perspective;
-        }
-    }
+    //if (ImGui::Checkbox("Orthogonal", &IsOrthogonal))
+    //{
+    //    if (IsOrthogonal)
+    //    {
+    //        Camera->ProjectionMode = ECameraProjectionMode::Orthographic;
+    //    }
+    //    else
+    //    {
+    //        Camera->ProjectionMode = ECameraProjectionMode::Perspective;
+    //    }
+    //}
 
     float FOV = Camera->GetFieldOfView();
     if (ImGui::DragFloat("FOV", &FOV, 0.1f))
@@ -583,24 +583,24 @@ void UI::RenderSceneManager()
 	ImGui::End();
 }
 
-void UI::RenderShowFlagsPanel() const
-{
-	if (ImGui::Begin("Show Flags"))
-	{
-		bool bPrimitives = FEngineShowFlags::Get().GetSingleFlag(EEngineShowFlags::SF_Primitives);
-		if (ImGui::Checkbox("Primitives", &bPrimitives))
-		{
-			FEngineShowFlags::Get().SetSingleFlag(EEngineShowFlags::SF_Primitives, bPrimitives);
-		}
-
-		bool bBillboardText = FEngineShowFlags::Get().GetSingleFlag(EEngineShowFlags::SF_BillboardText);
-		if (ImGui::Checkbox("Billboard Text", &bBillboardText))
-		{
-			FEngineShowFlags::Get().SetSingleFlag(EEngineShowFlags::SF_BillboardText, bBillboardText);
-		}
-	}
-	ImGui::End();
-}
+//void UI::RenderShowFlagsPanel() const
+//{
+//	if (ImGui::Begin("Show Flags"))
+//	{
+//		bool bPrimitives = FEngineShowFlags::Get().GetSingleFlag(EEngineShowFlags::SF_Primitives);
+//		if (ImGui::Checkbox("Primitives", &bPrimitives))
+//		{
+//			FEngineShowFlags::Get().SetSingleFlag(EEngineShowFlags::SF_Primitives, bPrimitives);
+//		}
+//
+//		bool bBillboardText = FEngineShowFlags::Get().GetSingleFlag(EEngineShowFlags::SF_BillboardText);
+//		if (ImGui::Checkbox("Billboard Text", &bBillboardText))
+//		{
+//			FEngineShowFlags::Get().SetSingleFlag(EEngineShowFlags::SF_BillboardText, bBillboardText);
+//		}
+//	}
+//	ImGui::End();
+//}
 
 //void UI::RenderViewModePanel() const
 //{
@@ -638,7 +638,7 @@ void UI::RenderViewportSettings(FViewport* InViewport, int32 index)
 	// 뷰포트의 Rect를 이용해 창 위치 설정
 	FRect rect = InViewport->GetRect();
 	ImGui::SetNextWindowPos(ImVec2(rect.Left + 10, rect.Top + 10), ImGuiCond_Always);
-	ImGui::SetNextWindowSize(ImVec2(310, 35), ImGuiCond_Always);
+	ImGui::SetNextWindowSize(ImVec2(0, 0), ImGuiCond_Always);
 
 	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize;
 
@@ -650,9 +650,8 @@ void UI::RenderViewportSettings(FViewport* InViewport, int32 index)
 	int CurrentViewMode = static_cast<int>(InViewport->GetClient()->GetViewMode());
 	ImGui::PushItemWidth(100.0f);	//콤보박스 길이 수정
 	if (ImGui::Combo("##Render Mode", &CurrentViewMode, ViewModeIndex, IM_ARRAYSIZE(ViewModeIndex)))
-	{
 		InViewport->GetClient()->SetViewMode(static_cast<EViewModeIndex>(CurrentViewMode));
-	}
+	ImGui::PopItemWidth();
 
 	ImGui::SameLine();
 
@@ -661,8 +660,35 @@ void UI::RenderViewportSettings(FViewport* InViewport, int32 index)
 	int CurrentLevelViewportMode = static_cast<int>(InViewport->GetClient()->GetLevelViewportType());
 	ImGui::PushItemWidth(100.0f);	//콤보박스 길이 수정
 	if (ImGui::Combo("##View Type", &CurrentLevelViewportMode, LevelViewportIndex, IM_ARRAYSIZE(LevelViewportIndex)))
-	{
 		InViewport->GetClient()->SetLevelViewportType(static_cast<ELevelViewportType>(CurrentLevelViewportMode));
+	ImGui::PopItemWidth();
+
+	ImGui::SameLine();
+
+	// 메뉴 버튼을 클릭하면 커스텀 팝업 열기
+	if (ImGui::Button("Display"))
+	{
+		ImGui::OpenPopup("DisplayPopup");
+	}
+
+	// 커스텀 팝업을 고정 크기로 생성
+	ImGui::SetNextWindowSize(ImVec2(150, 100), ImGuiCond_Always);
+	if (ImGui::BeginPopup("DisplayPopup"))
+	{
+		static bool bPrimitives = FEngineShowFlags::Get().GetSingleFlag(EEngineShowFlags::SF_Primitives);
+		static bool bBillboardText = FEngineShowFlags::Get().GetSingleFlag(EEngineShowFlags::SF_BillboardText);
+
+		if (ImGui::MenuItem("Primitives", nullptr, &bPrimitives))
+		{
+			FEngineShowFlags::Get().SetSingleFlag(EEngineShowFlags::SF_Primitives, bPrimitives);
+		}
+		if (ImGui::MenuItem("Billboard Text", nullptr, &bBillboardText))
+		{
+			FEngineShowFlags::Get().SetSingleFlag(EEngineShowFlags::SF_BillboardText, bBillboardText);
+		}
+		InViewport->GetClient()->SetEngineShowFlags(FEngineShowFlags::Get().GetAllFlag());
+
+		ImGui::EndPopup();
 	}
 
 	ImGui::SameLine();
