@@ -10,7 +10,7 @@ AStaticMeshObj::AStaticMeshObj()
 	RootComponent = Comp;
 	Comp->SetRelativeTransform(FTransform());
 	
-	Comp->GetRenderResourceCollection().SetSamplerBinding("LinearSamplerState", 0, true, 
+	Comp->GetRenderResourceCollection().SetSamplerBinding("LinearSamplerState", 0, true, true); 
 }
 
 void AStaticMeshObj::BeginPlay()
