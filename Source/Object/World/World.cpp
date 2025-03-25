@@ -6,6 +6,7 @@
 #include "Debug/DebugDrawManager.h"
 #include "Object/Actor/Arrow.h"
 #include "Object/Actor/Camera.h"
+#include "Object/Actor/OrthoGraphicActor.h"
 #include "Object/Actor/Cone.h"
 #include "Object/Actor/Cube.h"
 #include "Object/Actor/Cylinder.h"
@@ -14,11 +15,39 @@
 #include "Static/FEditorManager.h"
 #include "Static/FLineBatchManager.h"
 #include "Static/FUUIDBillBoard.h"
+#include "Core/Rendering/FViewport.h"
 
 
 void UWorld::InitWorld()
 {
 	GridSize = FString::ToFloat(UConfigManager::Get().GetValue(TEXT("World"), TEXT("GridSize")));
+	ViewportManager = new FViewportManager();
+
+	SSplitterV* TopSplitter = UEngine::Get().GetTopSplitter();
+	SSplitterV* BottomSplitter = UEngine::Get().GetBottomSplitter();
+	TArray<FRect> Rects;
+	Rects.Add(TopSplitter->GetSideLT()->GetRect());
+	Rects.Add(TopSplitter->GetSideRB()->GetRect());
+	Rects.Add(BottomSplitter->GetSideLT()->GetRect());
+	Rects.Add(BottomSplitter->GetSideRB()->GetRect());
+
+	for (FRect Rect : Rects)
+	{
+		ACamera* orthocamera = SpawnActor<ACamera>();
+		orthocamera->ProjectionMode = ECameraProjectionMode::Orthographic;
+		ViewportManager->RegisterViewport(new FViewport(new FViewportClient(SpawnActor<ACamera>(), orthocamera) , Rect));
+	}
+
+	TArray<FViewport*> Viewports = ViewportManager->GetViewports();
+	ViewportManager->SetFullScreenViewport(Viewports[2]);
+	Viewports[2]->SetRect(FRect(0, 0, UEngine::Get().GetScreenWidth(), UEngine::Get().GetScreenHeight()));
+
+	Viewports[0]->GetClient()->SetViewType(ELevelViewportType::Top);
+	Viewports[1]->GetClient()->SetViewType(ELevelViewportType::Front);
+	Viewports[2]->GetClient()->SetViewType(ELevelViewportType::Perspective);
+	Viewports[2]->GetClient()->SetRenderType(ERenderModeIndex::VMI_Default);
+	Viewports[3]->GetClient()->SetViewType(ELevelViewportType::Right);
+
 }
 
 void UWorld::BeginPlay()
@@ -74,6 +103,129 @@ void UWorld::LateTick(float DeltaTime)
 		UEngine::Get().GObjects.Remove(PendingActor->GetUUID());
 	}
 	PendingDestroyActors.Empty();
+
+
+	FViewportManager* ViewportManager = UEngine::Get().GetWorld()->GetViewportManager();
+	TArray<FViewport*> Viewports = ViewportManager->GetViewports();
+
+	SSplitterV* TopSplitter = UEngine::Get().GetTopSplitter();
+	SSplitterV* BottomSplitter = UEngine::Get().GetBottomSplitter();
+
+	FViewport* FullScreenViewport = ViewportManager->GetFullScreenViewport();
+	
+	if (!FullScreenViewport)
+	{
+		Viewports[0]->SetRect(TopSplitter->GetSideLT()->GetRect());
+		Viewports[1]->SetRect(TopSplitter->GetSideRB()->GetRect());
+		Viewports[2]->SetRect(BottomSplitter->GetSideLT()->GetRect());
+		Viewports[3]->SetRect(BottomSplitter->GetSideRB()->GetRect());
+	}
+	else
+	{
+		FullScreenViewport->SetRect(FRect(0, 0, UEngine::Get().GetScreenWidth(), UEngine::Get().GetScreenHeight()));
+	}
+	FVector OrthoCamPos = UEngine::Get().GetWorld()->GetOrthoGraphicActor()->GetActorPosition();
+
+	FTransform Top;
+	Top.SetPosition(OrthoCamPos + FVector(0.f, 0.f, 50.f));
+	Top.SetRotation(FVector(0.f, 89.9f, 0.f));
+
+	FTransform Bottom;
+	Bottom.SetPosition(OrthoCamPos + FVector(0.f, 0.f, -50.f));
+	Bottom.SetRotation(FVector(0.f, -89.9f, 180.f));
+
+	FTransform Left;
+	Left.SetPosition(OrthoCamPos + FVector(0.f, -50.f, 0.f));
+	Left.SetRotation(FVector(0.f, 0.f, 90.f));
+
+	FTransform Right;
+	Right.SetPosition(OrthoCamPos + FVector(0.f, 50.f, 0.f));
+	Right.SetRotation(FVector(0.f, 0.f, -90.f));
+
+	FTransform Front;
+	Front.SetPosition(OrthoCamPos + FVector(50.f, 0.f, 0.f));
+	Front.SetRotation(FVector(0.f, 0.f, 180.f));
+
+	FTransform Back;
+	Back.SetPosition(OrthoCamPos + FVector(-0.f, 0.f, 0.f));
+	Back.SetRotation(FVector(0.f, 0.f, 0.f));
+
+	ViewTransformMap.Add(ELevelViewportType::Top, Top);
+	ViewTransformMap.Add(ELevelViewportType::Bottom, Bottom);
+	ViewTransformMap.Add(ELevelViewportType::Left, Left);
+	ViewTransformMap.Add(ELevelViewportType::Right, Right);
+	ViewTransformMap.Add(ELevelViewportType::Front, Front);
+	ViewTransformMap.Add(ELevelViewportType::Back, Back);
+
+	FPoint MousePos = FPoint(APlayerInput::Get().GetMousePos().X, APlayerInput::Get().GetMousePos().Y);
+	FVector MouseDeltaPos = APlayerInput::Get().GetMouseDeltaPos();
+
+	for (FViewport* vp : Viewports)
+	{
+		if (FullScreenViewport && FullScreenViewport != vp)
+			continue;
+
+		ELevelViewportType LevelViewportType = vp->GetClient()->GetViewType();
+
+		if (FTransform* Transform = ViewTransformMap.Find(LevelViewportType))
+		{
+			vp->GetClient()->GetOrthographicCamera()->SetActorTransform(*Transform);
+		}
+
+		if (vp->GetRect().Contains(MousePos) &&
+			(APlayerInput::Get().GetKeyDown(EKeyCode::LButton) || APlayerInput::Get().GetKeyDown(EKeyCode::RButton)))
+		{
+			ViewportManager->SetActiveViewport(vp);
+		}
+
+		if (vp == ViewportManager->GetActiveViewport())
+		{
+			FEditorManager::Get().SetCamera(vp->GetClient()->GetOrthographicCamera());
+			if (LevelViewportType == ELevelViewportType::Perspective)
+			{
+				ACamera* PerspectiveCam = vp->GetClient()->GetPerspectiveCamera();
+				if (APlayerInput::Get().GetKeyPress(EKeyCode::W)) { PerspectiveCam->MoveForward(); }
+				if (APlayerInput::Get().GetKeyPress(EKeyCode::S)) { PerspectiveCam->MoveBackward(); }
+				if (APlayerInput::Get().GetKeyPress(EKeyCode::A)) { PerspectiveCam->MoveLeft(); }
+				if (APlayerInput::Get().GetKeyPress(EKeyCode::D)) { PerspectiveCam->MoveRight(); }
+				if (APlayerInput::Get().GetKeyPress(EKeyCode::Q)) { PerspectiveCam->MoveDown(); }
+				if (APlayerInput::Get().GetKeyPress(EKeyCode::E)) { PerspectiveCam->MoveUp(); }
+				if (APlayerInput::Get().GetKeyPress(EKeyCode::RButton)) { PerspectiveCam->Rotate(MouseDeltaPos); }
+			}
+			else
+			{
+				if (APlayerInput::Get().GetKeyPress(EKeyCode::RButton))
+				{
+					AOrthoGraphicActor* Actor = UEngine::Get().GetWorld()->GetOrthoGraphicActor();
+					if (LevelViewportType == ELevelViewportType::Top)
+					{
+						Actor->MoveTop(MouseDeltaPos);
+					}
+					else if (LevelViewportType == ELevelViewportType::Bottom)
+					{
+						Actor->MoveBottom(MouseDeltaPos);
+					}
+					else if (LevelViewportType == ELevelViewportType::Left)
+					{
+						Actor->MoveLeft(MouseDeltaPos);
+					}
+					else if (LevelViewportType == ELevelViewportType::Right)
+					{
+						Actor->MoveRight(MouseDeltaPos);
+					}
+					else if (LevelViewportType == ELevelViewportType::Front)
+					{
+						Actor->MoveFront(MouseDeltaPos);
+					}
+					else if (LevelViewportType == ELevelViewportType::Back)
+					{
+						Actor->MoveBack(MouseDeltaPos);
+					}
+				}
+			}
+		}
+	}
+
 }
 
 void UWorld::OnDestroy()
@@ -90,17 +242,12 @@ void UWorld::Render()
 		return;
 	}
 
-	ACamera* cam = FEditorManager::Get().GetCamera();
-	cam->UpdateCameraMatrix();
-
 	//if (APlayerInput::Get().GetKeyDown(EKeyCode::LButton))
 	//{
 	//	RenderPickingTexture(*Renderer);
 	//}
 
 	RenderMainTexture(*Renderer);
-
-	FLineBatchManager::Get().Render();
 
 	AActor* SelectedActor = FEditorManager::Get().GetSelectedActor();
 	if (SelectedActor != nullptr)
@@ -178,7 +325,7 @@ void UWorld::RenderMainTexture(URenderer& Renderer)
 		RenderComponent->Render();
 	}
 
-	FDevice::Get().SetRenderTarget();
+	FDevice::Get().SetRenderTargetOnly();
 }
 
 // void UWorld::DisplayPickingTexture(URenderer& Renderer)

@@ -17,32 +17,22 @@ ACamera::ACamera()
     RootComponent = AddComponent<USceneComponent>();
     
     FTransform StartPos = GetActorTransform();
-    StartPos.SetPosition(FVector(-5, 0, 0));
+    StartPos.SetPosition(FVector(-50, 10, 50));
     SetActorTransform(StartPos);
 }
 
 void ACamera::BeginPlay()
 {
 	Super::BeginPlay();
-	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::W, [this] { MoveForward(); }, GetUUID());
-	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::S, [this] { MoveBackward(); }, GetUUID());
-	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::A, [this] { MoveLeft(); }, GetUUID());
-	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::D, [this] { MoveRight(); }, GetUUID());
-	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::Q, [this] { MoveDown(); }, GetUUID());
-	APlayerInput::Get().RegisterKeyPressCallback(EKeyCode::E, [this] { MoveUp(); }, GetUUID());
-
-	APlayerInput::Get().RegisterKeyDownCallback(EKeyCode::F, [this]
-	{
-		if (const AActor* SelectedActor = FEditorManager::Get().GetSelectedActor())
-		{
-			if (SelectedActor == this) return;
-			SetActorPosition(SelectedActor->GetActorPosition() - (GetForward() * 10.0f));
-		}
-	}, GetUUID());
-
-	APlayerInput::Get().RegisterMousePressCallback(EKeyCode::RButton, std::bind(&ACamera::Rotate, this, std::placeholders::_1), GetUUID());
-
-	UConfigManager::Get().SetValue("Camera", "Sensitivity", std::to_string(Sensitivity));
+	//APlayerInput::Get().RegisterKeyDownCallback(EKeyCode::F, [this]
+	//{
+	//	if (const AActor* SelectedActor = FEditorManager::Get().GetSelectedActor())
+	//	{
+	//		if (SelectedActor == this) return;
+	//		SetActorPosition(SelectedActor->GetActorPosition() - (GetForward() * 10.0f));
+	//	}
+	//}, GetUUID());
+	//UConfigManager::Get().SetValue("Camera", "Sensitivity", std::to_string(Sensitivity));
 }
 
 void ACamera::SetFieldOfVew(float Fov)
@@ -58,6 +48,12 @@ void ACamera::SetFar(float Far)
 void ACamera::SetNear(float Near)
 {
     this->Near = Near;
+}
+
+void ACamera::SetWidthHeight(float Width, float Height)
+{
+	this->Width = Width;
+	this->Height = Height;
 }
 
 float ACamera::GetFieldOfView() const
@@ -86,10 +82,11 @@ void ACamera::UpdateCameraMatrix()
 {
 	//뷰 매트릭스 업데이트
 	ViewMatrix = GetActorTransform().GetViewMatrix();
-	
-	// 프로젝션 매트릭스 업데이트
-	float AspectRatio = UEngine::Get().GetScreenRatio();
 
+	//TODO: ScreenRatio는 뷰포트 마다 다를 수 있으므로 입력으로 받아야함.
+	// 프로젝션 매트릭스 업데이트
+
+	float AspectRatio = Width / Height;
 	float FOV = FMath::DegreesToRadians(GetFieldOfView());
 	float Near = GetNear();
 	float Far = GetFar();
@@ -100,7 +97,7 @@ void ACamera::UpdateCameraMatrix()
 	}
 	else if (ProjectionMode == ECameraProjectionMode::Orthographic)
 	{
-		ProjectionMatrix = FMatrix::OrthoForLH(UEngine::Get().GetScreenWidth() / ZoomSize, UEngine::Get().GetScreenHeight() / ZoomSize, Near, Far);
+		ProjectionMatrix = FMatrix::OrthoForLH(Width / ZoomSize, Height / ZoomSize, Near, Far);
 
 		// TODO: 추가 필요.
 		// ProjectionMatrix = FMatrix::OrthoForLH(FOV, AspectRatio, Near, Far);

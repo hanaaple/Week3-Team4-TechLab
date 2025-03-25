@@ -5,7 +5,7 @@
 #include "Core/Container/Map.h"
 
 
-enum class EViewModeIndex : uint32
+enum class ERenderModeIndex : uint32
 {
 	// Lit mode는 추후 업데이트
 	//VMI_Lit, 
@@ -25,18 +25,18 @@ public:
 	}
 
 	void Initialize(ID3D11Device* InDevice);
-	void SetViewMode(EViewModeIndex ViewMode);
+	void SetViewMode(ERenderModeIndex ViewMode);
 	void ApplyViewMode();
 
-	EViewModeIndex GetViewMode() const { return CurrentViewMode; }
+	ERenderModeIndex GetViewMode() const { return CurrentViewMode; }
 private:
-	FViewMode() : CurrentViewMode(EViewModeIndex::VMI_Solid), Device(nullptr) {}
+	FViewMode() : CurrentViewMode(ERenderModeIndex::VMI_Solid), Device(nullptr) {}
 	~FViewMode();
 
 	void CreateRasterizerStates();
 
-	EViewModeIndex CurrentViewMode;
+	ERenderModeIndex CurrentViewMode;
 	ID3D11Device* Device;
 
-	TMap<EViewModeIndex, ID3D11RasterizerState*> RasterizerStates;
+	TMap<ERenderModeIndex, ID3D11RasterizerState*> RasterizerStates;
 };

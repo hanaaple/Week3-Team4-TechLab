@@ -17,7 +17,6 @@ public:
 
 	inline ID3D11Device* GetDevice() const { return Device; }
 	inline ID3D11DeviceContext* GetDeviceContext() const { return DeviceContext; }
-	inline const D3D11_VIEWPORT& GetViewPortInfo() const { return ViewportInfo; }
 	inline ID3D11DepthStencilView* GetDepthStencilView() const { return DepthStencilView; }
 	inline IDXGISwapChain* GetSwapChain() const { return SwapChain; }
 
@@ -43,8 +42,12 @@ public:
 	void Prepare() const;
 
 	void Clear() const;
+
+	void Clear(float color) const;
 	
 	void SetRenderTarget() const;
+
+	void SetRenderTargetOnly() const;
 
 	/** 픽킹렌더링 파이프라인을 준비 합니다. */
 	void PickingPrepare() const;
@@ -86,9 +89,4 @@ private:
 	ID3D11DepthStencilView* PickingDepthStencilView = nullptr;     // DepthStencil버퍼를 렌더 타겟으로 사용하는 뷰
 
 	bool bIsInit = FALSE;
-
-	
 };
-
-
-

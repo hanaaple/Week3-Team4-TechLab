@@ -9,11 +9,12 @@
 #include "Core/Input/PlayerInput.h"
 #include "Resource/Texture.h"
 #include "Core/Rendering/FDevice.h"
+#include "Object/Actor/OrthographicActor.h"
 
 void FEditorManager::Init()
 {
-	const int Width = static_cast<int>(FDevice::Get().GetViewPortInfo().Width);
-	const int Height = static_cast<int>(FDevice::Get().GetViewPortInfo().Height);
+	const int Width = UEngine::Get().GetScreenWidth();
+	const int Height = UEngine::Get().GetScreenHeight();
 
 	D3D11_TEXTURE2D_DESC textureDesc = {};
 	textureDesc.Width = Width;
@@ -72,6 +73,11 @@ void FEditorManager::SelectActor(AActor* NewActor)
 void FEditorManager::SetCamera(ACamera* NewCamera)
 {
     Camera = NewCamera;
+}
+
+void FEditorManager::SetOrthoGraphicCamera(AOrthoGraphicActor* NewOrthoGraphicCamera)
+{
+	OrthoGraphicCamera = NewOrthoGraphicCamera;
 }
 
 FVector4 FEditorManager::EncodeUUID(uint32 UUID)
@@ -207,23 +213,23 @@ void FEditorManager::OnUpdateWindowSize(uint32 Width, uint32 Height)
 		UUIDTexture = nullptr;
 	}
 
-	D3D11_TEXTURE2D_DESC textureDesc = {};
-	textureDesc.Width = Width;
-	textureDesc.Height = Height;
-	textureDesc.MipLevels = 1;
-	textureDesc.ArraySize = 1;
-	textureDesc.Format = DXGI_FORMAT_R32G32B32A32_UINT; // 32비트 UINT로 변경
-	textureDesc.SampleDesc.Count = 1;
-	textureDesc.Usage = D3D11_USAGE_DEFAULT;
-	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-	UUIDTexture = FTexture::Create("UUIDTexture", textureDesc);
-	UUIDTexture->CreateRenderTargetView();
+	//D3D11_TEXTURE2D_DESC textureDesc = {};
+	//textureDesc.Width = Width;
+	//textureDesc.Height = Height;
+	//textureDesc.MipLevels = 1;
+	//textureDesc.ArraySize = 1;
+	//textureDesc.Format = DXGI_FORMAT_R32G32B32A32_UINT; // 32비트 UINT로 변경
+	//textureDesc.SampleDesc.Count = 1;
+	//textureDesc.Usage = D3D11_USAGE_DEFAULT;
+	//textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	//UUIDTexture = FTexture::Create("UUIDTexture", textureDesc);
+	//UUIDTexture->CreateRenderTargetView();
 }
 
 void FEditorManager::OnResizeComplete()
 {
-	const int Width = static_cast<int>(FDevice::Get().GetViewPortInfo().Width);
-	const int Height = static_cast<int>(FDevice::Get().GetViewPortInfo().Height);
+	const int Width = UEngine::Get().GetScreenWidth();
+	const int Height = UEngine::Get().GetScreenHeight();
 
 	D3D11_TEXTURE2D_DESC textureDesc = {};
 	textureDesc.Width = Width;
@@ -242,8 +248,8 @@ void FEditorManager::OnResizeComplete()
 FVector4 FEditorManager::GetPixel(FVector MPos) const
 {
 
-	const float Width = FDevice::Get().GetViewPortInfo().Width;
-	const float Height = FDevice::Get().GetViewPortInfo().Height;
+	const float Width = UEngine::Get().GetScreenHeight();
+	const float Height = UEngine::Get().GetScreenHeight();
     MPos.X = FMath::Clamp(MPos.X, 0.0f, Width);
     MPos.Y = FMath::Clamp(MPos.Y, 0.0f, Height);
     // 1. Staging 텍스처 생성 (1x1 픽셀)

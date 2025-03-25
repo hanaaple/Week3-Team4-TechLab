@@ -89,12 +89,12 @@ FVector AActor::GetActorForwardVector() const
 
 FVector AActor::GetActorRightVector() const
 {
-	return (RootComponent != nullptr) ? RootComponent->GetRightVector() : FVector::ForwardVector;
+	return (RootComponent != nullptr) ? RootComponent->GetRightVector() : FVector::RightVector;
 }
 
 FVector AActor::GetActorUpVector() const
 {
-	return (RootComponent != nullptr) ? RootComponent->GetUpVector() : FVector::ForwardVector;
+	return (RootComponent != nullptr) ? RootComponent->GetUpVector() : FVector:: UpVector;
 }
 
 FVector AActor::GetActorPosition() const
@@ -456,12 +456,12 @@ FVector AActor::GetActorRelativeForwardVector() const
 
 FVector AActor::GetActorRelativeRightVector() const
 {
-	return (RootComponent != nullptr) ? RootComponent->GetRelativeRightVector() : FVector::ForwardVector;
+	return (RootComponent != nullptr) ? RootComponent->GetRelativeRightVector() : FVector::RightVector;
 }
 
 FVector AActor::GetActorRelativeUpVector() const
 {
-	return (RootComponent != nullptr) ? RootComponent->GetRelativeUpVector() : FVector::ForwardVector;
+	return (RootComponent != nullptr) ? RootComponent->GetRelativeUpVector() : FVector::UpVector;
 }
 
 const FString AActor::GetTypeName()

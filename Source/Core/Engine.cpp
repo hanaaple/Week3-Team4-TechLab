@@ -11,7 +11,8 @@
 #include "Rendering/FDevice.h"
 #include "Static/FEditorManager.h"
 #include "Static/FLineBatchManager.h"
-
+#include "Slate/SSplitter.h"
+#include "Rendering/FViewMode.h"
 
 class AArrow;
 class APicker;
@@ -32,7 +33,6 @@ LRESULT UEngine::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		// 창이 제거될 때 (창 닫기, Alt+F4 등)
 	case WM_DESTROY:
 		PostQuitMessage(0); // 프로그램 종료
-		break;
 		break;
 	case WM_CAPTURECHANGED://현재 마우스 입력을 독점(capture)하고 있던 창이 마우스 캡처를 잃었을 때
 		break;
@@ -69,6 +69,16 @@ void UEngine::Initialize(
 	ScreenHeight = InScreenHeight;
 
     InitWindow(InScreenWidth, InScreenHeight);
+
+	/* Split Initial Window */
+	uint32 ScreenWidth = UEngine::Get().GetScreenWidth();
+	uint32 ScreenHeight = UEngine::Get().GetScreenHeight();
+	RootSplitter = std::make_unique<SSplitterH>(0, 0, ScreenWidth, ScreenHeight);
+	RootSplitter->SplitHorizontally(ScreenHeight / 2.f);
+	TopSplitter = std::make_unique<SSplitterV>(RootSplitter->GetSideLT()->GetRect());
+	TopSplitter->SplitVertically(ScreenWidth / 2.f);
+	BottomSplitter = std::make_unique<SSplitterV>(RootSplitter->GetSideRB()->GetRect());
+	BottomSplitter->SplitVertically(ScreenWidth / 2.f);
 
 	InitWorld();
 	FDevice::Get().Init(WindowHandle);
@@ -126,7 +136,61 @@ void UEngine::Run()
 				IsRunning = false;
 				break;
 			}
+		}
 
+		if (!UEngine::Get().GetWorld()->GetViewportManager()->GetFullScreenViewport())
+		{
+#pragma region BorderMouse
+			// 마우스 입력 통한 창 크기 조절 //
+			FPoint MousePos = FPoint(APlayerInput::Get().GetMousePos().X, APlayerInput::Get().GetMousePos().Y);
+
+			//TODO: 마우스 커서 플래그로 관리
+			if (RootSplitter->IsBorderHover(MousePos))
+				SetCursor(LoadCursor(nullptr, IDC_SIZEALL));
+			else if (TopSplitter->IsBorderHover(MousePos) || BottomSplitter->IsBorderHover(MousePos))
+				SetCursor(LoadCursor(nullptr, IDC_SIZEALL));
+			else
+				SetCursor(LoadCursor(nullptr, IDC_ARROW));
+
+			if (APlayerInput::Get().GetKeyDown(EKeyCode::LButton))
+			{
+				if (RootSplitter->IsBorderHover(MousePos))
+				{
+					RootSplitter->SetIsBorderDragging(true);
+				}
+
+				if (TopSplitter->IsBorderHover(MousePos) || BottomSplitter->IsBorderHover(MousePos))
+				{
+					TopSplitter->SetIsBorderDragging(true);
+					BottomSplitter->SetIsBorderDragging(true);
+				}
+			}
+
+			if (APlayerInput::Get().GetKeyUp(EKeyCode::LButton))
+			{
+				RootSplitter->SetIsBorderDragging(false);
+				TopSplitter->SetIsBorderDragging(false);
+				BottomSplitter->SetIsBorderDragging(false);
+			}
+
+			if (APlayerInput::Get().GetKeyPress(EKeyCode::LButton))
+			{
+				FPoint DeltaMousePos = FPoint(APlayerInput::Get().GetMouseScreenDeltaPos().X, APlayerInput::Get().GetMouseScreenDeltaPos().Y);
+
+				if (RootSplitter->GetIsBorderDragging())
+				{
+					RootSplitter->MoveBorder(DeltaMousePos.Y);
+					TopSplitter->MoveParentBorder(DeltaMousePos.Y, true);
+					BottomSplitter->MoveParentBorder(DeltaMousePos.Y, false);
+				}
+
+				if (TopSplitter->GetIsBorderDragging() || BottomSplitter->GetIsBorderDragging())
+				{
+					TopSplitter->MoveBorder(DeltaMousePos.X);
+					BottomSplitter->MoveBorder(DeltaMousePos.X);
+				}
+			}
+#pragma endregion BorderMouse
 		}
 
 		if (!ImGui::GetIO().WantCaptureMouse)
@@ -141,9 +205,11 @@ void UEngine::Run()
 		// World Update
 		if (World)
 		{
-			FDevice::Get().Prepare();
+			//FDevice::Get().Prepare();
 			World->Tick(EngineDeltaTime);
-			World->Render();
+
+			RenderSplitScreen();
+			//World->Render();
 
 			FEditorManager::Get().LateTick(EngineDeltaTime);
 		    World->LateTick(EngineDeltaTime);
@@ -234,10 +300,13 @@ void UEngine::InitWorld()
 {
     World = FObjectFactory::ConstructObject<UWorld>();
 
-	World->InitWorld();
-
 	World->SetCamera(World->SpawnActor<ACamera>());
-    FEditorManager::Get().SetCamera(World->GetCamera());
+	FEditorManager::Get().SetCamera(World->GetCamera());
+
+	World->SetOrthoGraphicCamera(World->SpawnActor<AOrthoGraphicActor>());
+	FEditorManager::Get().SetOrthoGraphicCamera(World->GetOrthoGraphicActor());
+
+	World->InitWorld();
 
 	FLineBatchManager::Get().DrawWorldGrid(World->GetGridSize(), World->GetGridSize() / 100.f);
 
@@ -280,6 +349,48 @@ void UEngine::UpdateWindowSize(uint32 InScreenWidth, uint32 InScreenHeight)
 	FDevice::Get().OnResizeComplete();
 	
 	FEditorManager::Get().OnResizeComplete();
+}
+
+void UEngine::RenderSplitScreen()
+{
+	FViewportManager* ViewportManager = UEngine::Get().GetWorld()->GetViewportManager();
+
+	FViewport* FullScreenViewport = ViewportManager->GetFullScreenViewport();
+	TArray<FViewport*> Viewports = ViewportManager->GetViewports();
+
+	FDevice::Get().Clear();
+
+	for(FViewport* vp : Viewports)
+	{
+		if (FullScreenViewport && FullScreenViewport != vp)
+			continue;
+		D3D11_VIEWPORT d3dvp = vp->GetViewport();
+		FDevice::Get().GetDeviceContext()->RSSetViewports(1, &d3dvp);
+		FDevice::Get().SetRenderTargetOnly();
+
+		ELevelViewportType LevelViewportType = vp->GetClient()->GetViewType();
+		
+		float Width = vp->GetRect().Right - vp->GetRect().Left;
+		float Height = vp->GetRect().Bottom - vp->GetRect().Top;
+		if (LevelViewportType == ELevelViewportType::Perspective)
+		{
+			vp->GetClient()->GetPerspectiveCamera()->SetWidthHeight(Width, Height);
+			vp->GetClient()->GetPerspectiveCamera()->UpdateCameraMatrix();
+			World->SetCamera(vp->GetClient()->GetPerspectiveCamera());
+			FEditorManager::Get().SetCamera(vp->GetClient()->GetPerspectiveCamera());
+		}
+		else
+		{
+			vp->GetClient()->GetOrthographicCamera()->SetWidthHeight(Width, Height);
+			vp->GetClient()->GetOrthographicCamera()->UpdateCameraMatrix();
+			World->SetCamera(vp->GetClient()->GetOrthographicCamera());
+			FEditorManager::Get().SetCamera(vp->GetClient()->GetOrthographicCamera());
+		}
+		FViewMode::Get().SetViewMode(vp->GetClient()->GetRenderType());
+		FViewMode::Get().ApplyViewMode();
+
+		World->Render();
+	}
 }
 
 UObject* UEngine::GetObjectByUUID(uint32 InUUID) const

@@ -6,6 +6,7 @@
 #include "HAL/PlatformType.h"
 #include "Rendering/UI.h"
 #include "Rendering/URenderer.h"
+#include "Slate/SSplitter.h"
 #include "UObject/Casts.h"
 
 class UObject;
@@ -47,8 +48,8 @@ public:
 
 	URenderer* GetRenderer() const { return Renderer.get(); }
 	float GetScreenRatio() const { return static_cast<float>(ScreenWidth) / static_cast<float>(ScreenHeight); }
-    int GetScreenWidth() const { return ScreenWidth; }
-    int GetScreenHeight() const { return ScreenHeight; }
+    uint32 GetScreenWidth() const { return ScreenWidth; }
+    uint32 GetScreenHeight() const { return ScreenHeight; }
     int GetInitializedScreenWidth() const { return InitializedScreenWidth; }
     int GetInitializedScreenHeight() const { return InitializedScreenHeight; }
 
@@ -62,6 +63,8 @@ private:
     void ShutdownWindow();
     void UpdateWindowSize(uint32 InScreenWidth, uint32 InScreenHeight);
 
+	void RenderSplitScreen();
+
 public:
 	UWorld* GetWorld() const { return World; }
 
@@ -72,7 +75,9 @@ public:
     ObjectType* GetObjectByUUID(uint32 InUUID) const;
     UObject* GetObjectByUUID(uint32 InUUID) const;
 
-
+	SSplitterH* GetRootSplitter() const { return RootSplitter.get(); }
+	SSplitterV* GetTopSplitter() const { return TopSplitter.get(); }
+	SSplitterV* GetBottomSplitter() const { return BottomSplitter.get(); }
 private:
     bool IsRunning = false;
     EScreenMode ScreenMode = EScreenMode::Windowed;
@@ -85,8 +90,12 @@ private:
     int InitializedScreenWidth = 0;
     int InitializedScreenHeight = 0;
 
-    int ScreenWidth = 0;
-    int ScreenHeight = 0;
+    uint32 ScreenWidth = 0;
+    uint32 ScreenHeight = 0;
+
+	std::unique_ptr<SSplitterH> RootSplitter = nullptr;
+	std::unique_ptr<SSplitterV> TopSplitter = nullptr;
+	std::unique_ptr<SSplitterV> BottomSplitter = nullptr;
 
 	float EngineDeltaTime = 0.0f;
 

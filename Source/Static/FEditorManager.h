@@ -5,8 +5,10 @@
 #include "Core/Math/Vector.h"
 
 class ACamera;
+class AOrthoGraphicActor;
 class AActor;
 class AGizmoActor;
+
 
 class FEditorManager : public TSingleton<FEditorManager>
 {
@@ -38,12 +40,14 @@ public:
 
 	FVector4 GetPixel(FVector MPos) const;
     
+	inline AOrthoGraphicActor* GetOrthoGraphicCamera() const { return OrthoGraphicCamera; }
+
+	void SetOrthoGraphicCamera(AOrthoGraphicActor* NewOrthoGraphicCamera);
 private:
     ACamera* Camera = nullptr;
+	AOrthoGraphicActor* OrthoGraphicCamera = nullptr;
     AActor* SelectedActor = nullptr;
 	AGizmoActor* Gizmo = nullptr;
-
-	
 
 	std::shared_ptr<class FTexture> UUIDTexture = nullptr;
 	//std::shared_ptr<class FTexture> UUIDTextureDepthStecil = nullptr;

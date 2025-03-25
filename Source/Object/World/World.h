@@ -7,7 +7,10 @@
 #include "Core/Utils/JsonSavehelper.h"
 #include "Debug/DebugConsole.h"
 #include "Object/ObjectFactory.h"
-
+#include "Object/Actor/OrthographicActor.h"
+#include "Core/Rendering/FViewport.h"
+#include "Core/Rendering/FViewportClient.h"
+#include "Core/Rendering/ViewportManager.h"
 
 class URenderer;
 class AActor;
@@ -56,6 +59,9 @@ public:
 	inline ACamera* GetCamera() const { return Camera; }
 	void SetCamera(ACamera* NewCamera) { Camera = NewCamera; }
 
+	inline AOrthoGraphicActor* GetOrthoGraphicActor() const { return OrthoGraphicActor; }
+	void SetOrthoGraphicCamera(AOrthoGraphicActor* NewOrthoGraphicActor) { OrthoGraphicActor = NewOrthoGraphicActor; }
+
 	void RayCasting(const FVector& MouseNDCPos);
 
 	void PickByPixel(const FVector& MousePos);
@@ -67,11 +73,16 @@ public:
 	void OnChangedGridSize() const;
 
 	float GetGridSize() const { return GridSize; }
+	
+	FViewportManager* GetViewportManager() const { return ViewportManager; }
 private:
 	UWorldInfo GetWorldInfo() const;
 	ACamera* Camera = nullptr;
-
+	AOrthoGraphicActor* OrthoGraphicActor = nullptr;
 	float GridSize = 100.0f;
+
+	TMap<ELevelViewportType, FTransform> ViewTransformMap;
+	FViewportManager* ViewportManager;
 
 public:
 	FString SceneName;
