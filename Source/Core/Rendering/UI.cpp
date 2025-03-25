@@ -258,17 +258,17 @@ void UI::RenderCameraSettings() const
         IsOrthogonal = false;
     }
 
-    if (ImGui::Checkbox("Orthogonal", &IsOrthogonal))
-    {
-        if (IsOrthogonal)
-        {
-            Camera->ProjectionMode = ECameraProjectionMode::Orthographic;
-        }
-        else
-        {
-            Camera->ProjectionMode = ECameraProjectionMode::Perspective;
-        }
-    }
+    //if (ImGui::Checkbox("Orthogonal", &IsOrthogonal))
+    //{
+    //    if (IsOrthogonal)
+    //    {
+    //        Camera->ProjectionMode = ECameraProjectionMode::Orthographic;
+    //    }
+    //    else
+    //    {
+    //        Camera->ProjectionMode = ECameraProjectionMode::Perspective;
+    //    }
+    //}
 
     float FOV = Camera->GetFieldOfView();
     if (ImGui::DragFloat("FOV", &FOV, 0.1f))
