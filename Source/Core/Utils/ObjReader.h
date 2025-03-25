@@ -1,7 +1,6 @@
 #pragma once
 #include "Core/Container/Map.h"
 #include "Core/Container/Pair.h"
-#include "Core/Container/Set.h"
 #include "Core/Container/String.h"
 #include "Core/Math/Vector.h"
 
@@ -34,15 +33,15 @@ struct FObjMaterialInfo
 {
 	FString MaterialName;	// newmtl Blatt_NONE
 	
-	float SpecularExponent;			// Ns
-	FVector Ambient;				// Ka
-	FVector Diffuse;				// Kd
-	FVector Specular;				// Ks
-	FVector Emissive;				// Ke
+	float SpecularExponent = 50.0;			// Ns
+	FVector Ambient = FVector(1);				// Ka
+	FVector Diffuse = FVector(1);				// Kd
+	FVector Specular = FVector(1);				// Ks
+	FVector Emissive = FVector(0);				// Ke
 
-	float OpticalDensity;			// Ni
-	float Dissolve;					// d     Dissolve / Transparency
-	uint32 Illumination;			// illum
+	float OpticalDensity = 1;			// Ni
+	float Dissolve = 1;					// d     Dissolve / Transparency
+	int32 Illumination = 2;			// illum
 
 	// File Path
 	FString AmbientMap;				// Ka
@@ -51,6 +50,16 @@ struct FObjMaterialInfo
 	FString SpecularExponentMap;	// Ns
 	FString DissolveMap;			// d
 	FString BumpMap;				// bump
+
+	bool operator==(const FObjMaterialInfo& Other) const
+	{
+		return MaterialName == Other.MaterialName;
+	}
+	
+	bool operator!=(const FObjMaterialInfo& Other) const
+	{
+		return !(*this == Other);
+	}
 };
 
 // 일단 object는 여러개여도 하나로
@@ -69,8 +78,8 @@ struct FObjInfo
 	TArray<uint32> NormalIndexList;
 	TArray<uint32> UvIndexList;
 
-	// 머티리얼 (중복 방지용 Map)
-	TSet<FObjMaterialInfo> MaterialDataMap;	// Material Map       중복 이름 X 
+	// 머티리얼 중복 X
+	TArray<FObjMaterialInfo> MaterialDataMap;	// Material Map       중복 이름 X 
 
 
 

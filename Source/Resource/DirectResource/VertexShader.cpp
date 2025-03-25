@@ -41,6 +41,12 @@ void FVertexShader::ShaderLoad(const LPCWSTR& _Path, const FString& _EntryPoint,
 	SetShaderType(ShaderType::Vertex);
 	
 	D3DCompileFromFile(_Path, nullptr, nullptr, _EntryPoint.c_char(), "vs_5_0", shaderFlags, 0, &BinaryCode, &Error);
-	FDevice::Get().GetDevice()->CreateVertexShader(BinaryCode->GetBufferPointer(), BinaryCode->GetBufferSize(), nullptr, &ShaderPtr);
 
+	if (Error)
+	{
+		const char* a = (char*)Error->GetBufferPointer();
+		OutputDebugStringA((char*)Error->GetBufferPointer()); // 오류 메시지 출력
+		Error->Release();
+	}
+	FDevice::Get().GetDevice()->CreateVertexShader(BinaryCode->GetBufferPointer(), BinaryCode->GetBufferSize(), nullptr, &ShaderPtr);
 }

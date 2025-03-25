@@ -491,13 +491,17 @@
     <Content Include="cube-tex.obj" />
     <Content Include="DefaultTexture.png" />
     <Content Include="DefaultTexture.dds" />
-    <Content Include="Low-Poly Plant_.mtl" />
     <Content Include="Low-Poly Plant_.obj" />
+    <Content Include="Low-Poly Plant_.mtl" />
+    <Content Include="Resource\cube.mtl" />
+    <Content Include="Resource\dice_texture.png" />
+    <Content Include="Resource\Texture\bpng.jpg" />
+    <Content Include="Resource\Texture\bpng_NRM Kopie.jpg" />
+    <Content Include="Resource\Texture\bpng_Schwaz_weistensel.jpg" />
+    <Content Include="Resource\Texture\Pot textures_col.jpg" />
+    <Content Include="Resource\Texture\Pot textures_nor.png" />
     <Content Include="texture.png" />
     <Content Include="Untitled.obj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resource\" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

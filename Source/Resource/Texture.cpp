@@ -175,7 +175,7 @@ void FTexture::ResLoad(const FString& InPath)
 			MsgBoxAssert("텍스처 로드에 실패했습니다.");
 		}
 	}
-	else if (extension == "png")
+	else if (extension == "png" || extension == "jpg")
 	{
 		 if (S_OK != DirectX::CreateWICTextureFromFile(FDevice::Get().GetDevice(), FDevice::Get().GetDeviceContext(), wstr.c_str(), &Resource, &SRV))
 		 {

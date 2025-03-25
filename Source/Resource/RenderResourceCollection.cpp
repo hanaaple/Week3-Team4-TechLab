@@ -55,18 +55,17 @@ void FRenderResourceCollection::SetMaterial(std::shared_ptr<FMaterial> _Material
 
 void FRenderResourceCollection::Render()
 {
-	// Mesh -> for -> SetMaterial(0, 1, 2...) -> Draw (0, 1, 2...)
-	// Mesh -> SetMaterial All, Draw
-	Mesh->Setting();
-	Layout->Setting();
-	if (Mesh->MaterialCount > 0)
+	TArray<std::shared_ptr<FMaterial>> MeshMaterials = Mesh->GetMaterials();
+	// obj인 경우 Render
+	if (MeshMaterials.Num() > 0)
 	{
-		for (auto MeshMaterial : Mesh->GetMaterials())
+		Layout->Setting();
+		for (const auto& MeshMaterial : MeshMaterials)
 		{
-			// Set IndexBuffer
-			// Bind Texture
-			MeshMaterial->Setting();
-			//Material->Setting(); 
+			auto IndexBuffer = FIndexBuffer::Find(Mesh->FResource::GetName() + MeshMaterial->GetName());
+			Mesh->SetIndexBuffer(IndexBuffer);
+			Mesh->Setting();
+			MeshMaterial->Setting(); 
 
 			for (auto& Binding : ConstantBufferBindings)
 			{
@@ -83,13 +82,15 @@ void FRenderResourceCollection::Render()
 				Binding.Value->Setting();
 			}
 
-			MeshMaterial->Draw();
-			//Mesh->Draw();
+			Mesh->Draw();
 		}
 	}
+	// 기존 Render
 	else
 	{
-		Material->Setting(); 
+		Mesh->Setting();
+		Layout->Setting();
+		Material->Setting();
 
 		for (auto& Binding : ConstantBufferBindings)
 		{

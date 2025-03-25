@@ -1,5 +1,4 @@
 #include "StaticMesh.h"
-#include "Core/Engine.h"
 #include "Core/Rendering/FDevice.h"
 
 

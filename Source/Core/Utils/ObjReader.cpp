@@ -54,7 +54,9 @@ TArray<FObjMaterialInfo> ObjReader::ReadMtl(const FString& InFilePath)
 			
 			MaterialInfoList.Add(FObjMaterialInfo());
 
-			MaterialName = StringStream.str();
+			MaterialName = std::string((std::istreambuf_iterator<char>(StringStream)), std::istreambuf_iterator<char>());
+			MaterialName.erase(0, MaterialName.find_first_not_of(" \t\n\r"));
+			
 			MaterialInfoList[Index].MaterialName = MaterialName;
 		}
 		else if (Prefix == "Ns")
@@ -107,32 +109,38 @@ TArray<FObjMaterialInfo> ObjReader::ReadMtl(const FString& InFilePath)
 		}
 		else if (Prefix == "map_Kd")
 		{
-			std::string Value = StringStream.str();
+			std::string Value = std::string((std::istreambuf_iterator<char>(StringStream)), std::istreambuf_iterator<char>());
+			Value.erase(0, Value.find_first_not_of(" \t\n\r"));
 			MaterialInfoList[Index].DiffuseMap = Value;
 		}
 		else if (Prefix == "map_Bump")
 		{
-			std::string Value = StringStream.str();
+			std::string Value = std::string((std::istreambuf_iterator<char>(StringStream)), std::istreambuf_iterator<char>());
+			Value.erase(0, Value.find_first_not_of(" \t\n\r"));
 			MaterialInfoList[Index].BumpMap = Value;
 		}
 		else if (Prefix == "map_Ks")
 		{
-			std::string Value = StringStream.str();
+			std::string Value = std::string((std::istreambuf_iterator<char>(StringStream)), std::istreambuf_iterator<char>());
+			Value.erase(0, Value.find_first_not_of(" \t\n\r"));
 			MaterialInfoList[Index].SpecularMap = Value;
 		}
 		else if (Prefix == "map_d")
 		{
-			std::string Value = StringStream.str();
+			std::string Value = std::string((std::istreambuf_iterator<char>(StringStream)), std::istreambuf_iterator<char>());
+			Value.erase(0, Value.find_first_not_of(" \t\n\r"));
 			MaterialInfoList[Index].DissolveMap = Value;
 		}
 		else if (Prefix == "map_Ns")
 		{
-			std::string Value = StringStream.str();
+			std::string Value = std::string((std::istreambuf_iterator<char>(StringStream)), std::istreambuf_iterator<char>());
+			Value.erase(0, Value.find_first_not_of(" \t\n\r"));
 			MaterialInfoList[Index].SpecularExponentMap = Value;
 		}
 		else if (Prefix == "map_Ka")
 		{
-			std::string Value = StringStream.str();
+			std::string Value = std::string((std::istreambuf_iterator<char>(StringStream)), std::istreambuf_iterator<char>());
+			Value.erase(0, Value.find_first_not_of(" \t\n\r"));
 			MaterialInfoList[Index].AmbientMap = Value;
 		}
 	}
@@ -162,17 +170,19 @@ FObjInfo ObjReader::ReadRawData(const FString& InFilePath)
 
 		if (Prefix == "o")
 		{
-			// FString ObjectName = TokenStream.str();
+			
 			// ObjInfo.Add(ObjectName, FObjInfo());
 		}
 		else if (Prefix == "mtllib")
 		{
 			//mtllib Low-Poly Plant_.mtl
-			std::string MtlLibPath = TokenStream.str();
+			std::string MtlLibPath((std::istreambuf_iterator<char>(TokenStream)), std::istreambuf_iterator<char>());
+			MtlLibPath.erase(0, MtlLibPath.find_first_not_of(" \t\n\r"));
+			
 			TArray<FObjMaterialInfo> MaterialInfoList = ReadMtl(MtlLibPath);
 			for (const auto& MaterialInfo : MaterialInfoList)
 			{
-				if (!ObjInfo.MaterialDataMap.Contains(MaterialInfo))
+				if (ObjInfo.MaterialDataMap.Find(MaterialInfo) == -1)
 				{
 					ObjInfo.MaterialDataMap.Add(MaterialInfo);
 				}
@@ -240,9 +250,9 @@ FStaticMesh* ObjReader::CookRawData(FObjInfo InObjInfo)
 		uint32 StartIndex = InObjInfo.MaterialIndexData[i].Value;
 		uint32 NextStartIndex;
 		if (i == InObjInfo.MaterialIndexData.Num() - 1)
-			NextStartIndex = InObjInfo.MaterialIndexData[i + 1].Value;
+			NextStartIndex = InObjInfo.VertexIndexList.Num();
 		else
-			NextStartIndex = InObjInfo.VertexList.Num();
+			NextStartIndex = InObjInfo.MaterialIndexData[i + 1].Value;
 		
 		for (uint32 Index = StartIndex; Index < NextStartIndex; Index++)
 		{
@@ -263,6 +273,7 @@ FStaticMesh* ObjReader::CookRawData(FObjInfo InObjInfo)
 			Vertex.NZ = InObjInfo.NormalList[NormalIdx].Z;
 			
 
+			// TODO 리팩토링 필요
 			// 중복 체크하는 시간이 너무 김
 			//int32 findIndex = OutMesh.Vertices.Find(Vertex);
 			//if (findIndex == -1)

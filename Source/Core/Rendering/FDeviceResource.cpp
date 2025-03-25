@@ -285,7 +285,7 @@ void FDevice::InitResource()
 			FVertexBuffer::Create(FString("Line"), vertices);
 			FIndexBuffer::Create(FString("Line"), indices);
 		
-			UStaticMesh::Create(FString("Line"), D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+			UStaticMesh::Create(FString("Line"), false, D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 		}
 		{
 			TArray<FVertexSimple> vertices;
@@ -417,18 +417,21 @@ void FDevice::InitResource()
 	{
 		{
 			FStaticMesh* StaticMeshAsset = ObjReader::Read("cube-tex.obj");
-			FString MeshName = TEXT("CubeCube");
+			FString MeshName = TEXT("Dice");
+			FVertexBuffer::Create(MeshName, StaticMeshAsset->Vertices);
 
-			UStaticMesh* StaticMesh = UStaticMesh::Create(MeshName).get();
+			UStaticMesh* StaticMesh = UStaticMesh::Create(MeshName, true).get();
 			StaticMesh->SetStaticMeshAsset(StaticMeshAsset);
-		
-			FVertexBuffer::Create(MeshName, StaticMeshAsset->Vertices);						
 			
 			for (FObjMaterialInfo& MaterialInfo : StaticMeshAsset->MaterialData)
 			{
-				FString MaterialName = MaterialInfo.MaterialName + std::to_string(StaticMesh->GetUUID());
+				FString MaterialName = MaterialInfo.MaterialName;
+				if (!StaticMeshAsset->IndexDataList.Contains(MaterialName))
+					continue;
 				FString IndexBufferName = MeshName + MaterialName;
 
+				// 머티리얼 이름 - 머티리얼 이름
+				// 인덱스 버퍼 이름 - MeshName + MaterialName
 				
 				FIndexBuffer::Create(IndexBufferName, StaticMeshAsset->IndexDataList[MaterialInfo.MaterialName]);
 
@@ -439,35 +442,171 @@ void FDevice::InitResource()
 				Mat->SetDepthState("DefaultDepthStencilState");
 				Mat->SetVertexShader("StaticMesh_VS");
 				Mat->SetPixelShader("StaticMesh_PS");
-				// Mat->GetRenderResourceCollection().SetConstantBufferBinding();
-				// Comp->GetRenderResourceCollection().SetSamplerBinding("LinearSamplerState", 0, true, true);
-				
+								
 				// Create라는게 있다. 나중에 확인해봐라.
 				// FTexture::Create(MaterialInfo.DiffuseMap, textureDesc);
-				FTexture::Load(MaterialInfo.DiffuseMap, MaterialInfo.DiffuseMap);
-				FTexture::Load(MaterialInfo.SpecularMap, MaterialInfo.DiffuseMap);
-				FTexture::Load(MaterialInfo.BumpMap, MaterialInfo.DiffuseMap);
-				FTexture::Load(MaterialInfo.DissolveMap, MaterialInfo.DiffuseMap);
+				if (!MaterialInfo.AmbientMap.IsEmpty())
+				{
+					auto Texture = FTexture::Load(MaterialInfo.AmbientMap, MaterialInfo.AmbientMap);
+					Texture->CreateShaderResourceView();
+				}
+				if (!MaterialInfo.DiffuseMap.IsEmpty())
+				{
+					auto Texture = FTexture::Load(MaterialInfo.DiffuseMap, MaterialInfo.DiffuseMap);
+					Texture->CreateShaderResourceView();
+				}
+				if (!MaterialInfo.SpecularMap.IsEmpty())
+				{
+					auto Texture =	FTexture::Load(MaterialInfo.SpecularMap, MaterialInfo.SpecularMap);
+					Texture->CreateShaderResourceView();
+				}
+				if (!MaterialInfo.SpecularExponentMap.IsEmpty())
+				{
+					auto Texture =	FTexture::Load(MaterialInfo.SpecularExponentMap, MaterialInfo.SpecularExponentMap);
+					Texture->CreateShaderResourceView();
+				}
+				if (!MaterialInfo.DissolveMap.IsEmpty())
+				{
+					auto Texture =	FTexture::Load(MaterialInfo.DissolveMap, MaterialInfo.DissolveMap);
+					Texture->CreateShaderResourceView();
+				}
+				if (!MaterialInfo.BumpMap.IsEmpty())
+				{
+					auto Texture =	FTexture::Load(MaterialInfo.BumpMap, MaterialInfo.BumpMap);
+					Texture->CreateShaderResourceView();
+				}
+
+				struct alignas(16) FStaticMeshConstantInfo
+				{	
+					float SpecularExponent;			// Ns
+					FVector Ambient;				// Ka
+					FVector Diffuse;				// Kd
+					FVector Specular;				// Ks
+					FVector Emissive;				// Ke
+
+					float OpticalDensity;			// Ni
+					float Dissolve;					// d     Dissolve / Transparency
+					int32 Illumination;			// illum
+				};
+
+				FStaticMeshConstantInfo StaticMeshConstantInfo;
+				StaticMeshConstantInfo.SpecularExponent = MaterialInfo.SpecularExponent;
+				StaticMeshConstantInfo.Ambient = MaterialInfo.Ambient;
+				StaticMeshConstantInfo.Diffuse = MaterialInfo.Diffuse;
+				StaticMeshConstantInfo.Specular = MaterialInfo.Specular;
+				StaticMeshConstantInfo.Emissive = MaterialInfo.Emissive;
+				StaticMeshConstantInfo.OpticalDensity = MaterialInfo.OpticalDensity;
+				StaticMeshConstantInfo.Dissolve = MaterialInfo.Dissolve;
+				StaticMeshConstantInfo.Illumination = MaterialInfo.Illumination;
 				
-				Mat->SetTexture(MaterialInfo.DiffuseMap, 1);
-				Mat->SetTexture(MaterialInfo.SpecularMap, 2);
-				Mat->SetTexture(MaterialInfo.BumpMap, 3);
-				Mat->SetTexture(MaterialInfo.DissolveMap, 4);
+				Mat->SetConstantBuffer(MaterialName, &StaticMeshConstantInfo, sizeof(FStaticMeshConstantInfo), 2, true, true);
+				
+				Mat->SetTexture(MaterialInfo.AmbientMap, 1);
+				Mat->SetTexture(MaterialInfo.DiffuseMap, 2);
+				Mat->SetTexture(MaterialInfo.SpecularMap, 3);
+				Mat->SetTexture(MaterialInfo.SpecularExponentMap, 4);
+				Mat->SetTexture(MaterialInfo.DissolveMap, 5);
+				Mat->SetTexture(MaterialInfo.BumpMap, 6);
 
-				// StaticMesh.SetMaterial(Mat);
+				StaticMesh->AddMaterial(Mat);
 			}
+		}
 
-			// 그리고 다중 머터리얼을 넣어주려면
+		{
+			FStaticMesh* StaticMeshAsset = ObjReader::Read("Low-Poly Plant_.obj");
+			FString MeshName = TEXT("Plant");
+			FVertexBuffer::Create(MeshName, StaticMeshAsset->Vertices);
 
-
+			UStaticMesh* StaticMesh = UStaticMesh::Create(MeshName, true).get();
+			StaticMesh->SetStaticMeshAsset(StaticMeshAsset);
 			
-			// 1 ~ n개를 사용
-			// 쉐이더 고정..?
-			
-			// Texture는 메시에 있는 거로
-			// Mat->SetSamplerBinding("LinearSamplerState", 0, true, true);
-			//Mat->SetTexture("CubeTexture", 1, true, true);
-			//Mat->SetTexture("CubeTexture", 2, true, true);
+			for (FObjMaterialInfo& MaterialInfo : StaticMeshAsset->MaterialData)
+			{
+				FString MaterialName = MaterialInfo.MaterialName;
+				if (!StaticMeshAsset->IndexDataList.Contains(MaterialName))
+					continue;
+				FString IndexBufferName = MeshName + MaterialName;
+
+				// 머티리얼 이름 - 머티리얼 이름
+				// 인덱스 버퍼 이름 - MeshName + MaterialName
+				
+				FIndexBuffer::Create(IndexBufferName, StaticMeshAsset->IndexDataList[MaterialInfo.MaterialName]);
+
+
+				std::shared_ptr<FMaterial> Mat = FMaterial::Create(MaterialName);
+				Mat->SetRasterizer("DefaultRasterizer");
+				Mat->SetBlendState("DefaultBlendState");
+				Mat->SetDepthState("DefaultDepthStencilState");
+				Mat->SetVertexShader("StaticMesh_VS");
+				Mat->SetPixelShader("StaticMesh_PS");
+								
+				// Create라는게 있다. 나중에 확인해봐라.
+				// FTexture::Create(MaterialInfo.DiffuseMap, textureDesc);
+				if (!MaterialInfo.AmbientMap.IsEmpty())
+				{
+					auto Texture = FTexture::Load(MaterialInfo.AmbientMap, MaterialInfo.AmbientMap);
+					Texture->CreateShaderResourceView();
+				}
+				if (!MaterialInfo.DiffuseMap.IsEmpty())
+				{
+					auto Texture = FTexture::Load(MaterialInfo.DiffuseMap, MaterialInfo.DiffuseMap);
+					Texture->CreateShaderResourceView();
+				}
+				if (!MaterialInfo.SpecularMap.IsEmpty())
+				{
+					auto Texture =	FTexture::Load(MaterialInfo.SpecularMap, MaterialInfo.SpecularMap);
+					Texture->CreateShaderResourceView();
+				}
+				if (!MaterialInfo.SpecularExponentMap.IsEmpty())
+				{
+					auto Texture =	FTexture::Load(MaterialInfo.SpecularExponentMap, MaterialInfo.SpecularExponentMap);
+					Texture->CreateShaderResourceView();
+				}
+				if (!MaterialInfo.DissolveMap.IsEmpty())
+				{
+					auto Texture =	FTexture::Load(MaterialInfo.DissolveMap, MaterialInfo.DissolveMap);
+					Texture->CreateShaderResourceView();
+				}
+				if (!MaterialInfo.BumpMap.IsEmpty())
+				{
+					auto Texture =	FTexture::Load(MaterialInfo.BumpMap, MaterialInfo.BumpMap);
+					Texture->CreateShaderResourceView();
+				}
+
+				struct alignas(16) FStaticMeshConstantInfo
+				{	
+					float SpecularExponent;			// Ns
+					FVector Ambient;				// Ka
+					FVector Diffuse;				// Kd
+					FVector Specular;				// Ks
+					FVector Emissive;				// Ke
+
+					float OpticalDensity;			// Ni
+					float Dissolve;					// d     Dissolve / Transparency
+					int32 Illumination;			// illum
+				};
+
+				FStaticMeshConstantInfo StaticMeshConstantInfo;
+				StaticMeshConstantInfo.SpecularExponent = MaterialInfo.SpecularExponent;
+				StaticMeshConstantInfo.Ambient = MaterialInfo.Ambient;
+				StaticMeshConstantInfo.Diffuse = MaterialInfo.Diffuse;
+				StaticMeshConstantInfo.Specular = MaterialInfo.Specular;
+				StaticMeshConstantInfo.Emissive = MaterialInfo.Emissive;
+				StaticMeshConstantInfo.OpticalDensity = MaterialInfo.OpticalDensity;
+				StaticMeshConstantInfo.Dissolve = MaterialInfo.Dissolve;
+				StaticMeshConstantInfo.Illumination = MaterialInfo.Illumination;
+				
+				Mat->SetConstantBuffer(MaterialName, &StaticMeshConstantInfo, sizeof(FStaticMeshConstantInfo), 2, true, true);
+				
+				Mat->SetTexture(MaterialInfo.AmbientMap, 1);
+				Mat->SetTexture(MaterialInfo.DiffuseMap, 2);
+				Mat->SetTexture(MaterialInfo.SpecularMap, 3);
+				Mat->SetTexture(MaterialInfo.SpecularExponentMap, 4);
+				Mat->SetTexture(MaterialInfo.DissolveMap, 5);
+				Mat->SetTexture(MaterialInfo.BumpMap, 6);
+
+				StaticMesh->AddMaterial(Mat);
+			}
 		}
 	}
 }
