@@ -55,26 +55,60 @@ void FRenderResourceCollection::SetMaterial(std::shared_ptr<FMaterial> _Material
 
 void FRenderResourceCollection::Render()
 {
-	Mesh->Setting();
-	Layout->Setting();
-	Material->Setting(); 
+	TArray<std::shared_ptr<FMaterial>> MeshMaterials = Mesh->GetMaterials();
+	// obj인 경우 Render
+	if (MeshMaterials.Num() > 0)
+	{
+		Layout->Setting();
+		for (const auto& MeshMaterial : MeshMaterials)
+		{
+			auto IndexBuffer = FIndexBuffer::Find(Mesh->FResource::GetName() + MeshMaterial->GetName());
+			Mesh->SetIndexBuffer(IndexBuffer);
+			Mesh->Setting();
+			MeshMaterial->Setting(); 
 
-	for (auto& Binding : ConstantBufferBindings)
-	{
-		Binding.Value->Setting();
-	}
+			for (auto& Binding : ConstantBufferBindings)
+			{
+				Binding.Value->Setting();
+			}
   
-  for (auto& Binding : TextureBindings)
-	{
-		Binding.Value->Setting();
-	}
+			for (auto& Binding : TextureBindings)
+			{
+				Binding.Value->Setting();
+			}
 	
-	for (auto& Binding : SamplerBindings)
-	{
-		Binding.Value->Setting();
+			for (auto& Binding : SamplerBindings)
+			{
+				Binding.Value->Setting();
+			}
+
+			Mesh->Draw();
+		}
 	}
+	// 기존 Render
+	else
+	{
+		Mesh->Setting();
+		Layout->Setting();
+		Material->Setting();
+
+		for (auto& Binding : ConstantBufferBindings)
+		{
+			Binding.Value->Setting();
+		}
+  
+		for (auto& Binding : TextureBindings)
+		{
+			Binding.Value->Setting();
+		}
 	
-	Mesh->Draw();
+		for (auto& Binding : SamplerBindings)
+		{
+			Binding.Value->Setting();
+		}
+	
+		Mesh->Draw();	
+	}
 }
 
 void FRenderResourceCollection::Reset()

@@ -61,7 +61,9 @@ public:
 	void OnResizeComplete();
 
 	//렌더러에 필요한 기본 리소스 생성
-	void InitResource();
+	void InitResource();	
+
+	
 private:
 	// Direct3D 11 장치(Device)와 장치 컨텍스트(Device Context) 및 스왑 체인(Swap Chain)을 관리하기 위한 포인터들
 	ID3D11Device* Device = nullptr;                         // GPU와 통신하기 위한 Direct3D 장치
@@ -72,6 +74,8 @@ private:
 	FLOAT ClearColor[4] = { 0.025f, 0.025f, 0.025f, 1.0f }; // 화면(스왑버퍼)을 초기화(clear)할 때 사용할 색상 (RGBA)
 
 	FLOAT PickingClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f }; //
+	
+    D3D11_VIEWPORT ViewportInfo = {};                       // 렌더링 영역을 정의하는 뷰포트 정보
 
 	// 렌더링에 필요한 리소스 및 상태를 관리하기 위한 변수들
 	ID3D11Texture2D* FrameBuffer = nullptr;                 // 화면 출력용 텍스처

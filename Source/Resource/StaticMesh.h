@@ -3,12 +3,14 @@
 #define _TCHAR_DEFINED
 #include <d3d11.h>
 
+#include "Material.h"
 #include "Core/Engine.h"
 #include "Resource/Resource.h"
 #include "Core/Container/String.h"
 #include "Core/Container/Array.h"
 #include "Core/UObject/Object.h"
 #include "Core/UObject/ObjectMacros.h"
+#include "Core/Utils/ObjReader.h"
 #include "DirectResource/Shader.h"
 #include "Resource/DirectResource/Vertexbuffer.h"
 #include "Resource/DirectResource/IndexBuffer.h"
@@ -20,14 +22,14 @@ class UStaticMesh : public FResource<UStaticMesh>, public UObject
 public:
 	UStaticMesh() = default;
 
-	static std::shared_ptr<UStaticMesh> Create(const FString& InName, D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST)
+	static std::shared_ptr<UStaticMesh> Create(const FString& InName, bool bIsObj = false, D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST)
 	{
-		return Create(InName, InName, InName, Topology);
+		return Create(InName, InName, InName, Topology, bIsObj);
 	}
 
 	static std::shared_ptr<UStaticMesh> Create(
 		const FString& InName, const FString& VertexName, const FString& IndexName
-		, D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST
+		, D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, bool bIsObj = false
 	)
 	{
 		std::shared_ptr<UStaticMesh> Res = CreateUObjectRes(InName);
@@ -36,8 +38,7 @@ public:
 		Res->IndexBuffer = FIndexBuffer::Find(IndexName);
 		Res->Topology = Topology;
 
-		if (nullptr == Res->VertexBuffer
-			|| nullptr == Res->IndexBuffer)
+		if (!bIsObj && (nullptr == Res->VertexBuffer || nullptr == Res->IndexBuffer))
 		{
 			MsgBoxAssert("매쉬를 만드는데 실패했습니다.");
 		}
@@ -85,9 +86,17 @@ public:
 	{
 		return IndexBuffer;
 	}
-	
+
+	void SetStaticMeshAsset(FStaticMesh* MeshAsset) { StaticMeshAsset = MeshAsset; }
+
+	void AddMaterial(const std::shared_ptr<FMaterial>& InMaterial) { Materials.Add(InMaterial); }
+	TArray<std::shared_ptr<FMaterial>> GetMaterials() { return Materials; }
+	void SetIndexBuffer(const std::shared_ptr<FIndexBuffer>& shared) { IndexBuffer = shared; }
+
 private:
 	std::shared_ptr<FVertexBuffer> VertexBuffer = nullptr;
 	std::shared_ptr<FIndexBuffer> IndexBuffer = nullptr;
 	D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	FStaticMesh* StaticMeshAsset = nullptr;
+	TArray<std::shared_ptr<FMaterial>> Materials;
 };

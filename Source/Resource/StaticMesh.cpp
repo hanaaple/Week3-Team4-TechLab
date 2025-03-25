@@ -1,5 +1,4 @@
 #include "StaticMesh.h"
-#include "Core/Engine.h"
 #include "Core/Rendering/FDevice.h"
 
 
@@ -24,7 +23,6 @@ void UStaticMesh::Setting()
 
 void UStaticMesh::Draw()
 {
-	
 	FDevice::Get().GetDeviceContext()->DrawIndexed(IndexBuffer->GetIndexCount(), 0, 0);
 }
 

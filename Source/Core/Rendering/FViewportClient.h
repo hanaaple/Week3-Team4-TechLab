@@ -1,7 +1,7 @@
 #pragma once
 #include "FViewMode.h"
 
-enum class EViewModeIndex : uint32
+enum class ELevelViewportType : uint32
 {
 	Perspective,
 	Top,
@@ -17,24 +17,24 @@ class FViewportClient
 public:
 	FViewportClient(ACamera* InPerspectiveCamera, ACamera* InOrthographicCamera)
 	{
-		ViewType = EViewModeIndex::Top;
+		LevelViewportType = ELevelViewportType::Top;
 		PerspectiveCamera = InPerspectiveCamera;
 		OrthographicCamera = InOrthographicCamera;
-		RenderType = ERenderModeIndex::VMI_Wireframe;
+		ViewMode = ERenderModeIndex::VMI_Wireframe;
 	}
 
-	EViewModeIndex GetViewType() const { return ViewType; }
-	ERenderModeIndex GetRenderType() const { return RenderType; }
+	ELevelViewportType GetViewType() const { return LevelViewportType; }
+	ERenderModeIndex GetRenderType() const { return ViewMode; }
 
-	void SetViewType(const EViewModeIndex InViewType) { ViewType = InViewType; }
-	void SetRenderType(const ERenderModeIndex InRenderType) { RenderType = InRenderType; }
+	void SetViewType(const ELevelViewportType InViewType) { LevelViewportType = InViewType; }
+	void SetRenderType(const ERenderModeIndex InRenderType) { ViewMode = InRenderType; }
 
 	ACamera* GetPerspectiveCamera() const { return PerspectiveCamera; }
 	ACamera* GetOrthographicCamera() const { return OrthographicCamera; }
 
 private:
-	EViewModeIndex ViewType;
-	ERenderModeIndex RenderType;
+	ELevelViewportType LevelViewportType;
+	ERenderModeIndex ViewMode;
 	ACamera* PerspectiveCamera;
 	ACamera* OrthographicCamera;
 };
