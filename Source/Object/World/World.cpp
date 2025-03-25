@@ -112,7 +112,8 @@ void UWorld::LateTick(float DeltaTime)
 	SSplitterV* BottomSplitter = UEngine::Get().GetBottomSplitter();
 
 	FViewport* FullScreenViewport = ViewportManager->GetFullScreenViewport();
-	
+	FViewport* ActiveViewport = ViewportManager->GetActiveViewport();
+
 	if (!FullScreenViewport)
 	{
 		Viewports[0]->SetRect(TopSplitter->GetSideLT()->GetRect());
@@ -165,18 +166,19 @@ void UWorld::LateTick(float DeltaTime)
 		if (FullScreenViewport && FullScreenViewport != vp)
 			continue;
 
-		ELevelViewportType LevelViewportType = vp->GetClient()->GetLevelViewportType();
-
-		if (FTransform* Transform = ViewTransformMap.Find(LevelViewportType))
-		{
-			vp->GetClient()->GetOrthographicCamera()->SetActorTransform(*Transform);
-		}
-
 		if (vp->GetRect().Contains(MousePos) &&
 			(APlayerInput::Get().GetKeyDown(EKeyCode::LButton) || APlayerInput::Get().GetKeyDown(EKeyCode::RButton)))
 		{
 			ViewportManager->SetActiveViewport(vp);
 		}
+		ELevelViewportType LevelViewportType = vp->GetClient()->GetLevelViewportType();
+		if (FTransform* Transform = ViewTransformMap.Find(LevelViewportType))
+		{
+			vp->GetClient()->GetOrthographicCamera()->SetActorTransform(*Transform);
+		}
+
+		if (ActiveViewport && ActiveViewport != vp)
+			continue;
 
 		if (vp == ViewportManager->GetActiveViewport())
 		{
@@ -247,8 +249,6 @@ void UWorld::Render()
 	//	RenderPickingTexture(*Renderer);
 	//}
 
-	RenderMainTexture(*Renderer);
-
 	AActor* SelectedActor = FEditorManager::Get().GetSelectedActor();
 	if (SelectedActor != nullptr)
 	{
@@ -266,6 +266,7 @@ void UWorld::Render()
 
 	FUUIDBillBoard::Get().Render();
 
+	RenderMainTexture(*Renderer);
 	//DisplayPickingTexture(*Renderer);
 }
 
@@ -322,7 +323,7 @@ void UWorld::RenderMainTexture(URenderer& Renderer)
 	for (auto& RenderComponent: ZIgnoreRenderComponents)
 	{
 		uint32 depth = RenderComponent->GetOwner()->GetDepth();
-		RenderComponent->Render();
+		RenderComponent->RenderGizmo();
 	}
 
 	FDevice::Get().SetRenderTargetOnly();

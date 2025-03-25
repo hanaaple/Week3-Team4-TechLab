@@ -90,6 +90,53 @@ void UPrimitiveComponent::Render()
 	Renderer->Render(GetRenderResourceCollection());
 }
 
+void UPrimitiveComponent::RenderGizmo()
+{
+	URenderer* Renderer = UEngine::Get().GetRenderer();
+	if (Renderer == nullptr || !FEngineShowFlags::Get().GetSingleFlag(EEngineShowFlags::SF_Primitives) || !bCanBeRendered)
+	{
+		return;
+	}
+	// if (GetOwner()->Implements<IGizmoInterface>() == false) // TODO: RTTI 개선하면 사용
+	if (!dynamic_cast<IGizmoInterface*>(GetOwner()))
+	{
+		if (bIsPicked)
+		{
+			bUseVertexColor = false;
+			SetCustomColor(FVector4(1.0f, 0.647f, 0.0f, 1.0f));
+		}
+		else
+		{
+			bUseVertexColor = true;
+		}
+	}
+
+	FMatrix ModelMatrix;
+	CalculateModelMatrix(ModelMatrix);
+
+	const FMatrix& ViewProjectionMatrix = UEngine::Get().GetWorld()->GetCamera()->GetViewProjectionMatrix();
+
+	FMatrix MVP = FMatrix::Transpose(ModelMatrix * ViewProjectionMatrix);
+
+	uint32 ID = GetUUID();
+
+	FVector4 UUIDCOlor = FEditorManager::EncodeUUID(ID);
+
+	FConstantsComponentData& Data = GetConstantsComponentData();
+
+	Data = {
+		.MVP = MVP,
+		.Color = GetCustomColor(),
+		.UUIDColor = UUIDCOlor,
+		.bUseVertexColor = IsUseVertexColor()
+	};
+
+	FViewMode::Get().SetViewMode(EViewModeIndex::VMI_Default);
+	FViewMode::Get().ApplyViewMode();
+
+	Renderer->Render(GetRenderResourceCollection());
+}
+
 void UPrimitiveComponent::CalculateModelMatrix(FMatrix& OutMatrix)
 {
 	//빌보드 행렬계산
