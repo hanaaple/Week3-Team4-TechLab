@@ -62,6 +62,7 @@ std::unique_ptr<UWorldInfo> JsonSaveHelper::LoadScene(const std::string& SceneNa
 			static_cast<float>(Scale[2].ToFloat())
 		);
 
+		ObjectInfo->ObjStaticMeshName = ActorInfo["ObjStaticMeshName"].ToString();
         ObjectInfo->ObjectType = ActorInfo["Type"].ToString();
 		WorldInfo->ObjectInfos.push(std::move(ObjectInfo));
     }
@@ -112,10 +113,12 @@ void JsonSaveHelper::SaveScene(UWorldInfo WorldInfo)
 		WorldInfo.ObjectInfos.pop();
 
         std::string Uuid = std::to_string(ObjectInfo->UUID);
-        
+
         Json["Actors"][Uuid]["Location"].append(ObjectInfo->Location.X, ObjectInfo->Location.Y, ObjectInfo->Location.Z);
         Json["Actors"][Uuid]["Rotation"].append(ObjectInfo->Rotation.X, ObjectInfo->Rotation.Y, ObjectInfo->Rotation.Z);
         Json["Actors"][Uuid]["Scale"].append(ObjectInfo->Scale.X, ObjectInfo->Scale.Y, ObjectInfo->Scale.Z);
+		Json["Actors"][Uuid]["ObjStaticMeshName"] = (ObjectInfo->ObjStaticMeshName.c_char());
+		//Json["Actors"][Uuid]["ObjStaticMeshPathName"].append(ObjectInfo->ObjStaticMeshPathName.c_char());
         Json["Actors"][Uuid]["Type"] = ObjectInfo->ObjectType.c_char();
     }
 

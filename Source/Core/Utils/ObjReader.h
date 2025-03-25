@@ -90,6 +90,7 @@ struct FObjInfo
 struct FStaticMesh
 {
 	FString PathFileName;
+	FString Name;
 	TArray<FObjVertex> Vertices;
 	TMap<FString, TArray<uint32>> IndexDataList;
 	TArray<FObjMaterialInfo> MaterialData;
