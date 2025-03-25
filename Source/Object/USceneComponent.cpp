@@ -222,8 +222,8 @@ void USceneComponent::SetRelativePositionAndRotation(const FVector& InPosition, 
 
 void USceneComponent::SetRelativePositionAndRotation(const FVector& InPosition, const FQuat& InRotation)
 {
-	//RelativeTransform.SetPosition(InPosition);
-	//RelativeTransform.SetRotation(InRotation);
+	RelativeTransform.SetPosition(InPosition);
+	RelativeTransform.SetRotation(InRotation);
 
 	ConditionalUpdateComponentToWorld();
 
