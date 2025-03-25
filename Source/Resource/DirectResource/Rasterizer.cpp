@@ -21,10 +21,10 @@ FRasterizer::~FRasterizer()
 void FRasterizer::Setting()
 {
 
-	ERenderModeIndex Index = FViewMode::Get().GetViewMode();
+	EViewModeIndex Index = FViewMode::Get().GetViewMode();
 
 
-	if (Index == ERenderModeIndex::VMI_Default)
+	if (Index == EViewModeIndex::VMI_Default)
 	{
 		if (nullptr == State)
 		{

@@ -368,7 +368,7 @@ void UEngine::RenderSplitScreen()
 		FDevice::Get().GetDeviceContext()->RSSetViewports(1, &d3dvp);
 		FDevice::Get().SetRenderTargetOnly();
 
-		ELevelViewportType LevelViewportType = vp->GetClient()->GetViewType();
+		ELevelViewportType LevelViewportType = vp->GetClient()->GetLevelViewportType();
 		
 		float Width = vp->GetRect().Right - vp->GetRect().Left;
 		float Height = vp->GetRect().Bottom - vp->GetRect().Top;
@@ -386,7 +386,7 @@ void UEngine::RenderSplitScreen()
 			World->SetCamera(vp->GetClient()->GetOrthographicCamera());
 			FEditorManager::Get().SetCamera(vp->GetClient()->GetOrthographicCamera());
 		}
-		FViewMode::Get().SetViewMode(vp->GetClient()->GetRenderType());
+		FViewMode::Get().SetViewMode(vp->GetClient()->GetViewMode());
 		FViewMode::Get().ApplyViewMode();
 
 		World->Render();

@@ -84,7 +84,7 @@ struct FObjInfo
 
 
 	// Section의 Material 이름과 Index	(usemtl MaterialName)
-	TArray<TPair<FString, uint32>> MaterialIndexData;
+	TArray<TPair<FString, int32>> MaterialIndexData;
 };
 
 struct FStaticMesh

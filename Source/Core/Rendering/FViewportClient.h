@@ -20,21 +20,21 @@ public:
 		LevelViewportType = ELevelViewportType::Top;
 		PerspectiveCamera = InPerspectiveCamera;
 		OrthographicCamera = InOrthographicCamera;
-		ViewMode = ERenderModeIndex::VMI_Wireframe;
+		ViewMode = EViewModeIndex::VMI_Wireframe;
 	}
 
-	ELevelViewportType GetViewType() const { return LevelViewportType; }
-	ERenderModeIndex GetRenderType() const { return ViewMode; }
+	ELevelViewportType GetLevelViewportType() const { return LevelViewportType; }
+	EViewModeIndex GetViewMode() const { return ViewMode; }
 
-	void SetViewType(const ELevelViewportType InViewType) { LevelViewportType = InViewType; }
-	void SetRenderType(const ERenderModeIndex InRenderType) { ViewMode = InRenderType; }
+	void SetLevelViewportType(const ELevelViewportType InLevelViewportType) { LevelViewportType = InLevelViewportType; }
+	void SetViewMode(const EViewModeIndex InViewMode) { ViewMode = InViewMode; }
 
 	ACamera* GetPerspectiveCamera() const { return PerspectiveCamera; }
 	ACamera* GetOrthographicCamera() const { return OrthographicCamera; }
 
 private:
 	ELevelViewportType LevelViewportType;
-	ERenderModeIndex ViewMode;
+	EViewModeIndex ViewMode;
 	ACamera* PerspectiveCamera;
 	ACamera* OrthographicCamera;
 };

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <algorithm>
 #include <utility>
 #include <vector>
@@ -83,7 +83,7 @@ public:
     bool Find(const T& Item, SizeType& Index);
 
     /** Array Size를 가져옵니다. */
-    unsigned Num() const;
+    SizeType Num() const;
 
     /** Array의 Capacity를 가져옵니다. */
     SizeType Len() const;
@@ -258,7 +258,8 @@ bool TArray<T, Allocator>::Find(const T& Item, SizeType& Index)
 }
 
 template <typename T, typename Allocator>
-unsigned TArray<T, Allocator>::Num() const
+typename TArray<T, Allocator>::SizeType
+TArray<T, Allocator>::Num() const
 {
     return PrivateVector.size();
 }

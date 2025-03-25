@@ -42,11 +42,11 @@ void UWorld::InitWorld()
 	ViewportManager->SetFullScreenViewport(Viewports[2]);
 	Viewports[2]->SetRect(FRect(0, 0, UEngine::Get().GetScreenWidth(), UEngine::Get().GetScreenHeight()));
 
-	Viewports[0]->GetClient()->SetViewType(ELevelViewportType::Top);
-	Viewports[1]->GetClient()->SetViewType(ELevelViewportType::Front);
-	Viewports[2]->GetClient()->SetViewType(ELevelViewportType::Perspective);
-	Viewports[2]->GetClient()->SetRenderType(ERenderModeIndex::VMI_Default);
-	Viewports[3]->GetClient()->SetViewType(ELevelViewportType::Right);
+	Viewports[0]->GetClient()->SetLevelViewportType(ELevelViewportType::Top);
+	Viewports[1]->GetClient()->SetLevelViewportType(ELevelViewportType::Front);
+	Viewports[2]->GetClient()->SetLevelViewportType(ELevelViewportType::Perspective);
+	Viewports[2]->GetClient()->SetViewMode(EViewModeIndex::VMI_Default);
+	Viewports[3]->GetClient()->SetLevelViewportType(ELevelViewportType::Right);
 
 }
 
@@ -165,7 +165,7 @@ void UWorld::LateTick(float DeltaTime)
 		if (FullScreenViewport && FullScreenViewport != vp)
 			continue;
 
-		ELevelViewportType LevelViewportType = vp->GetClient()->GetViewType();
+		ELevelViewportType LevelViewportType = vp->GetClient()->GetLevelViewportType();
 
 		if (FTransform* Transform = ViewTransformMap.Find(LevelViewportType))
 		{
