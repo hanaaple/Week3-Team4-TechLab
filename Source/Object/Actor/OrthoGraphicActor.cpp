@@ -26,7 +26,9 @@ void AOrthoGraphicActor::MoveTop(const FVector& mouseDelta)
 	FVector Offset;
 	Offset.X = mouseDelta.Y * Sensitivity;
 	Offset.Y = mouseDelta.X * Sensitivity;
-	this->AddWorldOffset(Offset);
+	FTransform tr = GetActorTransform();
+	tr.SetPosition(tr.GetPosition() + Offset);
+	SetActorTransform(tr);
 }
 
 void AOrthoGraphicActor::MoveBottom(const FVector& mouseDelta)
@@ -34,7 +36,9 @@ void AOrthoGraphicActor::MoveBottom(const FVector& mouseDelta)
 	FVector Offset;
 	Offset.X = -mouseDelta.Y * Sensitivity;
 	Offset.Y = mouseDelta.X * Sensitivity;
-	this->AddWorldOffset(Offset);
+	FTransform tr = GetActorTransform();
+	tr.SetPosition(tr.GetPosition() + Offset);
+	SetActorTransform(tr);
 }
 
 void AOrthoGraphicActor::MoveLeft(const FVector& mouseDelta)
@@ -42,7 +46,9 @@ void AOrthoGraphicActor::MoveLeft(const FVector& mouseDelta)
 	FVector Offset;
 	Offset.X = mouseDelta.X * Sensitivity;
 	Offset.Z = -mouseDelta.Y * Sensitivity;
-	this->AddWorldOffset(Offset);
+	FTransform tr = GetActorTransform();
+	tr.SetPosition(tr.GetPosition() + Offset);
+	SetActorTransform(tr);
 }
 
 void AOrthoGraphicActor::MoveRight(const FVector& mouseDelta)
@@ -50,7 +56,9 @@ void AOrthoGraphicActor::MoveRight(const FVector& mouseDelta)
 	FVector Offset;
 	Offset.X = -mouseDelta.X * Sensitivity;
 	Offset.Z = -mouseDelta.Y * Sensitivity;
-	this->AddWorldOffset(Offset);
+	FTransform tr = GetActorTransform();
+	tr.SetPosition(tr.GetPosition() + Offset);
+	SetActorTransform(tr);
 }
 
 void AOrthoGraphicActor::MoveFront(const FVector& mouseDelta)
@@ -58,7 +66,9 @@ void AOrthoGraphicActor::MoveFront(const FVector& mouseDelta)
 	FVector Offset;
 	Offset.Y = mouseDelta.X * Sensitivity;
 	Offset.Z = mouseDelta.Y * Sensitivity;
-	this->AddWorldOffset(Offset);
+	FTransform tr = GetActorTransform();
+	tr.SetPosition(tr.GetPosition() + Offset);
+	SetActorTransform(tr);
 }
 
 void AOrthoGraphicActor::MoveBack(const FVector& mouseDelta)
@@ -66,5 +76,7 @@ void AOrthoGraphicActor::MoveBack(const FVector& mouseDelta)
 	FVector Offset;
 	Offset.Y = -mouseDelta.X * Sensitivity;
 	Offset.Z = mouseDelta.Y * Sensitivity;
-	this->AddWorldOffset(Offset);
+	FTransform tr = GetActorTransform();
+	tr.SetPosition(tr.GetPosition() + Offset);
+	SetActorTransform(tr);
 }

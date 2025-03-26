@@ -126,7 +126,7 @@ void UWorld::LateTick(float DeltaTime)
 	{
 		FullScreenViewport->SetRect(FRect(0, 0, UEngine::Get().GetScreenWidth(), UEngine::Get().GetScreenHeight()));
 	}
-	FVector OrthoCamPos = UEngine::Get().GetWorld()->GetOrthoGraphicActor()->GetActorPosition();
+	FVector OrthoCamPos = UEngine::Get().GetWorld()->GetOrthoGraphicActor()->GetActorTransform().GetPosition();
 
 	FTransform Top;
 	Top.SetPosition(OrthoCamPos + FVector(0.f, 0.f, 50.f));
@@ -172,6 +172,7 @@ void UWorld::LateTick(float DeltaTime)
 		{
 			ViewportManager->SetActiveViewport(vp);
 		}
+
 		ELevelViewportType LevelViewportType = vp->GetClient()->GetLevelViewportType();
 		if (FTransform* Transform = ViewTransformMap.Find(LevelViewportType))
 		{
@@ -183,9 +184,9 @@ void UWorld::LateTick(float DeltaTime)
 
 		if (vp == ViewportManager->GetActiveViewport())
 		{
-			FEditorManager::Get().SetCamera(vp->GetClient()->GetOrthographicCamera());
 			if (LevelViewportType == ELevelViewportType::Perspective)
 			{
+				FEditorManager::Get().SetCamera(vp->GetClient()->GetPerspectiveCamera());
 				ACamera* PerspectiveCam = vp->GetClient()->GetPerspectiveCamera();
 				if (APlayerInput::Get().GetKeyPress(EKeyCode::W)) { PerspectiveCam->MoveForward(); }
 				if (APlayerInput::Get().GetKeyPress(EKeyCode::S)) { PerspectiveCam->MoveBackward(); }
@@ -197,31 +198,28 @@ void UWorld::LateTick(float DeltaTime)
 			}
 			else
 			{
+				FEditorManager::Get().SetCamera(vp->GetClient()->GetOrthographicCamera());
 				if (APlayerInput::Get().GetKeyPress(EKeyCode::RButton))
 				{
 					AOrthoGraphicActor* Actor = UEngine::Get().GetWorld()->GetOrthoGraphicActor();
-					if (LevelViewportType == ELevelViewportType::Top)
+					switch (LevelViewportType)
 					{
+					case ELevelViewportType::Top:
 						Actor->MoveTop(MouseDeltaPos);
-					}
-					else if (LevelViewportType == ELevelViewportType::Bottom)
-					{
+						break;
+					case ELevelViewportType::Bottom:
 						Actor->MoveBottom(MouseDeltaPos);
-					}
-					else if (LevelViewportType == ELevelViewportType::Left)
-					{
+						break;
+					case ELevelViewportType::Left:
 						Actor->MoveLeft(MouseDeltaPos);
-					}
-					else if (LevelViewportType == ELevelViewportType::Right)
-					{
+						break;
+					case ELevelViewportType::Right:
 						Actor->MoveRight(MouseDeltaPos);
-					}
-					else if (LevelViewportType == ELevelViewportType::Front)
-					{
+						break;
+					case ELevelViewportType::Front:
 						Actor->MoveFront(MouseDeltaPos);
-					}
-					else if (LevelViewportType == ELevelViewportType::Back)
-					{
+						break;
+					case ELevelViewportType::Back:
 						Actor->MoveBack(MouseDeltaPos);
 					}
 				}
