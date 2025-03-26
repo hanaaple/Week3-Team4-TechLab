@@ -36,14 +36,15 @@ public:
 
 	TObjectIterator& operator++()
 	{
-		Advance();
-		return *this;
-	}
-	TObjectIterator operator++(int)
-	{
 		TObjectIterator temp = *this; // 현재 상태 저장
 		Advance();
 		return temp;
+		
+	}
+	TObjectIterator operator++(int)
+	{
+		Advance();
+		return *this;
 	}
 	
 	TObjectIterator<T> begin() { return TObjectIterator<T>(0); }
