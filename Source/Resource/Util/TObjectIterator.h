@@ -7,8 +7,6 @@ template<class T>
 class TObjectIterator
 {
 public:
-	TArray<std::shared_ptr<UObject>> GObjects;
-
 	TObjectIterator(int Idx = 0)
 	{
 		GObjects = TArray<std::shared_ptr<UObject>>();
@@ -22,6 +20,7 @@ public:
 			Advance();
 		}
 	}
+
 	~TObjectIterator() = default;
 
 	T* operator*() const { return (T*)GetUObject(); }
@@ -49,6 +48,7 @@ public:
 	
 	TObjectIterator<T> begin() { return TObjectIterator<T>(0); }
 	TObjectIterator<T> end() { return TObjectIterator<T>(GObjects.Num()); }
+
 private:
 	bool Advance()
 	{
@@ -68,6 +68,7 @@ private:
 	}
 	
 private:
+	TArray<std::shared_ptr<UObject>> GObjects;
 	uint32 Index;
 };
 
