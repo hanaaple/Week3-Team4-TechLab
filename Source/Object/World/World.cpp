@@ -128,8 +128,10 @@ void UWorld::LateTick(float DeltaTime)
 	FPoint MousePos = FPoint(APlayerInput::Get().GetMousePos().X, APlayerInput::Get().GetMousePos().Y);
 	FVector MouseDeltaPos = APlayerInput::Get().GetMouseDeltaPos();
 
+	int32 index = -1;
 	for (FViewport* vp : Viewports)
 	{
+		index++;
 		if (FullScreenViewport && FullScreenViewport != vp)
 			continue;
 
@@ -137,6 +139,7 @@ void UWorld::LateTick(float DeltaTime)
 			(APlayerInput::Get().GetKeyDown(EKeyCode::LButton) || APlayerInput::Get().GetKeyDown(EKeyCode::RButton)))
 		{
 			ViewportManager->SetActiveViewport(vp);
+			ViewportManager->SetActiveIndex(index);
 		}
 
 		ELevelViewportType LevelViewportType = vp->GetClient()->GetLevelViewportType();
@@ -559,12 +562,11 @@ UWorldInfo UWorld::GetWorldInfo() const
 		i++;
 	}
 
-	ACamera* ActiveCamera = GetViewportManager()->GetActiveViewport()->GetClient()->GetPerspectiveCamera();
-	WorldInfo.CameraInfo.Location = ActiveCamera->GetActorPosition();
-	WorldInfo.CameraInfo.Rotation = ActiveCamera->GetActorRotation();
-	WorldInfo.CameraInfo.FieldOfView = ActiveCamera->GetFieldOfView();
-	WorldInfo.CameraInfo.NearClip = ActiveCamera->GetNear();
-	WorldInfo.CameraInfo.FarClip = ActiveCamera->GetFar();
+	WorldInfo.CameraInfo.Location = Camera->GetActorPosition();
+	WorldInfo.CameraInfo.Rotation = Camera->GetActorRotation();
+	WorldInfo.CameraInfo.FieldOfView = Camera->GetFieldOfView();
+	WorldInfo.CameraInfo.NearClip = Camera->GetNear();
+	WorldInfo.CameraInfo.FarClip = Camera->GetFar();
 
 	return WorldInfo;
 }
