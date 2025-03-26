@@ -9,7 +9,6 @@
 #include "Primitive/PrimitiveVertices.h"
 #include "Resource/RenderResourceCollection.h"
 #include "Resource/StaticMesh.h"
-#include "Resource/DirectResource/Vertexbuffer.h"
 
 
 class FVertexShader;
@@ -30,7 +29,7 @@ struct alignas(16) FConstantsComponentData
 	// true인 경우 Vertex Color를 사용하고, false인 경우 Color를 사용합니다.
 	FVector4 UUIDColor;
 	uint32 bUseVertexColor;
-	FVector Padding;
+	FMatrix M;
 };
 
 class UPrimitiveComponent : public USceneComponent

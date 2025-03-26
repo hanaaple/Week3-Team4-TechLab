@@ -15,6 +15,7 @@
 #include "Slate/SSplitter.h"
 #include "Rendering/FViewMode.h"
 #include "Debug/EngineShowFlags.h"
+#include "Object/Actor/DirectionalLight.h"
 
 class AArrow;
 class APicker;
@@ -322,6 +323,7 @@ void UEngine::InitWorld()
 	FLineBatchManager::Get().DrawWorldGrid(World->GetGridSize(), World->GetGridSize() / 100.f);
 
 	World->BeginPlay();
+	World->SpawnActor<ADirectionalLight>();
 }
 
 void UEngine::ShutdownWindow()

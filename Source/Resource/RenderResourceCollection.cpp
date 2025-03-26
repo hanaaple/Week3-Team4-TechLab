@@ -60,6 +60,7 @@ void FRenderResourceCollection::Render()
 	if (MeshMaterials.Num() > 0)
 	{
 		Layout->Setting();
+		Mesh->UpdateCameraConstantData();
 		for (const auto& MeshMaterial : MeshMaterials)
 		{
 			auto IndexBuffer = FIndexBuffer::Find(Mesh->FResource::GetName() + MeshMaterial->GetName());

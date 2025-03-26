@@ -96,8 +96,10 @@ void FMaterial::Texture()
 
 void FMaterial::UpdateConstantBuffer()
 {
-	//if (ConstantBufferBindingPtr != nullptr)
-	//	ConstantBufferBindingPtr->Setting();
+	for (const auto& Binding : ConstantBufferBindingPtrArray)
+	{
+		Binding->Setting();
+	}
 }
 
 void FMaterial::SetVertexShader(const FString& InValue)
@@ -160,7 +162,7 @@ void FMaterial::SetTexture(const FString& InValue, uint8 InSlot)
 	TexturePtrMap.Add(InSlot, TexturePtr);
 }
 
-void FMaterial::SetConstantBuffer(const FString& InValue, const void* CPUDataPtr, int DataSize, int BindPoint, bool bIsUseVertexShader,	bool bIsUsePixelShader)
+void FMaterial::AddConstantBuffer(const FString& InValue, const void* CPUDataPtr, int DataSize, int BindPoint, bool bIsUseVertexShader,	bool bIsUsePixelShader)
 {
 	std::shared_ptr<FConstantBuffer> Res = FConstantBuffer::Find(InValue);
 

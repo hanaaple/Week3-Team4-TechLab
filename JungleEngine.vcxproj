@@ -184,11 +184,13 @@
     <ClCompile Include="Source\Core\Rendering\FontAtlas.cpp" />
     <ClCompile Include="Source\Core\Utils\ObjReader.cpp" />
     <ClCompile Include="Source\Debug\DebugDrawManager.cpp" />
+    <ClCompile Include="Source\Object\Actor\DirectionalLight.cpp" />
     <ClCompile Include="Source\Object\Actor\StaticMeshObj.cpp" />
     <ClCompile Include="Source\Object\Actor\OrthoGraphicActor.cpp" />
     <ClCompile Include="Source\Object\Actor\SubUVParticle.cpp" />
     <ClCompile Include="Source\Object\Actor\WorldGrid.cpp" />
     <ClCompile Include="Source\Object\Assets\MeshAsset.cpp" />
+    <ClCompile Include="Source\Object\Component\UDirectionalLightComp.cpp" />
     <ClCompile Include="Source\Object\PrimitiveComponent\GizmoComponent.cpp" />
     <ClCompile Include="Source\Core\Rendering\FViewMode.cpp" />
     <ClCompile Include="Source\Debug\EngineShowFlags.cpp" />
@@ -202,6 +204,7 @@
     <ClCompile Include="Source\Resource\Material.cpp" />
     <ClCompile Include="Source\Resource\StaticMesh.cpp" />
     <ClCompile Include="Source\Resource\RenderResourceCollection.cpp" />
+    <ClCompile Include="Source\Resource\StaticMeshCreator.cpp" />
     <ClCompile Include="Source\Resource\Texture.cpp" />
     <ClCompile Include="Source\Static\FUUIDBillBoard.cpp" />
     <ClCompile Include="Source\Core\Math\Rotator.cpp" />
@@ -326,7 +329,10 @@
     <ClInclude Include="Source\Core\Rendering\FViewport.h" />
     <ClInclude Include="Source\Core\Rendering\FViewportClient.h" />
     <ClInclude Include="Source\Core\Rendering\ViewportManager.h" />
+    <ClInclude Include="Source\Object\Actor\DirectionalLight.h" />
     <ClInclude Include="Source\Object\Actor\OrthoGraphicActor.h" />
+    <ClInclude Include="Source\Object\Component\UDirectionalLightComp.h" />
+    <ClInclude Include="Source\Resource\StaticMeshCreator.h" />
     <ClInclude Include="Source\Slate\SSplitter.h" />
     <ClInclude Include="Source\Slate\SWindow.h" />
     <ClInclude Include="Source\Core\Delegates\Delegate.h" />

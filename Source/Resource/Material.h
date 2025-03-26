@@ -36,7 +36,7 @@ public:
 	void SetBlendState(const FString& InValue);
 	void SetDepthState(const FString& InValue);
 	void SetTexture(const FString& InValue, uint8 InSlot);
-	void SetConstantBuffer(const FString& InValue, const void* CPUDataPtr, int DataSize, int BindPoint, bool bIsUseVertexShader, bool bIsUsePixelShader);
+	void AddConstantBuffer(const FString& InValue, const void* CPUDataPtr, int DataSize, int BindPoint, bool bIsUseVertexShader, bool bIsUsePixelShader);
 	
 	std::shared_ptr<class FVertexShader> GetVertexShader()
 	{

@@ -1,6 +1,7 @@
 #pragma once
 
 #define _TCHAR_DEFINED
+#include <chrono>
 #include <d3d11.h>
 
 #include "Material.h"
@@ -15,6 +16,14 @@
 #include "Resource/DirectResource/Vertexbuffer.h"
 #include "Resource/DirectResource/IndexBuffer.h"
 #include "Debug/DebugConsole.h"
+#include "Object/Actor/Camera.h"
+#include "Object/World/World.h"
+
+struct alignas(16) FCameraConstantData
+{
+	FVector CameraPosition;
+	float Time;
+};
 
 class UStaticMesh : public FResource<UStaticMesh>, public UObject
 {
@@ -93,11 +102,18 @@ public:
 	void AddMaterial(const std::shared_ptr<FMaterial>& InMaterial) { Materials.Add(InMaterial); }
 	TArray<std::shared_ptr<FMaterial>> GetMaterials() { return Materials; }
 	void SetIndexBuffer(const std::shared_ptr<FIndexBuffer>& shared) { IndexBuffer = shared; }
-
+	FCameraConstantData& GetCameraConstantData() { return CameraConstantData; }
+	void UpdateCameraConstantData()
+	{
+		CameraConstantData.Time = std::chrono::duration_cast<std::chrono::duration<float>>(std::chrono::system_clock::now().time_since_epoch()).count();
+		CameraConstantData.CameraPosition = UEngine::Get().GetWorld()->GetCamera()->GetActorPosition();
+	}
+	
 private:
 	std::shared_ptr<FVertexBuffer> VertexBuffer = nullptr;
 	std::shared_ptr<FIndexBuffer> IndexBuffer = nullptr;
 	D3D_PRIMITIVE_TOPOLOGY Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	FStaticMesh* StaticMeshAsset = nullptr;
 	TArray<std::shared_ptr<FMaterial>> Materials;
+	FCameraConstantData CameraConstantData;
 };

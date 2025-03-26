@@ -83,7 +83,8 @@ void UPrimitiveComponent::Render()
 		.MVP = MVP,
 		.Color = GetCustomColor(),
 		.UUIDColor = UUIDCOlor,
-		.bUseVertexColor = IsUseVertexColor()
+		.bUseVertexColor = IsUseVertexColor(),
+		.M = ModelMatrix,
 	};
 	
 
@@ -128,7 +129,8 @@ void UPrimitiveComponent::RenderGizmo()
 		.MVP = MVP,
 		.Color = GetCustomColor(),
 		.UUIDColor = UUIDCOlor,
-		.bUseVertexColor = IsUseVertexColor()
+		.bUseVertexColor = IsUseVertexColor(),
+		.M = ModelMatrix,
 	};
 
 	FViewMode::Get().SetViewMode(EViewModeIndex::VMI_Default);
