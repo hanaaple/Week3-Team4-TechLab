@@ -20,8 +20,8 @@ void AOrthoGraphicActor::BeginPlay()
 void AOrthoGraphicActor::MoveTop(const FVector& mouseDelta)
 {
 	FVector Offset;
-	Offset.X = mouseDelta.Y * Sensitivity;
-	Offset.Y = mouseDelta.X * Sensitivity;
+	Offset.X = -mouseDelta.Y * Sensitivity;
+	Offset.Y = -mouseDelta.X * Sensitivity;
 	FTransform tr = GetActorTransform();
 	tr.SetPosition(tr.GetPosition() + Offset);
 	SetActorTransform(tr);
@@ -61,7 +61,7 @@ void AOrthoGraphicActor::MoveFront(const FVector& mouseDelta)
 {
 	FVector Offset;
 	Offset.Y = mouseDelta.X * Sensitivity;
-	Offset.Z = mouseDelta.Y * Sensitivity;
+	Offset.Z = -mouseDelta.Y * Sensitivity;
 	FTransform tr = GetActorTransform();
 	tr.SetPosition(tr.GetPosition() + Offset);
 	SetActorTransform(tr);
@@ -71,7 +71,7 @@ void AOrthoGraphicActor::MoveBack(const FVector& mouseDelta)
 {
 	FVector Offset;
 	Offset.Y = -mouseDelta.X * Sensitivity;
-	Offset.Z = mouseDelta.Y * Sensitivity;
+	Offset.Z = -mouseDelta.Y * Sensitivity;
 	FTransform tr = GetActorTransform();
 	tr.SetPosition(tr.GetPosition() + Offset);
 	SetActorTransform(tr);
