@@ -69,45 +69,45 @@ bool UConfigManager::LoadConfig(const FString& InConfigName)
 
 bool UConfigManager::SaveConfig(const FString& InConfigName)
 {
-	if (IsDebuggerPresent())
+	//if (IsDebuggerPresent())
+	//{
+	filesystem::path curPath = filesystem::current_path();
+	filesystem::path configPath = curPath / "Config" / InConfigName.c_char();
+	filesystem::path parentPath = configPath.parent_path();
+	if (parentPath.empty() == false && filesystem::exists(parentPath) == false)
 	{
-		filesystem::path curPath = filesystem::current_path();
-		filesystem::path configPath = curPath / "Config" / InConfigName.c_char();
-		filesystem::path parentPath = configPath.parent_path();
-		if (parentPath.empty() == false && filesystem::exists(parentPath) == false)
+		if (filesystem::create_directories(parentPath) == false)
 		{
-			if (filesystem::create_directories(parentPath) == false)
-			{
-				std::cout << "Failed to create directory: " << parentPath << '\n';
-				return false;
-			}
-		}
-
-		ofstream configFile(configPath);
-		if (configFile.is_open() == false)
-		{
-			std::cout << "File open failed: " << configPath << '\n';
+			std::cout << "Failed to create directory: " << parentPath << '\n';
 			return false;
 		}
-
-		for (const auto& [section, keyValues] : Configs)
-		{
-			if (section.IsEmpty() == false)
-				configFile << "[" << section.c_char() << "]" << '\n';
-			for (const auto& [key, value] : keyValues)
-			{
-				configFile << key.c_char() << " = " << value.c_char() << '\n';
-			}
-			configFile << '\n';
-		}
-
-		return true;
 	}
-	else
+
+	ofstream configFile(configPath);
+	if (configFile.is_open() == false)
 	{
-		// 빌드된 실행 파일의 경로로 설정
+		std::cout << "File open failed: " << configPath << '\n';
 		return false;
 	}
+
+	for (const auto& [section, keyValues] : Configs)
+	{
+		if (section.IsEmpty() == false)
+			configFile << "[" << section.c_char() << "]" << '\n';
+		for (const auto& [key, value] : keyValues)
+		{
+			configFile << key.c_char() << " = " << value.c_char() << '\n';
+		}
+		configFile << '\n';
+	}
+
+	return true;
+	//}
+	//else
+	//{
+	//	// 빌드된 실행 파일의 경로로 설정
+	//	return false;
+	//}
 }
 
 FString UConfigManager::GetValue(const FString& InSection, const FString& InKey)
