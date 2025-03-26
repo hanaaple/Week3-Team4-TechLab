@@ -57,7 +57,7 @@ private:
 	std::shared_ptr<FBlendState> BlendStatePtr = nullptr;
 	std::shared_ptr<FDepthStencilState> DepthStencilPtr = nullptr;
 	TMap<uint8, std::shared_ptr<FTexture>> TexturePtrMap;
-	std::shared_ptr<FConstantBufferBinding> ConstantBufferBindingPtr = nullptr;
+	TArray<std::shared_ptr<FConstantBufferBinding>> ConstantBufferBindingPtrArray;
 };
 
 

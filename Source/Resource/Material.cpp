@@ -96,8 +96,8 @@ void FMaterial::Texture()
 
 void FMaterial::UpdateConstantBuffer()
 {
-	if (ConstantBufferBindingPtr != nullptr)
-		ConstantBufferBindingPtr->Setting();
+	//if (ConstantBufferBindingPtr != nullptr)
+	//	ConstantBufferBindingPtr->Setting();
 }
 
 void FMaterial::SetVertexShader(const FString& InValue)
@@ -169,8 +169,8 @@ void FMaterial::SetConstantBuffer(const FString& InValue, const void* CPUDataPtr
 		//없으면 그 사이즈의 이름으로 만듦 이름이 겹치면 몰?루
 		Res = FConstantBuffer::Create(InValue, DataSize);
 	}
-	
-	ConstantBufferBindingPtr = std::make_shared<FConstantBufferBinding>();
+
+	std::shared_ptr<FConstantBufferBinding> ConstantBufferBindingPtr = std::make_shared<FConstantBufferBinding>();
 
 	ConstantBufferBindingPtr->DataSize = DataSize;
 	ConstantBufferBindingPtr->CPUDataPtr = CPUDataPtr;
@@ -179,6 +179,7 @@ void FMaterial::SetConstantBuffer(const FString& InValue, const void* CPUDataPtr
 	ConstantBufferBindingPtr->bIsUseVertexShader = bIsUseVertexShader;
 	ConstantBufferBindingPtr->bIsUsePixelShader = bIsUsePixelShader;
 	ConstantBufferBindingPtr->BindPoint = BindPoint;
+	ConstantBufferBindingPtrArray.Add(ConstantBufferBindingPtr);
 }
 
 void FMaterial::Setting()
