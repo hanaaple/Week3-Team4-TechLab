@@ -1,0 +1,33 @@
+# Blender 4.4.0 MTL File: 'TF2_Engineer.blend'
+# www.blender.org
+
+newmtl models_player_engineer_engineer_head_red
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Resource/Texture/TF_Engineer_Red_1.png
+
+newmtl models_player_engineer_engineer_mech_hand
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Resource/Texture/TF_Engineer_Red_2.png
+map_Bump Resource/Texture/TF_Engineer_Red_5.png
+
+newmtl models_player_engineer_engineer_red
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Resource/Texture/TF_Engineer_Red_0.png
