@@ -596,11 +596,12 @@ UWorldInfo UWorld::GetWorldInfo() const
 		i++;
 	}
 
-	WorldInfo.CameraInfo.Location = Camera->GetActorPosition();
-	WorldInfo.CameraInfo.Rotation = Camera->GetActorRotation();
-	WorldInfo.CameraInfo.FieldOfView = Camera->GetFieldOfView();
-	WorldInfo.CameraInfo.NearClip = Camera->GetNear();
-	WorldInfo.CameraInfo.FarClip = Camera->GetFar();
+	ACamera* ActiveCamera = GetViewportManager()->GetActiveViewport()->GetClient()->GetPerspectiveCamera();
+	WorldInfo.CameraInfo.Location = ActiveCamera->GetActorPosition();
+	WorldInfo.CameraInfo.Rotation = ActiveCamera->GetActorRotation();
+	WorldInfo.CameraInfo.FieldOfView = ActiveCamera->GetFieldOfView();
+	WorldInfo.CameraInfo.NearClip = ActiveCamera->GetNear();
+	WorldInfo.CameraInfo.FarClip = ActiveCamera->GetFar();
 
 	return WorldInfo;
 }
