@@ -2,6 +2,7 @@
 #include "Core/HAL/PlatformType.h"
 #include "Core/Interfaces/GizmoInterface.h"
 #include "Object/Actor/Actor.h"
+#include "Core/Rendering/FViewportClient.h"
 
 class AOrthoGraphicActor : public AActor, public IGizmoInterface
 {
@@ -22,4 +23,5 @@ public:
 	void MoveRight(const FVector& mouseDelta);
 	void MoveFront(const FVector& mouseDelta);
 	void MoveBack(const FVector& mouseDelta);
+	FTransform GetTransform(ELevelViewportType InLevelViewportType);
 };

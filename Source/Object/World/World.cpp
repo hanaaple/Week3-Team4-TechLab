@@ -111,7 +111,6 @@ void UWorld::LateTick(float DeltaTime)
 	}
 	PendingDestroyActors.Empty();
 
-
 	FViewportManager* ViewportManager = UEngine::Get().GetWorld()->GetViewportManager();
 	TArray<FViewport*> Viewports = ViewportManager->GetViewports();
 
@@ -125,39 +124,6 @@ void UWorld::LateTick(float DeltaTime)
 	Viewports[1]->SetRect(TopSplitter->GetSideRB()->GetRect());
 	Viewports[2]->SetRect(BottomSplitter->GetSideLT()->GetRect());
 	Viewports[3]->SetRect(BottomSplitter->GetSideRB()->GetRect());
-
-	FVector OrthoCamPos = UEngine::Get().GetWorld()->GetOrthoGraphicActor()->GetActorTransform().GetPosition();
-
-	FTransform Top;
-	Top.SetPosition(OrthoCamPos + FVector(0.f, 0.f, 50.f));
-	Top.SetRotation(FVector(0.f, 89.9f, 0.f));
-
-	FTransform Bottom;
-	Bottom.SetPosition(OrthoCamPos + FVector(0.f, 0.f, -50.f));
-	Bottom.SetRotation(FVector(0.f, -89.9f, 180.f));
-
-	FTransform Left;
-	Left.SetPosition(OrthoCamPos + FVector(0.f, -50.f, 0.f));
-	Left.SetRotation(FVector(0.f, 0.f, 90.f));
-
-	FTransform Right;
-	Right.SetPosition(OrthoCamPos + FVector(0.f, 50.f, 0.f));
-	Right.SetRotation(FVector(0.f, 0.f, -90.f));
-
-	FTransform Front;
-	Front.SetPosition(OrthoCamPos + FVector(50.f, 0.f, 0.f));
-	Front.SetRotation(FVector(0.f, 0.f, 180.f));
-
-	FTransform Back;
-	Back.SetPosition(OrthoCamPos + FVector(-0.f, 0.f, 0.f));
-	Back.SetRotation(FVector(0.f, 0.f, 0.f));
-
-	ViewTransformMap.Add(ELevelViewportType::Top, Top);
-	ViewTransformMap.Add(ELevelViewportType::Bottom, Bottom);
-	ViewTransformMap.Add(ELevelViewportType::Left, Left);
-	ViewTransformMap.Add(ELevelViewportType::Right, Right);
-	ViewTransformMap.Add(ELevelViewportType::Front, Front);
-	ViewTransformMap.Add(ELevelViewportType::Back, Back);
 
 	FPoint MousePos = FPoint(APlayerInput::Get().GetMousePos().X, APlayerInput::Get().GetMousePos().Y);
 	FVector MouseDeltaPos = APlayerInput::Get().GetMouseDeltaPos();
@@ -174,10 +140,8 @@ void UWorld::LateTick(float DeltaTime)
 		}
 
 		ELevelViewportType LevelViewportType = vp->GetClient()->GetLevelViewportType();
-		if (FTransform* Transform = ViewTransformMap.Find(LevelViewportType))
-		{
-			vp->GetClient()->GetOrthographicCamera()->SetActorTransform(*Transform);
-		}
+		if(LevelViewportType != ELevelViewportType::Perspective)
+			vp->GetClient()->GetOrthographicCamera()->SetActorTransform(UEngine::Get().GetWorld()->GetOrthoGraphicActor()->GetTransform(LevelViewportType));
 
 		if (ActiveViewport && ActiveViewport != vp)
 			continue;
@@ -226,7 +190,6 @@ void UWorld::LateTick(float DeltaTime)
 			}
 		}
 	}
-
 }
 
 void UWorld::OnDestroy()

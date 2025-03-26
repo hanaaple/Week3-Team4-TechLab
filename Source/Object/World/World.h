@@ -81,7 +81,6 @@ private:
 	AOrthoGraphicActor* OrthoGraphicActor = nullptr;
 	float GridSize = 100.0f;
 
-	TMap<ELevelViewportType, FTransform> ViewTransformMap;
 	FViewportManager* ViewportManager;
 
 public:
