@@ -417,6 +417,7 @@ void FDevice::InitResource()
 			FStaticMeshCreator::CreateMesh("MER.obj", "Rober_MER");
 			FStaticMeshCreator::CreateMesh("Amiya.obj", "Amiya");
 			FStaticMeshCreator::CreateMesh("duck.obj", "Duck");
+			FStaticMeshCreator::CreateMesh("TF2_Engineer.obj", "TF2_Engineer");
 		}
 	}
 }
