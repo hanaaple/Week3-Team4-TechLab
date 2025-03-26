@@ -35,9 +35,12 @@ public:
 	// 등록된 모든 뷰포트의 배열을 반환합니다.
 	const TArray<FViewport*>& GetViewports() const { return Viewports; }
 
+	uint32 GetActiveIndex() const { return ActiveIndex; }
+	void SetActiveIndex(uint32 InActiveIndex) { ActiveIndex = InActiveIndex; }
 private:
 	TArray<FViewport*> Viewports;
 	FViewport* ActiveViewport = nullptr;
 	FViewport* FullScreenViewport = nullptr;
+	uint32 ActiveIndex;
 	bool blsFullscreen = true;
 };

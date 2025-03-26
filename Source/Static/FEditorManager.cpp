@@ -66,6 +66,9 @@ void FEditorManager::SelectActor(AActor* NewActor)
 	if (SelectedActor == NewActor)	//같은 대상 선택시에 이벤트 없음
 		return;
 
+	if(SelectedActor && SelectedActor != NewActor)
+		SelectedActor->UnPick();
+
 	SelectedActor = NewActor;
 	SelectedActor->Pick();
 }
@@ -295,7 +298,7 @@ FVector4 FEditorManager::GetPixel(FVector MPos) const
     FDevice::Get().GetDeviceContext()->Map(stagingTexture, 0, D3D11_MAP_READ, 0, &mapped);
 
     // 5. 픽셀 데이터 추출 (1x1 텍스처이므로 offset = 0)
-    const BYTE* pixelData = static_cast<const BYTE*>(mapped.pData);
+    const uint32* pixelData = static_cast<const uint32*>(mapped.pData);
 
     if (pixelData)
     {
