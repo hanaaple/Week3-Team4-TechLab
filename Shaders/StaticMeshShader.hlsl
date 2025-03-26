@@ -69,7 +69,7 @@ PS_INPUT mainVS(VS_INPUT input)
 	output.worldPosition = mul(float4(input.position.xyz, 1), M);
 	output.M = M;
 	output.color = input.color;
-	output.uv = input.uv;
+	output.uv = float2(input.uv.x, 1 - input.uv.y);
 	output.normal = input.normal;
 	
 	return output;
