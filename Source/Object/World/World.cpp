@@ -463,7 +463,7 @@ void UWorld::LoadWorld(const char* InSceneName)
 		if (Actor)
 			Actor->SetActorTransform(Transform);
 	}
-	Camera = UEngine::Get().GetWorld()->GetViewportManager()->GetActiveViewport()->GetClient()->GetOrthographicCamera();
+	Camera = UEngine::Get().GetWorld()->GetViewportManager()->GetActiveViewport()->GetClient()->GetPerspectiveCamera();
 	Camera->SetActorTransform(FTransform(WorldInfo->CameraInfo.Location, FQuat(WorldInfo->CameraInfo.Rotation), FVector(1.0f)));
 	Camera->SetFieldOfVew(WorldInfo->CameraInfo.FieldOfView);
 	Camera->SetNear(WorldInfo->CameraInfo.NearClip);
