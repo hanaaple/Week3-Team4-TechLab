@@ -66,6 +66,9 @@ void FEditorManager::SelectActor(AActor* NewActor)
 	if (SelectedActor == NewActor)	//같은 대상 선택시에 이벤트 없음
 		return;
 
+	if(SelectedActor && SelectedActor != NewActor)
+		SelectedActor->UnPick();
+
 	SelectedActor = NewActor;
 	SelectedActor->Pick();
 }

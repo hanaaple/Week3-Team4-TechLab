@@ -311,9 +311,6 @@ void UEngine::InitWorld()
 {
     World = FObjectFactory::ConstructObject<UWorld>();
 
-	World->SetCamera(World->SpawnActor<ACamera>());
-	FEditorManager::Get().SetCamera(World->GetCamera());
-
 	World->SetOrthoGraphicCamera(World->SpawnActor<AOrthoGraphicActor>());
 	FEditorManager::Get().SetOrthoGraphicCamera(World->GetOrthoGraphicActor());
 

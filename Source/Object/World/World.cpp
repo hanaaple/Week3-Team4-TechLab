@@ -41,6 +41,7 @@ void UWorld::InitWorld()
 
 	TArray<FViewport*> Viewports = ViewportManager->GetViewports();
 	ViewportManager->SetFullScreenViewport(Viewports[2]);
+	ViewportManager->SetActiveViewport(Viewports[2]);
 	Viewports[2]->SetRect(FRect(0, 0, UEngine::Get().GetScreenWidth(), UEngine::Get().GetScreenHeight()));
 
 	Viewports[0]->GetClient()->SetLevelViewportType(ELevelViewportType::Top);
@@ -462,7 +463,7 @@ void UWorld::LoadWorld(const char* InSceneName)
 		if (Actor)
 			Actor->SetActorTransform(Transform);
 	}
-
+	Camera = UEngine::Get().GetWorld()->GetViewportManager()->GetActiveViewport()->GetClient()->GetOrthographicCamera();
 	Camera->SetActorTransform(FTransform(WorldInfo->CameraInfo.Location, FQuat(WorldInfo->CameraInfo.Rotation), FVector(1.0f)));
 	Camera->SetFieldOfVew(WorldInfo->CameraInfo.FieldOfView);
 	Camera->SetNear(WorldInfo->CameraInfo.NearClip);
