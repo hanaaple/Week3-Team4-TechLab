@@ -416,6 +416,7 @@ void FDevice::InitResource()
 			FStaticMeshCreator::CreateMesh("Low-Poly Plant_.obj", "Plant");
 			FStaticMeshCreator::CreateMesh("MER.obj", "Rober_MER");
 			FStaticMeshCreator::CreateMesh("Amiya.obj", "Amiya");
+			FStaticMeshCreator::CreateMesh("duck.obj", "Duck");
 		}
 	}
 }
