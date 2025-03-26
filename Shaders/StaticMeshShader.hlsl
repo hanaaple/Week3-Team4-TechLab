@@ -85,25 +85,19 @@ PS_OUTPUT mainPS(PS_INPUT input) : SV_Target
 	float4 dissolveColor = DissolveMap.Sample(g_Sample, input.uv);
 	float4 bumpColor = BumpMap.Sample(g_Sample, input.uv);
 
-
-	float3 lightDir = mul(float4(lightDirection, 1), M).rgb;
-
 	// Tangent 계산
 	//float3 tangent = normalize(mul(deltaPos1, deltaUV2.yx) - mul(deltaPos2, deltaUV1.yx));
 	
-	//float3 normal = bumpColor.rgb;
-	//float3 N = normalize(normal * 2.0 - 1.0);
+	float3 L = mul(float4(lightDirection, 1), M).rgb;
 	float3 N = normalize(input.normal);
 
+	float3 viewDir = normalize(cameraPosition - input.worldPosition.rgb);
+	float3 reflectDir = reflect(-L, N);
+	
+	float LDotN = dot(N, -L);
 
-	
-	float LDotN = dot(N, -lightDir);
-	
 	float3 diffuse = diffuseColor.rgb * lightDiffuseColor * LDotN * Diffuse;
 
-
-	float3 viewDir = normalize(cameraPosition - input.worldPosition.rgb);
-	float3 reflectDir = reflect(-lightDir, N);
 	float spec = pow(saturate(dot(reflectDir, viewDir)), SpecularExponent);
 	float3 specular = spec * specularColor.rgb * lightSpecularColor * Specular;
 	
