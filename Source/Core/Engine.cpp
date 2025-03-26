@@ -375,7 +375,6 @@ void UEngine::RenderSplitScreen()
 		if (FullScreenViewport && FullScreenViewport != vp)
 			continue;
 
-
 		float Width;
 		float Height;
 		D3D11_VIEWPORT d3dvp;
@@ -398,8 +397,6 @@ void UEngine::RenderSplitScreen()
 		FDevice::Get().SetRenderTargetOnly();
 
 		ELevelViewportType LevelViewportType = vp->GetClient()->GetLevelViewportType();
-		
-		
 		
 		if (LevelViewportType == ELevelViewportType::Perspective)
 		{

@@ -5,10 +5,6 @@
 #include "Static/FEditorManager.h"
 AOrthoGraphicActor::AOrthoGraphicActor()
 {
-	Near = .1f;
-	Far = 1000.f;
-	ZoomSize = 100.f;
-
 	RootComponent = AddComponent<USceneComponent>();
 
 	FTransform StartPos;

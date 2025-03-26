@@ -12,13 +12,7 @@ public:
 
 	virtual bool IsGizmo() override { return true; }
 
-private:
-	float Near;
-	float Far;
-	float ZoomSize;
-
 public:
-	float CameraSpeed = 1.0f;
 	float Sensitivity = 5.0f;
 
 	virtual void BeginPlay() override;
