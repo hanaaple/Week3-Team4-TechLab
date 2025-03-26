@@ -419,6 +419,7 @@ void FDevice::InitResource()
 			FStaticMeshCreator::CreateMesh("duck.obj", "Duck");
 			FStaticMeshCreator::CreateMesh("sola.obj", "Sola");
 			FStaticMeshCreator::CreateMesh("TF2_Engineer.obj", "TF2_Engineer");
+			FStaticMeshCreator::CreateMesh("10523_Pool_Table_v1_L3.obj", "PoolTable");
 		}
 	}
 }
