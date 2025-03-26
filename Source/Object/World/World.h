@@ -87,7 +87,6 @@ private:
 public:
 	FString SceneName;
 	uint32 Version = 1;
-	
 protected:
 	TArray<AActor*> Actors;
 	TArray<UPrimitiveComponent*> ZIgnoreRenderComponents;

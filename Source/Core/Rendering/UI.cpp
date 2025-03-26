@@ -89,7 +89,7 @@ void UI::Update()
 	{
 		if (FullScreenViewport && FullScreenViewport != vp)
 			continue;
-		RenderViewportSettings(vp, ++index);
+		RenderViewportSettings(vp, index++);
 	}
 
     // ImGui 렌더링
@@ -637,6 +637,13 @@ void UI::RenderViewportSettings(FViewport* InViewport, int32 index)
 {
 	// 뷰포트의 Rect를 이용해 창 위치 설정
 	FRect rect = InViewport->GetRect();
+	FViewportManager* ViewportManager = UEngine::Get().GetWorld()->GetViewportManager();
+	FViewport* FullScreenViewport = ViewportManager->GetFullScreenViewport();
+	if (FullScreenViewport)
+	{
+		rect.Top = 0;
+		rect.Left = 0;
+	}
 	ImGui::SetNextWindowPos(ImVec2(rect.Left + 10, rect.Top + 10), ImGuiCond_Always);
 	ImGui::SetNextWindowSize(ImVec2(0, 0), ImGuiCond_Always);
 
@@ -695,9 +702,6 @@ void UI::RenderViewportSettings(FViewport* InViewport, int32 index)
 
 	if (ImGui::Button("FullScreen"))
 	{
-		FViewportManager* ViewportManager = UEngine::Get().GetWorld()->GetViewportManager();
-		FViewport* FullScreenViewport = ViewportManager->GetFullScreenViewport();
-
 		if (FullScreenViewport)
 		{
 			ViewportManager->SetFullScreenViewport(nullptr);
@@ -706,6 +710,7 @@ void UI::RenderViewportSettings(FViewport* InViewport, int32 index)
 		{
 			ViewportManager->SetFullScreenViewport(InViewport);
 			ViewportManager->SetActiveViewport(InViewport);
+			ViewportManager->SetActiveIndex(index);
 			InViewport->SetRect(FRect(0, 0, UEngine::Get().GetScreenWidth(), UEngine::Get().GetScreenHeight()));
 		}
 	}

@@ -40,16 +40,21 @@ void UWorld::InitWorld()
 	}
 
 	TArray<FViewport*> Viewports = ViewportManager->GetViewports();
-	ViewportManager->SetFullScreenViewport(Viewports[2]);
-	ViewportManager->SetActiveViewport(Viewports[2]);
-	Viewports[2]->SetRect(FRect(0, 0, UEngine::Get().GetScreenWidth(), UEngine::Get().GetScreenHeight()));
 
+	ViewportManager->SetActiveIndex(std::stoi((UConfigManager::Get().GetValue(TEXT("Viewports"), TEXT("ActiveScreen"))).c_char()));
+	ViewportManager->SetActiveViewport(Viewports[ViewportManager->GetActiveIndex()]);
+
+	if (UConfigManager::Get().GetValue(TEXT("Viewports"), TEXT("FullScreen")) == TEXT("true"))
+	{
+		ViewportManager->SetFullScreenViewport(Viewports[ViewportManager->GetActiveIndex()]);
+	}
+	
 	Viewports[0]->GetClient()->SetLevelViewportType(ELevelViewportType::Top);
 	Viewports[1]->GetClient()->SetLevelViewportType(ELevelViewportType::Front);
 	Viewports[2]->GetClient()->SetLevelViewportType(ELevelViewportType::Perspective);
-	Viewports[2]->GetClient()->SetViewMode(EViewModeIndex::VMI_Default);
 	Viewports[3]->GetClient()->SetLevelViewportType(ELevelViewportType::Right);
 
+	Viewports[2]->GetClient()->SetViewMode(EViewModeIndex::VMI_Default);
 }
 
 void UWorld::BeginPlay()
@@ -116,17 +121,11 @@ void UWorld::LateTick(float DeltaTime)
 	FViewport* FullScreenViewport = ViewportManager->GetFullScreenViewport();
 	FViewport* ActiveViewport = ViewportManager->GetActiveViewport();
 
-	if (!FullScreenViewport)
-	{
-		Viewports[0]->SetRect(TopSplitter->GetSideLT()->GetRect());
-		Viewports[1]->SetRect(TopSplitter->GetSideRB()->GetRect());
-		Viewports[2]->SetRect(BottomSplitter->GetSideLT()->GetRect());
-		Viewports[3]->SetRect(BottomSplitter->GetSideRB()->GetRect());
-	}
-	else
-	{
-		FullScreenViewport->SetRect(FRect(0, 0, UEngine::Get().GetScreenWidth(), UEngine::Get().GetScreenHeight()));
-	}
+	Viewports[0]->SetRect(TopSplitter->GetSideLT()->GetRect());
+	Viewports[1]->SetRect(TopSplitter->GetSideRB()->GetRect());
+	Viewports[2]->SetRect(BottomSplitter->GetSideLT()->GetRect());
+	Viewports[3]->SetRect(BottomSplitter->GetSideRB()->GetRect());
+
 	FVector OrthoCamPos = UEngine::Get().GetWorld()->GetOrthoGraphicActor()->GetActorTransform().GetPosition();
 
 	FTransform Top;

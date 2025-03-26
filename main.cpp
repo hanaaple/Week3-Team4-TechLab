@@ -110,6 +110,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		UConfigManager::Get().SetValue(TEXT("ViewPorts"), TEXT("RB Top"), TEXT("540"));
 		UConfigManager::Get().SetValue(TEXT("ViewPorts"), TEXT("RB Right"), TEXT("1920"));
 		UConfigManager::Get().SetValue(TEXT("ViewPorts"), TEXT("RB Bottom"), TEXT("1280"));
+		UConfigManager::Get().SetValue(TEXT("ViewPorts"), TEXT("FullScreen"), TEXT("true"));
+		UConfigManager::Get().SetValue(TEXT("ViewPorts"), TEXT("ActiveScreen"), TEXT("2"));
 		UConfigManager::Get().SaveConfig("editor.ini");
 	}
 
@@ -138,6 +140,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	UConfigManager::Get().SetValue(TEXT("Viewports"), TEXT("RB Right"), FString::FromInt(UEngine::Get().GetWorld()->GetViewportManager()->GetViewports()[3]->GetRect().Right));
 	UConfigManager::Get().SetValue(TEXT("Viewports"), TEXT("RB Bottom"), FString::FromInt(UEngine::Get().GetWorld()->GetViewportManager()->GetViewports()[3]->GetRect().Bottom));
 
+	if(UEngine::Get().GetWorld()->GetViewportManager()->GetFullScreenViewport())
+		UConfigManager::Get().SetValue(TEXT("Viewports"), TEXT("FullScreen"), TEXT("true"));
+	else
+		UConfigManager::Get().SetValue(TEXT("Viewports"), TEXT("FullScreen"), TEXT("false"));
+	
+	UConfigManager::Get().SetValue(TEXT("Viewports"), TEXT("ActiveScreen"), FString::FromInt(UEngine::Get().GetWorld()->GetViewportManager()->GetActiveIndex()));
 	UConfigManager::Get().SaveConfig("editor.ini");	//TODO: Already saved in UEngine::Shutdown()>World->OnDestroy(), Needed?
 
 	

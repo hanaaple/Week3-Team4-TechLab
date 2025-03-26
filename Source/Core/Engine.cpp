@@ -372,15 +372,33 @@ void UEngine::RenderSplitScreen()
 	{
 		if (FullScreenViewport && FullScreenViewport != vp)
 			continue;
-		D3D11_VIEWPORT d3dvp = vp->GetViewport();
+
+
+		float Width;
+		float Height;
+		D3D11_VIEWPORT d3dvp;
+		if (FullScreenViewport)
+		{
+			Width = UEngine::Get().GetScreenWidth();
+			Height = UEngine::Get().GetScreenHeight();
+			d3dvp = {
+				0.0f, 0.0f, static_cast<float>(UEngine::Get().GetScreenWidth()), static_cast<float>(UEngine::Get().GetScreenHeight()), 0.0f, 1.0f
+			};
+		}
+		else
+		{
+			Width = vp->GetRect().Right - vp->GetRect().Left;
+			Height = vp->GetRect().Bottom - vp->GetRect().Top;
+			d3dvp = vp->GetViewport();
+		}
+
 		FDevice::Get().GetDeviceContext()->RSSetViewports(1, &d3dvp);
 		FDevice::Get().SetRenderTargetOnly();
 
 		ELevelViewportType LevelViewportType = vp->GetClient()->GetLevelViewportType();
 		
-		float Width = vp->GetRect().Right - vp->GetRect().Left;
-		float Height = vp->GetRect().Bottom - vp->GetRect().Top;
-
+		
+		
 		if (LevelViewportType == ELevelViewportType::Perspective)
 		{
 			vp->GetClient()->GetPerspectiveCamera()->SetWidthHeight(Width, Height);
