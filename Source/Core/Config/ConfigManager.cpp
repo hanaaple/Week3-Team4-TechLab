@@ -208,6 +208,14 @@ FString UConfigManager::GetValue(const FString& InSection, const FString& InKey)
 			{
 				SetValue(InSection, InKey, TEXT("1280"));
 			}
+			else if (InKey.Equals( TEXT("ActiveScreen")))
+			{
+				SetValue(InSection, InKey, TEXT("0"));
+			}
+			else if (InKey.Equals(TEXT("FullScreen")))
+			{
+				SetValue(InSection, InKey, TEXT("true"));
+			}
 			else
 			{
 				//Invalid Key
